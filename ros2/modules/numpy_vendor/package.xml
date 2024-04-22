@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<?xml-model
+  href="http://download.ros.org/schema/package_format2.xsd"
+  schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="2">
+  <name>numpy_vendor</name>
+  <version>1.18.4</version>
+  <description>
+    Wrapper around numpy, it provides a fixed CMake module and an ExternalProject build of it.
+  </description>
+  <maintainer email="asobhy@blackberry.com">Ahmed Sobhy</maintainer>
+  <license>BSD</license>
+  <license>BSD</license>  <!-- numpy is BSD -->
+  <url type="website">https://numpy.org</url>
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

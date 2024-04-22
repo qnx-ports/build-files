@@ -1,0 +1,15 @@
+diff --git a/osrf_testing_tools_cpp/src/memory_tools/CMakeLists.txt b/osrf_testing_tools_cpp/src/memory_tools/CMakeLists.txt
+index be7f216..7dd6c83 100644
+--- a/osrf_testing_tools_cpp/src/memory_tools/CMakeLists.txt
++++ b/osrf_testing_tools_cpp/src/memory_tools/CMakeLists.txt
+@@ -35,6 +35,10 @@ endif()
+ target_compile_definitions(memory_tools
+   PRIVATE "OSRF_TESTING_TOOLS_CPP_MEMORY_TOOLS_BUILDING_DLL")
+ 
++if(QNX)
++  target_compile_definitions(memory_tools PRIVATE _GNU_SOURCE)
++endif()
++
+ add_library(memory_tools_interpose SHARED
+   memory_tools.cpp
+ )

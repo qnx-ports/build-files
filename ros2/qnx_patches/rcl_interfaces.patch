@@ -1,0 +1,26 @@
+diff --git a/builtin_interfaces/package.xml b/builtin_interfaces/package.xml
+index c664090..c6c78c8 100644
+--- a/builtin_interfaces/package.xml
++++ b/builtin_interfaces/package.xml
+@@ -16,6 +16,8 @@
+ 
+   <buildtool_depend>rosidl_default_generators</buildtool_depend>
+ 
++  <depend>numpy_vendor</depend>
++
+   <exec_depend>rosidl_default_runtime</exec_depend>
+ 
+   <test_depend>ament_lint_common</test_depend>
+diff --git a/lifecycle_msgs/package.xml b/lifecycle_msgs/package.xml
+index 7bb73cd..b06201f 100644
+--- a/lifecycle_msgs/package.xml
++++ b/lifecycle_msgs/package.xml
+@@ -15,6 +15,8 @@
+   <buildtool_depend>ament_cmake</buildtool_depend>
+   <buildtool_depend>rosidl_default_generators</buildtool_depend>
+ 
++  <depend>numpy_vendor</depend>
++
+   <exec_depend>rosidl_default_runtime</exec_depend>
+ 
+   <test_depend>ament_lint_auto</test_depend>

@@ -1,0 +1,16 @@
+diff --git a/rosidl_generator_py/cmake/rosidl_generator_py_generate_interfaces.cmake b/rosidl_generator_py/cmake/rosidl_generator_py_generate_interfaces.cmake
+index a6d8263..5530106 100644
+--- a/rosidl_generator_py/cmake/rosidl_generator_py_generate_interfaces.cmake
++++ b/rosidl_generator_py/cmake/rosidl_generator_py_generate_interfaces.cmake
+@@ -176,6 +176,11 @@ target_link_libraries(
+   ${_target_name_lib}
+   ${PythonExtra_LIBRARIES}
+ )
++
++if(QNX)
++  list(APPEND PythonExtra_INCLUDE_DIRS ${CMAKE_INSTALL_PREFIX}/usr/lib/python${PYTHON_VERSION_QNX}/site-packages/numpy/core/include)
++endif()
++
+ target_include_directories(${_target_name_lib}
+   PRIVATE
+   ${CMAKE_CURRENT_BINARY_DIR}/rosidl_generator_c

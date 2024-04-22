@@ -1,0 +1,12 @@
+diff --git a/rmw_dds_common/package.xml b/rmw_dds_common/package.xml
+index 87e6b7c..c709a77 100644
+--- a/rmw_dds_common/package.xml
++++ b/rmw_dds_common/package.xml
+@@ -17,6 +17,7 @@
+   <depend>rcpputils</depend>
+   <depend>rmw</depend>
+   <depend>rosidl_runtime_cpp</depend>
++  <depend>numpy_vendor</depend>
+ 
+   <test_depend>ament_cmake_gmock</test_depend>
+   <test_depend>ament_lint_auto</test_depend>

@@ -1,0 +1,26 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 310f818..2167296 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -70,6 +70,10 @@ ament_export_targets(${PROJECT_NAME})
+ 
+ ament_export_dependencies("builtin_interfaces" "rcl" "rcpputils" "rosidl_default_runtime" "statistics_msgs")
+ 
++if(QNX)
++  set(BUILD_TESTING ON)
++endif()
++
+ if(BUILD_TESTING)
+   find_package(ament_lint_auto REQUIRED)
+   find_package(ament_cmake_gtest REQUIRED)
+@@ -112,6 +116,10 @@ if(BUILD_TESTING)
+   if(TARGET benchmark_iterative)
+     target_link_libraries(benchmark_iterative ${PROJECT_NAME})
+   endif()
++
++  if(QNX)
++    install(DIRECTORY ${CMAKE_BINARY_DIR}/ DESTINATION test/libstatistics_collector)
++  endif()
+ endif()
+ 
+ install(
