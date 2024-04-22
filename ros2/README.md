@@ -22,10 +22,6 @@ mkdir -p ~/ros2_workspace && cd ~/ros2_workspace
 # Clone repos
 git clone https://gitlab.com/qnx/libs/qnx-ports.git
 git clone -b qnx_v1.13.0 https://gitlab.com/qnx/libs/googletest.git
-git clone -b humble https://github.com/ros2/ros2.git
-
-# Set QNX_PORTS_ROS2
-export QNX_PORTS_ROS2=~/ros2_workspace/qnx-ports/ros2
 
 # Build the Docker image
 cd  ~/ros2_workspace/qnx-ports/ros2/docker
@@ -43,17 +39,16 @@ cd ~/ros2_workspace
 JLEVEL=4 PREFIX="/usr" QNX_PROJECT_ROOT="~/ros2_workspace/googletest" make -C qnx-ports/googletest install
 
 # Import ros2 packages
-cd ~/ros2_workspace/ros2
+cd ~/ros2_workspace/qnx-ports/ros2
 mkdir -p src
 vcs import src < ros2.repos
 
 # Run required scripts
-./qnx/build/scripts/colcon-ignore.sh
-./qnx/build/scripts/patch.sh
+./scripts/colcon-ignore.sh
+./scripts/patch.sh
 
 # Build ros2
-cd ~/ros2_workspace/ros2
-./qnx/build/scripts/build-ros2.sh
+./scripts/build-ros2.sh
 ```
 
 After the build completes, ros2_humble.tar.gz will be created at $QNX_TARGET/$CPUVARDIR/ros2_humble.tar.gz
@@ -72,7 +67,6 @@ mkdir -p ~/ros2_workspace && cd ~/ros2_workspace
 # Clone repos
 git clone https://gitlab.com/qnx/libs/qnx-ports.git
 git clone -b qnx_v1.13.0 https://gitlab.com/qnx/libs/googletest.git
-git clone -b humble https://github.com/ros2/ros2.git
 
 # Install python 3.11
 sudo add-apt-repository ppa:deadsnakes/ppa
@@ -110,18 +104,17 @@ pip install -U \
 JLEVEL=4 PREFIX="/usr" QNX_PROJECT_ROOT="~/ros2_workspace/googletest" make -C qnx-ports/googletest install
 
 # Import ros2 packages
-cd ~/ros2_workspace/ros2
+cd ~/ros2_workspace/qnx-ports/ros2
 mkdir -p src
 vcs import src < ros2.repos
 
 # Run scripts to ignore some packages and apply QNX patches
-./qnx/build/scripts/colcon-ignore.sh
-./qnx/build/scripts/patch.sh
+./scripts/colcon-ignore.sh
+./scripts/patch.sh
 
 # Set LD_PRELOAD to the host libzstd.so for x86_64 SDP 7.1 builds
 export LD_PRELOAD=$LD_PRELOAD:/usr/lib/x86_64-linux-gnu/libzstd.so
 
 # Build ros2
-cd ~/ros2_workspace/ros2
-./qnx/build/scripts/build-ros2.sh
+./scripts/build-ros2.sh
 ```

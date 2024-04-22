@@ -17,10 +17,6 @@ build(){
         exit 1
     fi
 
-    if [ -z "$QNX_PORTS_ROS2" ] ; then
-        echo "Please set QNX_PORTS_ROS2 to the qnx-ports/ros2 directory"    
-    fi
-
     echo "CPU set to ${CPUVAR}"
     echo "CPUVARDIR set to ${CPUVARDIR}"
     export CPUVARDIR CPUVAR
@@ -30,7 +26,6 @@ build(){
     export PROJECT_ROOT=${PWD}
     export LC_NUMERIC="en_US.UTF-8"
     export PYTHONPYCACHEPREFIX=/tmp
-    export QNX_PORTS_ROS2=${QNX_PORTS_ROS2}
 
     rm -rf build/${CPUVARDIR}/foonathan_memory_vendor/
     rm -rf build/${CPUVARDIR}/netifaces_vendor/
@@ -42,8 +37,8 @@ build(){
         --build-base=build/${CPUVARDIR} \
         --install-base=install/${CPUVARDIR} \
         --cmake-args \
-            -DCMAKE_TOOLCHAIN_FILE="${QNX_PORTS_ROS2}/platform/qnx.nto.toolchain.cmake" \
-            -DCMAKE_MODULE_PATH="${QNX_PORTS_ROS2}/modules" \
+            -DCMAKE_TOOLCHAIN_FILE="${PWD}/platform/qnx.nto.toolchain.cmake" \
+            -DCMAKE_MODULE_PATH="${PWD}/modules" \
             -DBUILD_TESTING:BOOL="OFF" \
             -DCMAKE_BUILD_TYPE="Release" \
             -DTHIRDPARTY=FORCE \

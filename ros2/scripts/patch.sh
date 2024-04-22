@@ -5,11 +5,11 @@
 # $2 arg is the patch name
 qnx_patch () {
     cd $1
-    git apply --whitespace=nowarn ${root_dir}/qnx_patches/$2 > /dev/null
+    git apply --whitespace=nowarn $QNX_PORTS_ROS2/qnx_patches/$2 > /dev/null
     cd - > /dev/null
 }
 
-root_dir=${PWD}/qnx/build
+QNX_PORTS_ROS2=${PWD}
 
 # Apply QNX patches
 qnx_patch ./src/eclipse-cyclonedds/cyclonedds cyclonedds.patch
