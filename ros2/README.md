@@ -51,7 +51,7 @@ vcs import src < ros2.repos
 ./scripts/build-ros2.sh
 ```
 
-After the build completes, ros2_humble.tar.gz will be created at $QNX_TARGET/$CPUVARDIR/ros2_humble.tar.gz
+After the build completes, ros2_humble.tar.gz will be created at QNX_TARGET/CPUVARDIR/ros2_humble.tar.gz
 
 ## Build on host without using Docker
 
