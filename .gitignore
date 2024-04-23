@@ -1,2 +1,2 @@
-./*/nto-*/*
-!./*/nto-*/Makefile
+*/nto-*/*
+!*/nto-*/Makefile
