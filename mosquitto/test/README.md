@@ -3,10 +3,6 @@
 mosquitto normally wants to be tested on the same machine it was built on. This obviously doesn't work when cross-compiling for QNX. The gist is to build, then copy the whole mosquitto source tree on a target. This will include all the relevant files and directory structure which mosquitto expects when running its test suite.
 
 # Running the Test Suite
-Compile the mosquitto source for the desired architecture, e.g.
-
-    OSLIST=nto CPULIST=x86_64 make -C qnx/build install
-
 Once the target has booted run the tests
 
 ```bash

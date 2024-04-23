@@ -3,6 +3,8 @@ QCONFIG=qconfig.mk
 endif
 include $(QCONFIG)
 
+QNX_PROJECT_ROOT ?= $(PRODUCT_ROOT)/../
+
 #where to install mosquitto:
 #$(INSTALL_ROOT_$(OS)) is pointing to $QNX_TARGET
 #by default, unless it was manually re-routed to
@@ -55,9 +57,9 @@ include $(MKFILES_ROOT)/qtargets.mk
 ifndef NO_TARGET_OVERRIDE
 mosquitto_all:
 	@mkdir -p build
-	@cd build && cmake $(CMAKE_ARGS) ../../../../
+	@cd build && cmake $(CMAKE_ARGS) $(QNX_PROJECT_ROOT)
 	@cd build && make VERBOSE=1 all $(MAKE_ARGS)
-	@cp -r $(PROJECT_ROOT)/../../test ./build
+	@cp -r $(QNX_PROJECT_ROOT)/test ./build
 
 test:
 	@cd build && make install $(MAKE_ARGS)
