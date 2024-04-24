@@ -118,3 +118,49 @@ export LD_PRELOAD=$LD_PRELOAD:/usr/lib/x86_64-linux-gnu/libzstd.so
 # Build ros2
 ./scripts/build-ros2.sh
 ```
+
+# How to run tests
+
+Use scp to move ros2_humble.tar.gz to the target
+
+```bash
+scp ros2_humble.tar.gz root@<target-ip-address>:/
+```
+
+```bash
+ssh root@<target-ip-address>
+cd /
+tar -xvzf ./ros2_humble.tar.gz
+```
+
+### Prepare Target
+
+```bash
+# Update system time
+ntpdate -sb 0.pool.ntp.org 1.pool.ntp.org
+
+# Install pip and packaging
+mkdir -p /data
+export TMPDIR=/data
+python3 -m ensurepip
+pip3 install packaging pyyaml lark
+export PYTHONPATH=$PYTHONPATH:/opt/ros/humble/usr/lib/python3.11/site-packages/
+```
+
+### Running the Listner Talker Demo on RPI4
+
+Run listener in a terminal:
+
+```bash
+cd /opt/ros/humble
+. /opt/ros/humble/setup.bash
+python3 ./bin/ros2 run demo_nodes_cpp listener
+```
+
+Run talker in another terminal:
+
+```bash
+cd /opt/ros/humble
+. /opt/ros/humble/setup.bash
+python3 ./bin/ros2 run demo_nodes_cpp talker
+```
