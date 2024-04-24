@@ -19,6 +19,7 @@ scp -r $QNX_TARGET/aarch64le/usr/local/bin/mqtt_tests root@<target-ip-address>:/
 scp $QNX_TARGET/aarch64le/usr/local/lib/lib* root@<target-ip-address>:/usr/lib
 ```
 
+Run tests on the target.
 ```bash
 # ssh into the target
 ssh root@<target-ip-address>
