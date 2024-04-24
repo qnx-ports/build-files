@@ -13,14 +13,21 @@ BUILD_TESTING=ON QNX_PROJECT_ROOT="$(pwd)/mosquitto" make -C qnx-ports/mosquitto
 
 # How to run tests
 
-scp libraries and tests to the target
+scp libraries and tests to the target.
+```bash
+scp -r $QNX_TARGET/aarch64le/usr/local/bin/mqtt_tests root@<target-ip-address>:/
+scp $QNX_TARGET/aarch64le/usr/local/lib/lib* root@<target-ip-address>:/usr/lib
+```
 
 ```bash
+# ssh into the target
+ssh root@<target-ip-address>
+
 # Required for running tests
 export SNAP_NAME=mosquitto
 
 # Change directory to the test directory
-cd mqtt_tests
+cd /mqtt_tests
 TEST_PATH=${PWD}
 
 # Generate ssl stuff
