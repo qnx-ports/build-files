@@ -10,7 +10,7 @@ git clone https://gitlab.com/qnx/libs/qnx-ports.git
 git clone https://gitlab.com/qnx/libs/tinyxml2.git
 
 # Build
-BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/tinyxml2" make -C qnx-ports/tinyxml2 install
+BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/tinyxml2" make -C qnx-ports/tinyxml2 install -j4
 ```
 
 # How to run tests
@@ -27,6 +27,6 @@ Run tests on the target.
 ssh root@<target-ip-address>
 
 # Run xmltest
-cd /tinyxml2_test
+cd /tinyxml2_tests
 ./xmltest
 ```

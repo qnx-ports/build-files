@@ -15,7 +15,7 @@ cd tools/build && git apply ../../../qnx-ports/boost/tools_qnx.patch && cd -
 cd ../
 
 # Build
-OSLIST=nto make -C qnx-ports/boost/ install QNX_PROJECT_ROOT="$(pwd)/boost" JLEVEL=$(nproc)
+make -C qnx-ports/boost/ install QNX_PROJECT_ROOT="$(pwd)/boost" -j4
 
 ./qnx-ports/boost/build_and_install_tests.sh
 ```
@@ -27,4 +27,4 @@ Currently, when numpy is installed on your host system, the build fails:
    13 |     #include <endian.h>
 ```
 
-The workaround is to run `sudo pip3 uninstall numpy` to uninstall numpy
+The workaround is to run `sudo pip3 uninstall numpy` or `pip3 uninstall numpy` to uninstall numpy

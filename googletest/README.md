@@ -10,5 +10,24 @@ git clone https://gitlab.com/qnx/libs/qnx-ports.git
 git clone https://gitlab.com/qnx/libs/googletest.git
 
 # Build
-BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/googletest" make -C qnx-ports/googletest install
+BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/googletest" make -C qnx-ports/googletest install -j4
+```
+
+# How to run tests
+
+scp libraries and tests to the target.
+```bash
+scp -r $QNX_TARGET/aarch64le/usr/local/bin/googletest_tests root@<target-ip-address>:/
+scp $QNX_TARGET/aarch64le/usr/local/lib/libg* root@<target-ip-address>:/usr/lib
+```
+
+Run tests on the target.
+```bash
+# ssh into the target
+ssh root@<target-ip-address>
+
+# Run unit tests
+cd /googletest_tests
+chmod +x *
+./gmock-actions_test
 ```
