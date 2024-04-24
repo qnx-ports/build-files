@@ -3,10 +3,60 @@
 **NOTE**: QNX ports are only supported from a Linux host operating system
 
 ```bash
-# Clone the qnx-ports and tinyxml2 repos
+# Clone the repos
 git clone https://gitlab.com/qnx/libs/qnx-ports.git
 git clone https://gitlab.com/qnx/libs/mosquitto.git
 
 # Build
-JLEVEL=4 QNX_PROJECT_ROOT="$(pwd)/mosquitto" make -C qnx-ports/mosquitto install
+BUILD_TESTING=ON QNX_PROJECT_ROOT="$(pwd)/mosquitto" make -C qnx-ports/mosquitto install
 ```
+
+# How to run tests
+
+scp libraries and tests to the target
+
+```bash
+# Required for running tests
+export SNAP_NAME=mosquitto
+
+# Change directory to the test directory
+cd mqtt_tests
+TEST_PATH=${PWD}
+
+# Generate ssl stuff
+cd test/ssl
+./gen.sh
+cd $TEST_PATH
+
+# Set permissions
+chmod -R 777 $TEST_PATH/*
+
+# Run broker test
+cd test/broker
+python3 ./test_qnx.py
+cd $TEST_PATH
+
+# Run client test
+cd test/client
+./test_qnx.sh
+cd $TEST_PATH
+
+# Run lib test
+cd test/lib
+python3 ./test_qnx.py
+```
+
+### Failed Test
+#### QEMU: possibly due to VM internet config
+- ./02-subpub-qos2-receive-maximum-1.py
+- ./02-subpub-qos2-receive-maximum-2.py
+- ./06-bridge-clean-session-csF-lcsF.py
+- ./06-bridge-clean-session-csF-lcsN.py
+- ./06-bridge-clean-session-csF-lcsT.py
+- ./06-bridge-clean-session-csT-lcsF.py
+- ./06-bridge-clean-session-csT-lcsN.py
+- ./06-bridge-clean-session-csT-lcsT.py
+- ./08-ssl-bridge.py
+
+#### QEMU and RPI4: failed when run in batch but succeeded when run individually
+- ./02-subscribe-qos1.py

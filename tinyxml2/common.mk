@@ -50,8 +50,6 @@ CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DBUILD_SHARED_LIBS=1 \
              -DBUILD_TESTING=$(BUILD_TESTING)
 
-MAKE_ARGS ?= -j $(firstword $(JLEVEL) 1)
-
 ifndef NO_TARGET_OVERRIDE
 tinyxml2_all:
 	@mkdir -p build

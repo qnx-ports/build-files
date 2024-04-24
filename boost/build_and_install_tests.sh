@@ -1,8 +1,12 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 if [ -z "$QNX_TARGET" ]; then
     echo "Please source qnxsdp-env.sh script!"
     exit
+fi
+
+if [ -z "$PREFIX" ]; then
+    PREFIX="/usr/local"
 fi
 
 # Copy test binaries to QNX_TARGET
@@ -27,15 +31,15 @@ copy_test_binaries() {
 
     # Install binaries
     if [[ $1 == "nto-aarch64-le" ]]; then
-        cp -rf $test_folder_path "$QNX_TARGET/aarch64le/usr/bin"
+        cp -rf $test_folder_path "$QNX_TARGET/aarch64le/$PREFIX/bin"
 
-        echo "Installing tests in $QNX_TARGET/aarch64le/usr/bin" 
+        echo "Installing tests in $QNX_TARGET/aarch64le/$PREFIX/bin"
     fi
 
     if [[ $1 == "nto-x86_64-o" ]]; then
-        cp -rf $test_folder_path "$QNX_TARGET/x86_64/usr/bin"
+        cp -rf $test_folder_path "$QNX_TARGET/x86_64/$PREFIX/bin"
 
-        echo "Installing tests in $QNX_TARGET/x86_64/usr/bin"
+        echo "Installing tests in $QNX_TARGET/x86_64/$PREFIX/bin"
     fi
 
     mkdir -p $test_folder_path/libs
@@ -50,7 +54,7 @@ copy_test_binaries() {
 echo "Start building tests for Boost"
 
 for lib in "./qnx-ports/boost/nto-x86_64-o/build/boost/bin.v2/libs"/* ; do
-    QNX_PROJECT_ROOT="$(pwd)/boost" JLEVEL=8 make -C qnx-ports/boost/ test."$(basename $lib)" -i
+    QNX_PROJECT_ROOT="$(pwd)/boost" make -C qnx-ports/boost/ test."$(basename $lib)" -i -j4
 done
 
 # Copy test binaries to QNX_TARGET

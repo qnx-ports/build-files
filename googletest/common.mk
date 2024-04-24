@@ -72,8 +72,6 @@ CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -Dgtest_build_samples=$(BUILD_TESTING) \
              -Dgmock_build_tests=$(BUILD_TESTING)
 
-MAKE_ARGS ?= -j $(firstword $(JLEVEL) 1)
-
 ifndef NO_TARGET_OVERRIDE
 googletest_all:
 	@mkdir -p build
