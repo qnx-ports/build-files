@@ -10,7 +10,7 @@ git clone https://gitlab.com/qnx/libs/qnx-ports.git
 git clone https://gitlab.com/qnx/libs/googletest.git
 
 # Build
-BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/googletest" make -C qnx-ports/googletest install -j4
+BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/googletest" make -C qnx-ports/googletest install -j$(nproc)
 ```
 
 # How to run tests

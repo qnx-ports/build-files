@@ -54,7 +54,7 @@ copy_test_binaries() {
 echo "Start building tests for Boost"
 
 for lib in "./qnx-ports/boost/nto-x86_64-o/build/boost/bin.v2/libs"/* ; do
-    QNX_PROJECT_ROOT="$(pwd)/boost" make -C qnx-ports/boost/ test."$(basename $lib)" -i -j4
+    QNX_PROJECT_ROOT="$(pwd)/boost" make -C qnx-ports/boost/ test."$(basename $lib)" -i -j$(nproc)
 done
 
 # Copy test binaries to QNX_TARGET

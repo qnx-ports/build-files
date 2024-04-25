@@ -15,7 +15,7 @@ cd tools/build && git apply ../../../qnx-ports/boost/tools_qnx.patch && cd -
 cd ../
 
 # Build
-make -C qnx-ports/boost/ install QNX_PROJECT_ROOT="$(pwd)/boost" -j4
+make -C qnx-ports/boost/ install QNX_PROJECT_ROOT="$(pwd)/boost" -j$(nproc)
 
 ./qnx-ports/boost/build_and_install_tests.sh
 ```

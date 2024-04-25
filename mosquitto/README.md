@@ -8,7 +8,7 @@ git clone https://gitlab.com/qnx/libs/qnx-ports.git
 git clone https://gitlab.com/qnx/libs/mosquitto.git
 
 # Build
-BUILD_TESTING=ON QNX_PROJECT_ROOT="$(pwd)/mosquitto" make -C qnx-ports/mosquitto install -j4
+BUILD_TESTING=ON QNX_PROJECT_ROOT="$(pwd)/mosquitto" make -C qnx-ports/mosquitto install -j$(nproc)
 ```
 
 # How to run tests
