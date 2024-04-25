@@ -60,7 +60,7 @@ mosquitto_all:
 	@cd build && make VERBOSE=1 all $(MAKE_ARGS)
 	@cp -r $(QNX_PROJECT_ROOT)/test ./build
 
-test:
+test: mosquitto_all
 	@cd build && make install $(MAKE_ARGS)
 	@cd build/test/broker/c && make -f Makefile.qnx clean && make -f Makefile.qnx $(MAKE_ARGS) TARGET=$(MOSQUITTO_INSTALL_ROOT) CPUVARDIR=$(CPUVARDIR) PREFIX=$(PREFIX)
 	@cd build/test/lib/c && make -f Makefile.qnx clean&& make -f Makefile.qnx $(MAKE_ARGS) TARGET=$(MOSQUITTO_INSTALL_ROOT) CPUVARDIR=$(CPUVARDIR) PREFIX=$(PREFIX)
