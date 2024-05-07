@@ -5,15 +5,19 @@ include $(QCONFIG)
 
 QNX_PROJECT_ROOT ?= $(PRODUCT_ROOT)/../
 
-#where to install tensorflow-lite:
 #$(INSTALL_ROOT_$(OS)) is pointing to $QNX_TARGET
 #by default, unless it was manually re-routed to
 #a staging area by setting both INSTALL_ROOT_nto
 #and USE_INSTALL_ROOT
-TFLITE_INSTALL_ROOT ?= $(INSTALL_ROOT_$(OS))
+INSTALL_ROOT ?= $(INSTALL_ROOT_$(OS))
 
-#where to find the glog external dependencies, such as gflags
-TFLITE_EXTERNAL_DEPS_INSTALL ?= $(USE_ROOT_$(OS))
+#A prefix path to use **on the target**. This is
+#different from INSTALL_ROOT, which refers to a
+#installation destination **on the host machine**.
+#This prefix path may be exposed to the source code,
+#the linker, or package discovery config files (.pc,
+#CMake config modules, etc.). Default is /usr/local
+PREFIX ?= /usr/local
 
 #choose Release or Debug
 CMAKE_BUILD_TYPE ?= Release
@@ -27,9 +31,10 @@ FLAGS   += -D__USESRCVERSION -D_QNX_SOURCE -funsafe-math-optimizations -DFARMHAS
 LDFLAGS += -Wl,--build-id=md5 -lang-c++ -lsocket
 
 CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
-             -DCMAKE_INSTALL_PREFIX=$(TFLITE_INSTALL_ROOT) \
-             -DTFLITE_EXTERNAL_DEPS_INSTALL=$(TFLITE_EXTERNAL_DEPS_INSTALL) \
+             -DCMAKE_INSTALL_PREFIX=$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX) \
              -DCMAKE_BUILD_TYPE=$(CMAKE_BUILD_TYPE) \
+             -DCMAKE_INSTALL_LIBDIR=$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/lib \
+             -DCMAKE_INSTALL_INCLUDEDIR=$(INSTALL_ROOT)/$(PREFIX)/include/tensorflo \
              -DEXTRA_CMAKE_C_FLAGS="$(FLAGS)" \
              -DEXTRA_CMAKE_CXX_FLAGS="$(FLAGS)" \
              -DEXTRA_CMAKE_LINKER_FLAGS="$(LDFLAGS)" \
@@ -57,7 +62,7 @@ include $(MKFILES_ROOT)/qtargets.mk
 ifndef NO_TARGET_OVERRIDE
 tflite_all:
 	@mkdir -p build
-	cd build && cmake $(CMAKE_ARGS) $(QNX_PROJECT_ROOT)/tensorflow/lite/examples/minimal
+	cd build && cmake $(CMAKE_ARGS) $(QNX_PROJECT_ROOT)/tensorflow/lite/
 	cd build && make all $(MAKE_ARGS)
 
 install check: tflite_all
