@@ -43,6 +43,9 @@ CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON \
              -DTFLITE_ENABLE_INSTALL=ON \
              -DBUILD_SHARED_LIBS=ON \
+             -DTFLITE_KERNEL_TEST=ON \
+             -DTFLITE_HOST_TOOLS_DIR=$(TFLITE_HOST_TOOLS_DIR) \
+             -DQNX_PATCH_DIR=$(QNX_PATCH_DIR) \
              -DOVERRIDABLE_FETCH_CONTENT_cpuinfo_GIT_REPOSITORY=https://gitlab.com/qnx/libs/cpuinfo \
              -DOVERRIDABLE_FETCH_CONTENT_cpuinfo_GIT_TAG=qnx \
              -DOVERRIDABLE_FETCH_CONTENT_ruy_GIT_REPOSITORY=https://gitlab.com/qnx/libs/ruy \
