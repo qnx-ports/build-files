@@ -68,3 +68,19 @@ for test in $(ls | grep _test) ; do
     ./$test
 done
 ```
+
+Currently these test cases fail when `-funsafe-math-optimizations` compiler flag is set, pass when this flag is not set:
+
+```text
+SoftmaxOpTest/SoftmaxOpTest.Softmax4DInt8/0, where GetParam() = "GenericOptimized"
+SoftmaxOpTest/SoftmaxOpTest.Softmax4DInt8/1, where GetParam() = "Reference"
+LogSoftmaxOpTest/LogSoftmaxOpTest.LogSoftmaxInt8/0, where GetParam() = "GenericOptimized"
+LogSoftmaxOpTest/LogSoftmaxOpTest.LogSoftmaxInt8/1, where GetParam() = "Reference"
+QuantizedPoolingOpTest.AveragePoolActivationRelu
+QuantizedPoolingOpTest.AveragePoolActivationRelu1
+QuantizedPoolingOpTest.AveragePoolActivationRelu6
+QuantizedUInt8PoolingOpTest.MaxPoolActivationRelu
+QuantizedUInt8PoolingOpTest.MaxPoolActivationRelu1
+QuantizedUInt8PoolingOpTest.MaxPoolActivationRelu6
+ConstUint8MeanOpTest.Rounding
+```
