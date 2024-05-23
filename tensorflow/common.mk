@@ -27,17 +27,16 @@ ALL_DEPENDENCIES = tflite_all
 .PHONY: tflite_all
 
 
-FLAGS   += -D__USESRCVERSION -D_QNX_SOURCE -funsafe-math-optimizations -DFARMHASH_LITTLE_ENDIAN -D__LITTLE_ENDIAN__
-LDFLAGS += -Wl,--build-id=md5 -lang-c++ -lsocket
+FLAGS += -D_QNX_SOURCE -funsafe-math-optimizations -DFARMHASH_LITTLE_ENDIAN -D__LITTLE_ENDIAN__
 
 CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DCMAKE_INSTALL_PREFIX=$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX) \
+             -DCMAKE_INSTALL_PREFIX=$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX) \
              -DCMAKE_BUILD_TYPE=$(CMAKE_BUILD_TYPE) \
              -DCMAKE_INSTALL_LIBDIR=$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/lib \
-             -DCMAKE_INSTALL_INCLUDEDIR=$(INSTALL_ROOT)/$(PREFIX)/include/tensorflo \
+             -DCMAKE_INSTALL_INCLUDEDIR=$(INSTALL_ROOT)/$(PREFIX)/include/tensorflow \
              -DEXTRA_CMAKE_C_FLAGS="$(FLAGS)" \
              -DEXTRA_CMAKE_CXX_FLAGS="$(FLAGS)" \
-             -DEXTRA_CMAKE_LINKER_FLAGS="$(LDFLAGS)" \
              -DCPUVARDIR=$(CPUVARDIR) \
              -DTFLITE_ENABLE_XNNPACK=OFF \
              -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON \
