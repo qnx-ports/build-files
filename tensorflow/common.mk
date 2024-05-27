@@ -55,6 +55,8 @@ CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DOVERRIDABLE_FETCH_CONTENT_farmhash_GIT_TAG=qnx \
              -DOVERRIDABLE_FETCH_CONTENT_eigen_GIT_REPOSITORY=https://gitlab.com/qnx/libs/eigen.git \
              -DOVERRIDABLE_FETCH_CONTENT_eigen_GIT_TAG=qnx_v3.4.1 \
+             -DOVERRIDABLE_FETCH_CONTENT_google_benchmark_GIT_REPOSITORY=https://gitlab.com/qnx/libs/benchmark.git \
+             -DOVERRIDABLE_FETCH_CONTENT_google_benchmark_GIT_TAG=qnx_v1.8.3 \
 
 MAKE_ARGS ?= -j $(firstword $(JLEVEL) 1)
 
