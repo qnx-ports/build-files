@@ -1,4 +1,6 @@
-# Compile the port for QNX
+# TensorFlow Lite
+
+## Build TensorFlow Lite
 
 **NOTE**: QNX ports are only supported from a Linux host operating system
 
@@ -17,7 +19,7 @@ cd ..
 QNX_PROJECT_ROOT="$(pwd)/tensorflow" QNX_PATCH_DIR="$(pwd)/qnx-ports/tensorflow/patches" TFLITE_HOST_TOOLS_DIR="$(pwd)/flatc-native-build/flatbuffers-flatc/bin/" make -C qnx-ports/tensorflow  install JLEVEL=$(nproc)
 ```
 
-# How to run tests
+## Run tests
 
 Create test directories on the target.
 
@@ -46,7 +48,7 @@ qnx-ports/tensorflow/nto-aarch64-le/build/_deps/gemmlowp-build/libeight_bit_int_
 qnx-ports/tensorflow/nto-aarch64-le/build/pthreadpool/libpthreadpool.so
 qnx-ports/tensorflow/nto-aarch64-le/build/_deps/google_benchmark-build/src/libbenchmark.so.1
 )
-scp $libs root@<target ip or hostname>:/data/tflite/libs
+scp ${libs[@]} root@<target ip or hostname>:/data/tflite/libs
 ```
 
 scp those tests to the target.
@@ -56,6 +58,7 @@ scp qnx-ports/tensorflow/nto-aarch64-le/build/kernels/*_test root@<target ip or 
 ```
 
 Run tests on the target.
+
 ```bash
 # ssh into the target
 ssh root@<target-ip-address>
@@ -84,3 +87,23 @@ QuantizedUInt8PoolingOpTest.MaxPoolActivationRelu1
 QuantizedUInt8PoolingOpTest.MaxPoolActivationRelu6
 ConstUint8MeanOpTest.Rounding
 ```
+
+## Run minimal example
+
+In `qnx-ports/ternsorflow/common.mk`, change
+
+```bash
+cd build && cmake $(CMAKE_ARGS) $(QNX_PROJECT_ROOT)/tensorflow/lite/
+```
+
+to
+
+```bash
+cd build && cmake $(CMAKE_ARGS) $(QNX_PROJECT_ROOT)/tensorflow/lite/examples/minimal/
+```
+
+In order to build the minimal example.
+
+You can download existing tflite models and invoke the minimal example using `minimal <tflite model>` to load the model.
+
+You can follow the intructions in `tensorflow/lite/examples/minimal/minimal.cc` to fill input tensors and read output tensors to run inference using a model.
