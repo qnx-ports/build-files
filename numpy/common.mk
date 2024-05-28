@@ -100,17 +100,16 @@ numpy_all:
 	cp -r $(QNX_PROJECT_ROOT)/numpy/f2py/tests/src $(NUMPY_ROOT)/$(NTO_DIR_NAME)/lib/numpy/f2py/tests/
 
 install check: numpy_all
-	mkdir -p $(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/python3.11/site-packages/
-	$(CP_HOST) -rf $(NUMPY_ROOT)/$(NTO_DIR_NAME)/lib/numpy $(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/python3.11/site-packages/
-	$(CP_HOST) -rf $(QNX_PROJECT_ROOT)/numpy/core/include $(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/python3.11/site-packages/numpy/core/
-	$(CP_HOST) -rf $(QNX_PROJECT_ROOT)/numpy/random/include $(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/python3.11/site-packages/numpy/random/
-	$(CP_HOST) $(QNX_PROJECT_ROOT)/build/src*/numpy/core/include/numpy/*.h $(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/python3.11/site-packages/numpy/core/include/numpy/
-	$(CP_HOST) -rf $(QNX_PROJECT_ROOT)/numpy*dist-info $(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/python3.11/site-packages/numpy-$(NUMPY_VERSION).dist-info
-	$(ADD_USAGE_TO_LIBS)
+	mkdir -p $(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/lib/python3.11/site-packages/
+	$(CP_HOST) -rf $(NUMPY_ROOT)/$(NTO_DIR_NAME)/lib/numpy $(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/lib/python3.11/site-packages/
+	$(CP_HOST) -rf $(QNX_PROJECT_ROOT)/numpy/core/include $(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/lib/python3.11/site-packages/numpy/core/
+	$(CP_HOST) -rf $(QNX_PROJECT_ROOT)/numpy/random/include $(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/lib/python3.11/site-packages/numpy/random/
+	$(CP_HOST) $(QNX_PROJECT_ROOT)/build/src*/numpy/core/include/numpy/*.h $(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/lib/python3.11/site-packages/numpy/core/include/numpy/
+	$(CP_HOST) -rf $(QNX_PROJECT_ROOT)/numpy*dist-info $(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/lib/python3.11/site-packages/numpy-$(NUMPY_VERSION).dist-info
 
 clean iclean spotless:
 	rm -rf $(NUMPY_ROOT)/build
 
 uninstall quninstall huninstall cuninstall:
-	rm -rf $(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/python3.11/site-packages/numpy
+	rm -rf $(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/lib/python3.11/site-packages/numpy
 endif

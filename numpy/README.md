@@ -21,24 +21,55 @@ source env/bin/activate
 pip install -U pip Cython wheel
 
 # Build
-BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/numpy" make -C qnx-ports/numpy install -j$(nproc)
+QNX_PROJECT_ROOT="$(pwd)/numpy" make -C qnx-ports/numpy install -j$(nproc)
 ```
 
 # How to run tests
 
-scp libraries and tests to the target.
+Setup the target environment
 ```bash
-scp -r $QNX_TARGET/aarch64le/usr/local/bin/numpy_tests root@<target-ip-address>:/
-scp $QNX_TARGET/aarch64le/usr/local/lib/libg* root@<target-ip-address>:/usr/lib
+# scp numpy
+scp -r $QNX_TARGET/aarch64le/usr/local/lib/python3.11/site-packages/numpy root@<target-ip-address>:/usr/lib/python3.11/site-packages
+
+# Update system time
+ntpdate -sb 0.pool.ntp.org 1.pool.ntp.org
+
+# Install pip to install pytest
+export TMPDIR=/
+python3 -m ensurepip --root .
+pip3 install pytest -t /usr/lib/python3.11/site-packages/
+pip3 install hypothesis -t /usr/lib/python3.11/site-packages/
+
+# Start the python3 interpretor on Raspberry Pi
+python3
+
 ```
 
-Run tests on the target.
+Run tests in the python3 interpretor.
 ```bash
-# ssh into the target
-ssh root@<target-ip-address>
+# Run the following python code
+import numpy
 
-# Run unit tests
-cd /numpy_tests
-chmod +x *
-./gmock-actions_test
+numpy.test(label='fast', verbose=2)
+
+```
+
+WIP all tests pass except:
+```console
+test_longdouble.py:43: AssertionError
+
+ACTUAL: 1.0
+E DESIRED: 1.0000000000000000001
+
+test_scalarprint.py:276: AssertionError
+
+ACTUAL: ' -10.1999999999999992895'
+E DESIRED: ' -10.2 '
+
+test_umath.py:2235: AssertionError
+
+ACTUAL: 0.0
+E DESIRED: inf
+
+test_umath.py:4179: RuntimeWarning: divide by zero encountered in divide
 ```
