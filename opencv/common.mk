@@ -68,9 +68,9 @@ CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DEXTRA_CMAKE_ASM_FLAGS="$(FLAGS)" \
              -DEXTRA_CMAKE_LINKER_FLAGS="$(LDFLAGS)" \
              -DBUILD_SHARED_LIBS=1 \
-             -DCMAKE_INSTALL_INCLUDEDIR=$(INSTALL_ROOT)/$(PREFIX) \
+             -DCMAKE_INSTALL_INCLUDEDIR=$(INSTALL_ROOT)/$(PREFIX)/include \
              -DOPENCV_OTHER_INSTALL_PATH=$(INSTALL_ROOT)/$(PREFIX)/share \
-             -DQNX_PYTHON_INSTALL_PATH=$(INSTALL_ROOT)/$(CPUVARDIR)/usr/lib/python3.11/site-packages \
+             -DQNX_PYTHON_INSTALL_PATH=$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/lib/python3.11/site-packages \
              -DCMAKE_BUILD_TYPE=$(CMAKE_BUILD_TYPE) \
              -DCMAKE_NO_SYSTEM_FROM_IMPORTED=ON \
              -DCPU=$(CPU) \
@@ -84,7 +84,7 @@ CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DWITH_IPP=OFF \
              -DBUILD_opencv_python3=ON \
              -DBUILD_opencv_python_bindings_generator=ON \
-             -DOPENCV_TEST_DATA_INSTALL_PATH="/data/testdata" \
+             -DOPENCV_TEST_DATA_INSTALL_PATH="/testdata" \
 
 ifndef NO_TARGET_OVERRIDE
 opencv_all:
