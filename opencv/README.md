@@ -7,9 +7,28 @@ Don't forget the source qnxsdp-env.sh in your QNX SDP.
 ```bash
 # Clone the repos
 git clone https://gitlab.com/qnx/libs/qnx-ports.git
+# opencv depends on numpy
+git clone https://gitlab.com/qnx/libs/numpy.git
 git clone https://gitlab.com/qnx/libs/opencv.git
 
-# Build
+# Build numpy
+cd numpy
+git submodule update --init --recursive
+cd -
+
+# Install python3.11 and gfortran
+sudo add-apt-repository ppa:deadsnakes/ppa
+sudo apt-get install -y python3.11-dev python3.11-venv python3.11-distutils software-properties-common gfortran
+
+# Create a python virtual environment and install necessary packages
+python3.11 -m venv env
+source env/bin/activate
+pip install -U pip Cython wheel
+
+# Build numpy first
+PREFIX="/usr" QNX_PROJECT_ROOT="$(pwd)/numpy" make -C qnx-ports/numpy install -j$(nproc)
+
+# Build opencv
 BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/opencv" make -C qnx-ports/opencv install -j$(nproc)
 ```
 
