@@ -1,10 +1,34 @@
-# TensorFlow Lite
+# Compile the port for QNX in a Docker container
+
+Pre-requisite: Install Docker on Ubuntu https://docs.docker.com/engine/install/ubuntu/
+```bash
+# Create a workspace
+mkdir -p ~/qnx_workspace && cd ~/qnx_workspace
+git clone https://gitlab.com/qnx/libs/qnx-ports.git && cd qnx-ports
+
+# Build the Docker image and create a container
+./docker-build-qnx-image.sh
+./docker-create-container.sh
+
+# Now you are in the Docker container
+
+# source qnxsdp-env.sh in
+source ~/qnx800/qnxsdp-env.sh
+
+# Clone tensorflow-lite
+cd ~/qnx_workspace
+git clone https://gitlab.com/qnx/libs/tensorflow.git
+# Build host flatc (used in kernel tests)
+mkdir -p flatc-native-build && cd flatc-native-build
+cmake ../tensorflow/tensorflow/lite/tools/cmake/native_tools/flatbuffers
+cmake --build .
+cd ~/qnx_workspace
+
+# Build ComputeLibrary
+QNX_PROJECT_ROOT="$(pwd)/tensorflow" QNX_PATCH_DIR="$(pwd)/qnx-ports/tensorflow/patches" TFLITE_HOST_TOOLS_DIR="$(pwd)/flatc-native-build/flatbuffers-flatc/bin/" make -C qnx-ports/tensorflow  install JLEVEL=$(nproc)
+```
 
 ## Build TensorFlow Lite
-
-**NOTE**: QNX ports are only supported from a Linux host operating system
-
-Don't forget the source qnxsdp-env.sh in your QNX SDP.
 
 ```bash
 # Clone the repos
@@ -15,6 +39,10 @@ mkdir flatc-native-build && cd flatc-native-build
 cmake ../tensorflow/tensorflow/lite/tools/cmake/native_tools/flatbuffers
 cmake --build .
 cd ..
+
+# source qnxsdp-env.sh
+source ~/qnx800/qnxsdp-env.sh
+
 # Build
 QNX_PROJECT_ROOT="$(pwd)/tensorflow" QNX_PATCH_DIR="$(pwd)/qnx-ports/tensorflow/patches" TFLITE_HOST_TOOLS_DIR="$(pwd)/flatc-native-build/flatbuffers-flatc/bin/" make -C qnx-ports/tensorflow  install JLEVEL=$(nproc)
 ```

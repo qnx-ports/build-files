@@ -1,6 +1,31 @@
-# Compile the port for QNX
+**NOTE**: QNX ports are only supported from a Linux host operating system
 
-**NOTE**: QNX ports are only supported from a **Linux host** operating system
+# Compile the port for QNX in a Docker container
+
+Pre-requisite: Install Docker on Ubuntu https://docs.docker.com/engine/install/ubuntu/
+```bash
+# Create a workspace
+mkdir -p ~/qnx_workspace && cd ~/qnx_workspace
+git clone https://gitlab.com/qnx/libs/qnx-ports.git && cd qnx-ports
+
+# Build the Docker image and create a container
+./docker-build-qnx-image.sh
+./docker-create-container.sh
+
+# Now you are in the Docker container
+
+# source qnxsdp-env.sh in
+source ~/qnx800/qnxsdp-env.sh
+
+# Clone ComputeLibrary
+cd ~/qnx_workspace
+git clone https://gitlab.com/qnx/libs/lighttpd1.4.git
+
+# Build and install lighttpd binaries to SDP
+QNX_PROJECT_ROOT="$(pwd)/lighttpd1.4" JLEVEL=$(nproc) make -C qnx-ports/lighttpd1.4  install
+```
+
+# Compile the port for QNX on Ubuntu host
 
 ## Install dependencies
 

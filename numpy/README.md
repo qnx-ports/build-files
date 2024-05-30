@@ -15,10 +15,10 @@ git clone https://gitlab.com/qnx/libs/qnx-ports.git && cd qnx-ports
 # Now you are in the Docker container
 
 # source qnxsdp-env.sh in
-. /qnx800/qnxsdp-env.sh
+source ~/qnx800/qnxsdp-env.sh
 
 # source python3.11 venv script
-. /usr/local/qnx/env/bin/activate
+source /usr/local/qnx/env/bin/activate
 
 # Clone numpy
 cd ~/qnx_workspace
@@ -33,6 +33,7 @@ QNX_PROJECT_ROOT="$(pwd)/numpy" make -C qnx-ports/numpy install -j$(nproc)
 # Compile the port for QNX on Ubuntu host
 ```bash
 # Clone the repos
+mkdir -p ~/qnx_workspace && cd qnx_workspace
 git clone https://gitlab.com/qnx/libs/qnx-ports.git
 git clone https://gitlab.com/qnx/libs/numpy.git && cd numpy
 git submodule update --init --recursive

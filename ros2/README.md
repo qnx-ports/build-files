@@ -1,45 +1,32 @@
-Documentation for QNX ROS2 Humble https://ros2-qnx-documentation.readthedocs.io/en/humble/
-
-# Compile the port for QNX
-
 **NOTE**: QNX ports are only supported from a Linux host operating system
+
+# Compile the port for QNX in a Docker container
 
 Currently the port is supported for QNX SDP 7.1 and 8.0.
 
 We recommend that you use Docker to build ros2 for QNX to ensure the build environment consistency.
-
-## Use Docker to build
-
-Don't forget to source qnxsdp-env.sh in your SDP.
 
 ```bash
 # Set QNX_SDP_VERSION to be qnx800 for SDP 8.0 or qnx710 for SDP 7.1
 export QNX_SDP_VERSION=qnx800
 
 # Create a workspace
-mkdir -p ~/ros2_workspace && cd ~/ros2_workspace
+mkdir -p ~/qnx_workspace && cd ~/qnx_workspace
+git clone https://gitlab.com/qnx/libs/qnx-ports.git && cd qnx-ports
 
-# Clone repos
-git clone https://gitlab.com/qnx/libs/qnx-ports.git
-git clone -b qnx_v1.13.0 https://gitlab.com/qnx/libs/googletest.git
-
-# Build the Docker image
-cd  ~/ros2_workspace/qnx-ports/ros2/docker
-./docker-build-qnxros2-image.sh
-
-# Create a Docker container using the built image
+# Build the Docker image and create a container
+./docker-build-qnx-image.sh
 ./docker-create-container.sh
 
 # Once you're in the image, set up environment variables
-. ./env/bin/activate
-. ./$QNX_SDP_VERSION/qnxsdp-env.sh
+source ~/qnx800/qnxsdp-env.sh
+source /usr/local/qnx/env/bin/activate
 
 # Build googletest
-cd ~/ros2_workspace
-JLEVEL=4 PREFIX="/usr" QNX_PROJECT_ROOT="~/ros2_workspace/googletest" make -C qnx-ports/googletest install
+PREFIX="/usr" QNX_PROJECT_ROOT="$(pwd)/googletest" make -C qnx-ports/googletest install -j$(nproc)
 
 # Import ros2 packages
-cd ~/ros2_workspace/qnx-ports/ros2
+cd ~/qnx_workspace/qnx-ports/ros2
 mkdir -p src
 vcs import src < ros2.repos
 
@@ -62,7 +49,7 @@ Don't forget to source qnxsdp-env.sh in your SDP.
 export QNX_SDP_VERSION=qnx800
 
 # Create a workspace
-mkdir -p ~/ros2_workspace && cd ~/ros2_workspace
+mkdir -p ~/qnx_workspace && cd ~/qnx_workspace
 
 # Clone repos
 git clone https://gitlab.com/qnx/libs/qnx-ports.git
@@ -100,11 +87,14 @@ pip install -U \
   pytest-rerunfailures \
   pytest
 
+# source qnxsdp-env.sh
+source ~/qnx800/qnxsdp-env.sh
+
 # Build and install googletest
-JLEVEL=4 PREFIX="/usr" QNX_PROJECT_ROOT="~/ros2_workspace/googletest" make -C qnx-ports/googletest install
+PREFIX="/usr" QNX_PROJECT_ROOT="$(pwd)/googletest" make -C qnx-ports/googletest install -j$(nproc)
 
 # Import ros2 packages
-cd ~/ros2_workspace/qnx-ports/ros2
+cd ~/qnx_workspace/qnx-ports/ros2
 mkdir -p src
 vcs import src < ros2.repos
 

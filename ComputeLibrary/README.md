@@ -15,11 +15,11 @@ git clone https://gitlab.com/qnx/libs/qnx-ports.git && cd qnx-ports
 # Now you are in the Docker container
 
 # source qnxsdp-env.sh in
-. /qnx800/qnxsdp-env.sh
+source ~/qnx800/qnxsdp-env.sh
 
 # Clone ComputeLibrary
 cd ~/qnx_workspace
-git clone https://gitlab.com/qnx/libs/ComputeLibrary.git && cd ComputeLibrary
+git clone https://gitlab.com/qnx/libs/ComputeLibrary.git
 
 # Build ComputeLibrary
 BUILD_EXAMPLES="ON" BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/ComputeLibrary" make -C qnx-ports/ComputeLibrary install -j$(nproc)
@@ -28,6 +28,7 @@ BUILD_EXAMPLES="ON" BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/ComputeLibrary" 
 # Compile the port for QNX on Ubuntu host
 ```bash
 # Clone the repos
+mkdir -p ~/qnx_workspace && cd qnx_workspace
 git clone https://gitlab.com/qnx/libs/qnx-ports.git
 git clone https://gitlab.com/qnx/libs/ComputeLibrary.git
 

@@ -1,9 +1,40 @@
-# Compile the port for QNX
-
 **NOTE**: QNX ports are only supported from a Linux host operating system
 
-Don't forget the source qnxsdp-env.sh in your QNX SDP.
+# Compile the port for QNX in a Docker container
 
+Pre-requisite: Install Docker on Ubuntu https://docs.docker.com/engine/install/ubuntu/
+```bash
+# Create a workspace
+mkdir -p ~/qnx_workspace && cd ~/qnx_workspace
+git clone https://gitlab.com/qnx/libs/qnx-ports.git && cd qnx-ports
+
+# Build the Docker image and create a container
+./docker-build-qnx-image.sh
+./docker-create-container.sh
+
+# Now you are in the Docker container
+
+# source qnxsdp-env.sh in
+source ~/qnx800/qnxsdp-env.sh
+
+# source python3.11 venv script
+source /usr/local/qnx/env/bin/activate
+
+# Clone numpy
+cd ~/qnx_workspace
+git clone https://gitlab.com/qnx/libs/opencv.git
+git clone https://gitlab.com/qnx/libs/numpy.git && cd numpy
+git submodule update --init --recursive
+cd ~/qnx_workspace
+
+# Build numpy first
+QNX_PROJECT_ROOT="$(pwd)/numpy" make -C qnx-ports/numpy install -j$(nproc)
+
+# Build opencv
+BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/opencv" make -C qnx-ports/opencv install -j$(nproc)
+```
+
+# Compile the port for QNX
 ```bash
 # Clone the repos
 git clone https://gitlab.com/qnx/libs/qnx-ports.git
@@ -24,6 +55,9 @@ sudo apt-get install -y python3.11-dev python3.11-venv python3.11-distutils soft
 python3.11 -m venv env
 source env/bin/activate
 pip install -U pip Cython wheel
+
+# source qnxsdp-env.sh
+source ~/qnx800/qnxsdp-env.sh
 
 # Build numpy first
 PREFIX="/usr" QNX_PROJECT_ROOT="$(pwd)/numpy" make -C qnx-ports/numpy install -j$(nproc)

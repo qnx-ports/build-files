@@ -1,11 +1,42 @@
-# Compile the port for QNX
-
 **NOTE**: QNX ports are only supported from a Linux host operating system
 
-Don't forget the source qnxsdp-env.sh in your QNX SDP.
+# Compile the port for QNX in a Docker container
 
+Pre-requisite: Install Docker on Ubuntu https://docs.docker.com/engine/install/ubuntu/
+```bash
+# Create a workspace
+mkdir -p ~/qnx_workspace && cd ~/qnx_workspace
+git clone https://gitlab.com/qnx/libs/qnx-ports.git && cd qnx-ports
+
+# Build the Docker image and create a container
+./docker-build-qnx-image.sh
+./docker-create-container.sh
+
+# Now you are in the Docker container
+
+# source qnxsdp-env.sh in
+source ~/qnx800/qnxsdp-env.sh
+
+# Clone boost
+cd ~/qnx_workspace
+git clone https://gitlab.com/qnx/libs/boost.git && cd boost
+git submodule update --init --recursive
+
+# Apply a tools patch
+cd tools/build && git apply ../../../qnx-ports/boost/tools_qnx.patch
+cd ~/qnx_workspace
+
+# Build boost
+make -C qnx-ports/boost/ install QNX_PROJECT_ROOT="$(pwd)/boost" -j$(nproc)
+
+# Build and install tests
+./qnx-ports/boost/build_and_install_tests.sh
+```
+
+# Compile the port for QNX
 ```bash
 # Clone the qnx-ports and boost repos
+mkdir -p ~/qnx_workspace && cd ~/qnx_workspace
 git clone https://gitlab.com/qnx/libs/qnx-ports.git
 git clone https://gitlab.com/qnx/libs/boost.git
 
@@ -14,9 +45,13 @@ git submodule update --init --recursive
 cd tools/build && git apply ../../../qnx-ports/boost/tools_qnx.patch && cd -
 cd ../
 
+# source qnxsdp-env.sh
+source ~/qnx800/qnxsdp-env.sh
+
 # Build
 make -C qnx-ports/boost/ install QNX_PROJECT_ROOT="$(pwd)/boost" -j$(nproc)
 
+# Build and install tests
 ./qnx-ports/boost/build_and_install_tests.sh
 ```
 

@@ -1,11 +1,39 @@
-# Compile the port for QNX
-
 **NOTE**: QNX ports are only supported from a Linux host operating system
+
+# Compile the port for QNX in a Docker container
+
+Pre-requisite: Install Docker on Ubuntu https://docs.docker.com/engine/install/ubuntu/
+```bash
+# Create a workspace
+mkdir -p ~/qnx_workspace && cd ~/qnx_workspace
+git clone https://gitlab.com/qnx/libs/qnx-ports.git && cd qnx-ports
+
+# Build the Docker image and create a container
+./docker-build-qnx-image.sh
+./docker-create-container.sh
+
+# Now you are in the Docker container
+
+# source qnxsdp-env.sh in
+source ~/qnx800/qnxsdp-env.sh
+
+# Clone mosquitto
+cd ~/qnx_workspace
+git clone https://gitlab.com/qnx/libs/mosquitto.git
+
+# Build mosquitto
+BUILD_TESTING=ON QNX_PROJECT_ROOT="$(pwd)/mosquitto" make -C qnx-ports/mosquitto install -j$(nproc)
+```
+
+# Compile the port for QNX on Ubuntu host
 
 ```bash
 # Clone the repos
 git clone https://gitlab.com/qnx/libs/qnx-ports.git
 git clone https://gitlab.com/qnx/libs/mosquitto.git
+
+# source qnxsdp-env.sh
+source ~/qnx800/qnxsdp-env.sh
 
 # Build
 BUILD_TESTING=ON QNX_PROJECT_ROOT="$(pwd)/mosquitto" make -C qnx-ports/mosquitto install -j$(nproc)
