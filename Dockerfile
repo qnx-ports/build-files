@@ -44,7 +44,8 @@ RUN apt update && apt install -y \
 	xsltproc \
 	libtool \
 	automake \
-	pkg-config
+	pkg-config \
+	gfortran
 
 # Install python 3.11
 RUN add-apt-repository ppa:deadsnakes/ppa -y && \
