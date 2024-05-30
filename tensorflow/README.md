@@ -24,7 +24,7 @@ cmake ../tensorflow/tensorflow/lite/tools/cmake/native_tools/flatbuffers
 cmake --build .
 cd ~/qnx_workspace
 
-# Build ComputeLibrary
+# Build tensorflow-lite
 QNX_PROJECT_ROOT="$(pwd)/tensorflow" QNX_PATCH_DIR="$(pwd)/qnx-ports/tensorflow/patches" TFLITE_HOST_TOOLS_DIR="$(pwd)/flatc-native-build/flatbuffers-flatc/bin/" make -C qnx-ports/tensorflow  install JLEVEL=$(nproc)
 ```
 
