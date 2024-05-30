@@ -22,7 +22,7 @@ cd ~/qnx_workspace
 git clone https://gitlab.com/qnx/libs/ComputeLibrary.git && cd ComputeLibrary
 
 # Build ComputeLibrary
-QNX_PROJECT_ROOT="$(pwd)/ComputeLibrary" make -C qnx-ports/ComputeLibrary install -j$(nproc)
+BUILD_EXAMPLES="ON" BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/ComputeLibrary" make -C qnx-ports/ComputeLibrary install -j$(nproc)
 ```
 
 # Compile the port for QNX on Ubuntu host
