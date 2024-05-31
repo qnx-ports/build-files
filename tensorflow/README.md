@@ -135,3 +135,13 @@ In order to build the minimal example.
 You can download existing tflite models and invoke the minimal example using `minimal <tflite model>` to load the model.
 
 You can follow the intructions in `tensorflow/lite/examples/minimal/minimal.cc` to fill input tensors and read output tensors to run inference using a model.
+
+## Run label_image example
+
+In `common.mk`, append this argument to `CMAKE_ARGS`, then continue with normal build process in order to build `label_image` example:
+
+```text
+-DTFLITE_ENABLE_LABEL_IMAGE=ON
+```
+
+Then follow the instructions "Download sample model and image" and "Run the sample on a desktop" in `tensorflow/tensorflow/lite/examples/label_image/README.md` to run the example.
