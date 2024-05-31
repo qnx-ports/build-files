@@ -4,10 +4,14 @@ Collection of build files for building QNX ports
 
 Recommended: Use Docker to build the ports
 
-Using Docker ensures a consistent build environment.
+The image includes build tools like CMake and automake to ensure a consistent build environment, but it does not
+include the QNX SDP itself. `./docker-create-container.sh` assumes the QNX SDP is in your home folder and mounts
+your home folder into the container.
 
+Build the Docker image and create a Docker container:
 ```bash
 # Pre-requisite: Install Docker on Ubuntu https://docs.docker.com/engine/install/ubuntu/
+# Remember to let Docker run with root privileges: https://docs.docker.com/engine/install/linux-postinstall/
 
 # Clone qnx-ports
 git clone https://gitlab.com/qnx/libs/qnx-ports && cd qnx-ports
@@ -17,5 +21,3 @@ git clone https://gitlab.com/qnx/libs/qnx-ports && cd qnx-ports
 ./docker-create-container.sh
 
 ```
-
-Your home folder will be mounted to the container.
