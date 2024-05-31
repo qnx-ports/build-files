@@ -50,7 +50,15 @@ build(){
     find ./install/${CPUVARDIR} -name "*cpython-38.so" | xargs rename -f "s/cpython-38.so/cpython-311.so/g"
 
     cp -f ./scripts/qnxtest.sh install/${CPUVARDIR}
-    find ./install/${CPUVARDIR} -name "*.o" -o -name "*.cmake" -o -name "*.make" -exec rm {} +
+
+    # Remove build files under test
+    find ./install/${CPUVARDIR}/test -name "CMakeFiles" -exec rm -rf {} +
+    find ./install/${CPUVARDIR}/test -name "*.o" -exec rm -f {} +
+    find ./install/${CPUVARDIR}/test -name "Makefile" -exec rm -f {} +
+    find ./install/${CPUVARDIR}/test -name "*.cmake" -exec rm -f {} +
+    find ./install/${CPUVARDIR}/test -name "*.txt" -exec rm -f {} +
+    find ./install/${CPUVARDIR}/test -name "*.make" -exec rm -f {} +
+    find ./install/${CPUVARDIR}/test -name "ament_*" -exec rm -f {} +
 
     # Install googletest
     cp -f ${QNX_TARGET}/${CPUVARDIR}/usr/lib/libgtest* ./install/${CPUVARDIR}/lib
