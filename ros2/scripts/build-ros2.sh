@@ -49,7 +49,7 @@ build(){
     find ./install/${CPUVARDIR} -name "*cpython-*-x86_64-linux-gnu.so" | xargs rename -f "s/-x86_64-linux-gnu//g"
     find ./install/${CPUVARDIR} -name "*cpython-38.so" | xargs rename -f "s/cpython-38.so/cpython-311.so/g"
 
-    cp -f ./qnx/test/qnxtest.sh install/${CPUVARDIR}
+    cp -f ./scripts/qnxtest.sh install/${CPUVARDIR}
     find ./install/${CPUVARDIR} -name "*.o" -o -name "*.cmake" -o -name "*.make" -exec rm {} +
 
     # Install googletest
