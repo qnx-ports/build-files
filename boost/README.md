@@ -19,7 +19,8 @@ source ~/qnx800/qnxsdp-env.sh
 
 # Clone boost
 cd ~/qnx_workspace
-git clone https://gitlab.com/qnx/libs/boost.git && cd boost
+git clone https://github.com/boostorg/boost.git && cd boost
+git checkout boost-1.82.0
 git submodule update --init --recursive
 
 # Apply a tools patch
@@ -38,9 +39,10 @@ make -C qnx-ports/boost/ install QNX_PROJECT_ROOT="$(pwd)/boost" -j$(nproc)
 # Clone the qnx-ports and boost repos
 mkdir -p ~/qnx_workspace && cd ~/qnx_workspace
 git clone https://gitlab.com/qnx/libs/qnx-ports.git
-git clone https://gitlab.com/qnx/libs/boost.git
+git clone https://github.com/boostorg/boost.git
 
 cd boost
+git checkout boost-1.82.0
 git submodule update --init --recursive
 cd tools/build && git apply ../../../qnx-ports/boost/tools_qnx.patch && cd -
 cd ../
