@@ -62,15 +62,17 @@ build(){
 
     # Patch the python version for all scripts generated with ament_python_install_package
     echo "Patching Python scripts..."
-    grep -rinl "\#\!/usr/bin/python3." ./opt/ros/humble | xargs -d '\n' sed -i '1 i #!/usr/bin/python3'
-    grep -rinl "\#\!/usr/bin/python3." ./opt/ros/humble | xargs -d '\n' sed -i '2 d'
-    echo "done."
+    PYTHON3_PATH=$(which python3)
+    grep -rinl "\#\!$PYTHON3_PATH" ./opt/ros/humble | xargs -d '\n' sed -i '1 i #!/usr/bin/python3'
+    grep -rinl "\#\!$PYTHON3_PATH" ./opt/ros/humble | xargs -d '\n' sed -i '2 d'
 
     tar -czf ros2_humble.tar.gz ./opt/ros/humble
-    rm -rf ./opt/ros/humble
+    cp -r ./opt ${QNX_TARGET}/${CPUVARDIR}
+    rm -rf ./opt
     mv ros2_humble.tar.gz ${QNX_TARGET}/${CPUVARDIR}
 
     echo "ros2_humble.tar.gz is created at ${QNX_TARGET}/${CPUVARDIR}/ros2_humble.tar.gz"
+    echo "Done."
 }
 
 if [ ! -d "${QNX_TARGET}" ]; then
