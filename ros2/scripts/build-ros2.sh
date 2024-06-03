@@ -58,7 +58,7 @@ build(){
     find ./install/${CPUVARDIR}/test -name "*.cmake" -exec rm -f {} +
     find ./install/${CPUVARDIR}/test -name "*.txt" -exec rm -f {} +
     find ./install/${CPUVARDIR}/test -name "*.make" -exec rm -f {} +
-    find ./install/${CPUVARDIR}/test -name "ament_*" -exec rm -f {} +
+    find ./install/${CPUVARDIR}/test -name "ament_*" -exec rm -rf {} +
 
     # Install googletest
     cp -f ${QNX_TARGET}/${CPUVARDIR}/usr/lib/libgtest* ./install/${CPUVARDIR}/lib
