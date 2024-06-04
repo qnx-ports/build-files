@@ -6,7 +6,7 @@ Pre-requisite: Install Docker on Ubuntu https://docs.docker.com/engine/install/u
 ```bash
 # Create a workspace
 mkdir -p ~/qnx_workspace && cd ~/qnx_workspace
-git clone https://gitlab.com/qnx/libs/qnx-ports.git && cd qnx-ports
+git clone https://gitlab.com/qnx/everywhere/qnx-ports.git && cd qnx-ports
 
 # Build the Docker image and create a container
 ./docker-build-qnx-image.sh
@@ -34,7 +34,7 @@ QNX_PROJECT_ROOT="$(pwd)/numpy" make -C qnx-ports/numpy install -j$(nproc)
 ```bash
 # Clone the repos
 mkdir -p ~/qnx_workspace && cd qnx_workspace
-git clone https://gitlab.com/qnx/libs/qnx-ports.git
+git clone https://gitlab.com/qnx/everywhere/qnx-ports.git
 git clone https://gitlab.com/qnx/libs/numpy.git && cd numpy
 git submodule update --init --recursive
 cd -
