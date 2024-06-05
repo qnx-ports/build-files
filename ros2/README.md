@@ -154,3 +154,26 @@ cd /opt/ros/humble
 . /opt/ros/humble/setup.bash
 python3 ./bin/ros2 run demo_nodes_cpp talker
 ```
+
+### Running the dummy robot demo on RPI4
+
+Launch the dummy robot demo node on RPI4.
+```bash
+cd /opt/ros/humble
+. /opt/ros/humble/setup.bash
+python3 ./bin/ros2 dummy_robot_bringup dummy_robot_bringup.launch.py
+```
+
+Install ROS2 Humble on your Ubuntu host.
+
+There is no QNX port for rviz2.
+
+Follow the instructions at https://docs.ros.org/en/humble/Installation/Ubuntu-Install-Debians.html.
+
+Start rviz2
+```bash
+source <ROS2_INSTALL_FOLDER>/setup.bash
+rviz2
+```
+
+Please refer to https://docs.ros.org/en/humble/Tutorials/Demos/dummy-robot-demo.html for more details about the dummy robot demo.
