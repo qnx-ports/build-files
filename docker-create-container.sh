@@ -17,4 +17,4 @@ docker run -it \
   --net=host \
   --privileged \
   -v $HOME:$HOME \
-  "$QNX_SDP_VERSION:latest" /bin/bash
+  "$QNX_SDP_VERSION:latest" /bin/bash --norc
