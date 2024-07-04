@@ -112,6 +112,7 @@ RUN cd /usr/local/qnx && \
 WORKDIR /home/${USER_NAME}
 
 # Welcome Message
+COPY --chown=${USER_NAME}:${GROUP_NAME} ".qnxbashrc" "/usr/local/qnx"
 COPY --chown=${USER_NAME}:${GROUP_NAME} "welcome.sh" "/usr/local/qnx"
 
 CMD /bin/bash
