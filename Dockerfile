@@ -110,4 +110,8 @@ RUN cd /usr/local/qnx && \
 
 WORKDIR /home/${USER_NAME}
 
+# Welcome Message
+COPY --chown=${USER_NAME}:${GROUP_NAME} ".welcome.bash" "/home/${USER_NAME}"
+RUN echo "source /home/${USER_NAME}/.welcome.bash\n" >> "/home/${USER_NAME}/.bashrc"
+
 CMD /bin/bash
