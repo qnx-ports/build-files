@@ -72,6 +72,8 @@ ARG QNX_SDP_VERSION
 
 ENV QNX_SDP_VERSION=$QNX_SDP_VERSION
 
+ENV PS1='[QNX] (\u) \w$ '
+
 RUN groupadd --gid ${GROUP_ID} ${GROUP_NAME} && \
 	useradd --uid ${USER_ID} --gid ${GROUP_ID} --groups sudo --no-log-init --create-home ${USER_NAME} && \
 	echo "${USER_NAME}:password" | chpasswd
@@ -115,4 +117,4 @@ WORKDIR /home/${USER_NAME}
 COPY --chown=${USER_NAME}:${GROUP_NAME} ".qnxbashrc" "/usr/local/qnx"
 COPY --chown=${USER_NAME}:${GROUP_NAME} "welcome.sh" "/usr/local/qnx"
 
-CMD /bin/bash
+CMD /bin/bash --rcfile /usr/local/qnx/.qnxbashrc
