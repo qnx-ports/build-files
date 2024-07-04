@@ -45,7 +45,8 @@ RUN apt update && apt install -y \
 	libtool \
 	automake \
 	pkg-config \
-	gfortran
+	gfortran \
+	vim
 
 # Install python 3.11
 RUN add-apt-repository ppa:deadsnakes/ppa -y && \
@@ -111,7 +112,6 @@ RUN cd /usr/local/qnx && \
 WORKDIR /home/${USER_NAME}
 
 # Welcome Message
-COPY --chown=${USER_NAME}:${GROUP_NAME} ".welcome.bash" "/home/${USER_NAME}"
-RUN echo "source /home/${USER_NAME}/.welcome.bash\n" >> "/home/${USER_NAME}/.bashrc"
+COPY --chown=${USER_NAME}:${GROUP_NAME} "welcome.sh" "/usr/local/qnx"
 
 CMD /bin/bash
