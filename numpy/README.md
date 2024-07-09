@@ -60,16 +60,18 @@ QNX_PROJECT_ROOT="$(pwd)/numpy" make -C qnx-ports/numpy install -j$(nproc)
 Setup the target environment
 ```bash
 # scp numpy
-scp -r $QNX_TARGET/aarch64le/usr/local/lib/python3.11/site-packages/numpy root@<target-ip-address>:/usr/lib/python3.11/site-packages
+scp -r $QNX_TARGET/aarch64le/usr/local/lib/python3.11/site-packages/numpy root@<target-ip-address>:/system/lib/python3.11/site-packages
 
 # Update system time
 ntpdate -sb 0.pool.ntp.org 1.pool.ntp.org
 
 # Install pip to install pytest
 export TMPDIR=/
-python3 -m ensurepip --root .
-pip3 install pytest -t /usr/lib/python3.11/site-packages/
-pip3 install hypothesis -t /usr/lib/python3.11/site-packages/
+python3 -m ensurepip
+# Add pip to PATH
+export PATH=$PATH:/system/bin
+pip3 install pytest -t /system/lib/python3.11/site-packages/
+pip3 install hypothesis -t /system/lib/python3.11/site-packages/
 
 # Start the python3 interpretor on Raspberry Pi
 python3
