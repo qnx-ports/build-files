@@ -82,7 +82,8 @@ ifndef NO_TARGET_OVERRIDE
 
 numpy_all:
 	cd $(NUMPY_ROOT) && \
-	rm -rf build && \
+	rm -rf lib && \
+	rm -rf tmp && \
 	$(EXPORT_PY) && python3 $(QNX_PROJECT_ROOT)/setup.py build_ext $(BUILD_EXT_FLAGS) build $(BUILD_FLAGS) dist_info && \
 	find $(NUMPY_ROOT)/$(NTO_DIR_NAME) -name "*.cpython-311.so" | xargs rm -rf && \
 	find $(NUMPY_ROOT)/$(NTO_DIR_NAME) -name "*.so" | sed  'p;s|\..*so|.cpython-311.so|' | xargs -n2 mv
@@ -108,7 +109,7 @@ install check: numpy_all
 	$(CP_HOST) -rf $(QNX_PROJECT_ROOT)/numpy*dist-info $(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/lib/python3.11/site-packages/numpy-$(NUMPY_VERSION).dist-info
 
 clean iclean spotless:
-	rm -rf $(NUMPY_ROOT)/build
+	rm -rf lib tmp
 
 uninstall quninstall huninstall cuninstall:
 	rm -rf $(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/lib/python3.11/site-packages/numpy
