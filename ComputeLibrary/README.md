@@ -44,12 +44,12 @@ BUILD_EXAMPLES="ON" BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/ComputeLibrary" 
 scp libraries and tests to the target.
 ```bash
 # Move neon test binaries to your QNX target
-scp ${QNX_TARGET}/aarch64le/usr/local/bin/ComputeLibrary_tests/ root@<target-ip-address>:/usr/bin
+scp ${QNX_TARGET}/aarch64le/usr/local/bin/ComputeLibrary_tests/ root@<target-ip-address>:/system/xbin
 
 # Move the ARM Compute Library to your QNX target
-scp ${QNX_TARGET}/aarch64le/usr/local/lib/libarm_compute* root@<target-ip-address>:/usr/lib
+scp ${QNX_TARGET}/aarch64le/usr/local/lib/libarm_compute* root@<target-ip-address>:/system/lib
 # Move the ARM Compute Library to your QNX target
-scp ${QNX_TARGET}/aarch64le/lib/libgomp.so.1 root@<target-ip-address>:/usr/lib
+scp ${QNX_TARGET}/aarch64le/lib/libgomp.so.1 root@<target-ip-address>:/system/lib
 ```
 
 Run tests on the target.
@@ -58,7 +58,7 @@ Run tests on the target.
 ssh root@<target-ip-address>
 
 # Run unit tests
-cd /usr/bin/ComputeLibrary_tests
+cd /system/xbin/ComputeLibrary_tests
 ./arm_compute_validation
 ./graph_alexnet
 ./graph_deepspeech_v0_4_1

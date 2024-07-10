@@ -74,14 +74,14 @@ Set up the test environment
 git clone git@github.com:opencv/opencv_extra.git && cd opencv_extra
 git checkout 4.9.0
 
-# scp opencv_extra's testdata to / on your target
-scp -r testdata root@<target-ip-address>:/
+# scp opencv_extra's testdata to /data on your target
+scp -r testdata root@<target-ip-address>:/data
 
 # scp opencv libraries
-scp $QNX_TARGET/aarch64le/usr/local/lib/libopencv* root@<target-ip-address>:/usr/lib
+scp $QNX_TARGET/aarch64le/usr/local/lib/libopencv* root@<target-ip-address>:/system/lib
 
 # scp opencv tests
-scp -r $QNX_TARGET/aarch64le/usr/local/bin/opencv_tests root@<target-ip-address>:/usr/bin
+scp -r $QNX_TARGET/aarch64le/usr/local/bin/opencv_tests root@<target-ip-address>:/system/xbin
 ```
 
 Run tests on the target.
@@ -90,10 +90,10 @@ Run tests on the target.
 ssh root@<target-ip-address>
 
 # Run tests
-cd /usr/bin/opencv_tests
+cd /system/xbin/opencv_tests
 chmod +x
 
-export OPENCV_TEST_DATA_PATH=/testdata
+export OPENCV_TEST_DATA_PATH=/data/testdata
 
 ./opencv_perf_calib3d
 ./opencv_perf_core

@@ -43,8 +43,8 @@ BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/tinyxml2" make -C qnx-ports/tinyxml2
 
 scp libraries and tests to the target.
 ```bash
-scp -r $QNX_TARGET/aarch64le/usr/local/bin/tinyxml2_tests root@<target-ip-address>:/
-scp $QNX_TARGET/aarch64le/usr/local/lib/libtiny* root@<target-ip-address>:/usr/lib
+scp -r $QNX_TARGET/aarch64le/usr/local/bin/tinyxml2_tests root@<target-ip-address>:/system/xbin
+scp $QNX_TARGET/aarch64le/usr/local/lib/libtiny* root@<target-ip-address>:/system/lib
 ```
 
 Run tests on the target.
@@ -53,6 +53,6 @@ Run tests on the target.
 ssh root@<target-ip-address>
 
 # Run xmltest
-cd /tinyxml2_tests
+cd /system/xbin/tinyxml2_tests
 ./xmltest
 ```

@@ -43,8 +43,8 @@ BUILD_TESTING=ON QNX_PROJECT_ROOT="$(pwd)/mosquitto" make -C qnx-ports/mosquitto
 
 scp libraries and tests to the target.
 ```bash
-scp -r $QNX_TARGET/aarch64le/usr/local/bin/mqtt_tests root@<target-ip-address>:/
-scp $QNX_TARGET/aarch64le/usr/local/lib/lib* root@<target-ip-address>:/usr/lib
+scp -r $QNX_TARGET/aarch64le/usr/local/bin/mqtt_tests root@<target-ip-address>:/system/xbin
+scp $QNX_TARGET/aarch64le/usr/local/lib/lib* root@<target-ip-address>:/system/lib
 ```
 
 Run tests on the target.
@@ -56,7 +56,7 @@ ssh root@<target-ip-address>
 export SNAP_NAME=mosquitto
 
 # Change directory to the test directory
-cd /mqtt_tests
+cd /system/xbin/mqtt_tests
 TEST_PATH=${PWD}
 
 # Generate ssl stuff
@@ -65,7 +65,7 @@ cd test/ssl
 cd $TEST_PATH
 
 # Set permissions
-chmod -R 777 $TEST_PATH/*
+chmod -R a+w $TEST_PATH/*
 
 # Run broker test
 cd test/broker
