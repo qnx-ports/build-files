@@ -26,6 +26,7 @@ qnx_patch ./src/ros2/rosbag2 rosbag2.patch
 qnx_patch ./src/ros2/tinyxml2_vendor tinyxml2_vendor.patch
 qnx_patch ./src/ros2/rmw_dds_common rmw_dds_common.patch
 qnx_patch ./src/ros2/unique_identifier_msgs unique_identifier_msgs.patch
+qnx_patch ./src/ros2/spdlog_vendor spdlog_vendor.patch
 
 qnx_patch ./src/eProsima/Fast-CDR fastcdr.patch
 qnx_patch ./src/eProsima/Fast-DDS fastrtps.patch

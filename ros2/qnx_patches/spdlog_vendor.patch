@@ -1,0 +1,15 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index ff36b34..51914de 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -9,6 +9,10 @@ if(POLICY CMP0135)
+   cmake_policy(SET CMP0135 NEW)
+ endif()
+ 
++if(QNX)
++  set (FORCE_BUILD_VENDOR_PKG ON)
++endif()
++
+ option(FORCE_BUILD_VENDOR_PKG
+   "Build spdlog from source, even if system-installed package is available"
+   OFF)
