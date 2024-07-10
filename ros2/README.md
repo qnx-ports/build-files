@@ -6,6 +6,13 @@ Currently the port is supported for QNX SDP 7.1 and 8.0.
 
 We recommend that you use Docker to build ros2 for QNX to ensure the build environment consistency.
 
+If python3 on the target is located at `/usr/bin/python3` instead of `/system/xbin/python3`, uncomment the following line in `build-ros2.sh`.
+
+```code
+#grep -rinl "\#\!$PYTHON3_PATH" ./opt/ros/humble | xargs -d '\n' sed -i '1 i #!/usr/bin/python3'
+grep -rinl "\#\!$PYTHON3_PATH" ./opt/ros/humble | xargs -d '\n' sed -i '1 i #!/system/xbin/python3'
+```
+
 ```bash
 # Set QNX_SDP_VERSION to be qnx800 for SDP 8.0 or qnx710 for SDP 7.1
 export QNX_SDP_VERSION=qnx800
@@ -114,12 +121,12 @@ export LD_PRELOAD=$LD_PRELOAD:/usr/lib/x86_64-linux-gnu/libzstd.so
 Use scp to move ros2_humble.tar.gz to the target
 
 ```bash
-scp ros2_humble.tar.gz root@<target-ip-address>:/
+scp ros2_humble.tar.gz root@<target-ip-address>:/system
 ```
 
 ```bash
 ssh root@<target-ip-address>
-cd /
+cd /system
 tar -xvzf ./ros2_humble.tar.gz
 ```
 
@@ -133,8 +140,11 @@ ntpdate -sb 0.pool.ntp.org 1.pool.ntp.org
 mkdir -p /data
 export TMPDIR=/data
 python3 -m ensurepip
-pip3 install packaging pyyaml lark
-export PYTHONPATH=$PYTHONPATH:/opt/ros/humble/usr/lib/python3.11/site-packages/
+# Add pip to PATH
+export PATH=$PATH:/system/bin
+pip3 install packaging pyyaml lark -t /system/lib/python3.11/site-packages/
+export PYTHONPATH=$PYTHONPATH:/system/opt/ros/humble/usr/lib/python3.11/site-packages/
+export COLCON_PYTHON_EXECUTABLE=/system/xbin/python3
 ```
 
 ### Running the Listner Talker Demo on RPI4
@@ -142,26 +152,26 @@ export PYTHONPATH=$PYTHONPATH:/opt/ros/humble/usr/lib/python3.11/site-packages/
 Run listener in a terminal:
 
 ```bash
-cd /opt/ros/humble
-. /opt/ros/humble/setup.bash
-python3 ./bin/ros2 run demo_nodes_cpp listener
+cd /system/opt/ros/humble
+. /system/opt/ros/humble/setup.bash
+ros2 run demo_nodes_cpp listener
 ```
 
 Run talker in another terminal:
 
 ```bash
-cd /opt/ros/humble
-. /opt/ros/humble/setup.bash
-python3 ./bin/ros2 run demo_nodes_cpp talker
+cd /system/opt/ros/humble
+. /system/opt/ros/humble/setup.bash
+ros2 run demo_nodes_cpp talker
 ```
 
 ### Running the dummy robot demo on RPI4
 
 Launch the dummy robot demo node on RPI4.
 ```bash
-cd /opt/ros/humble
-. /opt/ros/humble/setup.bash
-python3 ./bin/ros2 dummy_robot_bringup dummy_robot_bringup.launch.py
+cd /system/opt/ros/humble
+. /system/opt/ros/humble/setup.bash
+ros2 dummy_robot_bringup dummy_robot_bringup.launch.py
 ```
 
 Install ROS2 Humble on your Ubuntu host.
