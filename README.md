@@ -14,7 +14,7 @@ Build the Docker image and create a Docker container:
 # Remember to let Docker run with root privileges: https://docs.docker.com/engine/install/linux-postinstall/
 
 # Clone qnx-ports
-git clone https://gitlab.com/qnx/everywhere/qnx-ports.git && cd qnx-ports
+git clone https://gitlab.com/qnx/ports/build-files.git && cd qnx-ports
 
 # Build the Docker image and create a container
 ./docker-build-qnx-image.sh

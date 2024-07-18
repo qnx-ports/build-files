@@ -4,7 +4,7 @@ Pre-requisite: Install Docker on Ubuntu https://docs.docker.com/engine/install/u
 ```bash
 # Create a workspace
 mkdir -p ~/qnx_workspace && cd ~/qnx_workspace
-git clone https://gitlab.com/qnx/everywhere/qnx-ports.git && cd qnx-ports
+git clone https://gitlab.com/qnx/ports/build-files.git && cd qnx-ports
 
 # Build the Docker image and create a container
 ./docker-build-qnx-image.sh
@@ -17,7 +17,7 @@ source ~/qnx800/qnxsdp-env.sh
 
 # Clone tensorflow-lite
 cd ~/qnx_workspace
-git clone https://gitlab.com/qnx/libs/tensorflow.git
+git clone https://gitlab.com/qnx/ports/tensorflow.git
 # Build host flatc (used in kernel tests)
 mkdir -p flatc-native-build && cd flatc-native-build
 cmake ../tensorflow/tensorflow/lite/tools/cmake/native_tools/flatbuffers
@@ -32,8 +32,8 @@ QNX_PROJECT_ROOT="$(pwd)/tensorflow" QNX_PATCH_DIR="$(pwd)/qnx-ports/tensorflow/
 
 ```bash
 # Clone the repos
-git clone https://gitlab.com/qnx/everywhere/qnx-ports.git
-git clone https://gitlab.com/qnx/libs/tensorflow.git
+git clone https://gitlab.com/qnx/ports/build-files.git
+git clone https://gitlab.com/qnx/ports/tensorflow.git
 # Build host flatc (used in kernel tests)
 mkdir flatc-native-build && cd flatc-native-build
 cmake ../tensorflow/tensorflow/lite/tools/cmake/native_tools/flatbuffers

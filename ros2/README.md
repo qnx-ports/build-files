@@ -19,7 +19,7 @@ export QNX_SDP_VERSION=qnx800
 
 # Create a workspace
 mkdir -p ~/qnx_workspace && cd ~/qnx_workspace
-git clone https://gitlab.com/qnx/everywhere/qnx-ports.git && cd qnx-ports
+git clone https://gitlab.com/qnx/ports/build-files.git && cd qnx-ports
 
 # Build the Docker image and create a container
 ./docker-build-qnx-image.sh
@@ -59,8 +59,8 @@ export QNX_SDP_VERSION=qnx800
 mkdir -p ~/qnx_workspace && cd ~/qnx_workspace
 
 # Clone repos
-git clone https://gitlab.com/qnx/everywhere/qnx-ports.git
-git clone -b qnx_v1.13.0 https://gitlab.com/qnx/libs/googletest.git
+git clone https://gitlab.com/qnx/ports/build-files.git
+git clone -b qnx_v1.13.0 https://gitlab.com/qnx/ports/googletest.git
 
 # Install python 3.11
 sudo add-apt-repository ppa:deadsnakes/ppa

@@ -6,7 +6,7 @@ Pre-requisite: Install Docker on Ubuntu https://docs.docker.com/engine/install/u
 ```bash
 # Create a workspace
 mkdir -p ~/qnx_workspace && cd ~/qnx_workspace
-git clone https://gitlab.com/qnx/everywhere/qnx-ports.git && cd qnx-ports
+git clone https://gitlab.com/qnx/ports/build-files.git && cd qnx-ports
 
 # Build the Docker image and create a container
 ./docker-build-qnx-image.sh
@@ -38,7 +38,7 @@ make -C qnx-ports/boost/ install QNX_PROJECT_ROOT="$(pwd)/boost" -j$(nproc)
 ```bash
 # Clone the qnx-ports and boost repos
 mkdir -p ~/qnx_workspace && cd ~/qnx_workspace
-git clone https://gitlab.com/qnx/everywhere/qnx-ports.git
+git clone https://gitlab.com/qnx/ports/build-files.git
 git clone https://github.com/boostorg/boost.git
 
 cd boost
