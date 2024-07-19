@@ -44,7 +44,7 @@ BUILD_EXAMPLES="ON" BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/ComputeLibrary" 
 scp libraries and tests to the target.
 ```bash
 # Move neon test binaries to your QNX target
-scp ${QNX_TARGET}/aarch64le/usr/local/bin/ComputeLibrary_tests/ root@<target-ip-address>:/system/xbin
+scp -r ${QNX_TARGET}/aarch64le/usr/local/bin/ComputeLibrary_tests/ root@<target-ip-address>:/system/xbin
 
 # Move the ARM Compute Library to your QNX target
 scp ${QNX_TARGET}/aarch64le/usr/local/lib/libarm_compute* root@<target-ip-address>:/system/lib
