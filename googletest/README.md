@@ -6,7 +6,7 @@ Pre-requisite: Install Docker on Ubuntu https://docs.docker.com/engine/install/u
 ```bash
 # Create a workspace
 mkdir -p ~/qnx_workspace && cd ~/qnx_workspace
-git clone https://gitlab.com/qnx/ports/build-files.git && cd qnx-ports
+git clone https://gitlab.com/qnx/ports/build-files.git && cd build-files
 
 # Build the Docker image and create a container
 ./docker-build-qnx-image.sh
@@ -22,7 +22,7 @@ cd ~/qnx_workspace
 git clone https://gitlab.com/qnx/ports/googletest.git
 
 # Build googletest
-BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/googletest" make -C qnx-ports/googletest install -j$(nproc)
+BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/googletest" make -C build-files/googletest install -j$(nproc)
 ```
 
 # Compile the port for QNX on Ubuntu host
@@ -36,7 +36,7 @@ git clone https://gitlab.com/qnx/ports/googletest.git
 source ~/qnx800/qnxsdp-env.sh
 
 # Build
-BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/googletest" make -C qnx-ports/googletest install -j$(nproc)
+BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/googletest" make -C build-files/googletest install -j$(nproc)
 ```
 
 # How to run tests

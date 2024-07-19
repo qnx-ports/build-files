@@ -19,7 +19,7 @@ export QNX_SDP_VERSION=qnx800
 
 # Create a workspace
 mkdir -p ~/qnx_workspace && cd ~/qnx_workspace
-git clone https://gitlab.com/qnx/ports/build-files.git && cd qnx-ports
+git clone https://gitlab.com/qnx/ports/build-files.git && cd build-files
 
 # Build the Docker image and create a container
 ./docker-build-qnx-image.sh
@@ -30,10 +30,10 @@ source ~/qnx800/qnxsdp-env.sh
 source /usr/local/qnx/env/bin/activate
 
 # Build googletest
-PREFIX="/usr" QNX_PROJECT_ROOT="$(pwd)/googletest" make -C qnx-ports/googletest install -j$(nproc)
+PREFIX="/usr" QNX_PROJECT_ROOT="$(pwd)/googletest" make -C build-files/googletest install -j$(nproc)
 
 # Import ros2 packages
-cd ~/qnx_workspace/qnx-ports/ros2
+cd ~/qnx_workspace/build-files/ros2
 mkdir -p src
 vcs import src < ros2.repos
 
@@ -98,10 +98,10 @@ pip install -U \
 source ~/qnx800/qnxsdp-env.sh
 
 # Build and install googletest
-PREFIX="/usr" QNX_PROJECT_ROOT="$(pwd)/googletest" make -C qnx-ports/googletest install -j$(nproc)
+PREFIX="/usr" QNX_PROJECT_ROOT="$(pwd)/googletest" make -C build-files/googletest install -j$(nproc)
 
 # Import ros2 packages
-cd ~/qnx_workspace/qnx-ports/ros2
+cd ~/qnx_workspace/build-files/ros2
 mkdir -p src
 vcs import src < ros2.repos
 

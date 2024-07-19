@@ -1,4 +1,4 @@
-# qnx-ports
+# build-files
 
 Collection of build files for building QNX ports
 
@@ -13,8 +13,8 @@ Build the Docker image and create a Docker container:
 # Pre-requisite: Install Docker on Ubuntu https://docs.docker.com/engine/install/ubuntu/
 # Remember to let Docker run with root privileges: https://docs.docker.com/engine/install/linux-postinstall/
 
-# Clone qnx-ports
-git clone https://gitlab.com/qnx/ports/build-files.git && cd qnx-ports
+# Clone build-files
+git clone https://gitlab.com/qnx/ports/build-files.git && cd build-files
 
 # Build the Docker image and create a container
 ./docker-build-qnx-image.sh
