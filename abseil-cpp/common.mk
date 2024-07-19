@@ -2,8 +2,9 @@ ifndef QCONFIG
 QCONFIG=qconfig.mk
 endif
 include $(QCONFIG)
+include $(MKFILES_ROOT)/qmacros.mk
 
-NAME=ruy
+NAME=abseil-cpp
 
 QNX_PROJECT_ROOT ?= $(PRODUCT_ROOT)/../
 
@@ -21,50 +22,72 @@ INSTALL_ROOT ?= $(INSTALL_ROOT_$(OS))
 #CMake config modules, etc.). Default is /usr/local
 PREFIX ?= /usr/local
 
-BUILD_TESTING ?= OFF
-
 #choose Release or Debug
 CMAKE_BUILD_TYPE ?= Release
 
+#set the following to FALSE if generating .pinfo files is causing problems
+GENERATE_PINFO_FILES ?= TRUE
+
 #override 'all' target to bypass the default QNX build system
-ALL_DEPENDENCIES = ruy_all
-.PHONY: ruy_all install check clean
+ALL_DEPENDENCIES = abseil-cpp_all
+.PHONY: abseil-cpp_all install check clean
+
+CFLAGS += $(FLAGS)
 
 include $(MKFILES_ROOT)/qtargets.mk
 
-NTO_NAME=$(CPU)
+#Search paths for all of CMake's find_* functions --
+#headers, libraries, etc.
+#
+#$(QNX_TARGET): for architecture-agnostic files shipped with SDP (e.g. headers)
+#$(QNX_TARGET)/$(CPUVARDIR): for architecture-specific files in SDP
+#$(INSTALL_ROOT)/$(CPUVARDIR): any packages that may have been installed in the staging area
+CMAKE_FIND_ROOT_PATH := $(QNX_TARGET);$(QNX_TARGET)/$(CPUVARDIR);$(INSTALL_ROOT)/$(CPUVARDIR)
+
+#Path to CMake modules; These are CMake files installed by other packages
+#for downstreams to discover them automatically. We support discovering
+#CMake-based packages from inside SDP or in the staging area.
+#Note that CMake modules can automatically detect the prefix they are
+#installed in.
+CMAKE_MODULE_PATH := $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/cmake;$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/lib/cmake
+
 #Headers from INSTALL_ROOT need to be made available by default
 #because CMake and pkg-config do not necessary add it automatically
 #if the include path is "default"
 CFLAGS += -I$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/include
 
 CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
-             -DCMAKE_INSTALL_PREFIX=$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX) \
-             -DNTO_NAME=$(NTO_NAME) \
+             -DCMAKE_INSTALL_PREFIX="$(PREFIX)" \
+             -DCMAKE_STAGING_PREFIX="$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)" \
+             -DCMAKE_FIND_ROOT_PATH="$(CMAKE_FIND_ROOT_PATH)" \
+             -DCMAKE_MODULE_PATH="$(CMAKE_MODULE_PATH)" \
              -DCMAKE_BUILD_TYPE=$(CMAKE_BUILD_TYPE) \
              -DCMAKE_SYSTEM_PROCESSOR=$(CPUVARDIR) \
-             -DCMAKE_INSTALL_LIBDIR=$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/lib \
-             -DCMAKE_INSTALL_INCLUDEDIR=$(INSTALL_ROOT)/$(PREFIX)/include/ruy \
              -DEXTRA_CMAKE_C_FLAGS="$(CFLAGS)" \
              -DEXTRA_CMAKE_CXX_FLAGS="$(CFLAGS)" \
              -DEXTRA_CMAKE_ASM_FLAGS="$(FLAGS)" \
              -DEXTRA_CMAKE_LINKER_FLAGS="$(LDFLAGS)" \
-             -DBUILD_SHARED_LIBS=1 \
-             -DBUILD_TESTING=$(BUILD_TESTING)
+             -DBUILD_SHARED_LIBS=ON \
+             -DBUILD_TESTING=ON \
+             -DABSL_BUILD_TESTING=ON \
+             -DCPU=$(CPU) \
+             -DABSL_RUN_TESTS=OFF \
+             -DABSL_ENABLE_INSTALL=ON \
+             -DABSL_USE_EXTERNAL_GOOGLETEST=ON
+
+MAKE_ARGS ?= -j $(firstword $(JLEVEL) 1)
 
 ifndef NO_TARGET_OVERRIDE
-ruy_all:
+abseil-cpp_all:
 	@mkdir -p build
 	@cd build && cmake $(CMAKE_ARGS) $(QNX_PROJECT_ROOT)
 	@cd build && make VERBOSE=1 all $(MAKE_ARGS)
 
-install check: ruy_all
+install check: abseil-cpp_all
 	@echo Installing...
 	@cd build && make VERBOSE=1 install $(MAKE_ARGS)
 	@echo Done.
 
 clean iclean spotless:
 	rm -rf build
-
-uninstall:
 endif

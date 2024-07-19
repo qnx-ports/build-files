@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<shiplist>
+	<id>com.qnx.${baselineId}.osr.abseil-cpp_tests.internal</id>
+	<name>Abseil-cpp 20230802.1 Library Tests</name>
+	<description>Abseil-cpp - Abseil Common Libraries C++ Libraries Tests</description>
+	<property key="f.support" value="Custom"/>
+	<property key="f.swtype" value="III"/>
+	<property key="f.engage" value="B"/>
+	<category>OSR</category>
+
+	<property key="com.qnx.internal" value="true"/>
+	<!-- don't generate provides/requires tags for internal packages-->
+	<requires value="suppress-library: autogen"/>
+	<provides value="suppress-library: autogen"/>
+
+	<asset dest="${targetfolder}/[ARCH]/usr/local/bin/abseil-cpp_tests" />
+</shiplist>
