@@ -11,9 +11,16 @@
 sudo apt install cmake python3-pip git dos2unix automake
 ```
 
+Optional: Build in Docker container
+```bash
+git clone https://gitlab.com/qnx/ports/docker-build-environment.git && cd docker-build-environment
+./docker-build-qnx-image.sh
+./docker-create-container.sh
+```
+
 ```bash
 # Get Fast-DDS
-git clone git@gitlab.com:qnx/libs/Fast-DDS.git && cd Fast-DDS
+git clone git@gitlab.com:qnx/ports/Fast-DDS.git && cd Fast-DDS
 git checkout qnx_2.10.1
 
 WORKSPACE=$PWD
