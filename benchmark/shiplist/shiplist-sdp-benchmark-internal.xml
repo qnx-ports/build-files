@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<shiplist>
+    <id>com.qnx.${baselineId}.osr.benchmark.internal</id>
+    <name>Benchmark 1.8.3 Library - Internal Assets</name>
+    <description>A microbenchmark support library</description>
+    <property key="f.support" value="Custom"/>
+    <property key="f.swtype" value="III"/>
+    <property key="f.engage" value="B"/>
+    <category>OSR</category>
+
+    <property key="com.qnx.internal" value="true"/>
+    <!-- don't generate provides/requires tags for internal packages-->
+    <requires value="suppress-library: autogen"/>
+    <provides value="suppress-library: autogen"/>
+
+    <file name="${targetfolder}/[ARCH]/usr/local/lib/libbenchmark_main.so" />
+    <file name="${targetfolder}/[ARCH]/usr/local/lib/libbenchmark_main.so.1" />
+    <file name="${targetfolder}/[ARCH]/usr/local/lib/libbenchmark_main.so.1.8.3" />
+    <file name="${targetfolder}/[ARCH]/usr/local/lib/libbenchmark.so" />
+    <file name="${targetfolder}/[ARCH]/usr/local/lib/libbenchmark.so.1" />
+    <file name="${targetfolder}/[ARCH]/usr/local/lib/libbenchmark.so.1.8.3" />
+    <asset dest="${targetfolder}/usr/local/include/benchmark/" />
+</shiplist>
