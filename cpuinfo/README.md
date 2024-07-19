@@ -6,15 +6,16 @@
 
 Pre-requisite: Install Docker on Ubuntu https://docs.docker.com/engine/install/ubuntu/
 ```bash
-# Create a workspace
-mkdir -p ~/qnx_workspace && cd ~/qnx_workspace
-git clone https://gitlab.com/qnx/ports/build-files.git && cd build-files
-
 # Build the Docker image and create a container
+git clone https://gitlab.com/qnx/ports/docker-build-environment.git && cd docker-build-environment
 ./docker-build-qnx-image.sh
 ./docker-create-container.sh
 
 # Now you are in the Docker container
+
+# Create a workspace
+mkdir -p ~/qnx_workspace && cd ~/qnx_workspace
+git clone https://gitlab.com/qnx/ports/build-files.git && cd build-files
 
 # source qnxsdp-env.sh in
 source ~/qnx800/qnxsdp-env.sh

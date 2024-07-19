@@ -14,20 +14,19 @@ grep -rinl "\#\!$PYTHON3_PATH" ./opt/ros/humble | xargs -d '\n' sed -i '1 i #!/s
 ```
 
 ```bash
+# Build the Docker image and create a container
+git clone https://gitlab.com/qnx/ports/docker-build-environment.git && cd docker-build-environment
+./docker-build-qnx-image.sh
+./docker-create-container.sh
+
+# Now you are in the Docker container
+
 # Set QNX_SDP_VERSION to be qnx800 for SDP 8.0 or qnx710 for SDP 7.1
 export QNX_SDP_VERSION=qnx800
 
 # Create a workspace
 mkdir -p ~/qnx_workspace && cd ~/qnx_workspace
 git clone https://gitlab.com/qnx/ports/build-files.git && cd build-files
-
-# Build the Docker image and create a container
-./docker-build-qnx-image.sh
-./docker-create-container.sh
-
-# Once you're in the image, set up environment variables
-source ~/qnx800/qnxsdp-env.sh
-source /usr/local/qnx/env/bin/activate
 
 # Build googletest
 PREFIX="/usr" QNX_PROJECT_ROOT="$(pwd)/googletest" make -C build-files/googletest install -j$(nproc)
