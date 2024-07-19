@@ -6,7 +6,7 @@ Pre-requisite: Install Docker on Ubuntu https://docs.docker.com/engine/install/u
 ```bash
 # Create a workspace
 mkdir -p ~/qnx_workspace && cd ~/qnx_workspace
-git clone https://gitlab.com/qnx/ports/build-files.git && cd qnx-ports
+git clone https://gitlab.com/qnx/ports/build-files.git && cd build-files
 
 # Build the Docker image and create a container
 ./docker-build-qnx-image.sh
@@ -22,7 +22,7 @@ cd ~/qnx_workspace
 git clone https://gitlab.com/qnx/ports/ComputeLibrary.git
 
 # Build ComputeLibrary
-BUILD_EXAMPLES="ON" BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/ComputeLibrary" make -C qnx-ports/ComputeLibrary install -j$(nproc)
+BUILD_EXAMPLES="ON" BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/ComputeLibrary" make -C build-files/ComputeLibrary install -j$(nproc)
 ```
 
 # Compile the port for QNX on Ubuntu host
@@ -36,7 +36,7 @@ git clone https://gitlab.com/qnx/ports/ComputeLibrary.git
 source ~/qnx800/qnxsdp-env.sh
 
 # Build ComputeLibrary
-BUILD_EXAMPLES="ON" BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/ComputeLibrary" make -C qnx-ports/ComputeLibrary install -j$(nproc)
+BUILD_EXAMPLES="ON" BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/ComputeLibrary" make -C build-files/ComputeLibrary install -j$(nproc)
 ```
 
 # How to run tests

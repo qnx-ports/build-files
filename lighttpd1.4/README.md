@@ -6,7 +6,7 @@ Pre-requisite: Install Docker on Ubuntu https://docs.docker.com/engine/install/u
 ```bash
 # Create a workspace
 mkdir -p ~/qnx_workspace && cd ~/qnx_workspace
-git clone https://gitlab.com/qnx/ports/build-files.git && cd qnx-ports
+git clone https://gitlab.com/qnx/ports/build-files.git && cd build-files
 
 # Build the Docker image and create a container
 ./docker-build-qnx-image.sh
@@ -22,7 +22,7 @@ cd ~/qnx_workspace
 git clone https://gitlab.com/qnx/ports/lighttpd1.4.git
 
 # Build and install lighttpd binaries to SDP
-QNX_PROJECT_ROOT="$(pwd)/lighttpd1.4" JLEVEL=$(nproc) make -C qnx-ports/lighttpd1.4  install
+QNX_PROJECT_ROOT="$(pwd)/lighttpd1.4" JLEVEL=$(nproc) make -C build-files/lighttpd1.4  install
 ```
 
 # Compile the port for QNX on Ubuntu host
@@ -50,7 +50,7 @@ source <path-to-sdp>/qnxsdp-env.sh
 ## Build and install lighttpd binaries to SDP
 
 ```bash
-QNX_PROJECT_ROOT="$(pwd)/lighttpd1.4" JLEVEL=$(nproc) make -C qnx-ports/lighttpd1.4  install
+QNX_PROJECT_ROOT="$(pwd)/lighttpd1.4" JLEVEL=$(nproc) make -C build-files/lighttpd1.4  install
 ```
 
 **All binary files have to be installed to SDP**
@@ -65,7 +65,7 @@ QNX_PROJECT_ROOT="$(pwd)/lighttpd1.4" JLEVEL=$(nproc) make -C qnx-ports/lighttpd
 ## Build and install lighttpd binaries to specific path
 
 ```bash
-QNX_PROJECT_ROOT="$(pwd)/lighttpd1.4" JLEVEL=$(nproc) make -C qnx-ports/lighttpd1.4  install USE_INSTALL_ROOT=true INSTALL_ROOT_nto=<full-path>
+QNX_PROJECT_ROOT="$(pwd)/lighttpd1.4" JLEVEL=$(nproc) make -C build-files/lighttpd1.4  install USE_INSTALL_ROOT=true INSTALL_ROOT_nto=<full-path>
 ```
 
 **All binary files have to be installed to specific path**

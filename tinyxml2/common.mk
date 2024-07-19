@@ -52,6 +52,7 @@ CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
 
 ifndef NO_TARGET_OVERRIDE
 tinyxml2_all:
+	@echo $(CPULIST) ==== $(OSLIST) === $(HOST_SYSTEM)
 	@mkdir -p build
 	@cd build && cmake $(CMAKE_ARGS) $(QNX_PROJECT_ROOT)
 	@cd build && make VERBOSE=1 all $(MAKE_ARGS)

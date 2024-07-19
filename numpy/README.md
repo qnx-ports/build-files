@@ -6,7 +6,7 @@ Pre-requisite: Install Docker on Ubuntu https://docs.docker.com/engine/install/u
 ```bash
 # Create a workspace
 mkdir -p ~/qnx_workspace && cd ~/qnx_workspace
-git clone https://gitlab.com/qnx/ports/build-files.git && cd qnx-ports
+git clone https://gitlab.com/qnx/ports/build-files.git && cd build-files
 
 # Build the Docker image and create a container
 ./docker-build-qnx-image.sh
@@ -27,7 +27,7 @@ git submodule update --init --recursive
 cd ~/qnx_workspace
 
 # Build numpy
-QNX_PROJECT_ROOT="$(pwd)/numpy" make -C qnx-ports/numpy install -j$(nproc)
+QNX_PROJECT_ROOT="$(pwd)/numpy" make -C build-files/numpy install -j$(nproc)
 ```
 
 # Compile the port for QNX on Ubuntu host
@@ -52,7 +52,7 @@ pip install -U pip Cython wheel
 source ~/qnx800/qnxsdp-env.sh
 
 # Build numpy
-QNX_PROJECT_ROOT="$(pwd)/numpy" make -C qnx-ports/numpy install -j$(nproc)
+QNX_PROJECT_ROOT="$(pwd)/numpy" make -C build-files/numpy install -j$(nproc)
 ```
 
 # How to run tests

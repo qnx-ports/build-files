@@ -4,7 +4,7 @@ Pre-requisite: Install Docker on Ubuntu https://docs.docker.com/engine/install/u
 ```bash
 # Create a workspace
 mkdir -p ~/qnx_workspace && cd ~/qnx_workspace
-git clone https://gitlab.com/qnx/ports/build-files.git && cd qnx-ports
+git clone https://gitlab.com/qnx/ports/build-files.git && cd build-files
 
 # Build the Docker image and create a container
 ./docker-build-qnx-image.sh
@@ -25,7 +25,7 @@ cmake --build .
 cd ~/qnx_workspace
 
 # Build tensorflow-lite
-QNX_PROJECT_ROOT="$(pwd)/tensorflow" QNX_PATCH_DIR="$(pwd)/qnx-ports/tensorflow/patches" TFLITE_HOST_TOOLS_DIR="$(pwd)/flatc-native-build/flatbuffers-flatc/bin/" make -C qnx-ports/tensorflow  install JLEVEL=$(nproc)
+QNX_PROJECT_ROOT="$(pwd)/tensorflow" QNX_PATCH_DIR="$(pwd)/build-files/tensorflow/patches" TFLITE_HOST_TOOLS_DIR="$(pwd)/flatc-native-build/flatbuffers-flatc/bin/" make -C build-files/tensorflow  install JLEVEL=$(nproc)
 ```
 
 ## Build TensorFlow Lite
@@ -44,7 +44,7 @@ cd ..
 source ~/qnx800/qnxsdp-env.sh
 
 # Build
-QNX_PROJECT_ROOT="$(pwd)/tensorflow" QNX_PATCH_DIR="$(pwd)/qnx-ports/tensorflow/patches" TFLITE_HOST_TOOLS_DIR="$(pwd)/flatc-native-build/flatbuffers-flatc/bin/" make -C qnx-ports/tensorflow  install JLEVEL=$(nproc)
+QNX_PROJECT_ROOT="$(pwd)/tensorflow" QNX_PATCH_DIR="$(pwd)/build-files/tensorflow/patches" TFLITE_HOST_TOOLS_DIR="$(pwd)/flatc-native-build/flatbuffers-flatc/bin/" make -C build-files/tensorflow  install JLEVEL=$(nproc)
 ```
 
 ## Run tests
@@ -60,21 +60,21 @@ scp those libraries to the target.
 
 ```bash
 libs=(
-qnx-ports/tensorflow/nto-aarch64-le/build/libtensorflow-lite.so
-qnx-ports/tensorflow/nto-aarch64-le/build/kernels/libtensorflow-lite-test-external-main.so
-qnx-ports/tensorflow/nto-aarch64-le/build/kernels/libtensorflow-lite-test-base.so
-qnx-ports/tensorflow/nto-aarch64-le/build/lib/libgmock.so.1.12.1
-qnx-ports/tensorflow/nto-aarch64-le/build/lib/libgtest.so.1.12.1
-qnx-ports/tensorflow/nto-aarch64-le/build/lib/libgtest_main.so.1.12.1
-qnx-ports/tensorflow/nto-aarch64-le/build/_deps/nsync-build/libnsync_cpp.so.1
-qnx-ports/tensorflow/nto-aarch64-le/build/_deps/re2-build/libre2.so.11
-qnx-ports/tensorflow/nto-aarch64-le/build/_deps/abseil-cpp-build/absl/*/libabsl_*.so*
-qnx-ports/tensorflow/nto-aarch64-le/build/_deps/farmhash-build/libfarmhash.so
-qnx-ports/tensorflow/nto-aarch64-le/build/_deps/fft2d-build/libfft2d_fftsg2d.so
-qnx-ports/tensorflow/nto-aarch64-le/build/_deps/fft2d-build/libfft2d_fftsg.so
-qnx-ports/tensorflow/nto-aarch64-le/build/_deps/gemmlowp-build/libeight_bit_int_gemm.so
-qnx-ports/tensorflow/nto-aarch64-le/build/pthreadpool/libpthreadpool.so
-qnx-ports/tensorflow/nto-aarch64-le/build/_deps/google_benchmark-build/src/libbenchmark.so.1
+build-files/tensorflow/nto-aarch64-le/build/libtensorflow-lite.so
+build-files/tensorflow/nto-aarch64-le/build/kernels/libtensorflow-lite-test-external-main.so
+build-files/tensorflow/nto-aarch64-le/build/kernels/libtensorflow-lite-test-base.so
+build-files/tensorflow/nto-aarch64-le/build/lib/libgmock.so.1.12.1
+build-files/tensorflow/nto-aarch64-le/build/lib/libgtest.so.1.12.1
+build-files/tensorflow/nto-aarch64-le/build/lib/libgtest_main.so.1.12.1
+build-files/tensorflow/nto-aarch64-le/build/_deps/nsync-build/libnsync_cpp.so.1
+build-files/tensorflow/nto-aarch64-le/build/_deps/re2-build/libre2.so.11
+build-files/tensorflow/nto-aarch64-le/build/_deps/abseil-cpp-build/absl/*/libabsl_*.so*
+build-files/tensorflow/nto-aarch64-le/build/_deps/farmhash-build/libfarmhash.so
+build-files/tensorflow/nto-aarch64-le/build/_deps/fft2d-build/libfft2d_fftsg2d.so
+build-files/tensorflow/nto-aarch64-le/build/_deps/fft2d-build/libfft2d_fftsg.so
+build-files/tensorflow/nto-aarch64-le/build/_deps/gemmlowp-build/libeight_bit_int_gemm.so
+build-files/tensorflow/nto-aarch64-le/build/pthreadpool/libpthreadpool.so
+build-files/tensorflow/nto-aarch64-le/build/_deps/google_benchmark-build/src/libbenchmark.so.1
 )
 scp ${libs[@]} root@<target ip or hostname>:/data/tflite/libs
 ```
@@ -82,7 +82,7 @@ scp ${libs[@]} root@<target ip or hostname>:/data/tflite/libs
 scp those tests to the target.
 
 ```text
-scp qnx-ports/tensorflow/nto-aarch64-le/build/kernels/*_test root@<target ip or hostname>:/data/tflite/tests
+scp build-files/tensorflow/nto-aarch64-le/build/kernels/*_test root@<target ip or hostname>:/data/tflite/tests
 ```
 
 Run tests on the target.
@@ -118,7 +118,7 @@ ConstUint8MeanOpTest.Rounding
 
 ## Run minimal example
 
-In `qnx-ports/ternsorflow/common.mk`, change
+In `build-files/ternsorflow/common.mk`, change
 
 ```bash
 cd build && cmake $(CMAKE_ARGS) $(QNX_PROJECT_ROOT)/tensorflow/lite/

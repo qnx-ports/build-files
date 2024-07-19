@@ -6,7 +6,7 @@ Pre-requisite: Install Docker on Ubuntu https://docs.docker.com/engine/install/u
 ```bash
 # Create a workspace
 mkdir -p ~/qnx_workspace && cd ~/qnx_workspace
-git clone https://gitlab.com/qnx/ports/build-files.git && cd qnx-ports
+git clone https://gitlab.com/qnx/ports/build-files.git && cd build-files
 
 # Build the Docker image and create a container
 ./docker-build-qnx-image.sh
@@ -24,19 +24,19 @@ git checkout boost-1.82.0
 git submodule update --init --recursive
 
 # Apply a tools patch
-cd tools/build && git apply ../../../qnx-ports/boost/tools_qnx.patch
+cd tools/build && git apply ../../../build-files/boost/tools_qnx.patch
 cd ~/qnx_workspace
 
 # Build boost
-make -C qnx-ports/boost/ install QNX_PROJECT_ROOT="$(pwd)/boost" -j$(nproc)
+make -C build-files/boost/ install QNX_PROJECT_ROOT="$(pwd)/boost" -j$(nproc)
 
 # Build and install tests
-./qnx-ports/boost/build_and_install_tests.sh
+./build-files/boost/build_and_install_tests.sh
 ```
 
 # Compile the port for QNX
 ```bash
-# Clone the qnx-ports and boost repos
+# Clone the build-files and boost repos
 mkdir -p ~/qnx_workspace && cd ~/qnx_workspace
 git clone https://gitlab.com/qnx/ports/build-files.git
 git clone https://github.com/boostorg/boost.git
@@ -44,17 +44,17 @@ git clone https://github.com/boostorg/boost.git
 cd boost
 git checkout boost-1.82.0
 git submodule update --init --recursive
-cd tools/build && git apply ../../../qnx-ports/boost/tools_qnx.patch && cd -
+cd tools/build && git apply ../../../build-files/boost/tools_qnx.patch && cd -
 cd ../
 
 # source qnxsdp-env.sh
 source ~/qnx800/qnxsdp-env.sh
 
 # Build
-make -C qnx-ports/boost/ install QNX_PROJECT_ROOT="$(pwd)/boost" -j$(nproc)
+make -C build-files/boost/ install QNX_PROJECT_ROOT="$(pwd)/boost" -j$(nproc)
 
 # Build and install tests
-./qnx-ports/boost/build_and_install_tests.sh
+./build-files/boost/build_and_install_tests.sh
 ```
 
 Currently, when numpy is installed on your host system, the build fails:
