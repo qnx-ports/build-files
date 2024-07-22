@@ -22,7 +22,7 @@ source ~/qnx800/qnxsdp-env.sh
 
 # Clone cpuinfo
 cd ~/qnx_workspace
-git clone git@gitlab.com:qnx/ports/cpuinfo.git
+git clone https://gitlab.com/qnx/ports/cpuinfo.git
 
 # Build cpuinfo
 QNX_PROJECT_ROOT="$(pwd)/cpuinfo" make -C build-files/cpuinfo install -j$(nproc)

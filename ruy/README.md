@@ -22,7 +22,7 @@ source ~/qnx800/qnxsdp-env.sh
 
 # Clone ruy
 cd ~/qnx_workspace
-git clone git@gitlab.com:qnx/ports/ruy.git
+git clone https://gitlab.com/qnx/ports/ruy.git
 
 # Build ruy
 QNX_PROJECT_ROOT="$(pwd)/ruy" make -C build-files/ruy install -j$(nproc)

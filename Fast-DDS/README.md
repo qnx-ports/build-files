@@ -20,7 +20,7 @@ git clone https://gitlab.com/qnx/ports/docker-build-environment.git && cd docker
 
 ```bash
 # Get Fast-DDS
-git clone git@gitlab.com:qnx/ports/Fast-DDS.git && cd Fast-DDS
+git clone https://gitlab.com/qnx/ports/Fast-DDS.git && cd Fast-DDS
 git checkout qnx_2.10.1
 
 WORKSPACE=$PWD

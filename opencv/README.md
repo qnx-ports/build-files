@@ -72,7 +72,7 @@ BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/opencv" make -C build-files/opencv i
 Set up the test environment
 ```bash
 # On your development machine, clone opencv_extra
-git clone git@github.com:opencv/opencv_extra.git && cd opencv_extra
+git clone https://github.com/opencv/opencv_extra.git && cd opencv_extra
 git checkout 4.9.0
 
 # scp opencv_extra's testdata to /data on your target
