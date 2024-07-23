@@ -2,6 +2,9 @@
 
 **Note**: QNX ports areo only supported from a **Linux host** operating system
 
+## PRE-REQUISITE
+**NOTE**: An installation of google test on your **SDP** is required. Please follow the build instruction for `googletest` with `gmock` and make sure it is installed to the same SDP folder that you will source below.
+
 # Compile the port for QNX in a Docker container
 
 Pre-requisite: Install Docker on Ubuntu https://docs.docker.com/engine/install/ubuntu/
