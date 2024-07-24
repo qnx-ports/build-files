@@ -14,7 +14,7 @@ Build the Docker image and create a Docker container:
 # Remember to let Docker run with root privileges: https://docs.docker.com/engine/install/linux-postinstall/
 
 # Clone build-files
-git clone https://gitlab.com/qnx/ports/build-files.git && cd build-files
+git clone https://gitlab.com/qnx/ports/build-files.git && cd build-files/docker
 
 # Build the Docker image and create a container
 ./docker-build-qnx-image.sh

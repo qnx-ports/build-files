@@ -1,0 +1,5 @@
+# Execute welcome script
+source /usr/local/qnx/welcome.sh
+
+# Change terminal prompt to indicate that you're in a Docker container
+PS1="[QNX] (\u) \w$ "
