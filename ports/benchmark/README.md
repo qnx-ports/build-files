@@ -54,9 +54,9 @@ Compile the benchmark source for desired architecture.
 
 e.g.
 
-    - scp ~/build-files/ports/benchmark/nto-aarch64-le/build/src/libbenchmark* qnxuser@<target-ip-address>:/data/home/qnxuser/lib
-    - scp ~/build-files/ports/benchmark/nto-aarch64-le/build/test/*test qnxuser@<target-ip-address>:/data/home/qnxuser/bin
-    - scp ~/build-files/ports/benchmark/nto-aarch64-le/build/lib/lib* qnxuser@<target-ip-address>:/data/home/qnxuser/lib
+    - scp ~/qnx_workspace/build-files/ports/benchmark/nto-aarch64-le/build/src/libbenchmark* qnxuser@<target-ip-address>:/data/home/qnxuser/lib
+    - scp ~/qnx_workspace/build-files/ports/benchmark/nto-aarch64-le/build/test/*test qnxuser@<target-ip-address>:/data/home/qnxuser/bin
+    - scp ~/qnx_workspace/build-files/ports/benchmark/nto-aarch64-le/build/lib/lib* qnxuser@<target-ip-address>:/data/home/qnxuser/lib
 
 ssh into your target and run the tests. And then use `su root -c <command>` to move files over to `system` partition under `PATH` and `LD_LIBRARY_PATH`
 
@@ -64,9 +64,9 @@ ssh into your target and run the tests. And then use `su root -c <command>` to m
 
 e.g.
 
-    - scp ~/build-files/ports/benchmark/nto-x86_64-o/build/lib/lib* root@<target-ip-address>:/system/lib
-    - scp ~/build-files/ports/benchmark/nto-x86_64-o/build/src/libbenchmark* root@<target-ip-address>:/system/lib
-    - scp ~/build-files/ports/benchmark/nto-x86_64-o/build/test/*test root@<target-ip-address>:/system/xbin
+    - scp ~/qnx_workspace/build-files/ports/benchmark/nto-x86_64-o/build/lib/lib* root@<target-ip-address>:/system/lib
+    - scp ~/qnx_workspace/build-files/ports/benchmark/nto-x86_64-o/build/src/libbenchmark* root@<target-ip-address>:/system/lib
+    - scp ~/qnx_workspace/build-files/ports/benchmark/nto-x86_64-o/build/test/*test root@<target-ip-address>:/system/xbin
 
 Make sure the library and binary path you're adding to is correct.
 
