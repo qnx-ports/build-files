@@ -123,12 +123,14 @@ export LD_PRELOAD=$LD_PRELOAD:/usr/lib/x86_64-linux-gnu/libzstd.so
 Use scp to move ros2_humble.tar.gz to the target
 
 ```bash
-scp ros2_humble.tar.gz root@<target-ip-address>:/system
+scp ros2_humble.tar.gz qnxuser@<target-ip-address>:/data/home/qnxuser
 ```
 
+**NOTE**: You need to make sure the destination folders on the target exist. After you scped them over, you either need to use `su root -c <command>` to move files over to `/system/xbin` and `/system/lib`, or add the destination folders to `PATH` and `LD_LIBRARY_PATH` accordingly. 
+
 ```bash
-ssh root@<target-ip-address>
-cd /system
+ssh qnxuser@<target-ip-address>
+cd /data/home/qnxuser
 tar -xvzf ./ros2_humble.tar.gz
 ```
 
@@ -154,16 +156,16 @@ export COLCON_PYTHON_EXECUTABLE=/system/xbin/python3
 Run listener in a terminal:
 
 ```bash
-cd /system/opt/ros/humble
-. /system/opt/ros/humble/setup.bash
+cd /data/home/qnxuser/opt/ros/humble
+. /data/home/qnxuser/opt/ros/humble/setup.bash
 ros2 run demo_nodes_cpp listener
 ```
 
 Run talker in another terminal:
 
 ```bash
-cd /system/opt/ros/humble
-. /system/opt/ros/humble/setup.bash
+cd /data/home/qnxuser/opt/ros/humble
+. /data/home/qnxuser/opt/ros/humble/setup.bash
 ros2 run demo_nodes_cpp talker
 ```
 
@@ -171,8 +173,8 @@ ros2 run demo_nodes_cpp talker
 
 Launch the dummy robot demo node on RPI4.
 ```bash
-cd /system/opt/ros/humble
-. /system/opt/ros/humble/setup.bash
+cd /data/home/qnxuser/opt/ros/humble
+. /data/home/qnxuser/opt/ros/humble/setup.bash
 ros2 dummy_robot_bringup dummy_robot_bringup.launch.py
 ```
 

@@ -44,16 +44,18 @@ BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/tinyxml2" make -C build-files/ports/
 
 scp libraries and tests to the target.
 ```bash
-scp -r $QNX_TARGET/aarch64le/usr/local/bin/tinyxml2_tests root@<target-ip-address>:/system/xbin
-scp $QNX_TARGET/aarch64le/usr/local/lib/libtiny* root@<target-ip-address>:/system/lib
+scp -r $QNX_TARGET/aarch64le/usr/local/bin/tinyxml2_tests qnxuser@<target-ip-address>:/data/home/qnxuser/bin
+scp $QNX_TARGET/aarch64le/usr/local/lib/libtiny* qnxuser@<target-ip-address>:/data/home/qnxuser/lib
 ```
+
+**NOTE**: You need to make sure the destination folders on the target exist. After you scped them over, you either need to use `su root -c <command>` to move files over to `/system/xbin` and `/system/lib`, or add the destination folders to `PATH` and `LD_LIBRARY_PATH` accordingly. 
 
 Run tests on the target.
 ```bash
 # ssh into the target
-ssh root@<target-ip-address>
+ssh qnxuser@<target-ip-address>
 
 # Run xmltest
-cd /system/xbin/tinyxml2_tests
+cd /data/home/qnxuser/bin/tinyxml2_tests
 ./xmltest
 ```

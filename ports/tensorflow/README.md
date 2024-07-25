@@ -77,23 +77,25 @@ build-files/ports/tensorflow/nto-aarch64-le/build/_deps/gemmlowp-build/libeight_
 build-files/ports/tensorflow/nto-aarch64-le/build/pthreadpool/libpthreadpool.so
 build-files/ports/tensorflow/nto-aarch64-le/build/_deps/google_benchmark-build/src/libbenchmark.so.1
 )
-scp ${libs[@]} root@<target ip or hostname>:/data/tflite/libs
+scp ${libs[@]} qnxuser@<target ip or hostname>:/data/home/qnxuser/tflite/libs
 ```
 
 scp those tests to the target.
 
 ```text
-scp build-files/ports/tensorflow/nto-aarch64-le/build/kernels/*_test root@<target ip or hostname>:/data/tflite/tests
+scp build-files/ports/tensorflow/nto-aarch64-le/build/kernels/*_test qnxuser@<target ip or hostname>:/data/home/qnxuser/tflite/tests
 ```
+
+**NOTE**: You need to make sure the destination folders on the target exist. After you scped them over, you either need to use `su root -c <command>` to move files over to `/system/xbin` and `/system/lib`, or add the destination folders to `PATH` and `LD_LIBRARY_PATH` accordingly. 
 
 Run tests on the target.
 
 ```bash
 # ssh into the target
-ssh root@<target-ip-address>
+ssh qnxuser@<target-ip-address>
 
-cd /data/tflite/tests
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/data/tflite/libs
+cd /data/home/qnxuser/tflite/tests
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/data/home/qnxuser/tflite/libs
 
 # Run tests
 for test in $(ls | grep _test) ; do

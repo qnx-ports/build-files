@@ -54,11 +54,11 @@ Compile the benchmark source for desired architecture.
 
 e.g.
 
-    - scp ~/build-files/ports/benchmark/nto-aarch64-le/build/src/libbenchmark* root@<target-ip-address>:/usr/lib
-    - scp ~/build-files/ports/benchmark/nto-aarch64-le/build/test/*test root@<target-ip-address>:/usr/bin
-    - scp ~/build-files/ports/benchmark/nto-aarch64-le/build/lib/lib* root@<target-ip-address>:/usr/lib
+    - scp ~/build-files/ports/benchmark/nto-aarch64-le/build/src/libbenchmark* qnxuser@<target-ip-address>:/data/home/qnxuser/lib
+    - scp ~/build-files/ports/benchmark/nto-aarch64-le/build/test/*test qnxuser@<target-ip-address>:/data/home/qnxuser/bin
+    - scp ~/build-files/ports/benchmark/nto-aarch64-le/build/lib/lib* qnxuser@<target-ip-address>:/data/home/qnxuser/lib
 
-ssh into your target and run the tests
+ssh into your target and run the tests. And then use `su root -c <command>` to move files over to `system` partition under `PATH` and `LD_LIBRARY_PATH`
 
 **QEMU**: Move Benchmark library and test binary to qemu instance:
 

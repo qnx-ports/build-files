@@ -59,7 +59,14 @@ QNX_PROJECT_ROOT="$(pwd)/numpy" make -C build-files/ports/numpy install -j$(npro
 Setup the target environment
 ```bash
 # scp numpy
-scp -r $QNX_TARGET/aarch64le/usr/local/lib/python3.11/site-packages/numpy root@<target-ip-address>:/system/lib/python3.11/site-packages
+scp -r $QNX_TARGET/aarch64le/usr/local/lib/python3.11/site-packages/numpy qnxuser@<target-ip-address>:/data/home/qnxuser/numpy
+
+```
+
+**NOTE**: You need to make sure the destination folders on the target exist. After you scped them over, you either need to use `su root -c <command>` to move files over to `/system/xbin` and `/system/lib`, or add the destination folders to `PATH` and `LD_LIBRARY_PATH` accordingly, to install them. 
+
+```bash
+su root -c cp -r /data/home/qnxuser/numpy /system/lib/python3.11/site-packages
 
 # Update system time
 ntpdate -sb 0.pool.ntp.org 1.pool.ntp.org

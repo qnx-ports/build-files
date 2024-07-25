@@ -42,20 +42,22 @@ BUILD_TESTING=ON QNX_PROJECT_ROOT="$(pwd)/mosquitto" make -C build-files/ports/m
 
 scp libraries and tests to the target.
 ```bash
-scp -r $QNX_TARGET/aarch64le/usr/local/bin/mqtt_tests root@<target-ip-address>:/system/xbin
-scp $QNX_TARGET/aarch64le/usr/local/lib/lib* root@<target-ip-address>:/system/lib
+scp -r $QNX_TARGET/aarch64le/usr/local/bin/mqtt_tests qnxuser@<target-ip-address>:/data/home/qnxuser/bin
+scp $QNX_TARGET/aarch64le/usr/local/lib/lib* qnxuser@<target-ip-address>:/data/home/qnxuser/lib
 ```
 
 Run tests on the target.
+**NOTE**: You need to make sure the destination folders on the target exist. After you scped them over, you either need to use `su root -c <command>` to move files over to `/system/xbin` and `/system/lib`, or add the destination folders to `PATH` and `LD_LIBRARY_PATH` accordingly. 
+
 ```bash
 # ssh into the target
-ssh root@<target-ip-address>
+ssh qnxuser@<target-ip-address>
 
 # Required for running tests
 export SNAP_NAME=mosquitto
 
 # Change directory to the test directory
-cd /system/xbin/mqtt_tests
+cd /data/home/qnxuser/bin/mqtt_tests
 TEST_PATH=${PWD}
 
 # Generate ssl stuff

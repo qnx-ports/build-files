@@ -76,22 +76,24 @@ git clone https://github.com/opencv/opencv_extra.git && cd opencv_extra
 git checkout 4.9.0
 
 # scp opencv_extra's testdata to /data on your target
-scp -r testdata root@<target-ip-address>:/data
+scp -r testdata qnxuser@<target-ip-address>:/data/home/qnxuser/testdata
 
 # scp opencv libraries
-scp $QNX_TARGET/aarch64le/usr/local/lib/libopencv* root@<target-ip-address>:/system/lib
+scp $QNX_TARGET/aarch64le/usr/local/lib/libopencv* qnxuser@<target-ip-address>:/data/home/qnxuser/lib
 
 # scp opencv tests
-scp -r $QNX_TARGET/aarch64le/usr/local/bin/opencv_tests root@<target-ip-address>:/system/xbin
+scp -r $QNX_TARGET/aarch64le/usr/local/bin/opencv_tests qnxuser@<target-ip-address>:/data/home/qnxuser/bin
 ```
+
+**NOTE**: You need to make sure the destination folders on the target exist. After you scped them over, you either need to use `su root -c <command>` to move files over to `/system/xbin` and `/system/lib`, or add the destination folders to `PATH` and `LD_LIBRARY_PATH` accordingly. 
 
 Run tests on the target.
 ```bash
 # ssh into the target
-ssh root@<target-ip-address>
+ssh qnxuser@<target-ip-address>
 
 # Run tests
-cd /system/xbin/opencv_tests
+cd /data/home/qnxuser/bin/opencv_tests
 chmod +x
 
 export OPENCV_TEST_DATA_PATH=/data/testdata
