@@ -57,7 +57,7 @@ scp ${QNX_TARGET}/aarch64le/lib/libgomp.so.1 qnxuser@<target-ip-address>:/data/h
 Run tests on the target.
 ```bash
 # ssh into the target
-ssh root@<target-ip-address>
+ssh qnxuser@<target-ip-address>
 
 # Run unit tests
 cd /system/xbin/ComputeLibrary_tests

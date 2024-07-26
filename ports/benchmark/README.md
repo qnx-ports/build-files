@@ -60,14 +60,6 @@ e.g.
 
 ssh into your target and run the tests. And then use `su root -c <command>` to move files over to `system` partition under `PATH` and `LD_LIBRARY_PATH`
 
-**QEMU**: Move Benchmark library and test binary to qemu instance:
-
-e.g.
-
-    - scp ~/qnx_workspace/build-files/ports/benchmark/nto-x86_64-o/build/lib/lib* root@<target-ip-address>:/system/lib
-    - scp ~/qnx_workspace/build-files/ports/benchmark/nto-x86_64-o/build/src/libbenchmark* root@<target-ip-address>:/system/lib
-    - scp ~/qnx_workspace/build-files/ports/benchmark/nto-x86_64-o/build/test/*test root@<target-ip-address>:/system/xbin
-
 Make sure the library and binary path you're adding to is correct.
 
 ssh into your target and run the tests with the following flags for each test:

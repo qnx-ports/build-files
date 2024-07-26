@@ -84,16 +84,6 @@ python3 ./test_qnx.py
 ```
 
 ### Failed Test
-#### QEMU: possibly due to VM internet config
-- ./02-subpub-qos2-receive-maximum-1.py
-- ./02-subpub-qos2-receive-maximum-2.py
-- ./06-bridge-clean-session-csF-lcsF.py
-- ./06-bridge-clean-session-csF-lcsN.py
-- ./06-bridge-clean-session-csF-lcsT.py
-- ./06-bridge-clean-session-csT-lcsF.py
-- ./06-bridge-clean-session-csT-lcsN.py
-- ./06-bridge-clean-session-csT-lcsT.py
-- ./08-ssl-bridge.py
 
-#### QEMU and RPI4: failed when run in batch but succeeded when run individually
+#### RPI4: failed when run in batch but succeeded when run individually
 - ./02-subscribe-qos1.py

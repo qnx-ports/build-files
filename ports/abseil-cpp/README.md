@@ -60,10 +60,5 @@ ssh into target and run the binary. And then use `su root -c <command>` to move 
 
 In order to run all test binaries, you can copy over the qnxtests.sh file and run the file instead.
 
-
-**QEMU**: Move abseil library and test binary to qemu instance:
-
-    - scp ~/qnx_workspace/build-files/ports/abseil-cpp/nto-x86_64/build/bin/* root<target-ip-address>:/system/xbin
-    - scp ~/qnx_workspace/build-files/ports/abseil-cpp/nto-x86_64/build/lib/lib* root<target-ip-address>:/system/lib
 ---
 Tests results are provided on the wiki: https://wikis.rim.net/display/OSG/QNX+Open+Source+Group
