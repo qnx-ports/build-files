@@ -41,5 +41,3 @@ source ~/qnx800/qnxsdp-env.sh
 # Build cpuinfo
 QNX_PROJECT_ROOT="$(pwd)/cpuinfo" make -C build-files/ports/cpuinfo install -j$(nproc)
 ```
-
-# How to run tests
