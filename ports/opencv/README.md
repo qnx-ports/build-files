@@ -18,15 +18,17 @@ cd build-files/docker
 # source qnxsdp-env.sh in
 source ~/qnx800/qnxsdp-env.sh
 
-# source python3.11 venv script
-source /usr/local/qnx/env/bin/activate
-
 # Clone numpy
 cd ~/qnx_workspace
 git clone https://gitlab.com/qnx/ports/opencv.git
 git clone https://gitlab.com/qnx/ports/numpy.git && cd numpy
 git submodule update --init --recursive
 cd ~/qnx_workspace
+
+# Create a python virtual environment and install necessary packages
+python3.11 -m venv env
+source env/bin/activate
+pip install -U pip Cython wheel
 
 # Build numpy first
 QNX_PROJECT_ROOT="$(pwd)/numpy" make -C build-files/ports/numpy install -j$(nproc)
@@ -78,7 +80,7 @@ git checkout 4.9.0
 # scp opencv_extra's testdata to /data on your target
 scp -r testdata qnxuser@<target-ip-address>:/data/home/qnxuser/testdata
 
-# scp opencv libraries
+# scp opencv libraries (you may first need to create the lib directory)
 scp $QNX_TARGET/aarch64le/usr/local/lib/libopencv* qnxuser@<target-ip-address>:/data/home/qnxuser/lib
 
 # scp opencv tests
@@ -94,9 +96,11 @@ ssh qnxuser@<target-ip-address>
 
 # Run tests
 cd /data/home/qnxuser/bin/opencv_tests
-chmod +x
+chmod +x *
 
 export OPENCV_TEST_DATA_PATH=/data/testdata
+
+export LD_LIBRARY_PATH=LD_LIBRARY_PATH:/data/home/qnxuser/lib
 
 ./opencv_perf_calib3d
 ./opencv_perf_core
