@@ -45,10 +45,8 @@ scp libraries and tests to the target.
 scp -r $QNX_TARGET/aarch64le/usr/local/bin/googletest_tests qnxuser@<target-ip-address>:/data/home/qnxuser/bin
 scp $QNX_TARGET/aarch64le/usr/local/lib/libg* qnxuser@<target-ip-address>:/data/home/qnxuser/lib
 ```
-
-**NOTE**: You need to make sure the destination folders on the target exist. After you scped them over, you either need to use `su root -c <command>` to move files over to `/system/xbin` and `/system/lib`, or add the destination folders to `PATH` and `LD_LIBRARY_PATH` accordingly. 
-
 Run tests on the target.
+
 ```bash
 # ssh into the target
 ssh qnxuser@<target-ip-address>

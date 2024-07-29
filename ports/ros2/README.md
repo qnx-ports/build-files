@@ -126,8 +126,6 @@ Use scp to move ros2_humble.tar.gz to the target
 scp ros2_humble.tar.gz qnxuser@<target-ip-address>:/data/home/qnxuser
 ```
 
-**NOTE**: You need to make sure the destination folders on the target exist. After you scped them over, you either need to use `su root -c <command>` to move files over to `/system/xbin` and `/system/lib`, or add the destination folders to `PATH` and `LD_LIBRARY_PATH` accordingly. 
-
 ```bash
 ssh qnxuser@<target-ip-address>
 cd /data/home/qnxuser

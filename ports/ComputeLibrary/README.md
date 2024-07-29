@@ -52,7 +52,6 @@ scp ${QNX_TARGET}/aarch64le/usr/local/lib/libarm_compute* qnxuser@<target-ip-add
 # Move the ARM Compute Library to your QNX target
 scp ${QNX_TARGET}/aarch64le/lib/libgomp.so.1 qnxuser@<target-ip-address>:/data/home/qnxuser/lib
 ```
-**NOTE**: You need to make sure the destination folders on the target exist. After you scped them over, you either need to use `su root -c <command>` to move files over to `/system/xbin` and `/system/lib`, or add the destination folders to `PATH` and `LD_LIBRARY_PATH` accordingly. 
 
 Run tests on the target.
 ```bash

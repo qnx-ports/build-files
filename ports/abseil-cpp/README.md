@@ -56,7 +56,7 @@ e.g.
 
 Make sure to find all libsabsl* libraries and copy them over to the target: installed under ~/qnx800_ea/target/qnx/aarch64le/usr/lib
 
-ssh into target and run the binary. And then use `su root -c <command>` to move files over to `system` partition under `PATH` and `LD_LIBRARY_PATH`
+ssh into target and run the binary. 
 
 In order to run all test binaries, you can copy over the qnxtests.sh file and run the file instead.
 

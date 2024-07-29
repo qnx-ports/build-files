@@ -48,8 +48,6 @@ scp -r $QNX_TARGET/aarch64le/usr/local/bin/tinyxml2_tests qnxuser@<target-ip-add
 scp $QNX_TARGET/aarch64le/usr/local/lib/libtiny* qnxuser@<target-ip-address>:/data/home/qnxuser/lib
 ```
 
-**NOTE**: You need to make sure the destination folders on the target exist. After you scped them over, you either need to use `su root -c <command>` to move files over to `/system/xbin` and `/system/lib`, or add the destination folders to `PATH` and `LD_LIBRARY_PATH` accordingly. 
-
 Run tests on the target.
 ```bash
 # ssh into the target

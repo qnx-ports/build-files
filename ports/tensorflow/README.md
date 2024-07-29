@@ -86,7 +86,7 @@ scp those tests to the target.
 scp build-files/ports/tensorflow/nto-aarch64-le/build/kernels/*_test qnxuser@<target ip or hostname>:/data/home/qnxuser/tflite/tests
 ```
 
-**NOTE**: You need to make sure the destination folders on the target exist. After you scped them over, you either need to use `su root -c <command>` to move files over to `/system/xbin` and `/system/lib`, or add the destination folders to `PATH` and `LD_LIBRARY_PATH` accordingly. 
+**NOTE**: You need to make sure the destination folders on the target exist.
 
 Run tests on the target.
 

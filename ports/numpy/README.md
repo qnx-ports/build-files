@@ -65,8 +65,6 @@ scp -r $QNX_TARGET/aarch64le/usr/local/lib/python3.11/site-packages/numpy qnxuse
 
 ```
 
-**NOTE**: You need to make sure the destination folders on the target exist. After you scped them over, you either need to use `su root -c <command>` to move files over to `/system/xbin` and `/system/lib`, or add the destination folders to `PATH` and `LD_LIBRARY_PATH` accordingly, to install them. 
-
 ```bash
 su root -c cp -r /data/home/qnxuser/numpy /system/lib/python3.11/site-packages
 

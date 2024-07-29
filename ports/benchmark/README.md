@@ -58,7 +58,7 @@ e.g.
     - scp ~/qnx_workspace/build-files/ports/benchmark/nto-aarch64-le/build/test/*test qnxuser@<target-ip-address>:/data/home/qnxuser/bin
     - scp ~/qnx_workspace/build-files/ports/benchmark/nto-aarch64-le/build/lib/lib* qnxuser@<target-ip-address>:/data/home/qnxuser/lib
 
-ssh into your target and run the tests. And then use `su root -c <command>` to move files over to `system` partition under `PATH` and `LD_LIBRARY_PATH`
+ssh into your target and run the tests.
 
 Make sure the library and binary path you're adding to is correct.
 
