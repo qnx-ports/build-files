@@ -87,3 +87,7 @@ QNX_PROJECT_ROOT="$(pwd)/lighttpd1.4" JLEVEL=$(nproc) make -C build-files/ports/
 * \<full-path\>/aarch64le/usr/local/lib/mod_*.so
 * \<full-path\>/aarch64le/usr/local/sbin/lighttpd
 * \<full-path\>/aarch64le/usr/local/sbin/lighttpd-angel
+
+## Test instruction
+
+Currently, there is no way to run tests because tests require Perl to run. Perl for QNX is only used internally at the moment.
