@@ -66,8 +66,6 @@ scp -r $QNX_TARGET/aarch64le/usr/local/lib/python3.11/site-packages/numpy qnxuse
 ```
 
 ```bash
-su root -c cp -r /data/home/qnxuser/numpy /system/lib/python3.11/site-packages
-
 # Update system time
 ntpdate -sb 0.pool.ntp.org 1.pool.ntp.org
 
@@ -75,9 +73,11 @@ ntpdate -sb 0.pool.ntp.org 1.pool.ntp.org
 export TMPDIR=/
 python3 -m ensurepip
 # Add pip to PATH
-export PATH=$PATH:/system/bin
-pip3 install pytest -t /system/lib/python3.11/site-packages/
-pip3 install hypothesis -t /system/lib/python3.11/site-packages/
+export PATH=$PATH:/system/bin:/data/home/qnxuser/.local/bin
+pip3 install pytest -t /data/home/qnxuser/.local/lib/python3.11/site-packages/
+pip3 install hypothesis -t /data/home/qnxuser/.local/lib/python3.11/site-packages/
+# Add python packages to PYTHONPATH
+export PYTHONPATH=$PYTHONPATH:/data/home/qnxuser/.local/lib/python3.11/site-packages/:/data/home/qnxuser/
 
 # Start the python3 interpretor on Raspberry Pi
 python3
