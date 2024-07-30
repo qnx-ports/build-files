@@ -70,7 +70,7 @@ scp -r $QNX_TARGET/aarch64le/usr/local/lib/python3.11/site-packages/numpy qnxuse
 ntpdate -sb 0.pool.ntp.org 1.pool.ntp.org
 
 # Install pip to install pytest
-export TMPDIR=/
+export TMPDIR=/data
 python3 -m ensurepip
 # Add pip to PATH
 export PATH=$PATH:/system/bin:/data/home/qnxuser/.local/bin
