@@ -144,9 +144,12 @@ export TMPDIR=/data
 python3 -m ensurepip
 # Add pip to PATH
 export PATH=$PATH:/system/bin
-pip3 install packaging pyyaml lark -t /system/lib/python3.11/site-packages/
-export PYTHONPATH=$PYTHONPATH:/system/opt/ros/humble/usr/lib/python3.11/site-packages/
+pip3 install packaging pyyaml lark -t /data/home/qnxuser/.local/lib/python3.11/site-packages/
+export PYTHONPATH=$PYTHONPATH:/system/opt/ros/humble/usr/lib/python3.11/site-packages/:/data/home/qnxuser/.local/lib/python3.11/site-packages/
 export COLCON_PYTHON_EXECUTABLE=/system/xbin/python3
+
+# Start the python3 interpretor on Raspberry Pi
+python3
 ```
 
 ### Running the Listner Talker Demo on RPI4
