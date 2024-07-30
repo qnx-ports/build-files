@@ -143,9 +143,9 @@ mkdir -p /data
 export TMPDIR=/data
 python3 -m ensurepip
 # Add pip to PATH
-export PATH=$PATH:/system/bin
+export PATH=$PATH:/data/home/qnxuser/.local/bin
 pip3 install packaging pyyaml lark -t /data/home/qnxuser/.local/lib/python3.11/site-packages/
-export PYTHONPATH=$PYTHONPATH:/system/opt/ros/humble/usr/lib/python3.11/site-packages/:/data/home/qnxuser/.local/lib/python3.11/site-packages/
+export PYTHONPATH=$PYTHONPATH:/data/home/qnxuser/opt/ros/humble/usr/lib/python3.11/site-packages/:/data/home/qnxuser/.local/lib/python3.11/site-packages/
 export COLCON_PYTHON_EXECUTABLE=/system/xbin/python3
 
 # Start the python3 interpretor on Raspberry Pi
@@ -176,7 +176,7 @@ Launch the dummy robot demo node on RPI4.
 ```bash
 cd /data/home/qnxuser/opt/ros/humble
 . /data/home/qnxuser/opt/ros/humble/setup.bash
-ros2 dummy_robot_bringup dummy_robot_bringup.launch.py
+ros2 launch dummy_robot_bringup dummy_robot_bringup.launch.py
 ```
 
 Install ROS2 Humble on your Ubuntu host.
