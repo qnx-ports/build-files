@@ -67,6 +67,36 @@ JLEVEL=4 make install
 
 - Testing
 
-Tests will be installed to QNX_TARGET/CPUVARDIR/usr/bin/Fast-DDS_test.
+Copy host files to the target.
+```bash
+TARGET_IP=<target-ip-address>
 
-scp the installed libraries under QNX_TARGET/CPUVARDIR/usr/lib and QNX_TARGET/CPUVARDIR/usr/bin/Fast-DDS_test to your target and run them.
+# Copy tests from QNX_TARGET/CPUVARDIR/usr/bin/Fast-DDS_test to the target.
+scp -r $QNX_TARGET/aarch64le/usr/bin/Fast-DDS_test qnxuser@$TARGET_IP:/data/home/qnxuser
+
+# Copy libs from QNX_TARGET/CPUVARDIR/usr/lib to the target.
+scp $QNX_TARGET/aarch64le/usr/lib/libgtest.so.1.13.0 qnxuser@$TARGET_IP:/data/home/qnxuser
+scp $QNX_TARGET/aarch64le/usr/lib/libgmock.so.1.13.0 qnxuser@$TARGET_IP:/data/home/qnxuser
+scp $QNX_TARGET/aarch64le/usr/lib/libfastrtps.so.2.10 qnxuser@$TARGET_IP:/data/home/qnxuser
+scp $QNX_TARGET/aarch64le/usr/lib/libfastcdr.so.1 qnxuser@$TARGET_IP:/data/home/qnxuser
+scp $QNX_TARGET/aarch64le/usr/lib/libtinyxml2.so.6 qnxuser@$TARGET_IP:/data/home/qnxuser
+scp $QNX_TARGET/aarch64le/usr/lib/libfoonathan_memory-0.7.3.so qnxuser@$TARGET_IP:/data/home/qnxuser
+```
+
+Both examples and unit tests will now be on the target.
+
+To setup and run only the unit tests on the target.
+```bash
+# Move the libraries to /usr/lib
+cd /data/home/qnxuser
+su root -c "mv *.so* /usr/lib"
+
+# Run the tests
+# NOTE: Some tests are currently stuck. It may be more helpful to run them
+# individually.
+cd /data/home/qnxuser/Fast-DDS_test
+for test in $(find ./unittest -type f | grep Tests) ; do
+    chmod +x $test
+    ./$test
+done
+```
