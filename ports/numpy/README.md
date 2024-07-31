@@ -22,11 +22,6 @@ git clone https://gitlab.com/qnx/ports/numpy.git && cd numpy
 git submodule update --init --recursive
 cd ~/qnx_workspace
 
-# Create a python virtual environment and install necessary packages
-python3.11 -m venv env
-source env/bin/activate
-pip install -U pip Cython wheel
-
 # Build numpy
 QNX_PROJECT_ROOT="$(pwd)/numpy" make -C build-files/ports/numpy install -j$(nproc)
 ```
