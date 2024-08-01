@@ -63,7 +63,7 @@ mosquitto_all:
 test: mosquitto_all
 	@cd build && make install $(MAKE_ARGS)
 	@cd build/test/broker/c && make -f Makefile.qnx clean && make -f Makefile.qnx $(MAKE_ARGS) TARGET=$(MOSQUITTO_INSTALL_ROOT) CPUVARDIR=$(CPUVARDIR) PREFIX=$(PREFIX)
-	@cd build/test/lib/c && make -f Makefile.qnx clean&& make -f Makefile.qnx $(MAKE_ARGS) TARGET=$(MOSQUITTO_INSTALL_ROOT) CPUVARDIR=$(CPUVARDIR) PREFIX=$(PREFIX)
+	@cd build/test/lib/c && make -f Makefile.qnx clean&& make -f Makefile.qnx $(MAKE_ARGS) TARGET=$(MOSQUITTO_INSTALL_ROOT) CPUVARDIR=$(CPUVARDIR) PREFIX=$(PREFIX) QNX_PROJECT_ROOT=$(QNX_PROJECT_ROOT)
 	@cd build/test/lib/cpp && make -f Makefile.qnx clean && make -f Makefile.qnx $(MAKE_ARGS) TARGET=$(MOSQUITTO_INSTALL_ROOT) CPUVARDIR=$(CPUVARDIR) PREFIX=$(PREFIX)
 
 install: mosquitto_all test
