@@ -87,10 +87,6 @@ Both examples and unit tests will now be on the target.
 
 To setup and run only the unit tests on the target.
 ```bash
-# Move the libraries to /usr/lib
-cd /data/home/qnxuser/lib
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PWD
-
 # Run the tests
 # NOTE: Some tests are currently stuck. It may be more helpful to run them
 # individually.

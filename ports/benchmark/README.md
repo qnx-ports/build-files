@@ -56,7 +56,8 @@ e.g.
 
     - scp ~/qnx_workspace/build-files/ports/benchmark/nto-aarch64-le/build/src/libbenchmark* qnxuser@<target-ip-address>:/data/home/qnxuser/lib
     - scp ~/qnx_workspace/build-files/ports/benchmark/nto-aarch64-le/build/test/*test qnxuser@<target-ip-address>:/data/home/qnxuser/bin
-    - scp ~/qnx_workspace/build-files/ports/benchmark/nto-aarch64-le/build/lib/lib* qnxuser@<target-ip-address>:/data/home/qnxuser/lib
+    - scp $QNX_TARGET/aarch64le/usr/lib/libgtest* qnxuser@<target-ip-address>:/data/home/qnxuser/lib
+    - scp $QNX_TARGET/aarch64le/usr/lib/libgmock* qnxuser@<target-ip-address>:/data/home/qnxuser/lib
 
 ssh into your target and run the tests.
 
