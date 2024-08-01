@@ -66,3 +66,47 @@ Currently, when numpy is installed on your host system, the build fails:
 ```
 
 The workaround is to run `sudo pip3 uninstall numpy` or `pip3 uninstall numpy` to uninstall numpy
+
+# Test instruction
+
+`build_and_install_tests.sh` installs tests at $QNX_TARGET/aarch64le/usr/local/bin/boost_tests.
+
+```bash
+# Make sure /data/home/qnxuser/bin and /data/home/qnxuser/lib exist on your target
+
+# Move boost tests
+scp -r $QNX_TARGET/aarch64le/usr/local/bin/boost_tests qnxuser@<target-ip-address>:/data/home/qnxuser/bin
+# Move boost library
+scp $QNX_TARGET/aarch64le/usr/local/lib/liboost* qnxuser@<target-ip-address>:/data/home/qnxuser/lib
+
+# ssh into the target
+ssh qnxuser@<target-ip-address>
+
+# Add boost library to LD_LIBRARAY_PATH
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/data/home/qnxuser/lib
+
+cd /data/home/qnxuser/bin/boost_tests
+
+# You will see boost tests under each boost library folder
+.
+├── atomic
+│   ├── atomic_api
+│   ├── atomicity
+│   ├── ...
+├── chrono
+│   ├── arithmetic_pass_h
+│   ├── chrono_unit_test_d
+│   ├── ...
+
+# cd into each directory and run the tests
+cd atomic
+./atomic_api
+./atomicity
+cd ../chrono
+./arithmetic_pass_h
+./chrono_unit_test_d
+
+# A test folder might contain a .so file which will be needed to run the tests.
+# For example, system folder has libthrow_test.so.1.82.0. Move it to /data/home/qnxuser/lib
+cp ./system/libthrow_test.so.1.82.0 /data/home/qnxuser/lib
+```
