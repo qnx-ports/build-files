@@ -75,12 +75,12 @@ TARGET_IP=<target-ip-address>
 scp -r $QNX_TARGET/aarch64le/usr/bin/Fast-DDS_test qnxuser@$TARGET_IP:/data/home/qnxuser
 
 # Copy libs from QNX_TARGET/CPUVARDIR/usr/lib to the target.
-scp $QNX_TARGET/aarch64le/usr/lib/libgtest.so.1.13.0 qnxuser@$TARGET_IP:/data/home/qnxuser
-scp $QNX_TARGET/aarch64le/usr/lib/libgmock.so.1.13.0 qnxuser@$TARGET_IP:/data/home/qnxuser
-scp $QNX_TARGET/aarch64le/usr/lib/libfastrtps.so.2.10 qnxuser@$TARGET_IP:/data/home/qnxuser
-scp $QNX_TARGET/aarch64le/usr/lib/libfastcdr.so.1 qnxuser@$TARGET_IP:/data/home/qnxuser
-scp $QNX_TARGET/aarch64le/usr/lib/libtinyxml2.so.6 qnxuser@$TARGET_IP:/data/home/qnxuser
-scp $QNX_TARGET/aarch64le/usr/lib/libfoonathan_memory-0.7.3.so qnxuser@$TARGET_IP:/data/home/qnxuser
+scp $QNX_TARGET/aarch64le/usr/lib/libgtest.so.1.13.0 qnxuser@$TARGET_IP:/data/home/qnxuser/lib
+scp $QNX_TARGET/aarch64le/usr/lib/libgmock.so.1.13.0 qnxuser@$TARGET_IP:/data/home/qnxuser/lib
+scp $QNX_TARGET/aarch64le/usr/lib/libfastrtps.so.2.10 qnxuser@$TARGET_IP:/data/home/qnxuser/lib
+scp $QNX_TARGET/aarch64le/usr/lib/libfastcdr.so.1 qnxuser@$TARGET_IP:/data/home/qnxuser/lib
+scp $QNX_TARGET/aarch64le/usr/lib/libtinyxml2.so.6 qnxuser@$TARGET_IP:/data/home/qnxuser/lib
+scp $QNX_TARGET/aarch64le/usr/lib/libfoonathan_memory-0.7.3.so qnxuser@$TARGET_IP:/data/home/qnxuser/lib
 ```
 
 Both examples and unit tests will now be on the target.
@@ -88,8 +88,8 @@ Both examples and unit tests will now be on the target.
 To setup and run only the unit tests on the target.
 ```bash
 # Move the libraries to /usr/lib
-cd /data/home/qnxuser
-su root -c "mv *.so* /usr/lib"
+cd /data/home/qnxuser/lib
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PWD
 
 # Run the tests
 # NOTE: Some tests are currently stuck. It may be more helpful to run them
