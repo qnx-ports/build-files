@@ -1,2 +1,17 @@
+# Ignore development files
+# VS Code
+.vscode/
+*.code-workspace
+
+# Ignore build artifacts
+# Binary executables
 */nto-*/*
 !*/nto-*/Makefile
+# Libraries and symbols
+*.so
+*.a
+*.sym
+# Temporary build artifacts
+*.o
+*.dep
+*.pinfo
