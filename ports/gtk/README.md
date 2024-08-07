@@ -56,15 +56,24 @@ make -C build-files/ports/gtk INSTALL_ROOT_nto=/tmp/staging USE_INSTALL_ROOT=tru
 
 # How to run the gtk4 demo
 
-1. Make sure your target is booted with a display device connected and ensure the QNX Screen subsystem works.
-2. Transfer all files from the correct architecture subdirectory inside the staging area to your target.
-   - The default prefix used by the build scripts is `/usr/local`, but can be changed using the `PREFIX` variable.
-   - You can copy the files to an arbitray prefix on target too, since GTK itself does not depend on the installation path.
-3. Set the following env variables (`<prefix>` is the directory on target where all the subdirectories emitted by GTK such as `bin`, `lib` is located):
-   - `XDG_DATA_DIRS=<prefix>/share`
-   - `LD_LIBRARY_PATH=<prefix>/lib`
-   - `GSK_RENDERER=gl` on Raspberry Pi 4 (see below for explanation)
-4. Run `gtk4-demo` in the bin directory.
+```bash
+# gtk will be installed to /tmp/staging
+# scp the contents to /data/home/qnxuser
+TARGET_IP_ADDRESS=<target-ip-address>
+scp -r /tmp/staging/aarch64le/usr/local/bin qnxuser@$TARGET_IP_ADDRESS:/data/home/qnxuser
+scp -r /tmp/staging/aarch64le/usr/local/lib qnxuser@$TARGET_IP_ADDRESS:/data/home/qnxuser
+scp -r /tmp/staging/aarch64le/usr/local/share qnxuser@$TARGET_IP_ADDRESS:/data/home/qnxuser
+
+# ssh into your QNX target
+ssh qnxuser@$TARGET_IP_ADDRESS
+
+# Set environment variables
+export XDG_DATA_DIRS=/data/home/qnxuser/share
+export GSK_RENDERER=gl
+
+# Run the demo
+gtk4-demo
+```
 
 # Caveats
 - This is only an **experimental port of GTK4** itself. Dependency libraries, such as `glib`, are not fully ported and are not guaranteed to be fully functional outside of those functionalities used by GTK4.
