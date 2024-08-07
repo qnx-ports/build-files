@@ -47,7 +47,11 @@ RUN apt update && apt install -y \
 	pkg-config \
 	gfortran \
 	vim \
-	dos2unix
+	dos2unix \
+	sassc \
+	libglib2.0-bin \
+	libglib2.0-dev \
+	ninja-build
 
 # Install python 3.11
 RUN add-apt-repository ppa:deadsnakes/ppa -y && \
