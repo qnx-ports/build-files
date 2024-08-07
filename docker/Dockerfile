@@ -51,7 +51,9 @@ RUN apt update && apt install -y \
 	sassc \
 	libglib2.0-bin \
 	libglib2.0-dev \
-	ninja-build
+	ninja-build \
+	net-tools \
+	tree
 
 # Install python 3.11
 RUN add-apt-repository ppa:deadsnakes/ppa -y && \
