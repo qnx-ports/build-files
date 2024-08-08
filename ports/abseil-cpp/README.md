@@ -52,11 +52,9 @@ QNX_PROJECT_ROOT="$(pwd)/abseil-cpp" make -C build-files/ports/abseil-cpp JLEVEL
 e.g.
 
     - scp ~/qnx_workspace/build-files/ports/abseil-cpp/nto-aarch64-le/build/bin/* qnxuser@<target-ip-address>:/data/home/qnxuser/bin
-    - scp ~/qnx_workspace/build-files/ports/abseil-cpp/nto-aarch64-le/build/absl/base/lib* qnxuser@<target-ip-address>:/data/home/qnxuser/lib
+    - scp $(find ~/qnx_workspace/build-files/ports/abseil-cpp/nto-aarch64-le/build/ -name "libabsl*") qnxuser@<target-ip-address>:/data/home/qnxuser/lib
 
-**NOTE**: The command above is just an example to copy files from build directory. There will be multiple locations under the build output directory that contains libraries, and they should be installed to your SDP. You need to make sure to find **ALL** libsabsl* libraries and copy them over to the target installed under <Your-QNX-PATH>/target/qnx/aarch64le/usr/local/lib, or manually find all libabsl* libraries under `nto-aarch64-le/build` and copy them over. 
-
-ssh into target and run the binary. 
+ssh into target and run the binaries you copied over to target `/data/home/qnxuser/bin` folder. 
 
 In order to run all test binaries, you can copy over the qnxtests.sh file and run the file instead.
 
