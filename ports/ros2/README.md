@@ -200,3 +200,7 @@ rviz2
 ```
 
 Please refer to https://docs.ros.org/en/humble/Tutorials/Demos/dummy-robot-demo.html for more details about the dummy robot demo.
+
+# How to build your own node
+
+Please refer to the README.md inside the qnx-ros2-workspace folder.
