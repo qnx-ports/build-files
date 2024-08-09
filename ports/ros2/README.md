@@ -1,5 +1,7 @@
 **NOTE**: QNX ports are only supported from a Linux host operating system
 
+ROS2 Humble for QNX
+
 # Compile the port for QNX in a Docker container
 
 Currently the port is supported for QNX SDP 7.1 and 8.0.
@@ -42,6 +44,9 @@ vcs import src < ros2.repos
 # Run required scripts
 ./scripts/colcon-ignore.sh
 ./scripts/patch.sh
+
+# Specify a specific architecture you want to build it for. Otherwise, it will build for both x86_64 and aarch64
+export CPU=aarch64
 
 # Build ros2
 ./scripts/build-ros2.sh
@@ -113,6 +118,9 @@ vcs import src < ros2.repos
 
 # Set LD_PRELOAD to the host libzstd.so for x86_64 SDP 7.1 builds
 export LD_PRELOAD=$LD_PRELOAD:/usr/lib/x86_64-linux-gnu/libzstd.so
+
+# Specify a specific architecture you want to build it for. Otherwise, it will build for both x86_64 and aarch64
+export CPU=aarch64
 
 # Build ros2
 ./scripts/build-ros2.sh
