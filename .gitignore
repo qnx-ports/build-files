@@ -5,8 +5,8 @@
 
 # Ignore build artifacts
 # Binary executables
-*/nto-*/*
-!*/nto-*/Makefile
+**/nto-*/*
+!**/nto-*/Makefile
 # Libraries and symbols
 *.so
 *.a
