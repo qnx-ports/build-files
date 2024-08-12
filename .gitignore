@@ -15,6 +15,7 @@
 *.o
 *.dep
 *.pinfo
+*.cfg
 
 # ROS2 build artifacts
 build/
