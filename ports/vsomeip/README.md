@@ -22,6 +22,7 @@ cd build-files/docker
 ./docker-create-container.sh
 
 # Now you are in the Docker container
+WORKSPACE=${PWD}
 
 # source qnxsdp-env.sh in
 source ~/qnx710/qnxsdp-env.sh
@@ -65,7 +66,6 @@ source ~/qnx710/qnxsdp-env.sh
 
 # Clone boost
 cd ~/qnx_workspace
-WORKSPACE=${PWD}
 git clone https://github.com/boostorg/boost.git && cd boost
 git checkout boost-1.78.0
 git submodule update --init --recursive
