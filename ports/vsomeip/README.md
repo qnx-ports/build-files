@@ -97,21 +97,24 @@ ${QNX_TARGET}/${CPUVARDIR}/usr/local/lib/libvsomeip3*
 ${QNX_TARGET}/${CPUVARDIR}/usr/local/bin/vsomeip_tests
 ```
 
-Move the files to the target:
+Move the files to the target (note, mDNS is configured from /boot/qnx_config.txt
+and uses qnxpi.local by default):
 ```bash
-scp $QNX_TARGET/$CPUVARDIR/usr/local/lib/libboost* root@<target-ip-address>:/usr/lib
-scp $QNX_TARGET/$CPUVARDIR/usr/local/lib/libvsomeip3* root@<target-ip-address>:/usr/lib
-scp -r $QNX_TARGET/$CPUVARDIR/usr/local/bin/vsomeip_tests root@<target-ip-address>:/usr/bin
+TARGET_HOST=<target-ip-address-or-hostname>
+
+scp $QNX_TARGET/$CPUVARDIR/usr/local/lib/libboost* root@$TARGET_HOST:/data/home/qnxuser/lib
+scp $QNX_TARGET/$CPUVARDIR/usr/local/lib/libvsomeip3* root@$TARGET_HOST:/data/home/qnxuser/lib
+scp -r $QNX_TARGET/$CPUVARDIR/usr/local/bin/vsomeip_tests root@$TARGET_HOST:/data/home/qnxuser/bin
 ```
 
 ssh into the target and chmod +x the tests:
 ```bash
-ssh root@<target-ip-address>
-chmod -R +x /usr/bin/vsomeip_tests
-cd /usr/bin/vsomeip_tests/test/network_tests
+ssh qnxuser@$TARGET_HOST
+chmod -R +x /data/home/qnxuser/bin/vsomeip_tests
+cd /data/home/qnxuser/bin/vsomeip_tests/test/network_tests
 
 # Only required for 3.4.10
-cp /usr/bin/vsomeip_tests/test/common/libvsomeip_utilities.so /usr/lib
+cp /data/home/qnxuser/vsomeip_tests/test/common/libvsomeip_utilities.so /data/home/qnxuser/lib
 ```
 
 We will use 2 devices for the tests: a QNX 7.1 target, and the host Linux PC.

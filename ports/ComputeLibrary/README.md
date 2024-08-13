@@ -42,21 +42,24 @@ BUILD_EXAMPLES="ON" BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/ComputeLibrary" 
 
 # How to run tests
 
-scp libraries and tests to the target.
+scp libraries and tests to the target (note, mDNS is configured from
+/boot/qnx_config.txt and uses qnxpi.local by default).
 ```bash
+TARGET_HOST=<target-ip-address-or-hostname>
+
 # Move neon test binaries to your QNX target
-scp -r ${QNX_TARGET}/aarch64le/usr/local/bin/ComputeLibrary_tests/ qnxuser@<target-ip-address>:/data/home/qnxuser/bin
+scp -r $QNX_TARGET/aarch64le/usr/local/bin/ComputeLibrary_tests/ qnxuser@$TARGET_HOST:/data/home/qnxuser/bin
 
 # Move the ARM Compute Library to your QNX target
-scp ${QNX_TARGET}/aarch64le/usr/local/lib/libarm_compute* qnxuser@<target-ip-address>:/data/home/qnxuser/lib
+scp $QNX_TARGET/aarch64le/usr/local/lib/libarm_compute* qnxuser@$TARGET_HOST:/data/home/qnxuser/lib
 # Move the ARM Compute Library to your QNX target
-scp ${QNX_TARGET}/aarch64le/lib/libgomp.so.1 qnxuser@<target-ip-address>:/data/home/qnxuser/lib
+scp $QNX_TARGET/aarch64le/lib/libgomp.so.1 qnxuser@$TARGET_HOST:/data/home/qnxuser/lib
 ```
 
 Run tests on the target.
 ```bash
 # ssh into the target
-ssh qnxuser@<target-ip-address>
+ssh qnxuser@$TARGET_HOST
 
 # Run unit tests
 cd /system/xbin/ComputeLibrary_tests

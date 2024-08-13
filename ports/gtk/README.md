@@ -56,16 +56,19 @@ make -C build-files/ports/gtk INSTALL_ROOT_nto=/tmp/staging USE_INSTALL_ROOT=tru
 
 # How to run the gtk4 demo
 
+(note, mDNS is configured from /boot/qnx_config.txt and uses qnxpi.local by
+default)
 ```bash
 # gtk will be installed to /tmp/staging
 # scp the contents to /data/home/qnxuser
-TARGET_IP_ADDRESS=<target-ip-address>
-scp -r /tmp/staging/aarch64le/usr/local/bin qnxuser@$TARGET_IP_ADDRESS:/data/home/qnxuser
-scp -r /tmp/staging/aarch64le/usr/local/lib qnxuser@$TARGET_IP_ADDRESS:/data/home/qnxuser
-scp -r /tmp/staging/aarch64le/usr/local/share qnxuser@$TARGET_IP_ADDRESS:/data/home/qnxuser
+TARGET_HOST=<target-ip-address-or-hostname>
+
+scp -r /tmp/staging/aarch64le/usr/local/bin qnxuser@$TARGET_HOST:/data/home/qnxuser
+scp -r /tmp/staging/aarch64le/usr/local/lib qnxuser@$TARGET_HOST:/data/home/qnxuser
+scp -r /tmp/staging/aarch64le/usr/local/share qnxuser@$TARGET_HOST:/data/home/qnxuser
 
 # ssh into your QNX target
-ssh qnxuser@$TARGET_IP_ADDRESS
+ssh qnxuser@$TARGET_HOST
 
 # Set environment variables
 export XDG_DATA_DIRS=/data/home/qnxuser/share

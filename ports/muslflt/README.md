@@ -65,15 +65,18 @@ Building the library also produces a `muslflt_tests` output. This binary can be 
 
 Tests can be added to `tests.cpp`. Note that since muslflt overrides the `s*printf` and `strto{f,d,ld}` family of functions, you should not depend on the correctness of these functions for your tests to run. Avoid these functions unless you are testing them (i.e. try to test the correctness of only one function in one tests case).
 
-Run `TARGET_IP_ADDRESS=<target-ip-address>` to set the target ip address for the following commands.
+(note, mDNS is configured from /boot/qnx_config.txt and uses qnxpi.local by
+default)
 ```bash
+TARGET_HOST=<target-ip-address-or-hostname>
+
 # Make sure /data/home/qnxuser/lib and /data/home/qnxuser/bin exist on the QNX target
 # scp library and test to your QNX target
-scp $QNX_TARGET/aarch64le/usr/local/lib/libmuslflt.so* qnxuser@$TARGET_IP_ADDRESS:/data/home/qnxuser/lib
-scp $QNX_TARGET/aarch64le/usr/local/bin/muslflt_tests qnxuser@$TARGET_IP_ADDRESS:/data/home/qnxuser/bin
+scp $QNX_TARGET/aarch64le/usr/local/lib/libmuslflt.so* qnxuser@$TARGET_HOST:/data/home/qnxuser/lib
+scp $QNX_TARGET/aarch64le/usr/local/bin/muslflt_tests qnxuser@$TARGET_HOST:/data/home/qnxuser/bin
 
 # ssh into your QNX target
-ssh qnxuser@$TARGET_IP_ADDRESS
+ssh qnxuser@$TARGET_HOST
 
 # Create a symbolic link for libm.so.3 to make muslflt_tests use libmuslflt.so
 cd /data/home/qnxuser/lib

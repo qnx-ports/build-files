@@ -128,14 +128,19 @@ export CPU=aarch64
 
 # How to run tests
 
-Use scp to move ros2_humble.tar.gz to the target
+Use scp to move ros2_humble.tar.gz to the target (note, mDNS is configured from
+/boot/qnx_config.txt and uses qnxpi.local by default)
 
 ```bash
-scp ros2_humble.tar.gz qnxuser@<target-ip-address>:/data/home/qnxuser
+TARGET_HOST=<target-ip-address-or-hostname>
+
+scp ros2_humble.tar.gz qnxuser@$TARGET_HOST:/data/home/qnxuser
 ```
 
 ```bash
-ssh qnxuser@<target-ip-address>
+# ssh into the target
+ssh qnxuser@$TARGET_HOST
+
 cd /data/home/qnxuser
 tar -xvzf ./ros2_humble.tar.gz
 ```

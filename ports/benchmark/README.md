@@ -50,14 +50,18 @@ QNX_PROJECT_ROOT="$(pwd)/benchmark" make -C build-files/ports/benchmark JLEVEL=$
 
 Compile the benchmark source for desired architecture.
 
-**RPI**: Move Benchmark library and the test binary to the target:
+**RPI**: Move Benchmark library and the test binary to the target (note, mDNS
+is configured from /boot/qnx_config.txt and uses qnxpi.local by default):
 
 e.g.
+```bash
+TARGET_HOST=<target-ip-address-or-hostname>
 
-    - scp ~/qnx_workspace/build-files/ports/benchmark/nto-aarch64-le/build/src/libbenchmark* qnxuser@<target-ip-address>:/data/home/qnxuser/lib
-    - scp ~/qnx_workspace/build-files/ports/benchmark/nto-aarch64-le/build/test/*test qnxuser@<target-ip-address>:/data/home/qnxuser/bin
-    - scp $QNX_TARGET/aarch64le/usr/lib/libgtest* qnxuser@<target-ip-address>:/data/home/qnxuser/lib
-    - scp $QNX_TARGET/aarch64le/usr/lib/libgmock* qnxuser@<target-ip-address>:/data/home/qnxuser/lib
+scp ~/qnx_workspace/build-files/ports/benchmark/nto-aarch64-le/build/src/libbenchmark* qnxuser@$TARGET_HOST:/data/home/qnxuser/lib
+scp ~/qnx_workspace/build-files/ports/benchmark/nto-aarch64-le/build/test/*test qnxuser@$TARGET_HOST:/data/home/qnxuser/bin
+scp $QNX_TARGET/aarch64le/usr/lib/libgtest* qnxuser@$TARGET_HOST:/data/home/qnxuser/lib
+scp $QNX_TARGET/aarch64le/usr/lib/libgmock* qnxuser@$TARGET_HOST:/data/home/qnxuser/lib
+```
 
 ssh into your target and run the tests.
 

@@ -66,26 +66,29 @@ BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/opencv" make -C build-files/ports/op
 
 # How to run tests
 
-Set up the test environment
+Set up the test environment (note, mDNS is configured from
+/boot/qnx_config.txt and uses qnxpi.local by default)
 ```bash
+TARGET_HOST=<target-ip-address-or-hostname>
+
 # On your development machine, clone opencv_extra
 git clone https://github.com/opencv/opencv_extra.git && cd opencv_extra
 git checkout 4.9.0
 
 # scp opencv_extra's testdata to /data on your target
-scp -r testdata qnxuser@<target-ip-address>:/data/home/qnxuser/testdata
+scp -r testdata qnxuser@$TARGET_HOST:/data/home/qnxuser/testdata
 
 # scp opencv libraries (you may first need to create the lib directory)
-scp $QNX_TARGET/aarch64le/usr/local/lib/libopencv* qnxuser@<target-ip-address>:/data/home/qnxuser/lib
+scp $QNX_TARGET/aarch64le/usr/local/lib/libopencv* qnxuser@$TARGET_HOST:/data/home/qnxuser/lib
 
 # scp opencv tests
-scp -r $QNX_TARGET/aarch64le/usr/local/bin/opencv_tests qnxuser@<target-ip-address>:/data/home/qnxuser/bin
+scp -r $QNX_TARGET/aarch64le/usr/local/bin/opencv_tests qnxuser@$TARGET_HOST:/data/home/qnxuser/bin
 ```
 
 Run tests on the target.
 ```bash
 # ssh into the target
-ssh qnxuser@<target-ip-address>
+ssh qnxuser@$TARGET_HOST
 
 # Run tests
 cd /data/home/qnxuser/bin/opencv_tests

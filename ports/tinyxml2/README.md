@@ -42,16 +42,19 @@ BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/tinyxml2" make -C build-files/ports/
 
 # How to run tests
 
-scp libraries and tests to the target.
+scp libraries and tests to the target (note, mDNS is configured from
+/boot/qnx_config.txt and uses qnxpi.local by default).
 ```bash
-scp -r $QNX_TARGET/aarch64le/usr/local/bin/tinyxml2_tests qnxuser@<target-ip-address>:/data/home/qnxuser/bin
-scp $QNX_TARGET/aarch64le/usr/local/lib/libtiny* qnxuser@<target-ip-address>:/data/home/qnxuser/lib
+TARGET_HOST=<target-ip-address-or-hostname>
+
+scp -r $QNX_TARGET/aarch64le/usr/local/bin/tinyxml2_tests qnxuser@$TARGET_HOST:/data/home/qnxuser/bin
+scp $QNX_TARGET/aarch64le/usr/local/lib/libtiny* qnxuser@$TARGET_HOST:/data/home/qnxuser/lib
 ```
 
 Run tests on the target.
 ```bash
 # ssh into the target
-ssh qnxuser@<target-ip-address>
+ssh qnxuser@$TARGET_HOST
 
 # Run xmltest
 cd /data/home/qnxuser/bin/tinyxml2_tests

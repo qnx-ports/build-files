@@ -67,26 +67,30 @@ JLEVEL=4 make install
 
 - Testing
 
-Copy host files to the target.
+Copy host files to the target (note, mDNS is configured from
+/boot/qnx_config.txt and uses qnxpi.local by default).
 ```bash
-TARGET_IP=<target-ip-address>
+TARGET_HOST=<target-ip-address-or-hostname>
 
 # Copy tests from QNX_TARGET/CPUVARDIR/usr/bin/Fast-DDS_test to the target.
-scp -r $QNX_TARGET/aarch64le/usr/bin/Fast-DDS_test qnxuser@$TARGET_IP:/data/home/qnxuser
+scp -r $QNX_TARGET/aarch64le/usr/bin/Fast-DDS_test qnxuser@$TARGET_HOST:/data/home/qnxuser
 
 # Copy libs from QNX_TARGET/CPUVARDIR/usr/lib to the target.
-scp $QNX_TARGET/aarch64le/usr/lib/libgtest.so.1.13.0 qnxuser@$TARGET_IP:/data/home/qnxuser/lib
-scp $QNX_TARGET/aarch64le/usr/lib/libgmock.so.1.13.0 qnxuser@$TARGET_IP:/data/home/qnxuser/lib
-scp $QNX_TARGET/aarch64le/usr/lib/libfastrtps.so.2.10 qnxuser@$TARGET_IP:/data/home/qnxuser/lib
-scp $QNX_TARGET/aarch64le/usr/lib/libfastcdr.so.1 qnxuser@$TARGET_IP:/data/home/qnxuser/lib
-scp $QNX_TARGET/aarch64le/usr/lib/libtinyxml2.so.6 qnxuser@$TARGET_IP:/data/home/qnxuser/lib
-scp $QNX_TARGET/aarch64le/usr/lib/libfoonathan_memory-0.7.3.so qnxuser@$TARGET_IP:/data/home/qnxuser/lib
+scp $QNX_TARGET/aarch64le/usr/lib/libgtest.so.1.13.0 qnxuser@$TARGET_HOST:/data/home/qnxuser/lib
+scp $QNX_TARGET/aarch64le/usr/lib/libgmock.so.1.13.0 qnxuser@$TARGET_HOST:/data/home/qnxuser/lib
+scp $QNX_TARGET/aarch64le/usr/lib/libfastrtps.so.2.10 qnxuser@$TARGET_HOST:/data/home/qnxuser/lib
+scp $QNX_TARGET/aarch64le/usr/lib/libfastcdr.so.1 qnxuser@$TARGET_HOST:/data/home/qnxuser/lib
+scp $QNX_TARGET/aarch64le/usr/lib/libtinyxml2.so.6 qnxuser@$TARGET_HOST:/data/home/qnxuser/lib
+scp $QNX_TARGET/aarch64le/usr/lib/libfoonathan_memory-0.7.3.so qnxuser@$TARGET_HOST:/data/home/qnxuser/lib
 ```
 
 Both examples and unit tests will now be on the target.
 
 To setup and run only the unit tests on the target.
 ```bash
+# ssh into the target
+ssh qnxuser@$TARGET_HOST
+
 # Run the tests
 # NOTE: Some tests are currently stuck. It may be more helpful to run them
 # individually.
