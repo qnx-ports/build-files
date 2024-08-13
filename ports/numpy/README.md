@@ -53,14 +53,20 @@ QNX_PROJECT_ROOT="$(pwd)/numpy" make -C build-files/ports/numpy install -j$(npro
 
 # How to run tests
 
-Setup the target environment
+Setup the target environment (note, mDNS is configured from
+/boot/qnx_config.txt and uses qnxpi.local by default)
 ```bash
+TARGET_HOST=<target-ip-address-or-hostname>
+
 # scp numpy
-scp -r $QNX_TARGET/aarch64le/usr/local/lib/python3.11/site-packages/numpy qnxuser@<target-ip-address>:/data/home/qnxuser/numpy
+scp -r $QNX_TARGET/aarch64le/usr/local/lib/python3.11/site-packages/numpy qnxuser@$TARGET_HOST:/data/home/qnxuser/numpy
 
 ```
 
 ```bash
+# ssh into the target
+ssh qnxuser@$TARGET_HOST
+
 # Update system time
 ntpdate -sb 0.pool.ntp.org 1.pool.ntp.org
 

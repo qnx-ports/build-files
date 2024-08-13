@@ -57,9 +57,12 @@ mkdir -p /data/tflite/libs
 mkdir -p /data/tflite/tests
 ````
 
-scp those libraries to the target.
+scp those libraries to the target (note, mDNS is configured from
+/boot/qnx_config.txt and uses qnxpi.local by default).
 
 ```bash
+TARGET_HOST=<target-ip-address-or-hostname>
+
 libs=(
 build-files/ports/tensorflow/nto-aarch64-le/build/libtensorflow-lite.so
 build-files/ports/tensorflow/nto-aarch64-le/build/kernels/libtensorflow-lite-test-external-main.so
@@ -77,13 +80,13 @@ build-files/ports/tensorflow/nto-aarch64-le/build/_deps/gemmlowp-build/libeight_
 build-files/ports/tensorflow/nto-aarch64-le/build/pthreadpool/libpthreadpool.so
 build-files/ports/tensorflow/nto-aarch64-le/build/_deps/google_benchmark-build/src/libbenchmark.so.1
 )
-scp ${libs[@]} qnxuser@<target ip or hostname>:/data/home/qnxuser/tflite/libs
+scp ${libs[@]} qnxuser@$TARGET_HOST:/data/home/qnxuser/tflite/libs
 ```
 
 scp those tests to the target.
 
 ```text
-scp build-files/ports/tensorflow/nto-aarch64-le/build/kernels/*_test qnxuser@<target ip or hostname>:/data/home/qnxuser/tflite/tests
+scp build-files/ports/tensorflow/nto-aarch64-le/build/kernels/*_test qnxuser@$TARGET_HOST:/data/home/qnxuser/tflite/tests
 ```
 
 **NOTE**: You need to make sure the destination folders on the target exist.
@@ -92,7 +95,7 @@ Run tests on the target.
 
 ```bash
 # ssh into the target
-ssh qnxuser@<target-ip-address>
+ssh qnxuser@$TARGET_HOST
 
 cd /data/home/qnxuser/tflite/tests
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/data/home/qnxuser/tflite/libs

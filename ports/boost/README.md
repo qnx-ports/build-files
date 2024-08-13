@@ -70,17 +70,19 @@ The workaround is to run `sudo pip3 uninstall numpy` or `pip3 uninstall numpy` t
 # Test instruction
 
 `build_and_install_tests.sh` installs tests at $QNX_TARGET/aarch64le/usr/local/bin/boost_tests.
-
+(note, mDNS is configured from /boot/qnx_config.txt and uses qnxpi.local by default)
 ```bash
 # Make sure /data/home/qnxuser/bin and /data/home/qnxuser/lib exist on your target
 
+TARGET_HOST=<target-ip-address-or-hostname>
+
 # Move boost tests
-scp -r $QNX_TARGET/aarch64le/usr/local/bin/boost_tests qnxuser@<target-ip-address>:/data/home/qnxuser/bin
+scp -r $QNX_TARGET/aarch64le/usr/local/bin/boost_tests qnxuser@$TARGET_HOST:/data/home/qnxuser/bin
 # Move boost library
-scp $QNX_TARGET/aarch64le/usr/local/lib/liboost* qnxuser@<target-ip-address>:/data/home/qnxuser/lib
+scp $QNX_TARGET/aarch64le/usr/local/lib/liboost* qnxuser@$TARGET_HOST:/data/home/qnxuser/lib
 
 # ssh into the target
-ssh qnxuser@<target-ip-address>
+ssh qnxuser@$TARGET_HOST
 
 # Add boost library to LD_LIBRARAY_PATH
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/data/home/qnxuser/lib

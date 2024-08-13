@@ -47,12 +47,16 @@ QNX_PROJECT_ROOT="$(pwd)/abseil-cpp" make -C build-files/ports/abseil-cpp JLEVEL
 
 # How to run tests
 
-**RPI4**: Move abseil-cpp library and the test binary to the target:
+**RPI4**: Move abseil-cpp library and the test binary to the target (note, mDNS
+is configured from /boot/qnx_config.txt and uses qnxpi.local by default):
 
 e.g.
+```bash
+TARGET_HOST=<target-ip-address-or-hostname>
 
-    - scp ~/qnx_workspace/build-files/ports/abseil-cpp/nto-aarch64-le/build/bin/* qnxuser@<target-ip-address>:/data/home/qnxuser/bin
-    - scp $(find ~/qnx_workspace/build-files/ports/abseil-cpp/nto-aarch64-le/build/ -name "libabsl*") qnxuser@<target-ip-address>:/data/home/qnxuser/lib
+scp ~/qnx_workspace/build-files/ports/abseil-cpp/nto-aarch64-le/build/bin/* qnxuser@$TARGET_HOST:/data/home/qnxuser/bin
+scp $(find ~/qnx_workspace/build-files/ports/abseil-cpp/nto-aarch64-le/build/ -name "libabsl*") qnxuser@$TARGET_HOST:/data/home/qnxuser/lib
+```
 
 ssh into target and run the binaries you copied over to target `/data/home/qnxuser/bin` folder. 
 
