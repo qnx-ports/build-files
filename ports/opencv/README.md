@@ -94,9 +94,7 @@ ssh qnxuser@$TARGET_HOST
 cd /data/home/qnxuser/bin/opencv_tests
 chmod +x *
 
-export OPENCV_TEST_DATA_PATH=/data/testdata
-
-export LD_LIBRARY_PATH=LD_LIBRARY_PATH:/data/home/qnxuser/lib
+export OPENCV_TEST_DATA_PATH=/data/home/qnxuser/testdata
 
 ./opencv_perf_calib3d
 ./opencv_perf_core
