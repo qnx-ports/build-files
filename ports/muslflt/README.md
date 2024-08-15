@@ -27,9 +27,9 @@ cd build-files/docker
 
 # Now you are in the Docker container
 
-# Clone boost
+# Clone muslflt
 cd ~/qnx_workspace
-git clone https://gitlab.com/qnx/ports/muslflt.git && cd muslflt
+git clone https://gitlab.com/qnx/ports/muslflt.git
 
 
 # Build muslflt
@@ -38,7 +38,7 @@ make -C build-files/ports/muslflt/ install QNX_PROJECT_ROOT="$(pwd)/muslflt" -j$
 
 # Compile the port for QNX
 ```bash
-# Clone the build-files and boost repos
+# Clone the build-files and muslflt repos
 mkdir -p ~/qnx_workspace && cd ~/qnx_workspace
 git clone https://gitlab.com/qnx/ports/build-files.git
 git clone https://gitlab.com/qnx/ports/muslflt.git
