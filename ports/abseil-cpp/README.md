@@ -56,6 +56,8 @@ TARGET_HOST=<target-ip-address-or-hostname>
 
 scp ~/qnx_workspace/build-files/ports/abseil-cpp/nto-aarch64-le/build/bin/* qnxuser@$TARGET_HOST:/data/home/qnxuser/bin
 scp $(find ~/qnx_workspace/build-files/ports/abseil-cpp/nto-aarch64-le/build/ -name "libabsl*") qnxuser@$TARGET_HOST:/data/home/qnxuser/lib
+scp $QNX_TARGET/aarch64le/usr/local/lib/libgmock* qnxuser@$TARGET_HOST:/data/home/qnxuser/lib
+scp $QNX_TARGET/aarch64le/usr/local/lib/libgtest* qnxuser@$TARGET_HOST:/data/home/qnxuser/lib
 ```
 
 ssh into target and run the binaries you copied over to target `/data/home/qnxuser/bin` folder. 
