@@ -1,5 +1,7 @@
 **NOTE**: QNX ports are only supported from a Linux host operating system
 
+Please make sure you have com.qnx.qnx800.target.screen.img_codecs QNX package installed to your SDP.
+
 # Compile the port for QNX in a Docker container
 
 Pre-requisite: Install Docker on Ubuntu https://docs.docker.com/engine/install/ubuntu/
