@@ -13,6 +13,7 @@ Only code relevant to these features have been included here. This is not a full
 # Compile the port for QNX in a Docker container
 
 **NOTE**: QNX ports are only supported from a Linux host operating system
+**WARNING**: Since some ports link against musl by default it is recommended that you specify an install path other than the SDP for the build (with `INSTALL_ROOT_nto=<staging-install-folder> USE_INSTALL_ROOT=true`)
 
 Pre-requisite: Install Docker on Ubuntu https://docs.docker.com/engine/install/ubuntu/
 ```bash
@@ -33,7 +34,7 @@ git clone https://gitlab.com/qnx/ports/muslflt.git
 
 
 # Build muslflt
-make -C build-files/ports/muslflt/ install QNX_PROJECT_ROOT="$(pwd)/muslflt" -j$(nproc)
+make -C build-files/ports/muslflt/ INSTALL_ROOT_nto=<staging-install-folder> USE_INSTALL_ROOT=true install QNX_PROJECT_ROOT="$(pwd)/muslflt" -j$(nproc)
 ```
 
 # Compile the port for QNX
@@ -44,7 +45,7 @@ git clone https://gitlab.com/qnx/ports/build-files.git
 git clone https://gitlab.com/qnx/ports/muslflt.git
 
 # Build muslflt
-make -C build-files/ports/muslflt/ install QNX_PROJECT_ROOT="$(pwd)/muslflt" -j$(nproc)
+make -C build-files/ports/muslflt/ INSTALL_ROOT_nto=<staging-install-folder> USE_INSTALL_ROOT=true install QNX_PROJECT_ROOT="$(pwd)/muslflt" -j$(nproc)
 ```
 
 If `INSTALL_ROOT_nto` is omitted, the library will be installed into your SDP directory. `PREFIX` defaults to `/usr/local` if not specified to be consistent with other OSG ports.
@@ -70,10 +71,12 @@ default)
 ```bash
 TARGET_HOST=<target-ip-address-or-hostname>
 
-# Make sure /data/home/qnxuser/lib and /data/home/qnxuser/bin exist on the QNX target
 # scp library and test to your QNX target
-scp $QNX_TARGET/aarch64le/usr/local/lib/libmuslflt.so* qnxuser@$TARGET_HOST:/data/home/qnxuser/lib
-scp $QNX_TARGET/aarch64le/usr/local/bin/muslflt_tests qnxuser@$TARGET_HOST:/data/home/qnxuser/bin
+scp <staging-install-folder>/aarch64le/usr/local/lib/libmuslflt.so* qnxuser@$TARGET_HOST:/data/home/qnxuser/lib
+scp <staging-install-folder>/aarch64le/usr/local/bin/muslflt_tests qnxuser@$TARGET_HOST:/data/home/qnxuser/bin
+# or ...
+#scp $QNX_TARGET/aarch64le/usr/local/lib/libmuslflt.so* qnxuser@$TARGET_HOST:/data/home/qnxuser/lib
+#scp $QNX_TARGET/aarch64le/usr/local/bin/muslflt_tests qnxuser@$TARGET_HOST:/data/home/qnxuser/bin
 
 # ssh into your QNX target
 ssh qnxuser@$TARGET_HOST
