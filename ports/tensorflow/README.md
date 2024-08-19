@@ -53,8 +53,8 @@ QNX_PROJECT_ROOT="$(pwd)/tensorflow" QNX_PATCH_DIR="$(pwd)/build-files/ports/ten
 Create test directories on the target.
 
 ```bash
-mkdir -p /data/tflite/libs
-mkdir -p /data/tflite/tests
+mkdir -p /data/home/qnxuser/tflite/libs
+mkdir -p /data/home/qnxuser/tflite/tests
 ````
 
 scp those libraries to the target (note, mDNS is configured from
