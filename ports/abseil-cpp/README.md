@@ -2,6 +2,13 @@
 
 **Note**: QNX ports areo only supported from a **Linux host** operating system
 
+Before building abseil-cpp and its tests, you might want to first build and install `muslflt`
+under the same staging directory. Projects using abseil-cpp on QNX might also want to link to
+`muslflt` for consistent math behavior as other platforms. Without `muslflt`, some tests
+may fail and you may run into inconsistencies in results compared to other platforms.
+
+You can optionally set up a staging area folder (e.g. `/tmp/staging`) for `<staging-install-folder>`
+
 ## PRE-REQUISITE
 **NOTE**: An installation of google test on your **SDP** is required. Please follow the build instruction for `googletest` with `gmock` and make sure it is installed to the same SDP folder that you will source below.
 
@@ -28,7 +35,7 @@ cd ~/qnx_workspace
 git clone https://gitlab.com/qnx/ports/abseil-cpp.git
 
 # Build abseil-cpp
-QNX_PROJECT_ROOT="$(pwd)/abseil-cpp" make -C build-files/ports/abseil-cpp JLEVEL=$(nproc) install
+QNX_PROJECT_ROOT="$(pwd)/abseil-cpp" make -C build-files/ports/abseil-cpp INSTALL_ROOT_nto=<staging-install-folder> USE_INSTALL_ROOT=true JLEVEL=$(nproc) install
 ```
 
 # Compile the port for QNX on Ubuntu host
@@ -42,7 +49,7 @@ git clone https://gitlab.com/qnx/ports/abseil-cpp.git
 source ~/qnx800/qnxsdp-env.sh
 
 # Build
-QNX_PROJECT_ROOT="$(pwd)/abseil-cpp" make -C build-files/ports/abseil-cpp JLEVEL=$(nproc) install
+QNX_PROJECT_ROOT="$(pwd)/abseil-cpp" make -C build-files/ports/abseil-cpp INSTALL_ROOT_nto=<staging-install-folder> USE_INSTALL_ROOT=true JLEVEL=$(nproc) install
 ```
 
 # How to run tests
@@ -65,4 +72,3 @@ ssh into target and run the binaries you copied over to target `/data/home/qnxus
 In order to run all test binaries, you can copy over the qnxtests.sh file and run the file instead.
 
 ---
-Tests results are provided on the wiki: https://wikis.rim.net/display/OSG/QNX+Open+Source+Group
