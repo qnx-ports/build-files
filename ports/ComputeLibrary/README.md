@@ -48,7 +48,7 @@ scp libraries and tests to the target (note, mDNS is configured from
 TARGET_HOST=<target-ip-address-or-hostname>
 
 # Move neon test binaries to your QNX target
-scp -r $QNX_TARGET/aarch64le/usr/local/bin/ComputeLibrary_tests/ qnxuser@$TARGET_HOST:/data/home/qnxuser/bin
+scp -r $QNX_TARGET/aarch64le/usr/local/bin/ComputeLibrary_tests qnxuser@$TARGET_HOST:/data/home/qnxuser/bin
 
 # Move the ARM Compute Library to your QNX target
 scp $QNX_TARGET/aarch64le/usr/local/lib/libarm_compute* qnxuser@$TARGET_HOST:/data/home/qnxuser/lib
@@ -62,7 +62,7 @@ Run tests on the target.
 ssh qnxuser@$TARGET_HOST
 
 # Run unit tests
-cd /system/xbin/ComputeLibrary_tests
+cd /data/home/qnxuser/bin/ComputeLibrary_tests
 ./arm_compute_validation
 ./graph_alexnet
 ./graph_deepspeech_v0_4_1
