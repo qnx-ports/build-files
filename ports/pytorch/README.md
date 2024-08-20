@@ -24,6 +24,9 @@ git clone https://gitlab.com/qnx/ports/pytorch.git
 cd ~/qnx_workspace/pytorch
 pip install -r requirements.txt
 
+# Init submodules
+git submodule update --init --recursive
+
 # Apply third_party patches
 cd ~/qnx_workspace/build-files/ports/pytorch
 ./scripts/patch.sh ~/qnx_workspace/pytorch
@@ -50,6 +53,9 @@ python3.11 -m venv env
 source env/bin/activate
 cd ~/qnx_workspace/pytorch
 pip install -r requirements.txt
+
+# Init submodules
+git submodule update --init --recursive
 
 # source qnxsdp-env.sh in
 source ~/qnx800/qnxsdp-env.sh
