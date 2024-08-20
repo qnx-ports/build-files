@@ -83,7 +83,10 @@ uses qnxpi.local by default):
 TARGET_HOST=<target-ip-address-or-hostname>
 
 scp ~/qnx_workspace/build-files/ports/pytorch/nto-aarch64-le/build/bin/*_test qnxuser@$TARGET_HOST:/data/home/qnxuser/bin
-scp ~/qnx_workspace/build-files/ports/pytorch/nto-aarch64-le/build/lib/*.so qnxuser@$TARGET_HOST:/data/home/qnxuser/lib
+scp ~/qnx_workspace/build-files/ports/pytorch/nto-aarch64-le/build/lib/libc10.so qnxuser@$TARGET_HOST:/data/home/qnxuser/lib
+scp ~/qnx_workspace/build-files/ports/pytorch/nto-aarch64-le/build/lib/libtorch_cpu.so qnxuser@$TARGET_HOST:/data/home/qnxuser/lib
+scp ~/qnx_workspace/build-files/ports/pytorch/nto-aarch64-le/build/lib/libtorch_global_deps.so qnxuser@$TARGET_HOST:/data/home/qnxuser/lib
+scp ~/qnx_workspace/build-files/ports/pytorch/nto-aarch64-le/build/lib/libtorch.so qnxuser@$TARGET_HOST:/data/home/qnxuser/lib
 ```
 
 Run unit tests on the target.
