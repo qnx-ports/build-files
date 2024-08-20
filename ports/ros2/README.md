@@ -21,6 +21,7 @@ The build may fail on an unclean project. To get successive builds to succeed yo
 # Create a workspace
 mkdir -p ~/qnx_workspace && cd ~/qnx_workspace
 git clone https://gitlab.com/qnx/ports/build-files.git
+git clone -b qnx_v1.13.0 https://gitlab.com/qnx/ports/googletest.git
 
 # Build the Docker image and create a container
 cd build-files/docker
