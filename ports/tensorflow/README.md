@@ -85,8 +85,9 @@ scp ${libs[@]} qnxuser@$TARGET_HOST:/data/home/qnxuser/tflite/libs
 
 scp those tests to the target.
 
-```text
+```bash
 scp build-files/ports/tensorflow/nto-aarch64-le/build/kernels/*_test qnxuser@$TARGET_HOST:/data/home/qnxuser/tflite/tests
+scp build-files/ports/tensorflow/qnxtests.sh qnxuser@$TARGET_HOST:/data/home/qnxuser/tflite/tests
 ```
 
 **NOTE**: You need to make sure the destination folders on the target exist.
@@ -98,12 +99,9 @@ Run tests on the target.
 ssh qnxuser@$TARGET_HOST
 
 cd /data/home/qnxuser/tflite/tests
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/data/home/qnxuser/tflite/libs
 
 # Run tests
-for test in $(ls | grep _test) ; do
-    ./$test
-done
+su root -c "export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/data/home/qnxuser/tflite/libs && ./qnxtests.sh"
 ```
 
 Currently these test cases fail when `-funsafe-math-optimizations` compiler flag is set, pass when this flag is not set:
@@ -123,6 +121,8 @@ ConstUint8MeanOpTest.Rounding
 ```
 
 ## Run minimal example
+
+**NOTE** Examples may require root access to run (i.e. `su root -c "LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/data/home/qnxuser/tflite/libs && ..."`)
 
 In `build-files/ports/ternsorflow/common.mk`, change
 
