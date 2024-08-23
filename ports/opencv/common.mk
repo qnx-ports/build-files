@@ -85,6 +85,7 @@ CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DBUILD_opencv_python3=ON \
              -DBUILD_opencv_python_bindings_generator=ON \
              -DOPENCV_TEST_DATA_INSTALL_PATH="/testdata" \
+             -DOPENCV_PYTHON_INSTALL_TARGET=ON \
 
 ifndef NO_TARGET_OVERRIDE
 opencv_all:
