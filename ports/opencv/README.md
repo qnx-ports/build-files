@@ -68,6 +68,12 @@ BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/opencv" make -C build-files/ports/op
 
 # How to run tests
 
+Create directories on the target.
+
+```bash
+mkdir -p /data/home/qnxuser/opencv/libs
+````
+
 Set up the test environment (note, mDNS is configured from
 /boot/qnx_config.txt and uses qnxpi.local by default)
 ```bash
@@ -78,13 +84,13 @@ git clone https://github.com/opencv/opencv_extra.git && cd opencv_extra
 git checkout 4.9.0
 
 # scp opencv_extra's testdata to /data on your target
-scp -r testdata qnxuser@$TARGET_HOST:/data/home/qnxuser/testdata
+scp -r testdata qnxuser@$TARGET_HOST:/data/home/qnxuser/opencv
 
 # scp opencv libraries (you may first need to create the lib directory)
-scp $QNX_TARGET/aarch64le/usr/local/lib/libopencv* qnxuser@$TARGET_HOST:/data/home/qnxuser/lib
+scp $QNX_TARGET/aarch64le/usr/local/lib/libopencv* qnxuser@$TARGET_HOST:/data/home/qnxuser/opencv/libs
 
 # scp opencv tests
-scp -r $QNX_TARGET/aarch64le/usr/local/bin/opencv_tests qnxuser@$TARGET_HOST:/data/home/qnxuser/bin
+scp -r $QNX_TARGET/aarch64le/usr/local/bin/opencv_tests qnxuser@$TARGET_HOST:/data/home/qnxuser/opencv
 ```
 
 Run tests on the target.
@@ -93,10 +99,11 @@ Run tests on the target.
 ssh qnxuser@$TARGET_HOST
 
 # Run tests
-cd /data/home/qnxuser/bin/opencv_tests
+cd /data/home/qnxuser/opencv/opencv_tests
 chmod +x *
 
-export OPENCV_TEST_DATA_PATH=/data/home/qnxuser/testdata
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/data/home/qnxuser/opencv/libs
+export OPENCV_TEST_DATA_PATH=/data/home/qnxuser/opencv/testdata
 
 ./opencv_perf_calib3d
 ./opencv_perf_core
@@ -123,4 +130,26 @@ export OPENCV_TEST_DATA_PATH=/data/home/qnxuser/testdata
 ./opencv_test_stitching
 ./opencv_test_video
 ./opencv_test_videoio
+```
+
+# Install the Python Package
+
+```bash
+# Copy the package to the target
+scp -r $QNX_TARGET/aarch64le/usr/local/lib/python3.11/site-packages/cv2 qnxuser@$TARGET_HOST:/data/home/qnxuser/opencv
+
+# ssh into the target
+ssh qnxuser@$TARGET_HOST
+
+# Install the python package
+cd /data/home/qnxuser/opencv
+su root -c "mv cv2 /system/lib/python3.11/site-packages"
+```
+
+To verify the installation,
+```bash
+# Must point to opencv libs
+export OPENCV_LIBDIR=/data/home/qnxuser/opencv/libs
+
+python -c "import cv2; print(cv2.getBuildInformation())"
 ```
