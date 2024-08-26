@@ -55,7 +55,29 @@ QNX_PROJECT_ROOT="$(pwd)/eigen" make -C build-files/ports/eigen INSTALL_ROOT_nto
 # How to run tests
 
 After Eigen is built and installed, all test binaries will be located under `<prefix>/bin/eigen_tests`
-(prefix defaults to `/usr/local`). Note that the following test(s) are known to fail:
+(prefix defaults to `/usr/local`).
+
+Move files to the target (note, mDNS is configured from /boot/qnx_config.txt and
+uses qnxpi.local by default):
+```bash
+TARGET_HOST=<target-ip-address-or-hostname>
+
+# Copy tests to target
+scp -r $QNX_TARGET/aarch64le/usr/local/bin/eigen_tests qnxuser@$TARGET_HOST:/data/home/qnxuser/bin
+
+# ssh onto the target
+ssh qnxuser@$TARGET_HOST
+
+# Run the tests
+cd /data/home/qnxuser/bin/eigen_tests
+for test in $(ls); do
+    ./$test;
+done
+```
+
+Run tests on the target
+
+Note that the following test(s) are known to fail:
 
 NonLinearOptimization
 

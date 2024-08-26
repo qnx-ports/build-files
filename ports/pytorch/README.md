@@ -1,4 +1,6 @@
-# Compile the port for QNX in a Docker container
+# Compile the port for QNX
+
+## Build Pytorch Mobile in a Docker container
 
 Pre-requisite: Install Docker on Ubuntu https://docs.docker.com/engine/install/ubuntu/
 ```bash
@@ -37,7 +39,7 @@ export BUILD_PYTORCH_MOBILE_WITH_HOST_TOOLCHAIN=1
 BUILD_TESTING=ON BUILD_LITE_INTERPRETER=ON QNX_PROJECT_ROOT="$(pwd)/pytorch" make -C build-files/ports/pytorch  install JLEVEL=$(nproc)
 ```
 
-## Build Pytorch Mobile
+## Build Pytorch Mobile on Host
 
 ```bash
 # Create a workspace
