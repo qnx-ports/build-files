@@ -16,7 +16,7 @@ cd build-files/docker
 # source qnxsdp-env.sh in
 source ~/qnx800/qnxsdp-env.sh
 
-# Clone ComputeLibrary
+# Clone lighttpd1.4
 cd ~/qnx_workspace
 git clone https://gitlab.com/qnx/ports/lighttpd1.4.git
 ```
