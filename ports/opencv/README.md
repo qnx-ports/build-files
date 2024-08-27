@@ -138,18 +138,15 @@ export OPENCV_TEST_DATA_PATH=/data/home/qnxuser/opencv/testdata
 # Copy the package to the target
 scp -r $QNX_TARGET/aarch64le/usr/local/lib/python3.11/site-packages/cv2 qnxuser@$TARGET_HOST:/data/home/qnxuser/opencv
 
-# ssh into the target
-ssh qnxuser@$TARGET_HOST
-
-# Install the python package
-cd /data/home/qnxuser/opencv
-su root -c "mv cv2 /system/lib/python3.11/site-packages"
+# Copy the numpy dependencies to the target
+scp -r $QNX_TARGET/aarch64le/usr/local/lib/python3.11/site-packages/numpy* qnxuser@$TARGET_HOST:/data/home/qnxuser/opencv
 ```
 
-To verify the installation,
+To verify the installation on the target,
 ```bash
 # Must point to opencv libs
 export OPENCV_LIBDIR=/data/home/qnxuser/opencv/libs
 
+cd /data/home/qnxuser/opencv
 python -c "import cv2; print(cv2.getBuildInformation())"
 ```
