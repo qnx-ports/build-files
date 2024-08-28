@@ -30,8 +30,22 @@ cd build-files/docker
 # source qnxsdp-env.sh in
 source ~/qnx800/qnxsdp-env.sh
 
-# Clone abseil-cpp
 cd ~/qnx_workspace
+# Prerequisite: Install googletest
+# Create staging directory, e.g. /tmp/staging
+mkdir -p <staging-install-folder>
+# Clone googletest
+git clone https://gitlab.com/qnx/ports/googletest.git
+# Build googletest
+BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/googletest" make -C build-files/ports/googletest install -j$(nproc)
+
+# Prerequisite: Install muslflt
+# Clone muslflt
+git clone https://gitlab.com/qnx/ports/muslflt.git
+# Build muslflt
+QNX_PROJECT_ROOT="$(pwd)/muslflt" INSTALL_ROOT_nto=<staging-install-folder> USE_INSTALL_ROOT=true make -C build-files/ports/muslflt/ install -j$(nproc)
+
+# Clone abseil-cpp
 git clone https://gitlab.com/qnx/ports/abseil-cpp.git
 
 # Build abseil-cpp
@@ -44,9 +58,20 @@ QNX_PROJECT_ROOT="$(pwd)/abseil-cpp" make -C build-files/ports/abseil-cpp INSTAL
 mkdir -p ~/qnx_workspace && cd qnx_workspace
 git clone https://gitlab.com/qnx/ports/build-files.git
 git clone https://gitlab.com/qnx/ports/abseil-cpp.git
+git clone https://gitlab.com/qnx/ports/googletest.git
+git clone https://gitlab.com/qnx/ports/muslflt.git
+
+# Create staging directory, e.g. /tmp/staging
+mkdir -p <staging-install-folder>
 
 # source qnxsdp-env.sh
 source ~/qnx800/qnxsdp-env.sh
+
+# Prerequisite: Install googletest
+BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/googletest" make -C build-files/ports/googletest install -j$(nproc)
+
+# Prerequisite: Install muslflt
+QNX_PROJECT_ROOT="$(pwd)/muslflt" INSTALL_ROOT_nto=<staging-install-folder> USE_INSTALL_ROOT=true make -C build-files/ports/muslflt/ install -j$(nproc)
 
 # Build
 QNX_PROJECT_ROOT="$(pwd)/abseil-cpp" make -C build-files/ports/abseil-cpp INSTALL_ROOT_nto=<staging-install-folder> USE_INSTALL_ROOT=true JLEVEL=$(nproc) install

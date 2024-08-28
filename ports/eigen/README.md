@@ -30,8 +30,16 @@ cd build-files/docker
 # source qnxsdp-env.sh in
 source ~/qnx800/qnxsdp-env.sh
 
-# Clone eigen
 cd ~/qnx_workspace
+# Create staging directory, e.g. /tmp/staging
+mkdir -p <staging-install-folder>
+# Prerequisite: Install muslflt
+# Clone muslflt
+git clone https://gitlab.com/qnx/ports/muslflt.git
+# Build muslflt
+QNX_PROJECT_ROOT="$(pwd)/muslflt" INSTALL_ROOT_nto=<staging-install-folder> USE_INSTALL_ROOT=true make -C build-files/ports/muslflt/ install -j$(nproc)
+
+# Clone eigen
 git clone https://gitlab.com/qnx/ports/eigen.git
 
 # Build eigen
@@ -43,11 +51,16 @@ QNX_PROJECT_ROOT="$(pwd)/eigen" make -C build-files/ports/eigen INSTALL_ROOT_nto
 # Clone the repos
 mkdir -p ~/qnx_workspace && cd qnx_workspace
 git clone https://gitlab.com/qnx/ports/build-files.git
+git clone https://gitlab.com/qnx/ports/muslflt.git
 git clone https://gitlab.com/qnx/ports/eigen.git
+
+# Create staging directory, e.g. /tmp/staging
+mkdir -p <staging-install-folder>
 
 # source qnxsdp-env.sh
 source ~/qnx800/qnxsdp-env.sh
-
+# Prerequisite: Install muslflt
+QNX_PROJECT_ROOT="$(pwd)/muslflt" INSTALL_ROOT_nto=<staging-install-folder> USE_INSTALL_ROOT=true make -C build-files/ports/muslflt/ install -j$(nproc)
 # Build
 QNX_PROJECT_ROOT="$(pwd)/eigen" make -C build-files/ports/eigen INSTALL_ROOT_nto=<staging-install-folder> USE_INSTALL_ROOT=true JLEVEL=$(nproc) install
 ```
