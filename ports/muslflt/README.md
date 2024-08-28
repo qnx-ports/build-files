@@ -72,11 +72,11 @@ default)
 TARGET_HOST=<target-ip-address-or-hostname>
 
 # scp library and test to your QNX target
-scp <staging-install-folder>/aarch64le/usr/local/lib/libmuslflt.so* qnxuser@$TARGET_HOST:/data/home/qnxuser/lib
-scp <staging-install-folder>/aarch64le/usr/local/bin/muslflt_tests qnxuser@$TARGET_HOST:/data/home/qnxuser/bin
-# or ...
-#scp $QNX_TARGET/aarch64le/usr/local/lib/libmuslflt.so* qnxuser@$TARGET_HOST:/data/home/qnxuser/lib
-#scp $QNX_TARGET/aarch64le/usr/local/bin/muslflt_tests qnxuser@$TARGET_HOST:/data/home/qnxuser/bin
+scp $QNX_TARGET/aarch64le/usr/local/lib/libmuslflt.so* qnxuser@$TARGET_HOST:/data/home/qnxuser/lib
+scp $QNX_TARGET/aarch64le/usr/local/bin/muslflt_tests qnxuser@$TARGET_HOST:/data/home/qnxuser/bin
+# If you built with a staging directory, use that location instead:
+#scp <staging-install-folder>/aarch64le/usr/local/lib/libmuslflt.so* qnxuser@$TARGET_HOST:/data/home/qnxuser/lib
+#scp <staging-install-folder>/aarch64le/usr/local/bin/muslflt_tests qnxuser@$TARGET_HOST:/data/home/qnxuser/bin
 
 # ssh into your QNX target
 ssh qnxuser@$TARGET_HOST

@@ -64,6 +64,8 @@ TARGET_HOST=<target-ip-address-or-hostname>
 
 # Copy tests to target
 scp -r $QNX_TARGET/aarch64le/usr/local/bin/eigen_tests qnxuser@$TARGET_HOST:/data/home/qnxuser/bin
+# If you built with a staging directory, use that location instead:
+#scp -r <staging-install-folder>/aarch64le/usr/local/bin/eigen_tests qnxuser@$TARGET_HOST:/data/home/qnxuser/bin
 
 # ssh onto the target
 ssh qnxuser@$TARGET_HOST

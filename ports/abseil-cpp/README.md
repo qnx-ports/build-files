@@ -1,6 +1,6 @@
 # Compile the port for QNX
 
-**Note**: QNX ports areo only supported from a **Linux host** operating system
+**Note**: QNX ports are only supported from a **Linux host** operating system
 
 Before building abseil-cpp and its tests, you might want to first build and install `muslflt`
 under the same staging directory. Projects using abseil-cpp on QNX might also want to link to
