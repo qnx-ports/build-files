@@ -19,5 +19,6 @@ qnx_patch ${torch_dir}/third_party/XNNPACK XNNPACK.patch
 qnx_patch ${torch_dir}/third_party/kineto kineto.patch
 qnx_patch ${torch_dir}/third_party/googletest googletest.patch
 qnx_patch ${torch_dir}/third_party/cpuinfo cpuinfo.patch
+qnx_patch ${torch_dir}/third_party/benchmark benchmark.patch
 
 echo "Some of these patches add untracked files to git! If experiencing issues consider using 'git clean -xdff' to clear the untracked files."

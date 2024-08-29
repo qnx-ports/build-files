@@ -58,10 +58,10 @@ index e7df8ec5..efced555 100644
 +
  endif()
 diff --git a/googletest/CMakeLists.txt b/googletest/CMakeLists.txt
-index abdd98b7..8c996bfd 100644
+index abdd98b7..cdd7a162 100644
 --- a/googletest/CMakeLists.txt
 +++ b/googletest/CMakeLists.txt
-@@ -130,18 +130,42 @@ include_directories(${gtest_build_include_dirs})
+@@ -130,18 +130,44 @@ include_directories(${gtest_build_include_dirs})
  # aggressive about warnings.
  cxx_library(gtest "${cxx_strict}" src/gtest-all.cc)
  set_target_properties(gtest PROPERTIES VERSION ${GOOGLETEST_VERSION})
@@ -106,11 +106,13 @@ index abdd98b7..8c996bfd 100644
 +  endif()
 +endif()
 +if(CMAKE_SYSTEM_NAME MATCHES "QNX")
++  target_compile_options(gtest PRIVATE -Wno-error=array-bounds)
++  target_compile_options(gtest_main PRIVATE -Wno-error=array-bounds)
 +  target_link_libraries(gtest PUBLIC regex)
  endif()
  target_link_libraries(gtest_main PUBLIC gtest)
  
-@@ -239,14 +263,25 @@ if (gtest_build_tests)
+@@ -239,14 +265,25 @@ if (gtest_build_tests)
      "${cxx_exception} -DGTEST_ENABLE_CATCH_EXCEPTIONS_=1"
      gtest test/googletest-death-test_ex_test.cc)
  
@@ -140,7 +142,7 @@ index abdd98b7..8c996bfd 100644
    set_target_properties(gtest_dll_test_
                          PROPERTIES
                          COMPILE_DEFINITIONS "GTEST_LINKED_AS_SHARED_LIBRARY=1")
-@@ -262,11 +297,19 @@ if (gtest_build_tests)
+@@ -262,11 +299,19 @@ if (gtest_build_tests)
  
    # Visual Studio .NET 2003 does not support STL with exceptions disabled.
    if (NOT MSVC OR MSVC_VERSION GREATER 1310)  # 1310 is Visual Studio .NET 2003
@@ -165,7 +167,7 @@ index abdd98b7..8c996bfd 100644
    endif()
  
    cxx_executable_with_flags(
-@@ -299,7 +342,11 @@ if (gtest_build_tests)
+@@ -299,7 +344,11 @@ if (gtest_build_tests)
  
    # MSVC 7.1 does not support STL with exceptions disabled.
    if (NOT MSVC OR MSVC_VERSION GREATER 1310)
@@ -178,7 +180,7 @@ index abdd98b7..8c996bfd 100644
      set_target_properties(googletest-throw-on-failure-test_
        PROPERTIES
        COMPILE_FLAGS "${cxx_no_exception}")
-@@ -320,4 +367,13 @@ if (gtest_build_tests)
+@@ -320,4 +369,13 @@ if (gtest_build_tests)
    cxx_executable(gtest_xml_output_unittest_ test gtest)
    py_test(gtest_xml_output_unittest --no_stacktrace_support)
    py_test(googletest-json-output-unittest --no_stacktrace_support)
