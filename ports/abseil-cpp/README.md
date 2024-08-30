@@ -2,6 +2,9 @@
 
 **Note**: QNX ports are only supported from a **Linux host** operating system
 
+Use `$(nproc)` instead of `4` after `JLEVEL=` and `-j` if you want to use the maximum number of cores to build this project.
+32GB of RAM is recommended for using `JLEVEL=$(nproc)`.
+
 Before building abseil-cpp and its tests, you might want to first build and install `muslflt`
 under the same staging directory. Projects using abseil-cpp on QNX might also want to link to
 `muslflt` for consistent math behavior as other platforms. Without `muslflt`, some tests
@@ -37,19 +40,19 @@ mkdir -p <staging-install-folder>
 # Clone googletest
 git clone https://gitlab.com/qnx/ports/googletest.git
 # Build googletest
-BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/googletest" make -C build-files/ports/googletest install -j$(nproc)
+BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/googletest" make -C build-files/ports/googletest install -j4
 
 # Prerequisite: Install muslflt
 # Clone muslflt
 git clone https://gitlab.com/qnx/ports/muslflt.git
 # Build muslflt
-QNX_PROJECT_ROOT="$(pwd)/muslflt" INSTALL_ROOT_nto=<staging-install-folder> USE_INSTALL_ROOT=true make -C build-files/ports/muslflt/ install -j$(nproc)
+QNX_PROJECT_ROOT="$(pwd)/muslflt" INSTALL_ROOT_nto=<staging-install-folder> USE_INSTALL_ROOT=true make -C build-files/ports/muslflt/ install -j4
 
 # Clone abseil-cpp
 git clone https://gitlab.com/qnx/ports/abseil-cpp.git
 
 # Build abseil-cpp
-QNX_PROJECT_ROOT="$(pwd)/abseil-cpp" make -C build-files/ports/abseil-cpp INSTALL_ROOT_nto=<staging-install-folder> USE_INSTALL_ROOT=true JLEVEL=$(nproc) install
+QNX_PROJECT_ROOT="$(pwd)/abseil-cpp" make -C build-files/ports/abseil-cpp INSTALL_ROOT_nto=<staging-install-folder> USE_INSTALL_ROOT=true JLEVEL=4 install
 ```
 
 # Compile the port for QNX on Ubuntu host
@@ -68,13 +71,13 @@ mkdir -p <staging-install-folder>
 source ~/qnx800/qnxsdp-env.sh
 
 # Prerequisite: Install googletest
-BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/googletest" make -C build-files/ports/googletest install -j$(nproc)
+BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/googletest" make -C build-files/ports/googletest install -j4
 
 # Prerequisite: Install muslflt
-QNX_PROJECT_ROOT="$(pwd)/muslflt" INSTALL_ROOT_nto=<staging-install-folder> USE_INSTALL_ROOT=true make -C build-files/ports/muslflt/ install -j$(nproc)
+QNX_PROJECT_ROOT="$(pwd)/muslflt" INSTALL_ROOT_nto=<staging-install-folder> USE_INSTALL_ROOT=true make -C build-files/ports/muslflt/ install -j4
 
 # Build
-QNX_PROJECT_ROOT="$(pwd)/abseil-cpp" make -C build-files/ports/abseil-cpp INSTALL_ROOT_nto=<staging-install-folder> USE_INSTALL_ROOT=true JLEVEL=$(nproc) install
+QNX_PROJECT_ROOT="$(pwd)/abseil-cpp" make -C build-files/ports/abseil-cpp INSTALL_ROOT_nto=<staging-install-folder> USE_INSTALL_ROOT=true JLEVEL=4 install
 ```
 
 # How to run tests
@@ -92,7 +95,7 @@ scp $QNX_TARGET/aarch64le/usr/local/lib/libgmock* qnxuser@$TARGET_HOST:/data/hom
 scp $QNX_TARGET/aarch64le/usr/local/lib/libgtest* qnxuser@$TARGET_HOST:/data/home/qnxuser/lib
 ```
 
-ssh into target and run the binaries you copied over to target `/data/home/qnxuser/bin` folder. 
+ssh into target and run the binaries you copied over to target `/data/home/qnxuser/bin` folder.
 
 In order to run all test binaries, you can copy over the qnxtests.sh file and run the file instead.
 
