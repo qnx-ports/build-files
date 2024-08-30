@@ -2,9 +2,6 @@
 
 **Note**: QNX ports are only supported from a **Linux host** operating system
 
-Use `$(nproc)` instead of `4` after `JLEVEL=` and `-j` if you want to use the maximum number of cores to build this project.
-32GB of RAM is recommended for using `JLEVEL=$(nproc)`.
-
 Before building abseil-cpp and its tests, you might want to first build and install `muslflt`
 under the same staging directory. Projects using abseil-cpp on QNX might also want to link to
 `muslflt` for consistent math behavior as other platforms. Without `muslflt`, some tests
@@ -14,6 +11,9 @@ You can optionally set up a staging area folder (e.g. `/tmp/staging`) for `<stag
 
 ## PRE-REQUISITE
 **NOTE**: An installation of google test on your **SDP** is required. Please follow the build instruction for `googletest` with `gmock` and make sure it is installed to the same SDP folder that you will source below.
+
+Use `$(nproc)` instead of `4` after `JLEVEL=` and `-j` if you want to use the maximum number of cores to build this project.
+32GB of RAM is recommended for using `JLEVEL=$(nproc)` or `-j$(nproc)`.
 
 # Compile the port for QNX in a Docker container
 

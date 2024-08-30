@@ -1,5 +1,8 @@
 **NOTE**: QNX ports are only supported from a Linux host operating system
 
+Use `$(nproc)` instead of `4` after `JLEVEL=` and `-j` if you want to use the maximum number of cores to build this project.
+32GB of RAM is recommended for using `JLEVEL=$(nproc)` or `-j$(nproc)`.
+
 # Compile the port for QNX in a Docker container
 
 Pre-requisite: Install Docker on Ubuntu https://docs.docker.com/engine/install/ubuntu/
@@ -23,7 +26,7 @@ cd ~/qnx_workspace
 git clone https://gitlab.com/qnx/ports/ComputeLibrary.git
 
 # Build ComputeLibrary
-BUILD_EXAMPLES="ON" BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/ComputeLibrary" make -C build-files/ports/ComputeLibrary install -j$(nproc)
+BUILD_EXAMPLES="ON" BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/ComputeLibrary" make -C build-files/ports/ComputeLibrary install -j4
 ```
 
 # Compile the port for QNX on Ubuntu host
@@ -37,7 +40,7 @@ git clone https://gitlab.com/qnx/ports/ComputeLibrary.git
 source ~/qnx800/qnxsdp-env.sh
 
 # Build ComputeLibrary
-BUILD_EXAMPLES="ON" BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/ComputeLibrary" make -C build-files/ports/ComputeLibrary install -j$(nproc)
+BUILD_EXAMPLES="ON" BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/ComputeLibrary" make -C build-files/ports/ComputeLibrary install -j4
 ```
 
 # How to run tests

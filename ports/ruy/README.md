@@ -2,6 +2,9 @@
 
 **WARNING**: Ruy is currently used as a dependency of tensorflow, and you shouldn't expect it working when building it solely.
 
+Use `$(nproc)` instead of `4` after `JLEVEL=` and `-j` if you want to use the maximum number of cores to build this project.
+32GB of RAM is recommended for using `JLEVEL=$(nproc)` or `-j$(nproc)`.
+
 # Compile the port for QNX in a Docker container
 
 Pre-requisite: Install Docker on Ubuntu https://docs.docker.com/engine/install/ubuntu/
@@ -27,7 +30,7 @@ git submodule update --init --recursive
 cd -
 
 # Build ruy
-QNX_PROJECT_ROOT="$(pwd)/ruy" make -C build-files/ports/ruy install -j$(nproc)
+QNX_PROJECT_ROOT="$(pwd)/ruy" make -C build-files/ports/ruy install -j4
 ```
 
 # Compile the port for QNX on Ubuntu host
@@ -43,7 +46,7 @@ cd -
 source ~/qnx800/qnxsdp-env.sh
 
 # Build ruy
-QNX_PROJECT_ROOT="$(pwd)/ruy" make -C build-files/ports/ruy install -j$(nproc)
+QNX_PROJECT_ROOT="$(pwd)/ruy" make -C build-files/ports/ruy install -j4
 ```
 
 # How to run tests

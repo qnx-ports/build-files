@@ -1,5 +1,8 @@
 **NOTE**: QNX ports are only supported from a Linux host operating system
 
+Use `$(nproc)` instead of `4` after `JLEVEL=` and `-j` if you want to use the maximum number of cores to build this project.
+32GB of RAM is recommended for using `JLEVEL=$(nproc)` or `-j$(nproc)`.
+
 # Compile the port for QNX in a Docker container
 
 Pre-requisite: Install Docker on Ubuntu https://docs.docker.com/engine/install/ubuntu/
@@ -33,7 +36,7 @@ cd -
 
 ```bash
 # Build and install lighttpd binaries to SDP
-QNX_PROJECT_ROOT="$(pwd)/lighttpd1.4" JLEVEL=$(nproc) make -C build-files/ports/lighttpd1.4  install
+QNX_PROJECT_ROOT="$(pwd)/lighttpd1.4" JLEVEL=4 make -C build-files/ports/lighttpd1.4  install
 ```
 
 # Compile the port for QNX on Ubuntu host
@@ -61,7 +64,7 @@ source <path-to-sdp>/qnxsdp-env.sh
 ## Build and install lighttpd binaries to SDP
 
 ```bash
-QNX_PROJECT_ROOT="$(pwd)/lighttpd1.4" JLEVEL=$(nproc) make -C build-files/ports/lighttpd1.4  install
+QNX_PROJECT_ROOT="$(pwd)/lighttpd1.4" JLEVEL=4 make -C build-files/ports/lighttpd1.4  install
 ```
 
 **All binary files have to be installed to SDP**
@@ -76,7 +79,7 @@ QNX_PROJECT_ROOT="$(pwd)/lighttpd1.4" JLEVEL=$(nproc) make -C build-files/ports/
 ## Build and install lighttpd binaries to specific path
 
 ```bash
-QNX_PROJECT_ROOT="$(pwd)/lighttpd1.4" JLEVEL=$(nproc) make -C build-files/ports/lighttpd1.4  install USE_INSTALL_ROOT=true INSTALL_ROOT_nto=<full-path>
+QNX_PROJECT_ROOT="$(pwd)/lighttpd1.4" JLEVEL=4 make -C build-files/ports/lighttpd1.4  install USE_INSTALL_ROOT=true INSTALL_ROOT_nto=<full-path>
 ```
 
 **All binary files have to be installed to specific path**

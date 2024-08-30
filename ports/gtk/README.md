@@ -1,5 +1,8 @@
 **NOTE**: QNX ports are only supported from a Linux host operating system
 
+Use `$(nproc)` instead of `4` after `JLEVEL=` and `-j` if you want to use the maximum number of cores to build this project.
+32GB of RAM is recommended for using `JLEVEL=$(nproc)` or `-j$(nproc)`.
+
 # Compile the port for QNX in a Docker container
 
 Pre-requisite: Install Docker on Ubuntu https://docs.docker.com/engine/install/ubuntu/
@@ -30,7 +33,7 @@ git checkout 110642dd7
 cd -
 
 # Build gtk
-make -C build-files/ports/gtk INSTALL_ROOT_nto=/tmp/staging USE_INSTALL_ROOT=true QNX_PROJECT_ROOT="$(pwd)/gtk" JLEVEL=$(nproc) install
+make -C build-files/ports/gtk INSTALL_ROOT_nto=/tmp/staging USE_INSTALL_ROOT=true QNX_PROJECT_ROOT="$(pwd)/gtk" JLEVEL=4 install
 ```
 
 # Compile the port for QNX on Ubuntu host
@@ -51,7 +54,7 @@ cd -
 source ~/qnx800/qnxsdp-env.sh
 
 # Build gtk
-make -C build-files/ports/gtk INSTALL_ROOT_nto=/tmp/staging USE_INSTALL_ROOT=true QNX_PROJECT_ROOT="$(pwd)/gtk" JLEVEL=$(nproc) install
+make -C build-files/ports/gtk INSTALL_ROOT_nto=/tmp/staging USE_INSTALL_ROOT=true QNX_PROJECT_ROOT="$(pwd)/gtk" JLEVEL=4 install
 ```
 
 # How to run the gtk4 demo

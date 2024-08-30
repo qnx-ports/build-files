@@ -13,9 +13,14 @@ Only code relevant to these features have been included here. This is not a full
 # Compile the port for QNX in a Docker container
 
 **NOTE**: QNX ports are only supported from a Linux host operating system
+
 **WARNING**: Since some ports link against musl by default it is recommended that you specify an install path other than the SDP for the build (with `INSTALL_ROOT_nto=<staging-install-folder> USE_INSTALL_ROOT=true`)
 
 Pre-requisite: Install Docker on Ubuntu https://docs.docker.com/engine/install/ubuntu/
+
+Use `$(nproc)` instead of `4` after `JLEVEL=` and `-j` if you want to use the maximum number of cores to build this project.
+32GB of RAM is recommended for using `JLEVEL=$(nproc)` or `-j$(nproc)`.
+
 ```bash
 # Create a workspace
 mkdir -p ~/qnx_workspace && cd ~/qnx_workspace
@@ -34,7 +39,7 @@ git clone https://gitlab.com/qnx/ports/muslflt.git
 
 
 # Build muslflt
-make -C build-files/ports/muslflt/ INSTALL_ROOT_nto=<staging-install-folder> USE_INSTALL_ROOT=true install QNX_PROJECT_ROOT="$(pwd)/muslflt" -j$(nproc)
+make -C build-files/ports/muslflt/ INSTALL_ROOT_nto=<staging-install-folder> USE_INSTALL_ROOT=true install QNX_PROJECT_ROOT="$(pwd)/muslflt" -j4
 ```
 
 # Compile the port for QNX
@@ -45,7 +50,7 @@ git clone https://gitlab.com/qnx/ports/build-files.git
 git clone https://gitlab.com/qnx/ports/muslflt.git
 
 # Build muslflt
-make -C build-files/ports/muslflt/ INSTALL_ROOT_nto=<staging-install-folder> USE_INSTALL_ROOT=true install QNX_PROJECT_ROOT="$(pwd)/muslflt" -j$(nproc)
+make -C build-files/ports/muslflt/ INSTALL_ROOT_nto=<staging-install-folder> USE_INSTALL_ROOT=true install QNX_PROJECT_ROOT="$(pwd)/muslflt" -j4
 ```
 
 If `INSTALL_ROOT_nto` is omitted, the library will be installed into your SDP directory. `PREFIX` defaults to `/usr/local` if not specified to be consistent with other OSG ports.

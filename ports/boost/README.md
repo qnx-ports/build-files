@@ -1,5 +1,8 @@
 **NOTE**: QNX ports are only supported from a Linux host operating system
 
+Use `$(nproc)` instead of `4` after `JLEVEL=` and `-j` if you want to use the maximum number of cores to build this project.
+32GB of RAM is recommended for using `JLEVEL=$(nproc)` or `-j$(nproc)`.
+
 # Compile the port for QNX in a Docker container
 
 Pre-requisite: Install Docker on Ubuntu https://docs.docker.com/engine/install/ubuntu/
@@ -29,7 +32,7 @@ cd tools/build && git apply ../../../build-files/ports/boost/tools_qnx.patch
 cd ~/qnx_workspace
 
 # Build boost
-make -C build-files/ports/boost/ install QNX_PROJECT_ROOT="$(pwd)/boost" -j$(nproc)
+make -C build-files/ports/boost/ install QNX_PROJECT_ROOT="$(pwd)/boost" -j4
 
 # Build and install tests
 ./build-files/ports/boost/build_and_install_tests.sh
@@ -52,7 +55,7 @@ cd ../
 source ~/qnx800/qnxsdp-env.sh
 
 # Build
-make -C build-files/ports/boost/ install QNX_PROJECT_ROOT="$(pwd)/boost" -j$(nproc)
+make -C build-files/ports/boost/ install QNX_PROJECT_ROOT="$(pwd)/boost" -j4
 
 # Build and install tests
 ./build-files/ports/boost/build_and_install_tests.sh

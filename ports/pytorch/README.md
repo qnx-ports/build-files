@@ -1,5 +1,8 @@
 # Compile the port for QNX
 
+Use `$(nproc)` instead of `4` after `JLEVEL=` and `-j` if you want to use the maximum number of cores to build this project.
+32GB of RAM is recommended for using `JLEVEL=$(nproc)` or `-j$(nproc)`.
+
 ## Build Pytorch Mobile in a Docker container
 
 Pre-requisite: Install Docker on Ubuntu https://docs.docker.com/engine/install/ubuntu/
@@ -36,7 +39,7 @@ cd ~/qnx_workspace/build-files/ports/pytorch
 # Build pytorch mobile w/ lite interpreter
 cd ~/qnx_workspace
 export BUILD_PYTORCH_MOBILE_WITH_HOST_TOOLCHAIN=1
-BUILD_TESTING=ON BUILD_LITE_INTERPRETER=ON QNX_PROJECT_ROOT="$(pwd)/pytorch" make -C build-files/ports/pytorch  install JLEVEL=$(nproc)
+BUILD_TESTING=ON BUILD_LITE_INTERPRETER=ON QNX_PROJECT_ROOT="$(pwd)/pytorch" make -C build-files/ports/pytorch  install JLEVEL=4
 ```
 
 ## Build Pytorch Mobile on Host
@@ -69,7 +72,7 @@ cd ~/qnx_workspace/build-files/ports/pytorch
 # Build pytorch mobile w/ lite interpreter
 cd ~/qnx_workspace
 export BUILD_PYTORCH_MOBILE_WITH_HOST_TOOLCHAIN=1
-BUILD_TESTING=ON BUILD_LITE_INTERPRETER=ON QNX_PROJECT_ROOT="$(pwd)/pytorch" make -C build-files/ports/pytorch  install JLEVEL=$(nproc)
+BUILD_TESTING=ON BUILD_LITE_INTERPRETER=ON QNX_PROJECT_ROOT="$(pwd)/pytorch" make -C build-files/ports/pytorch  install JLEVEL=4
 ```
 
 ## Pytorch Mobile Build Options

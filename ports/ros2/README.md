@@ -17,6 +17,9 @@ grep -rinl "\#\!$PYTHON3_PATH" ./opt/ros/humble | xargs -d '\n' sed -i '1 i #!/s
 
 The build may fail on an unclean project. To get successive builds to succeed you may need to first remove untracked files (see `git clean`).
 
+Use `$(nproc)` instead of `4` after `JLEVEL=` and `-j` if you want to use the maximum number of cores to build this project.
+32GB of RAM is recommended for using `JLEVEL=$(nproc)` or `-j$(nproc)`.
+
 ```bash
 # Create a workspace
 mkdir -p ~/qnx_workspace && cd ~/qnx_workspace
@@ -35,7 +38,7 @@ export QNX_SDP_VERSION=qnx800
 
 # Build googletest
 cd ~/qnx_workspace
-PREFIX="/usr" QNX_PROJECT_ROOT="$(pwd)/googletest" make -C build-files/ports/googletest install -j$(nproc)
+PREFIX="/usr" QNX_PROJECT_ROOT="$(pwd)/googletest" make -C build-files/ports/googletest install -j4
 
 # Import ros2 packages
 cd ~/qnx_workspace/build-files/ports/ros2
@@ -106,7 +109,7 @@ pip install -U \
 source ~/qnx800/qnxsdp-env.sh
 
 # Build and install googletest
-PREFIX="/usr" QNX_PROJECT_ROOT="$(pwd)/googletest" make -C build-files/ports/googletest install -j$(nproc)
+PREFIX="/usr" QNX_PROJECT_ROOT="$(pwd)/googletest" make -C build-files/ports/googletest install -j4
 
 # Import ros2 packages
 cd ~/qnx_workspace/build-files/ports/ros2

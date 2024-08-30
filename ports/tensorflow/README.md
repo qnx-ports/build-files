@@ -1,3 +1,6 @@
+Use `$(nproc)` instead of `4` after `JLEVEL=` and `-j` if you want to use the maximum number of cores to build this project.
+32GB of RAM is recommended for using `JLEVEL=$(nproc)` or `-j$(nproc)`.
+
 # Compile the port for QNX in a Docker container
 
 Pre-requisite: Install Docker on Ubuntu https://docs.docker.com/engine/install/ubuntu/
@@ -26,7 +29,7 @@ cmake --build .
 cd ~/qnx_workspace
 
 # Build tensorflow-lite
-QNX_PROJECT_ROOT="$(pwd)/tensorflow" QNX_PATCH_DIR="$(pwd)/build-files/ports/tensorflow/patches" TFLITE_HOST_TOOLS_DIR="$(pwd)/flatc-native-build/flatbuffers-flatc/bin/" make -C build-files/ports/tensorflow  install JLEVEL=$(nproc)
+QNX_PROJECT_ROOT="$(pwd)/tensorflow" QNX_PATCH_DIR="$(pwd)/build-files/ports/tensorflow/patches" TFLITE_HOST_TOOLS_DIR="$(pwd)/flatc-native-build/flatbuffers-flatc/bin/" make -C build-files/ports/tensorflow  install JLEVEL=4
 ```
 
 ## Build TensorFlow Lite
@@ -45,7 +48,7 @@ cd ..
 source ~/qnx800/qnxsdp-env.sh
 
 # Build
-QNX_PROJECT_ROOT="$(pwd)/tensorflow" QNX_PATCH_DIR="$(pwd)/build-files/ports/tensorflow/patches" TFLITE_HOST_TOOLS_DIR="$(pwd)/flatc-native-build/flatbuffers-flatc/bin/" make -C build-files/ports/tensorflow  install JLEVEL=$(nproc)
+QNX_PROJECT_ROOT="$(pwd)/tensorflow" QNX_PATCH_DIR="$(pwd)/build-files/ports/tensorflow/patches" TFLITE_HOST_TOOLS_DIR="$(pwd)/flatc-native-build/flatbuffers-flatc/bin/" make -C build-files/ports/tensorflow  install JLEVEL=4
 ```
 
 ## Run tests

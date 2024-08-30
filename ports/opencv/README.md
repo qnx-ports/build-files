@@ -2,6 +2,9 @@
 
 Please make sure you have com.qnx.qnx800.target.screen.img_codecs QNX package installed to your SDP.
 
+Use `$(nproc)` instead of `4` after `JLEVEL=` and `-j` if you want to use the maximum number of cores to build this project.
+32GB of RAM is recommended for using `JLEVEL=$(nproc)` or `-j$(nproc)`.
+
 # Compile the port for QNX in a Docker container
 
 Pre-requisite: Install Docker on Ubuntu https://docs.docker.com/engine/install/ubuntu/
@@ -28,10 +31,10 @@ git submodule update --init --recursive
 cd ~/qnx_workspace
 
 # Build numpy first
-QNX_PROJECT_ROOT="$(pwd)/numpy" make -C build-files/ports/numpy install -j$(nproc)
+QNX_PROJECT_ROOT="$(pwd)/numpy" make -C build-files/ports/numpy install -j4
 
 # Build opencv
-BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/opencv" make -C build-files/ports/opencv install -j$(nproc)
+BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/opencv" make -C build-files/ports/opencv install -j4
 ```
 
 # Compile the port for QNX
@@ -60,10 +63,10 @@ pip install -U pip Cython wheel
 source ~/qnx800/qnxsdp-env.sh
 
 # Build numpy first
-PREFIX="/usr" QNX_PROJECT_ROOT="$(pwd)/numpy" make -C build-files/ports/numpy install -j$(nproc)
+PREFIX="/usr" QNX_PROJECT_ROOT="$(pwd)/numpy" make -C build-files/ports/numpy install -j4
 
 # Build opencv
-BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/opencv" make -C build-files/ports/opencv install -j$(nproc)
+BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/opencv" make -C build-files/ports/opencv install -j4
 ```
 
 # How to run tests

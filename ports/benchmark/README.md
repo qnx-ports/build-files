@@ -5,6 +5,9 @@
 - Setup your QNX SDP environment
 - Build and install `googletest` first (tested version 1.13.0 with QNX changes)
 
+Use `$(nproc)` instead of `4` after `JLEVEL=` and `-j` if you want to use the maximum number of cores to build this project.
+32GB of RAM is recommended for using `JLEVEL=$(nproc)` or `-j$(nproc)`.
+
 # Compile the port for QNX in a Docker container
 
 Pre-requisite: Install Docker on Ubuntu https://docs.docker.com/engine/install/ubuntu/
@@ -28,7 +31,7 @@ cd ~/qnx_workspace
 git clone https://gitlab.com/qnx/ports/benchmark.git
 
 # Build benchmark
-QNX_PROJECT_ROOT="$(pwd)/benchmark" make -C build-files/ports/benchmark JLEVEL=$(nproc) install
+QNX_PROJECT_ROOT="$(pwd)/benchmark" make -C build-files/ports/benchmark JLEVEL=4 install
 ```
 
 # Compile the port for QNX on Ubuntu host
@@ -42,7 +45,7 @@ git clone https://gitlab.com/qnx/ports/benchmark.git
 source ~/qnx800/qnxsdp-env.sh
 
 # Build
-QNX_PROJECT_ROOT="$(pwd)/benchmark" make -C build-files/ports/benchmark JLEVEL=$(nproc) install
+QNX_PROJECT_ROOT="$(pwd)/benchmark" make -C build-files/ports/benchmark JLEVEL=4 install
 ```
 
 # How to run tests

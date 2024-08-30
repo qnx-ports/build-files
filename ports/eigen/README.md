@@ -12,6 +12,9 @@ may fail and you may run into inconsistencies in results compared to other platf
 
 You can optionally set up a staging area folder (e.g. `/tmp/staging`) for `<staging-install-folder>`
 
+Use `$(nproc)` instead of `4` after `JLEVEL=` and `-j` if you want to use the maximum number of cores to build this project.
+32GB of RAM is recommended for using `JLEVEL=$(nproc)` or `-j$(nproc)`.
+
 # Compile the port for QNX in a Docker container
 
 Pre-requisite: Install Docker on Ubuntu https://docs.docker.com/engine/install/ubuntu/
@@ -37,13 +40,13 @@ mkdir -p <staging-install-folder>
 # Clone muslflt
 git clone https://gitlab.com/qnx/ports/muslflt.git
 # Build muslflt
-QNX_PROJECT_ROOT="$(pwd)/muslflt" INSTALL_ROOT_nto=<staging-install-folder> USE_INSTALL_ROOT=true make -C build-files/ports/muslflt/ install -j$(nproc)
+QNX_PROJECT_ROOT="$(pwd)/muslflt" INSTALL_ROOT_nto=<staging-install-folder> USE_INSTALL_ROOT=true make -C build-files/ports/muslflt/ install -j4
 
 # Clone eigen
 git clone https://gitlab.com/qnx/ports/eigen.git
 
 # Build eigen
-QNX_PROJECT_ROOT="$(pwd)/eigen" make -C build-files/ports/eigen INSTALL_ROOT_nto=<staging-install-folder> USE_INSTALL_ROOT=true JLEVEL=$(nproc) install
+QNX_PROJECT_ROOT="$(pwd)/eigen" make -C build-files/ports/eigen INSTALL_ROOT_nto=<staging-install-folder> USE_INSTALL_ROOT=true JLEVEL=4 install
 ```
 
 # Compile the port for QNX on Ubuntu host
@@ -60,9 +63,9 @@ mkdir -p <staging-install-folder>
 # source qnxsdp-env.sh
 source ~/qnx800/qnxsdp-env.sh
 # Prerequisite: Install muslflt
-QNX_PROJECT_ROOT="$(pwd)/muslflt" INSTALL_ROOT_nto=<staging-install-folder> USE_INSTALL_ROOT=true make -C build-files/ports/muslflt/ install -j$(nproc)
+QNX_PROJECT_ROOT="$(pwd)/muslflt" INSTALL_ROOT_nto=<staging-install-folder> USE_INSTALL_ROOT=true make -C build-files/ports/muslflt/ install -j4
 # Build
-QNX_PROJECT_ROOT="$(pwd)/eigen" make -C build-files/ports/eigen INSTALL_ROOT_nto=<staging-install-folder> USE_INSTALL_ROOT=true JLEVEL=$(nproc) install
+QNX_PROJECT_ROOT="$(pwd)/eigen" make -C build-files/ports/eigen INSTALL_ROOT_nto=<staging-install-folder> USE_INSTALL_ROOT=true JLEVEL=4 install
 ```
 
 # How to run tests

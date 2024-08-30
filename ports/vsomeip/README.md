@@ -2,6 +2,9 @@
 
 vsomeip is currently supported only for SDP 7.1.
 
+Use `$(nproc)` instead of `4` after `JLEVEL=` and `-j` if you want to use the maximum number of cores to build this project.
+32GB of RAM is recommended for using `JLEVEL=$(nproc)` or `-j$(nproc)`.
+
 # Compile the port for QNX in a Docker container
 
 Pre-requisite: Install Docker on Ubuntu https://docs.docker.com/engine/install/ubuntu/
@@ -42,12 +45,12 @@ cd tools/build && git apply $WORKSPACE/build-files/ports/boost/tools_qnx.patch
 cd $WORKSPACE
 
 # Build and install boost
-QNX_PROJECT_ROOT="$(pwd)/boost" make -C build-files/ports/boost install -j$(nproc)
+QNX_PROJECT_ROOT="$(pwd)/boost" make -C build-files/ports/boost install -j4
 
 # Build vsomeip
 # TEST_IP_MASTER should be your QNX target's ip address while TEST_IP_SLAVE should be your Ubuntu PC. It could be vice versa, but
 # the test instructions below follow the forementioned setup.
-TEST_IP_MASTER="<QNX-target-ip-address>" TEST_IP_SLAVE="<Ubuntu-ip-address>" QNX_PROJECT_ROOT="$(pwd)/vsomeip" make -C build-files/ports/vsomeip install -j$(nproc)
+TEST_IP_MASTER="<QNX-target-ip-address>" TEST_IP_SLAVE="<Ubuntu-ip-address>" QNX_PROJECT_ROOT="$(pwd)/vsomeip" make -C build-files/ports/vsomeip install -j4
 ```
 
 # Compile the port for QNX on Ubuntu host
@@ -79,12 +82,12 @@ cd tools/build && git apply $WORKSPACE/build-files/ports/boost/tools_qnx.patch
 cd $WORKSPACE
 
 # Build and install boost
-QNX_PROJECT_ROOT="$(pwd)/boost" make -C build-files/ports/boost install -j$(nproc)
+QNX_PROJECT_ROOT="$(pwd)/boost" make -C build-files/ports/boost install -j4
 
 # Build vsomeip
 # TEST_IP_MASTER should be your QNX target's ip address while TEST_IP_SLAVE should be your Ubuntu PC. It could be vice versa, but
 # the test instructions below follow the forementioned setup.
-TEST_IP_MASTER="<QNX-target-ip-address>" TEST_IP_SLAVE="<Ubuntu-ip-address>" QNX_PROJECT_ROOT="$(pwd)/vsomeip" make -C build-files/ports/vsomeip install -j$(nproc)
+TEST_IP_MASTER="<QNX-target-ip-address>" TEST_IP_SLAVE="<Ubuntu-ip-address>" QNX_PROJECT_ROOT="$(pwd)/vsomeip" make -C build-files/ports/vsomeip install -j4
 ```
 
 # How to run tests
