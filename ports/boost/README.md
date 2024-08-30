@@ -79,7 +79,7 @@ TARGET_HOST=<target-ip-address-or-hostname>
 # Move boost tests
 scp -r $QNX_TARGET/aarch64le/usr/local/bin/boost_tests qnxuser@$TARGET_HOST:/data/home/qnxuser/bin
 # Move boost library
-scp $QNX_TARGET/aarch64le/usr/local/lib/liboost* qnxuser@$TARGET_HOST:/data/home/qnxuser/lib
+scp $QNX_TARGET/aarch64le/usr/local/lib/libboost* qnxuser@$TARGET_HOST:/data/home/qnxuser/lib
 
 # ssh into the target
 ssh qnxuser@$TARGET_HOST
