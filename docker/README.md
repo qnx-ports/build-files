@@ -18,7 +18,7 @@ Before starting:
 First, clone this repo and build the Docker image:
 
 ```bash
-$ git clone https://gitlab.com/qnx/ports/build-files.git && cd build-files/docker
+$ git clone https://github.com/qnx-ports/build-files.git && cd build-files/docker
 $ ./docker-build-qnx-image.sh
 ```
 
@@ -41,7 +41,7 @@ QNX_HOST=/home/username/qnx800/host/linux/x86_64
 QNX_TARGET=/home/username/qnx800/target/qnx
 MAKEFLAGS=-I/home/username/qnx800/target/qnx/usr/include
 
-[QNX] (username) ~$  
+[QNX] (username) ~$
 ```
 
 > ***Note:*** Please be aware that your user account password inside the Docker container is `password` by default, and not the same as your user account password in your host terminal.

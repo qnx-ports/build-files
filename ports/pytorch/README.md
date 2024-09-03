@@ -9,7 +9,7 @@ Pre-requisite: Install Docker on Ubuntu https://docs.docker.com/engine/install/u
 ```bash
 # Create a workspace
 mkdir -p ~/qnx_workspace && cd ~/qnx_workspace
-git clone https://gitlab.com/qnx/ports/build-files.git
+git clone https://github.com/qnx-ports/build-files.git
 
 # Build the Docker image and create a container
 cd build-files/docker
@@ -23,7 +23,7 @@ source ~/qnx800/qnxsdp-env.sh
 
 # Clone pytorch
 cd ~/qnx_workspace
-git clone https://gitlab.com/qnx/ports/pytorch.git
+git clone https://github.com/qnx-ports/pytorch.git
 
 # Install pip dependencies
 cd ~/qnx_workspace/pytorch
@@ -47,11 +47,11 @@ BUILD_TESTING=ON BUILD_LITE_INTERPRETER=ON QNX_PROJECT_ROOT="$(pwd)/pytorch" mak
 ```bash
 # Create a workspace
 mkdir -p ~/qnx_workspace && cd ~/qnx_workspace
-git clone https://gitlab.com/qnx/ports/build-files.git
+git clone https://github.com/qnx-ports/build-files.git
 
 # Clone pytorch
 cd ~/qnx_workspace
-git clone https://gitlab.com/qnx/ports/pytorch.git
+git clone https://github.com/qnx-ports/pytorch.git
 
 # Create a python virtual environment and install necessary packages
 python3.11 -m venv env

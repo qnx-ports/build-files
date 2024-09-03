@@ -9,7 +9,7 @@ Pre-requisite: Install Docker on Ubuntu https://docs.docker.com/engine/install/u
 ```bash
 # Create a workspace
 mkdir -p ~/qnx_workspace && cd ~/qnx_workspace
-git clone https://gitlab.com/qnx/ports/build-files.git
+git clone https://github.com/qnx-ports/build-files.git
 
 # Build the Docker image and create a container
 cd build-files/docker
@@ -21,7 +21,7 @@ source ~/qnx800/qnxsdp-env.sh
 
 # Clone lighttpd1.4
 cd ~/qnx_workspace
-git clone https://gitlab.com/qnx/ports/lighttpd1.4.git
+git clone https://github.com/qnx-ports/lighttpd1.4.git
 ```
 
 ## Generate GNU build tool ./configure and all needed Makefiles

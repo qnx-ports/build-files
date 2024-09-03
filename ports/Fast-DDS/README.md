@@ -17,7 +17,7 @@ Optional: Build in Docker container
 ```bash
 # Create a workspace
 mkdir -p ~/qnx_workspace && cd ~/qnx_workspace
-git clone https://gitlab.com/qnx/ports/build-files.git
+git clone https://github.com/qnx-ports/build-files.git
 
 # Build the Docker image and create a container
 cd build-files/docker
@@ -27,7 +27,7 @@ cd build-files/docker
 
 ```bash
 # Get Fast-DDS
-git clone https://gitlab.com/qnx/ports/Fast-DDS.git && cd Fast-DDS
+git clone https://github.com/qnx-ports/Fast-DDS.git && cd Fast-DDS
 git checkout qnx_2.10.1
 
 WORKSPACE=$PWD

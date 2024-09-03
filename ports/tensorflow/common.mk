@@ -45,17 +45,17 @@ CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DTFLITE_KERNEL_TEST=ON \
              -DTFLITE_HOST_TOOLS_DIR=$(TFLITE_HOST_TOOLS_DIR) \
              -DQNX_PATCH_DIR=$(QNX_PATCH_DIR) \
-             -DOVERRIDABLE_FETCH_CONTENT_cpuinfo_GIT_REPOSITORY=https://gitlab.com/qnx/ports/cpuinfo \
+             -DOVERRIDABLE_FETCH_CONTENT_cpuinfo_GIT_REPOSITORY=https://github.com/qnx-ports/cpuinfo \
              -DOVERRIDABLE_FETCH_CONTENT_cpuinfo_GIT_TAG=qnx \
-             -DOVERRIDABLE_FETCH_CONTENT_ruy_GIT_REPOSITORY=https://gitlab.com/qnx/ports/ruy \
+             -DOVERRIDABLE_FETCH_CONTENT_ruy_GIT_REPOSITORY=https://github.com/qnx-ports/ruy \
              -DOVERRIDABLE_FETCH_CONTENT_ruy_GIT_TAG=qnx \
-             -DOVERRIDABLE_FETCH_CONTENT_abseil-cpp_GIT_REPOSITORY=https://gitlab.com/qnx/ports/abseil-cpp.git \
+             -DOVERRIDABLE_FETCH_CONTENT_abseil-cpp_GIT_REPOSITORY=https://github.com/qnx-ports/abseil-cpp.git \
              -DOVERRIDABLE_FETCH_CONTENT_abseil-cpp_GIT_TAG=qnx_20230802.1 \
-             -DOVERRIDABLE_FETCH_CONTENT_farmhash_GIT_REPOSITORY=https://gitlab.com/qnx/ports/farmhash.git \
+             -DOVERRIDABLE_FETCH_CONTENT_farmhash_GIT_REPOSITORY=https://github.com/qnx-ports/farmhash.git \
              -DOVERRIDABLE_FETCH_CONTENT_farmhash_GIT_TAG=qnx \
-             -DOVERRIDABLE_FETCH_CONTENT_eigen_GIT_REPOSITORY=https://gitlab.com/qnx/ports/eigen.git \
+             -DOVERRIDABLE_FETCH_CONTENT_eigen_GIT_REPOSITORY=https://github.com/qnx-ports/eigen.git \
              -DOVERRIDABLE_FETCH_CONTENT_eigen_GIT_TAG=qnx_v3.4.1 \
-             -DOVERRIDABLE_FETCH_CONTENT_google_benchmark_GIT_REPOSITORY=https://gitlab.com/qnx/ports/benchmark.git \
+             -DOVERRIDABLE_FETCH_CONTENT_google_benchmark_GIT_REPOSITORY=https://github.com/qnx-ports/benchmark.git \
              -DOVERRIDABLE_FETCH_CONTENT_google_benchmark_GIT_TAG=qnx_v1.8.3 \
 
 MAKE_ARGS ?= -j $(firstword $(JLEVEL) 1)

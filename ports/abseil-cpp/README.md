@@ -21,7 +21,7 @@ Pre-requisite: Install Docker on Ubuntu https://docs.docker.com/engine/install/u
 ```bash
 # Create a workspace
 mkdir -p ~/qnx_workspace && cd ~/qnx_workspace
-git clone https://gitlab.com/qnx/ports/build-files.git
+git clone https://github.com/qnx-ports/build-files.git
 
 # Build the Docker image and create a container
 cd build-files/docker
@@ -38,18 +38,18 @@ cd ~/qnx_workspace
 # Create staging directory, e.g. /tmp/staging
 mkdir -p <staging-install-folder>
 # Clone googletest
-git clone https://gitlab.com/qnx/ports/googletest.git
+git clone https://github.com/qnx-ports/googletest.git
 # Build googletest
 BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/googletest" make -C build-files/ports/googletest install -j4
 
 # Prerequisite: Install muslflt
 # Clone muslflt
-git clone https://gitlab.com/qnx/ports/muslflt.git
+git clone https://github.com/qnx-ports/muslflt.git
 # Build muslflt
 QNX_PROJECT_ROOT="$(pwd)/muslflt" make -C build-files/ports/muslflt/ INSTALL_ROOT_nto=<staging-install-folder> USE_INSTALL_ROOT=true install -j4
 
 # Clone abseil-cpp
-git clone https://gitlab.com/qnx/ports/abseil-cpp.git
+git clone https://github.com/qnx-ports/abseil-cpp.git
 
 # Build abseil-cpp
 QNX_PROJECT_ROOT="$(pwd)/abseil-cpp" make -C build-files/ports/abseil-cpp INSTALL_ROOT_nto=<staging-install-folder> USE_INSTALL_ROOT=true JLEVEL=4 install
@@ -59,10 +59,10 @@ QNX_PROJECT_ROOT="$(pwd)/abseil-cpp" make -C build-files/ports/abseil-cpp INSTAL
 ```bash
 # Clone the repos
 mkdir -p ~/qnx_workspace && cd qnx_workspace
-git clone https://gitlab.com/qnx/ports/build-files.git
-git clone https://gitlab.com/qnx/ports/abseil-cpp.git
-git clone https://gitlab.com/qnx/ports/googletest.git
-git clone https://gitlab.com/qnx/ports/muslflt.git
+git clone https://github.com/qnx-ports/build-files.git
+git clone https://github.com/qnx-ports/abseil-cpp.git
+git clone https://github.com/qnx-ports/googletest.git
+git clone https://github.com/qnx-ports/muslflt.git
 
 # Create staging directory, e.g. /tmp/staging
 mkdir -p <staging-install-folder>

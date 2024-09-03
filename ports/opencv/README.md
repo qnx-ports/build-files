@@ -11,7 +11,7 @@ Pre-requisite: Install Docker on Ubuntu https://docs.docker.com/engine/install/u
 ```bash
 # Create a workspace
 mkdir -p ~/qnx_workspace && cd ~/qnx_workspace
-git clone https://gitlab.com/qnx/ports/build-files.git
+git clone https://github.com/qnx-ports/build-files.git
 
 # Build the Docker image and create a container
 cd build-files/docker
@@ -25,8 +25,8 @@ source ~/qnx800/qnxsdp-env.sh
 
 # Clone numpy
 cd ~/qnx_workspace
-git clone https://gitlab.com/qnx/ports/opencv.git
-git clone https://gitlab.com/qnx/ports/numpy.git && cd numpy
+git clone https://github.com/qnx-ports/opencv.git
+git clone https://github.com/qnx-ports/numpy.git && cd numpy
 git submodule update --init --recursive
 cd ~/qnx_workspace
 
@@ -40,10 +40,10 @@ BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/opencv" make -C build-files/ports/op
 # Compile the port for QNX
 ```bash
 # Clone the repos
-git clone https://gitlab.com/qnx/ports/build-files.git
+git clone https://github.com/qnx-ports/build-files.git
 # opencv depends on numpy
-git clone https://gitlab.com/qnx/ports/numpy.git
-git clone https://gitlab.com/qnx/ports/opencv.git
+git clone https://github.com/qnx-ports/numpy.git
+git clone https://github.com/qnx-ports/opencv.git
 
 # Build numpy
 cd numpy

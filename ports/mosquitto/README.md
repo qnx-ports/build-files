@@ -9,7 +9,7 @@ Pre-requisite: Install Docker on Ubuntu https://docs.docker.com/engine/install/u
 ```bash
 # Create a workspace
 mkdir -p ~/qnx_workspace && cd ~/qnx_workspace
-git clone https://gitlab.com/qnx/ports/build-files.git
+git clone https://github.com/qnx-ports/build-files.git
 
 # Build the Docker image and create a container
 cd build-files/docker
@@ -21,7 +21,7 @@ source ~/qnx800/qnxsdp-env.sh
 
 # Clone mosquitto
 cd ~/qnx_workspace
-git clone https://gitlab.com/qnx/ports/mosquitto.git
+git clone https://github.com/qnx-ports/mosquitto.git
 
 # Build mosquitto
 BUILD_TESTING=ON QNX_PROJECT_ROOT="$(pwd)/mosquitto" make -C build-files/ports/mosquitto install -j4
@@ -31,8 +31,8 @@ BUILD_TESTING=ON QNX_PROJECT_ROOT="$(pwd)/mosquitto" make -C build-files/ports/m
 
 ```bash
 # Clone the repos
-git clone https://gitlab.com/qnx/ports/build-files.git
-git clone https://gitlab.com/qnx/ports/mosquitto.git
+git clone https://github.com/qnx-ports/build-files.git
+git clone https://github.com/qnx-ports/mosquitto.git
 
 # source qnxsdp-env.sh
 source ~/qnx800/qnxsdp-env.sh

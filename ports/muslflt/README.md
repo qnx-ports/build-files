@@ -24,7 +24,7 @@ Use `$(nproc)` instead of `4` after `JLEVEL=` and `-j` if you want to use the ma
 ```bash
 # Create a workspace
 mkdir -p ~/qnx_workspace && cd ~/qnx_workspace
-git clone https://gitlab.com/qnx/ports/build-files.git
+git clone https://github.com/qnx-ports/build-files.git
 
 # Build the Docker image and create a container
 cd build-files/docker
@@ -35,7 +35,7 @@ cd build-files/docker
 
 # Clone muslflt
 cd ~/qnx_workspace
-git clone https://gitlab.com/qnx/ports/muslflt.git
+git clone https://github.com/qnx-ports/muslflt.git
 
 
 # Build muslflt
@@ -46,8 +46,8 @@ make -C build-files/ports/muslflt/ INSTALL_ROOT_nto=<staging-install-folder> USE
 ```bash
 # Clone the build-files and muslflt repos
 mkdir -p ~/qnx_workspace && cd ~/qnx_workspace
-git clone https://gitlab.com/qnx/ports/build-files.git
-git clone https://gitlab.com/qnx/ports/muslflt.git
+git clone https://github.com/qnx-ports/build-files.git
+git clone https://github.com/qnx-ports/muslflt.git
 
 # Build muslflt
 make -C build-files/ports/muslflt/ INSTALL_ROOT_nto=<staging-install-folder> USE_INSTALL_ROOT=true install QNX_PROJECT_ROOT="$(pwd)/muslflt" -j4

@@ -7,7 +7,7 @@ Use `$(nproc)` instead of `4` after `JLEVEL=` and `-j` if you want to use the ma
 
 Pre-requisite: Install Docker on Ubuntu https://docs.docker.com/engine/install/ubuntu/
 ```bash
-git clone https://gitlab.com/qnx/ports/build-files.git
+git clone https://github.com/qnx-ports/build-files.git
 
 # Build the Docker image and create a container
 cd build-files/docker
@@ -25,7 +25,7 @@ mkdir -p ~/qnx_workspace && cd ~/qnx_workspace
 cd ~/qnx_workspace
 
 # Clone gtk
-git clone https://gitlab.com/qnx/ports/gtk.git
+git clone https://github.com/qnx-ports/gtk.git
 
 # Clone meson for building gtk
 git clone https://github.com/mesonbuild/meson && cd meson
@@ -44,7 +44,7 @@ sudo apt-get install sassc libglib2.0-bin ninja-build libglib2.0-dev pkg-config
 
 # Clone the repos
 mkdir -p ~/qnx_workspace && cd qnx_workspace
-git clone https://gitlab.com/qnx/ports/build-files.git
+git clone https://github.com/qnx-ports/build-files.git
 # Clone meson for building gtk
 git clone https://github.com/mesonbuild/meson && cd meson
 git checkout 110642dd7

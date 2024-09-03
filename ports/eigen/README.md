@@ -21,7 +21,7 @@ Pre-requisite: Install Docker on Ubuntu https://docs.docker.com/engine/install/u
 ```bash
 # Create a workspace
 mkdir -p ~/qnx_workspace && cd ~/qnx_workspace
-git clone https://gitlab.com/qnx/ports/build-files.git
+git clone https://github.com/qnx-ports/build-files.git
 
 # Build the Docker image and create a container
 cd build-files/docker
@@ -38,12 +38,12 @@ cd ~/qnx_workspace
 mkdir -p <staging-install-folder>
 # Prerequisite: Install muslflt
 # Clone muslflt
-git clone https://gitlab.com/qnx/ports/muslflt.git
+git clone https://github.com/qnx-ports/muslflt.git
 # Build muslflt
 QNX_PROJECT_ROOT="$(pwd)/muslflt" INSTALL_ROOT_nto=<staging-install-folder> USE_INSTALL_ROOT=true make -C build-files/ports/muslflt/ install -j4
 
 # Clone eigen
-git clone https://gitlab.com/qnx/ports/eigen.git
+git clone https://github.com/qnx-ports/eigen.git
 
 # Build eigen
 QNX_PROJECT_ROOT="$(pwd)/eigen" make -C build-files/ports/eigen INSTALL_ROOT_nto=<staging-install-folder> USE_INSTALL_ROOT=true JLEVEL=4 install
@@ -53,9 +53,9 @@ QNX_PROJECT_ROOT="$(pwd)/eigen" make -C build-files/ports/eigen INSTALL_ROOT_nto
 ```bash
 # Clone the repos
 mkdir -p ~/qnx_workspace && cd qnx_workspace
-git clone https://gitlab.com/qnx/ports/build-files.git
-git clone https://gitlab.com/qnx/ports/muslflt.git
-git clone https://gitlab.com/qnx/ports/eigen.git
+git clone https://github.com/qnx-ports/build-files.git
+git clone https://github.com/qnx-ports/muslflt.git
+git clone https://github.com/qnx-ports/eigen.git
 
 # Create staging directory, e.g. /tmp/staging
 mkdir -p <staging-install-folder>

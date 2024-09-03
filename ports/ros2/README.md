@@ -23,8 +23,8 @@ Use `$(nproc)` instead of `4` after `JLEVEL=` and `-j` if you want to use the ma
 ```bash
 # Create a workspace
 mkdir -p ~/qnx_workspace && cd ~/qnx_workspace
-git clone https://gitlab.com/qnx/ports/build-files.git
-git clone -b qnx_v1.13.0 https://gitlab.com/qnx/ports/googletest.git
+git clone https://github.com/qnx-ports/build-files.git
+git clone -b qnx_v1.13.0 https://github.com/qnx-ports/googletest.git
 
 # Build the Docker image and create a container
 cd build-files/docker
@@ -70,8 +70,8 @@ export QNX_SDP_VERSION=qnx800
 mkdir -p ~/qnx_workspace && cd ~/qnx_workspace
 
 # Clone repos
-git clone https://gitlab.com/qnx/ports/build-files.git
-git clone -b qnx_v1.13.0 https://gitlab.com/qnx/ports/googletest.git
+git clone https://github.com/qnx-ports/build-files.git
+git clone -b qnx_v1.13.0 https://github.com/qnx-ports/googletest.git
 
 # Install python 3.11
 sudo add-apt-repository ppa:deadsnakes/ppa

@@ -1,14 +1,14 @@
 Setting up a workspace for ROS2 Humble for QNX:
 
-Pre-requisite: build and install QNX ROS2 Humble from [source](https://gitlab.com/qnx/ports/build-files/-/blob/main/ports/ros2/README.md).
+Pre-requisite: build and install QNX ROS2 Humble from [source](https://github.com/qnx-ports/build-files/-/blob/main/ports/ros2/README.md).
 
 Preferable host OS: Ubuntu 20.04
 
-0. Optional: use [Docker](https://gitlab.com/qnx/ports/build-files/-/blob/main/docker/README.md) to have a consistent build environment.
+0. Optional: use [Docker](https://github.com/qnx-ports/build-files/-/blob/main/docker/README.md) to have a consistent build environment.
 
 1. Clone the sample workspace:
 ```bash
-git clone https://gitlab.com/qnx/ports/build-files.git && cd build-files/ports/ros2/qnx-ros2-workspace
+git clone https://github.com/qnx-ports/build-files.git && cd build-files/ports/ros2/qnx-ros2-workspace
 ```
 
 2. This repository has a hello_qnx in src as an example. Add your packages inside src.

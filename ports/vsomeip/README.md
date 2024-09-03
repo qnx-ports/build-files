@@ -12,10 +12,10 @@ Pre-requisite: Install Docker on Ubuntu https://docs.docker.com/engine/install/u
 # Create a workspace
 mkdir -p ~/qnx_workspace && cd ~/qnx_workspace
 WORKSPACE=${PWD}
-git clone https://gitlab.com/qnx/ports/build-files.git
-git clone https://gitlab.com/qnx/ports/vsomeip.git  -b qnx_3.4.10
+git clone https://github.com/qnx-ports/build-files.git
+git clone https://github.com/qnx-ports/vsomeip.git  -b qnx_3.4.10
 # Optional: get googletest if you want to run vsomeip tests
-git clone https://gitlab.com/qnx/ports/googletest.git -b qnx_v1.13.0
+git clone https://github.com/qnx-ports/googletest.git -b qnx_v1.13.0
 GTEST_ROOT=$WORKSPACE/googletest
 
 
@@ -58,10 +58,10 @@ TEST_IP_MASTER="<QNX-target-ip-address>" TEST_IP_SLAVE="<Ubuntu-ip-address>" QNX
 # Create a workspace
 mkdir -p ~/qnx_workspace && cd ~/qnx_workspace
 WORKSPACE=${PWD}
-git clone https://gitlab.com/qnx/ports/build-files.git
-git clone https://gitlab.com/qnx/ports/vsomeip.git -b qnx_3.4.10
+git clone https://github.com/qnx-ports/build-files.git
+git clone https://github.com/qnx-ports/vsomeip.git -b qnx_3.4.10
 # Optional: get googletest if you want to run vsomeip tests
-git clone https://gitlab.com/qnx/ports/googletest.git -b qnx_v1.13.0
+git clone https://github.com/qnx-ports/googletest.git -b qnx_v1.13.0
 GTEST_ROOT=$WORKSPACE/googletest
 
 # source qnxsdp-env.sh

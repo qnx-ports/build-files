@@ -9,7 +9,7 @@ Pre-requisite: Install Docker on Ubuntu https://docs.docker.com/engine/install/u
 ```bash
 # Create a workspace
 mkdir -p ~/qnx_workspace && cd ~/qnx_workspace
-git clone https://gitlab.com/qnx/ports/build-files.git
+git clone https://github.com/qnx-ports/build-files.git
 
 # Build the Docker image and create a container
 cd build-files/docker
@@ -23,7 +23,7 @@ source ~/qnx800/qnxsdp-env.sh
 
 # Clone ComputeLibrary
 cd ~/qnx_workspace
-git clone https://gitlab.com/qnx/ports/tinyxml2.git
+git clone https://github.com/qnx-ports/tinyxml2.git
 
 # Build tinyxml2
 BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/tinyxml2" make -C build-files/ports/tinyxml2 install -j4
@@ -33,8 +33,8 @@ BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/tinyxml2" make -C build-files/ports/
 
 ```bash
 # Clone the repos
-git clone https://gitlab.com/qnx/ports/build-files.git
-git clone https://gitlab.com/qnx/ports/tinyxml2.git
+git clone https://github.com/qnx-ports/build-files.git
+git clone https://github.com/qnx-ports/tinyxml2.git
 
 # source qnxsdp-env.sh
 source ~/qnx800/qnxsdp-env.sh
