@@ -47,7 +47,7 @@ set(PYTHON3_PACKAGES_PATH ${QNX_TARGET}/${CPUVARDIR}/usr/lib/python3.11/site-pac
 set(PYTHON3_NUMPY_INCLUDE_DIRS ${QNX_TARGET}/${CPUVARDIR}/usr/lib/python3.11/site-packages/numpy/core/include;${QNX_TARGET}/${CPUVARDIR}/usr/local/lib/python3.11/site-packages/numpy/core/include)
 set(PYTHONLIBS_FOUND)
 set(PYTHON_IS_DEBUG FALSE)
-set(OPENCV_PYTHON_INSTALL_PATH ${CMAKE_INSTALL_PREFIX}/lib/python3.11/site-packages)
+set(OPENCV_PYTHON_INSTALL_PATH ${QNX_TARGET}/${CPUVARDIR}/usr/local/lib/python3.11/site-packages)
 
 set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
 set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)

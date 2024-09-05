@@ -70,7 +70,6 @@ CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DBUILD_SHARED_LIBS=1 \
              -DCMAKE_INSTALL_INCLUDEDIR=$(INSTALL_ROOT)/$(PREFIX)/include \
              -DOPENCV_OTHER_INSTALL_PATH=$(INSTALL_ROOT)/$(PREFIX)/share \
-             -DQNX_PYTHON_INSTALL_PATH=$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/lib/python3.11/site-packages \
              -DCMAKE_BUILD_TYPE=$(CMAKE_BUILD_TYPE) \
              -DCMAKE_NO_SYSTEM_FROM_IMPORTED=ON \
              -DCPU=$(CPU) \
