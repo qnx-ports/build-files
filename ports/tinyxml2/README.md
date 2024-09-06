@@ -21,7 +21,7 @@ cd build-files/docker
 # source qnxsdp-env.sh in
 source ~/qnx800/qnxsdp-env.sh
 
-# Clone ComputeLibrary
+# Clone tinyxml2
 cd ~/qnx_workspace
 git clone https://github.com/qnx-ports/tinyxml2.git
 
