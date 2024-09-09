@@ -26,8 +26,15 @@ CMAKE_BUILD_TYPE ?= Release
 ALL_DEPENDENCIES = tflite_all
 .PHONY: tflite_all
 
+PYBIND11_INCLUDE = $(shell python3 -c "import pybind11; print (pybind11.get_include())")
+NUMPY_INCLUDE = $(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/lib/python3.11/site-packages/numpy/core/include
 
 FLAGS += -D_QNX_SOURCE -funsafe-math-optimizations -DFARMHASH_LITTLE_ENDIAN -D__LITTLE_ENDIAN__
+
+EXT_FLAGS = -I$(PYBIND11_INCLUDE) \
+            -I$(NUMPY_INCLUDE) \
+            -I"$(QNX_TARGET)/usr/include:$(QNX_TARGET)/usr/include/python3.11:$(QNX_TARGET)/$(CPUVARDIR)/usr/include:$(QNX_TARGET)/$(CPUVARDIR)/usr/include/python3.11:$(QNX_TARGET)/usr/include/$(CPUVARDIR)/python3.11" \
+            -L"$(QNX_TARGET)/$(CPUVARDIR)/lib:$(QNX_TARGET)/$(CPUVARDIR)/usr/lib"
 
 CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DCMAKE_INSTALL_PREFIX=$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX) \
@@ -35,8 +42,8 @@ CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DCMAKE_BUILD_TYPE=$(CMAKE_BUILD_TYPE) \
              -DCMAKE_INSTALL_LIBDIR=$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/lib \
              -DCMAKE_INSTALL_INCLUDEDIR=$(INSTALL_ROOT)/$(PREFIX)/include/tensorflow \
-             -DEXTRA_CMAKE_C_FLAGS="$(FLAGS)" \
-             -DEXTRA_CMAKE_CXX_FLAGS="$(FLAGS)" \
+             -DEXTRA_CMAKE_C_FLAGS="$(FLAGS) $(EXT_FLAGS)" \
+             -DEXTRA_CMAKE_CXX_FLAGS="$(FLAGS) $(EXT_FLAGS)" \
              -DCPUVARDIR=$(CPUVARDIR) \
              -DTFLITE_ENABLE_XNNPACK=OFF \
              -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON \
@@ -67,7 +74,8 @@ ifndef NO_TARGET_OVERRIDE
 tflite_all:
 	@mkdir -p build
 	cd build && cmake $(CMAKE_ARGS) $(QNX_PROJECT_ROOT)/tensorflow/lite/
-	cd build && make all $(MAKE_ARGS)
+	cd build && make all _pywrap_tensorflow_interpreter_wrapper $(MAKE_ARGS)
+	BUILD_DIR=$(PWD)/build/python_loader CMAKE_BUILD_DIR=$(PWD)/build $(QNX_PROJECT_ROOT)/tensorflow/lite/tools/pip_package/build_pip_package_with_cmake.sh nto
 
 install check: tflite_all
 	cd build && make install $(MAKE_ARGS)

@@ -135,7 +135,7 @@ export OPENCV_TEST_DATA_PATH=/data/home/qnxuser/opencv/testdata
 ./opencv_test_videoio
 ```
 
-# Install the Python Package
+## Install the Python Package
 
 ```bash
 # Copy the package to the target

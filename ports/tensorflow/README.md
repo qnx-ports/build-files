@@ -26,7 +26,15 @@ git clone https://github.com/qnx-ports/tensorflow.git
 mkdir -p flatc-native-build && cd flatc-native-build
 cmake ../tensorflow/tensorflow/lite/tools/cmake/native_tools/flatbuffers
 cmake --build .
+
+# Clone numpy
 cd ~/qnx_workspace
+git clone https://gitlab.com/qnx/ports/numpy.git && cd numpy
+git submodule update --init --recursive
+cd ~/qnx_workspace
+
+# Build numpy
+QNX_PROJECT_ROOT="$(pwd)/numpy" make -C build-files/ports/numpy install -j4
 
 # Build tensorflow-lite
 QNX_PROJECT_ROOT="$(pwd)/tensorflow" QNX_PATCH_DIR="$(pwd)/build-files/ports/tensorflow/patches" TFLITE_HOST_TOOLS_DIR="$(pwd)/flatc-native-build/flatbuffers-flatc/bin/" make -C build-files/ports/tensorflow  install JLEVEL=4
@@ -154,3 +162,21 @@ In `common.mk`, append this argument to `CMAKE_ARGS`, then continue with normal 
 ```
 
 Then follow the instructions "Download sample model and image" and "Run the sample on a desktop" in `tensorflow/tensorflow/lite/examples/label_image/README.md` to run the example.
+
+## Install the Python Package
+
+```bash
+# scp the python package
+scp -r build-files/ports/tensorflow/nto-aarch64-le/build/python_loader/tflite_runtime qnxuser@TARGET_HOST:/data/home/qnxuser
+```
+
+Verify the installation on the target.
+```bash
+python3 -c "import tflite_runtime as tf; print(tf.__version__)"
+```
+
+Further instructions for building an example with tflite_runtime can be found here:
+
+https://ai.google.dev/edge/litert/microcontrollers/python
+
+**NOTE** for image loading and processing see OpenCV.
