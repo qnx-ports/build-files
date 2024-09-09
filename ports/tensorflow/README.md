@@ -52,6 +52,12 @@ cmake ../tensorflow/tensorflow/lite/tools/cmake/native_tools/flatbuffers
 cmake --build .
 cd ..
 
+# Clone numpy
+cd ~/qnx_workspace
+git clone https://github.com/qnx-ports/numpy.git && cd numpy
+git submodule update --init --recursive
+cd ~/qnx_workspace
+
 # Install python3.11, gfortran, and pybind11
 sudo add-apt-repository ppa:deadsnakes/ppa
 sudo apt-get install -y python3.11-dev python3.11-venv python3.11-distutils software-properties-common gfortran pybind11
