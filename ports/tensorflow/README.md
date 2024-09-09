@@ -29,7 +29,7 @@ cmake --build .
 
 # Clone numpy
 cd ~/qnx_workspace
-git clone https://gitlab.com/qnx/ports/numpy.git && cd numpy
+git clone https://github.com/qnx-ports/numpy.git && cd numpy
 git submodule update --init --recursive
 cd ~/qnx_workspace
 
@@ -52,8 +52,20 @@ cmake ../tensorflow/tensorflow/lite/tools/cmake/native_tools/flatbuffers
 cmake --build .
 cd ..
 
+# Install python3.11, gfortran, and pybind11
+sudo add-apt-repository ppa:deadsnakes/ppa
+sudo apt-get install -y python3.11-dev python3.11-venv python3.11-distutils software-properties-common gfortran pybind11
+
+# Create a python virtual environment and install necessary packages
+python3.11 -m venv env
+source env/bin/activate
+pip install -U pip Cython wheel
+
 # source qnxsdp-env.sh
 source ~/qnx800/qnxsdp-env.sh
+
+# Build numpy
+QNX_PROJECT_ROOT="$(pwd)/numpy" make -C build-files/ports/numpy install -j4
 
 # Build
 QNX_PROJECT_ROOT="$(pwd)/tensorflow" QNX_PATCH_DIR="$(pwd)/build-files/ports/tensorflow/patches" TFLITE_HOST_TOOLS_DIR="$(pwd)/flatc-native-build/flatbuffers-flatc/bin/" make -C build-files/ports/tensorflow  install JLEVEL=4
