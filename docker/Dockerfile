@@ -116,7 +116,8 @@ RUN cd /usr/local/qnx && \
 	flake8-quotes \
 	pytest-repeat \
 	pytest-rerunfailures \
-	pytest
+	pytest \
+	pybind11
 
 WORKDIR /home/${USER_NAME}
 
