@@ -44,7 +44,12 @@ sudo apt-get install sassc libglib2.0-bin ninja-build libglib2.0-dev pkg-config
 
 # Clone the repos
 mkdir -p ~/qnx_workspace && cd qnx_workspace
+<<<<<<< Updated upstream
 git clone https://github.com/qnx-ports/build-files.git
+=======
+git clone https://gitlab.com/qnx/ports/build-files.git
+git clone https://gitlab.com/qnx/ports/gtk.git
+>>>>>>> Stashed changes
 # Clone meson for building gtk
 git clone https://github.com/mesonbuild/meson && cd meson
 git checkout 110642dd7
@@ -54,7 +59,11 @@ cd -
 source ~/qnx800/qnxsdp-env.sh
 
 # Build gtk
+<<<<<<< Updated upstream
 make -C build-files/ports/gtk INSTALL_ROOT_nto=/tmp/staging USE_INSTALL_ROOT=true QNX_PROJECT_ROOT="$(pwd)/gtk" JLEVEL=4 install
+=======
+QNX_PROJECT_ROOT="$(pwd)/gtk" INSTALL_ROOT_nto=/tmp/staging USE_INSTALL_ROOT=true make -C build-files/ports/gtk JLEVEL=$(nproc) install
+>>>>>>> Stashed changes
 ```
 
 # How to run the gtk4 demo

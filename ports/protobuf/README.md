@@ -31,7 +31,7 @@ cd ~/qnx_workspace
 
 # Build protobuf
 [export INSTALL_ROOT_nto=<PATH_TO_YOUR_STAGING_AREA>]
-[USE_INSTALL_ROOT=true] QNX_PROJECT_ROOT="$(pwd)/opencv" make -C build-files/ports/protobuf install JLEVEL=4
+[USE_INSTALL_ROOT=true] QNX_PROJECT_ROOT="$(pwd)/protobuf" make -C build-files/ports/protobuf install JLEVEL=4
 ```
 
 # Compile the port for QNX
@@ -50,7 +50,7 @@ source ~/qnx800/qnxsdp-env.sh
 
 # Build protobuf
 [export INSTALL_ROOT_nto=<PATH_TO_YOUR_STAGING_AREA>]
-[USE_INSTALL_ROOT=true] QNX_PROJECT_ROOT="$(pwd)/opencv" make -C build-files/ports/protobuf install JLEVEL=4
+[USE_INSTALL_ROOT=true] QNX_PROJECT_ROOT="$(pwd)/protobuf" make -C build-files/ports/protobuf install JLEVEL=4
 ```
 
 # How to run tests
@@ -67,10 +67,6 @@ Set up the test environment (note, mDNS is configured from
 /boot/qnx_config.txt and uses qnxpi.local by default)
 ```bash
 TARGET_HOST=<target-ip-address-or-hostname>
-
-# On your development machine, clone opencv_extra
-git clone https://github.com/opencv/opencv_extra.git && cd opencv_extra
-git checkout 4.9.0
 ```
 Now we copy protobuf test binaries and data to target. We need to first go to the correct directory.
 If you used `INSTALL_ROOT_nto`, run 
