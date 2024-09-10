@@ -123,6 +123,7 @@ WORKDIR /home/${USER_NAME}
 
 # Welcome Message
 COPY --chown=${USER_NAME}:${GROUP_NAME} ".qnxbashrc" "/usr/local/qnx"
+COPY --chown=${USER_NAME}:${GROUP_NAME} ".git-completion.bash" "/usr/local/qnx"
 COPY --chown=${USER_NAME}:${GROUP_NAME} "welcome.sh" "/usr/local/qnx"
 
 CMD /bin/bash --rcfile /usr/local/qnx/.qnxbashrc
