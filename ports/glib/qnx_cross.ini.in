@@ -1,0 +1,25 @@
+[constants]
+target_arch = 'TARGET_ARCH'
+qnx_host = 'QNX_HOST'
+cpudir = 'CPUDIR'
+qnx_target_bin_dir = 'QNX_TARGET_BIN_DIR'
+
+[host_machine]
+system = 'qnx'
+cpu_family = target_arch
+cpu = target_arch
+endian = 'little'
+
+[properties]
+growing_stack = false
+sys_lib_dir = qnx_target_bin_dir + '/lib'
+usr_lib_dir = qnx_target_bin_dir + '/usr/lib'
+
+[binaries]
+c = [qnx_host + '/usr/bin/nto' + target_arch + '-gcc']
+cpp = [qnx_host + '/usr/bin/nto' + target_arch + '-g++']
+ar = qnx_host + '/usr/bin/nto'+target_arch+'-ar'
+ld = qnx_host + '/usr/bin/nto'+target_arch+'-ld'
+strip = qnx_host + '/usr/bin/nto'+target_arch+'-strip'
+windres = ''
+objcopy = 'None'
