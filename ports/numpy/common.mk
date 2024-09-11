@@ -50,7 +50,7 @@ NUMPY_ROOT = $(PROJECT_ROOT)/
 NUMPY_VERSION = 1.25.0
 
 EXPORT_PY  = export CC=$(QNX_HOST)/usr/bin/qcc \
-             export CXX=$(QNX_HOST)/usr/bin/qcc \
+             export CXX=$(QNX_HOST)/usr/bin/q++ \
              export CFLAGS="-Vgcc_nto$(GCC_NAME)" \
              export CPPFLAGS="-D_POSIX_THREADS -Wno-implicit-function-declaration -Wno-stringop-overflow -Wno-unused-but-set-variable " \
              export CXXFLAGS=$(CFLAGS) \
@@ -75,7 +75,6 @@ BUILD_FLAGS =  --build-temp=$(PROJECT_ROOT)/$(NTO_DIR_NAME)/tmp \
 
 BUILD_EXT_FLAGS = -I"$(QNX_TARGET)/usr/include:$(QNX_TARGET)/usr/include/python3.11:$(QNX_TARGET)/$(CPUVARDIR)/usr/include:$(QNX_TARGET)/$(CPUVARDIR)/usr/include/python3.11:$(QNX_TARGET)/usr/include/$(CPUVARDIR)/python3.11" \
                   -L"$(QNX_TARGET)/$(CPUVARDIR)/lib:$(QNX_TARGET)/$(CPUVARDIR)/usr/lib" \
-                  -lc++ \
                   -b"$(PROJECT_ROOT)/$(NTO_DIR_NAME)/lib" \
 
 ifndef NO_TARGET_OVERRIDE
