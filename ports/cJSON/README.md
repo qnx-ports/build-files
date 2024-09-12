@@ -21,12 +21,12 @@ cd build-files/docker
 # source qnxsdp-env.sh in
 source ~/qnx800/qnxsdp-env.sh
 
-# Clone ComputeLibrary
+# Clone cJSON
 cd ~/qnx_workspace
-git clone https://github.com/qnx-ports/ComputeLibrary.git
+git clone https://github.com/qnx-ports/cJSON.git
 
-# Build ComputeLibrary
-BUILD_EXAMPLES="ON" BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/ComputeLibrary" make -C build-files/ports/ComputeLibrary install -j4
+# Build cJSON
+QNX_PROJECT_ROOT="$(pwd)/cJSON" make -C build-files/ports/cJSON install -j4
 ```
 
 # Compile the port for QNX on Ubuntu host
@@ -39,8 +39,8 @@ git clone https://github.com/qnx-ports/cJSON.git
 # source qnxsdp-env.sh
 source ~/qnx800/qnxsdp-env.sh
 
-# Build ComputeLibrary
-BUILD_EXAMPLES="ON" BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/ComputeLibrary" make -C build-files/ports/ComputeLibrary install -j4
+# Build cJSON
+QNX_PROJECT_ROOT="$(pwd)/cJSON" make -C build-files/ports/cJSON install -j4
 ```
 
 # How to run tests
@@ -63,8 +63,27 @@ Run tests on the target.
 ssh qnxuser@$TARGET_HOST
 
 # Run cJSON tests
-cd /data/home/qnxuser/bin/cJSON_tests/cJSON_test
+cd /data/home/qnxuser/bin/cJSON_tests/
+chmod +x *
 ./cJSON_test
+./cjson_add
+./compare_tests
+./minify_tests
+./misc_tests
+./parse_array
+./parse_examples
+./parse_hex4
+./parse_number
+./parse_object
+./parse_string
+./parse_value
+./parse_with_opts
+./print_array
+./print_number
+./print_object
+./print_string
+./print_value
+./readme_examples
 
 # WIP Tests which currently fail:
 N/A
