@@ -57,10 +57,11 @@ CMAKE_COMMON_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cma
                     -DCMAKE_CXX_COMPILER_TARGET=gcc_nto$(CPUVARDIR) \
                     -DCMAKE_C_COMPILER_TARGET=gcc_nto$(CPUVARDIR) \
                     -DCMAKE_INSTALL_PREFIX="$(PREFIX)" \
-                    -DCMAKE_STAGING_PREFIX="$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)" \
+                    -DCMAKE_STAGING_PREFIX="$(INSTALL_ROOT)/$(CPUVARDIR)" \
                     -DCMAKE_MODULE_PATH="$(CMAKE_MODULE_PATH)" \
                     -DCMAKE_FIND_ROOT_PATH="$(CMAKE_FIND_ROOT_PATH)" \
                     -DCMAKE_BUILD_TYPE=$(CMAKE_BUILD_TYPE) \
+                    -DCMAKE_NO_SYSTEM_FROM_IMPORTED=TRUE \
                     -DEXTRA_CMAKE_C_FLAGS="$(CFLAGS)" \
                     -DEXTRA_CMAKE_CXX_FLAGS="$(CFLAGS)" \
                     -DEXTRA_CMAKE_ASM_FLAGS="$(FLAGS)" \
@@ -86,18 +87,18 @@ protobuf_all: protobuf protoc_target
 
 protobuf: protoc_host
 	mkdir -p protobuf
-	cd protobuf && cmake $(CMAKE_COMMON_ARGS) -DWITH_PROTOC=$(HOST_PROTOC_PATH)/protoc -Dprotobuf_BUILD_LIBUPB=OFF $(DIST_BASE)
+	cd protobuf && cmake $(CMAKE_COMMON_ARGS) -DWITH_PROTOC=$(HOST_PROTOC_PATH)/protoc -Dprotobuf_BUILD_LIBUPB=OFF $(QNX_PROJECT_ROOT)
 	cd protobuf && cmake --build . $(GENERATOR_ARGS)
 
 protoc_target:
 	mkdir -p protoc
-	cd protoc && cmake $(CMAKE_COMMON_ARGS) -Dprotobuf_BUILD_TESTS=OFF -Dprotobuf_BUILD_LIBUPB=ON $(DIST_BASE)
+	cd protoc && cmake $(CMAKE_COMMON_ARGS) -Dprotobuf_BUILD_TESTS=OFF -Dprotobuf_BUILD_LIBUPB=ON $(QNX_PROJECT_ROOT)
 	cd protoc && cmake --build . $(GENERATOR_ARGS)
 
 protoc_host:
 	mkdir -p $(HOST_PROTOC_PATH)
 	cd $(HOST_PROTOC_PATH) && \
-	cmake $(HOST_CMAKE_ARGS) $(DIST_BASE) && \
+	cmake $(HOST_CMAKE_ARGS) $(QNX_PROJECT_ROOT) && \
     cmake --build . $(GENERATOR_ARGS)
 
 install: protobuf_all
