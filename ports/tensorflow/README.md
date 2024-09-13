@@ -21,10 +21,15 @@ source ~/qnx800/qnxsdp-env.sh
 
 # Clone tensorflow-lite
 cd ~/qnx_workspace
-git clone https://github.com/qnx-ports/tensorflow.git
+git clone https://github.com/qnx-ports/tensorflow.git --branch qnx_master
 # Build host flatc (used in kernel tests)
-mkdir -p flatc-native-build && cd flatc-native-build
-cmake ../tensorflow/tensorflow/lite/tools/cmake/native_tools/flatbuffers
+mkdir -p tf-native-tools/flatbuffers-build && cd tf-native-tools/flatbuffers-build
+cmake ../../tensorflow/tensorflow/lite/tools/cmake/native_tools/flatbuffers
+cmake --build .
+# Build host protoc (used in profiling)
+cd ~/qnx_workspace
+mkdir -p tf-native-tools/protobuf-build && cd tf-native-tools/protobuf-build
+cmake ../../tensorflow/tensorflow/lite/tools/cmake/native_tools/protobuf
 cmake --build .
 
 # Clone numpy
@@ -37,7 +42,7 @@ cd ~/qnx_workspace
 QNX_PROJECT_ROOT="$(pwd)/numpy" make -C build-files/ports/numpy install -j4
 
 # Build tensorflow-lite
-QNX_PROJECT_ROOT="$(pwd)/tensorflow" QNX_PATCH_DIR="$(pwd)/build-files/ports/tensorflow/patches" TFLITE_HOST_TOOLS_DIR="$(pwd)/flatc-native-build/flatbuffers-flatc/bin/" make -C build-files/ports/tensorflow  install JLEVEL=4
+QNX_PROJECT_ROOT="$(pwd)/tensorflow" QNX_PATCH_DIR="$(pwd)/build-files/ports/tensorflow/patches" TFLITE_HOST_TOOLS_DIR="$(pwd)/tf-native-tools" make -C build-files/ports/tensorflow  install JLEVEL=4
 ```
 
 ## Build TensorFlow Lite
@@ -45,12 +50,16 @@ QNX_PROJECT_ROOT="$(pwd)/tensorflow" QNX_PATCH_DIR="$(pwd)/build-files/ports/ten
 ```bash
 # Clone the repos
 git clone https://github.com/qnx-ports/build-files.git
-git clone https://github.com/qnx-ports/tensorflow.git
+git clone https://github.com/qnx-ports/tensorflow.git --branch qnx_master
 # Build host flatc (used in kernel tests)
-mkdir flatc-native-build && cd flatc-native-build
-cmake ../tensorflow/tensorflow/lite/tools/cmake/native_tools/flatbuffers
+mkdir -p tf-native-tools/flatbuffers-build && cd tf-native-tools/flatbuffers-build
+cmake ../../tensorflow/tensorflow/lite/tools/cmake/native_tools/flatbuffers
 cmake --build .
-cd ..
+# Build host protoc (used in profiling)
+cd ~/qnx_workspace
+mkdir -p tf-native-tools/protobuf-build && cd tf-native-tools/protobuf-build
+cmake ../../tensorflow/tensorflow/lite/tools/cmake/native_tools/protobuf
+cmake --build .
 
 # Clone numpy
 cd ~/qnx_workspace
@@ -74,7 +83,7 @@ source ~/qnx800/qnxsdp-env.sh
 QNX_PROJECT_ROOT="$(pwd)/numpy" make -C build-files/ports/numpy install -j4
 
 # Build
-QNX_PROJECT_ROOT="$(pwd)/tensorflow" QNX_PATCH_DIR="$(pwd)/build-files/ports/tensorflow/patches" TFLITE_HOST_TOOLS_DIR="$(pwd)/flatc-native-build/flatbuffers-flatc/bin/" make -C build-files/ports/tensorflow  install JLEVEL=4
+QNX_PROJECT_ROOT="$(pwd)/tensorflow" QNX_PATCH_DIR="$(pwd)/build-files/ports/tensorflow/patches" TFLITE_HOST_TOOLS_DIR="$(pwd)/tf-native-tools" make -C build-files/ports/tensorflow  install JLEVEL=4
 ```
 
 ## Run tests
