@@ -1,8 +1,4 @@
-LIST=VARIANT
-ifndef QRECURSE
-QRECURSE=recurse.mk
-ifdef QCONFIG
-QRDIR=$(dir $(QCONFIG))
-endif
-endif
-include $(QRDIR)$(QRECURSE)
+include ../../common.mk
+
+CMAKE_ARGS += -DCMAKE_SYSTEM_PROCESSOR=x86_64
+
