@@ -38,3 +38,6 @@ set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
 set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
 
 add_compile_options(-Wno-maybe-uninitialized)
+
+set(EIGEN_PATCH_CMD git reset --hard && git apply "${QNX_PATCH_DIR}/eigen.patch")
+set(PTHREAD_POOL_PATCH_CMD "patch" "<" "${QNX_PATCH_DIR}/pthreadpool.patch")
