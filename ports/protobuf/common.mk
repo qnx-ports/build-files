@@ -50,13 +50,14 @@ CMAKE_MODULE_PATH := $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/cmake;$(INSTALL_RO
 #Headers from INSTALL_ROOT need to be made available by default
 #because CMake and pkg-config do not necessary add it automatically
 #if the include path is "default"
-CFLAGS += -I$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/include
+CFLAGS += -I$(INSTALL_ROOT)/$(PREFIX)/include
 
 CMAKE_COMMON_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
                     -DCMAKE_SYSTEM_PROCESSOR=$(CPUVARDIR) \
                     -DCMAKE_CXX_COMPILER_TARGET=gcc_nto$(CPUVARDIR) \
                     -DCMAKE_C_COMPILER_TARGET=gcc_nto$(CPUVARDIR) \
                     -DCMAKE_INSTALL_PREFIX="$(PREFIX)" \
+                    -DCMAKE_INSTALL_INCLUDEDIR="$(INSTALL_ROOT)/$(PREFIX)/include" \
                     -DCMAKE_STAGING_PREFIX="$(INSTALL_ROOT)/$(CPUVARDIR)" \
                     -DCMAKE_MODULE_PATH="$(CMAKE_MODULE_PATH)" \
                     -DCMAKE_FIND_ROOT_PATH="$(CMAKE_FIND_ROOT_PATH)" \
