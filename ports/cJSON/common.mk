@@ -3,7 +3,6 @@ QCONFIG=qconfig.mk
 endif
 include $(QCONFIG)
 
-
 include $(MKFILES_ROOT)/qmacros.mk
 
 NAME=cJSON
@@ -23,9 +22,12 @@ CJSON_INSTALL_ROOT ?= $(INSTALL_ROOT_$(OS))
 #CMake config modules, etc.). Default is /usr/local
 PREFIX ?= /usr/local
 
+#choose Release or Debug
+CMAKE_BUILD_TYPE ?= Release
+
 #override 'all' target to bypass the default QNX build system
 ALL_DEPENDENCIES = cjson_all
-.PHONY: cjson_all
+.PHONY: cjson_all install check clean
 
 CFLAGS += $(FLAGS)
 LDFLAGS += -Wl,--build-id=md5
@@ -53,22 +55,21 @@ CMAKE_MODULE_PATH := $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/cmake;$(INSTALL_RO
 CFLAGS += -I$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/include
 
 CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
+             -DCMAKE_SYSTEM_PROCESSOR=$(CPUVARDIR) \
+             -DCPU=${CPU} \
              -DCMAKE_INSTALL_PREFIX=$(CJSON_INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX) \
-             -DCMAKE_MODULE_PATH="$(CMAKE_MODULE_PATH)" \
              -DCMAKE_INSTALL_INCLUDEDIR=$(CJSON_INSTALL_ROOT)/$(PREFIX)/include \
+             -DCMAKE_MODULE_PATH="$(CMAKE_MODULE_PATH)" \
              -DCMAKE_FIND_ROOT_PATH="$(CMAKE_FIND_ROOT_PATH)" \
              -DCMAKE_BUILD_TYPE=$(CMAKE_BUILD_TYPE) \
-             -DCMAKE_MODULE_PATH=$(PROJECT_ROOT) \
              -DEXTRA_CMAKE_C_FLAGS="$(CFLAGS)" \
              -DEXTRA_CMAKE_CXX_FLAGS="$(CFLAGS)" \
              -DEXTRA_CMAKE_LINKER_FLAGS="$(LDFLAGS)" \
-             -DCPUVARDIR=$(CPUVARDIR) \
              -DGCC_VER=${GCC_VER}
 
 MAKE_ARGS ?= -j $(firstword $(JLEVEL) 4)
 
 include $(MKFILES_ROOT)/qtargets.mk
-
 
 ifndef NO_TARGET_OVERRIDE
 cjson_all:
