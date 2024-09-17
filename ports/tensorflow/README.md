@@ -185,7 +185,7 @@ Then follow the instructions "Download sample model and image" and "Run the samp
 
 ```bash
 # scp the python package
-scp -r build-files/ports/tensorflow/nto-aarch64-le/build/python_loader/tflite_runtime qnxuser@TARGET_HOST:/data/home/qnxuser
+scp -r build-files/ports/tensorflow/nto-aarch64-le/build/python_loader/tflite_runtime qnxuser@$TARGET_HOST:/data/home/qnxuser
 ```
 
 Verify the installation on the target.
