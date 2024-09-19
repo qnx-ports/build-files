@@ -54,6 +54,14 @@ source ~/qnx800/qnxsdp-env.sh
 QNX_PROJECT_ROOT="$(pwd)/numpy" make -C build-files/ports/numpy install -j4
 ```
 
+# Configure CPU build
+Pass the following options to make to configure the CPU optimizations used when building numpy,
+```
+CPU_BASELINE=<arg-list>
+CPU_DISPATCH=<arg-list>
+```
+Read the documentation at https://numpy.org/doc/stable/reference/simd/build-options.html
+
 # How to run tests
 
 Setup the target environment (note, mDNS is configured from
@@ -62,7 +70,7 @@ Setup the target environment (note, mDNS is configured from
 TARGET_HOST=<target-ip-address-or-hostname>
 
 # scp numpy
-scp -r $QNX_TARGET/aarch64le/usr/local/lib/python3.11/site-packages/numpy qnxuser@$TARGET_HOST:/data/home/qnxuser/numpy
+scp -r $QNX_TARGET/aarch64le/usr/local/lib/python3.11/site-packages/numpy qnxuser@$TARGET_HOST:/data/home/qnxuser
 
 ```
 
@@ -80,8 +88,10 @@ python3 -m ensurepip
 export PATH=$PATH:/system/bin:/data/home/qnxuser/.local/bin
 pip3 install pytest -t /data/home/qnxuser/.local/lib/python3.11/site-packages/
 pip3 install hypothesis -t /data/home/qnxuser/.local/lib/python3.11/site-packages/
+pip3 install pytz -t /data/home/qnxuser/.local/lib/python3.11/site-packages/
 # Add python packages to PYTHONPATH
 export PYTHONPATH=$PYTHONPATH:/data/home/qnxuser/.local/lib/python3.11/site-packages/:/data/home/qnxuser/
+export NPY_AVAILABLE_MEM=16GB
 
 # Start the python3 interpretor on Raspberry Pi
 python3

@@ -34,6 +34,9 @@ ALL_DEPENDENCIES = numpy_all
 
 LDFLAGS += -Wl,--build-id=md5
 
+CPU_BASELINE ?= min
+CPU_DISPATCH ?= max
+
 include $(MKFILES_ROOT)/qtargets.mk
 
 ifeq ($(CPUVARDIR),aarch64le)
@@ -76,6 +79,8 @@ BUILD_FLAGS =  --build-temp=$(PROJECT_ROOT)/$(NTO_DIR_NAME)/tmp \
 BUILD_EXT_FLAGS = -I"$(QNX_TARGET)/usr/include:$(QNX_TARGET)/usr/include/python3.11:$(QNX_TARGET)/$(CPUVARDIR)/usr/include:$(QNX_TARGET)/$(CPUVARDIR)/usr/include/python3.11:$(QNX_TARGET)/usr/include/$(CPUVARDIR)/python3.11" \
                   -L"$(QNX_TARGET)/$(CPUVARDIR)/lib:$(QNX_TARGET)/$(CPUVARDIR)/usr/lib" \
                   -b"$(PROJECT_ROOT)/$(NTO_DIR_NAME)/lib" \
+                  --cpu-baseline="${CPU_BASELINE}" \
+                  --cpu-dispatch="${CPU_DISPATCH}" \
 
 ifndef NO_TARGET_OVERRIDE
 
@@ -89,6 +94,7 @@ numpy_all:
 	cp -rf $(QNX_PROJECT_ROOT)/numpy/typing/tests/data $(NUMPY_ROOT)/$(NTO_DIR_NAME)/lib/numpy/typing/tests
 	cp -rf $(QNX_PROJECT_ROOT)/numpy/lib/tests/data $(NUMPY_ROOT)/$(NTO_DIR_NAME)/lib/numpy/lib/tests
 	cp -rf $(QNX_PROJECT_ROOT)/numpy/core/tests/data $(NUMPY_ROOT)/$(NTO_DIR_NAME)/lib/numpy/core/tests
+	cp -rf $(QNX_PROJECT_ROOT)/numpy/core/tests/examples $(NUMPY_ROOT)/$(NTO_DIR_NAME)/lib/numpy/core/tests
 	cp -rf $(QNX_PROJECT_ROOT)/numpy/random/tests/data $(NUMPY_ROOT)/$(NTO_DIR_NAME)/lib/numpy/random/tests
 	rm -f  $(NUMPY_ROOT)/$(NTO_DIR_NAME)/lib/numpy/fft/tests/test_pocketfft.py # segfault
 	rm -f $(NUMPY_ROOT)/$(NTO_DIR_NAME)/lib/numpy/core/tests/test_limited_api.py # Cannot test compiling in QNX
