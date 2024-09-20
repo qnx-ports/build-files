@@ -108,6 +108,7 @@ build-files/ports/tensorflow/nto-aarch64-le/build/_deps/fft2d-build/libfft2d_fft
 build-files/ports/tensorflow/nto-aarch64-le/build/_deps/gemmlowp-build/libeight_bit_int_gemm.so
 build-files/ports/tensorflow/nto-aarch64-le/build/pthreadpool/libpthreadpool.so
 build-files/ports/tensorflow/nto-aarch64-le/build/_deps/google_benchmark-build/src/libbenchmark.so.1
+build-files/ports/tensorflow/nto-aarch64-le/build/_deps/xnnpack-build/libXNNPACK.so
 )
 scp ${libs[@]} qnxuser@$TARGET_HOST:/data/home/qnxuser/tflite/libs
 ```
