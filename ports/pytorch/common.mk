@@ -21,7 +21,7 @@ INSTALL_ROOT ?= $(INSTALL_ROOT_$(OS))
 #CMake config modules, etc.). Default is /usr/local
 PREFIX ?= /usr/local
 
-PYTORCH_VERSION = 2.2.0
+PYTORCH_VERSION = 2.3.1
 
 #choose Release or Debug
 CMAKE_BUILD_TYPE ?= Release
