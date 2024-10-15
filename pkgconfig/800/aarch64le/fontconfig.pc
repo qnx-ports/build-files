@@ -1,0 +1,10 @@
+prefix=/usr
+libdir=/aarch64${prefix}
+includedir=${prefix}/include/fontconfig
+
+Name: Fontconfig
+Description: Font configuration and customization library
+Version: 2.13.1
+Requires:  freetype2 >= 21.0.15
+Libs: -L${libdir} -lfontconfig
+Cflags: -I${includedir}

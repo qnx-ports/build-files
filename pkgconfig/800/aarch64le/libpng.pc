@@ -1,0 +1,12 @@
+prefix=/usr
+exec_prefix=${prefix}
+libdir=/aarch64${prefix}
+includedir=${prefix}/include/libpng16
+
+Name: libpng
+Description: Loads and saves PNG files
+Version: 1.6.37
+Requires:
+Libs: -L${libdir} -lpng16
+Libs.private: -lm -lz
+Cflags: -I${includedir}
