@@ -28,12 +28,18 @@ make install -C build-files/ports/glib QNX_PROJECT_ROOT="$(pwd)/glib"
 ## Compile Glib on a Linux host
 To build, first enable your SDP, and then copy and edit `qnx_cross.cfg.in` to `qnx_cross.ini` to reflect your SDP location, CPU arch, etc.
 
+You'll need to add some missing pkg-config files to the SDP, so meson can find dependencies. See `/resouces` in this repository.
+
 Then, run:
 
 ``` bash
 # For QNX 8.0.0
-meson setup --cross-file qnx_cross.ini build -Dprefix=$TARGET_DIR -Dxattr=false
-cd build && ninja && ninja install
+meson setup build-qnx800 --cross-file qnx_cross.ini -Dprefix=/usr -Dxattr=false
+meson compile -C build-qnx800
+# For installing into your SDP to be used as a dependency
+DESTDIR=/sdp/800/target/qnx meson install --no-rebuild -C build-qnx800
+# For installing to image, or a clean folder to be transferred to test platform
+DESTDIR=/path/to/output meson install --no-rebuild -C build-qnx800
 ```
 
 And build products will be available in `$TARGET_DIR`
