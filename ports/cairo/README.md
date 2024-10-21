@@ -1,7 +1,7 @@
 Current these versions are tested:
 + 1.18.0
 
-# Compile pixman on a Linux host
+# Compile cairo on a Linux host
 ## Prepare dependencies
 We will need the font engine package from software center. We will also need to add the missing pkg-config files so that meson can actually find them, without manually hack the build script. Copy everything from `resources/pkgconfig/$SDP_VERSION/$ARCH` to your QNX_TARGET's `usr/lib/pkgconfig` folder.
 
