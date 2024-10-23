@@ -11,9 +11,10 @@ ARG DEBIAN_FRONTEND=noninteractive
 
 # Set locale
 RUN apt-get clean && apt update && apt install -y locales software-properties-common
-RUN locale-gen en_US en_US.UTF-8 && \
-	update-locale LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8 && \
-	export LANG=en_US.UTF-8
+RUN locale-gen en_US en_US.UTF-8
+ENV LC_ALL en_US.UTF-8
+ENV LANG en_US.UTF-8
+ENV LANGUAGE en_US.UTF-8
 
 # Add ROS2 apt repository
 RUN apt update && apt install -y curl gnupg2 lsb-release && \
