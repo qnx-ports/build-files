@@ -58,14 +58,14 @@ git clone https://github.com/qnx-ports/numpy.git && cd numpy
 git submodule update --init --recursive
 cd ~/qnx_workspace
 
-# Install python3.11, gfortran, and pybind11
+# Install python3.11, gfortran
 sudo add-apt-repository ppa:deadsnakes/ppa
-sudo apt-get install -y python3.11-dev python3.11-venv python3.11-distutils software-properties-common gfortran pybind11
+sudo apt-get install -y python3.11-dev python3.11-venv python3.11-distutils software-properties-common gfortran
 
 # Create a python virtual environment and install necessary packages
 python3.11 -m venv env
 source env/bin/activate
-pip install -U pip Cython wheel
+pip install -U pip Cython wheel pybind11
 
 # source qnxsdp-env.sh
 source ~/qnx800/qnxsdp-env.sh
