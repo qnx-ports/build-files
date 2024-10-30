@@ -97,6 +97,9 @@ ssh qnxuser@$TARGET_HOST
 # NOTE: Some tests are currently stuck. It may be more helpful to run them
 # individually.
 cd /data/home/qnxuser/Fast-DDS_test
+
+export CERTS_PATH=$PWD/certs
+
 for test in $(find ./unittest -type f | grep Tests) ; do
     chmod +x $test
     ./$test
