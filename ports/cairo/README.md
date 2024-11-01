@@ -15,8 +15,10 @@ Build them and install them into the SDP target.
 
 ## Build it!
 ```bash
+# Using the official cairo repository
 git clone https://gitlab.freedesktop.org/cairo/cairo.git
 cd cairo/
+# Using a release, rather than master branch
 git checkout 1.18.0
 # We use QNX SDP 8.0.0 as an example here. 7.1.0 should work as well.
 # tests are disabled for now

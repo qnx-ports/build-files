@@ -11,6 +11,13 @@ To build, first enable your SDP, and then copy and edit `qnx$QNXVER.ini` to `qnx
 Then, run:
 
 ``` bash
+# Using QNX's fork of glib
+https://github.com/qnx-ports/glib.git
+cd glib/
+# For QNX 7.1.0+, use the generic branch
+git checkout qnx-2.82.2
+# For QNX 7.0.0, use a special branch instead:
+git checkout qnx700-2.82.2
 # For QNX 8.0.0
 meson setup build-qnx800 --cross-file qnx_cross.ini -Dprefix=/usr -Dxattr=false
 meson compile -C build-qnx800
