@@ -7,6 +7,9 @@ Use `$(nproc)` instead of `4` after `JLEVEL=` and `-j` if you want to use the ma
 
 Pre-requisite: Install Docker on Ubuntu https://docs.docker.com/engine/install/ubuntu/
 ```bash
+# Create a workspace
+mkdir -p ~/qnx_workspace && cd ~/qnx_workspace
+
 git clone https://github.com/qnx-ports/build-files.git
 
 # Build the Docker image and create a container
@@ -15,13 +18,6 @@ cd build-files/docker
 ./docker-create-container.sh
 
 # Now you are in the Docker container
-
-# Create a staging area for the GTK4 build, for example, `/tmp/staging`
-# This is required for the GTK4 port due to the sheer amount of files it installs,
-# and the fact that clearing all installed files is required for a fully clean build of GTK4.
-
-# Create a workspace
-mkdir -p ~/qnx_workspace && cd ~/qnx_workspace
 cd ~/qnx_workspace
 
 # Clone gtk
@@ -32,7 +28,9 @@ git clone https://github.com/mesonbuild/meson && cd meson
 git checkout 110642dd7
 cd -
 
-# Build gtk
+# Create a staging area for the GTK4 build, for example, `/tmp/staging`
+# This is required for the GTK4 port due to the sheer amount of files it installs,
+# and the fact that clearing all installed files is required for a fully clean build of GTK4.
 make -C build-files/ports/gtk INSTALL_ROOT_nto=/tmp/staging USE_INSTALL_ROOT=true QNX_PROJECT_ROOT="$(pwd)/gtk" JLEVEL=4 install
 ```
 
