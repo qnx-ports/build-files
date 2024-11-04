@@ -29,6 +29,12 @@ ALL_DEPENDENCIES = tflite_all
 PYBIND11_INCLUDE = $(shell python3 -c "import pybind11; print (pybind11.get_include())")
 NUMPY_INCLUDE = $(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/lib/python3.11/site-packages/numpy/core/include
 
+ifeq ($(strip $(notdir $(QNX_TARGET))),qnx7)
+TFLITE_ENABLE_XNNPACK = OFF
+else
+TFLITE_ENABLE_XNNPACK = ON
+endif
+
 FLAGS += -D_QNX_SOURCE -funsafe-math-optimizations -DFARMHASH_LITTLE_ENDIAN -D__LITTLE_ENDIAN__
 
 EXT_FLAGS = -I$(PYBIND11_INCLUDE) \
@@ -48,6 +54,7 @@ CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON \
              -DTFLITE_ENABLE_INSTALL=ON \
              -DABSL_ENABLE_INSTALL=ON \
+             -DTFLITE_ENABLE_XNNPACK=$(TFLITE_ENABLE_XNNPACK) \
              -DXNNPACK_ENABLE_ASSEMBLY=OFF \
              -DBUILD_SHARED_LIBS=ON \
              -DTFLITE_KERNEL_TEST=ON \
@@ -77,6 +84,7 @@ tflite_all:
 	cd build && cmake $(CMAKE_ARGS) $(QNX_PROJECT_ROOT)/tensorflow/lite/
 	cd build && make all _pywrap_tensorflow_interpreter_wrapper $(MAKE_ARGS)
 	BUILD_DIR=$(PWD)/build/python_loader CMAKE_BUILD_DIR=$(PWD)/build $(QNX_PROJECT_ROOT)/tensorflow/lite/tools/pip_package/build_pip_package_with_cmake.sh nto
+	mkdir -p $(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/lib/python3.11/site-packages && cp -r $(PWD)/build/python_loader/tflite_runtime $(PWD)/build/python_loader/tflite_runtime.egg-info $(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/lib/python3.11/site-packages;\
 
 install check: tflite_all
 	cd build && make install $(MAKE_ARGS)
