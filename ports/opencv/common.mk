@@ -55,11 +55,15 @@ CMAKE_MODULE_PATH := $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/cmake;$(INSTALL_RO
 #Headers from INSTALL_ROOT need to be made available by default
 #because CMake and pkg-config do not necessary add it automatically
 #if the include path is "default"
-CFLAGS += -I$(INSTALL_ROOT)/$(PREFIX)/include -D_QNX_SOURCE
+CFLAGS += -I$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/include -I$(INSTALL_ROOT)/$(PREFIX)/include \
+          -I$(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/include -I$(QNX_TARGET)/$(PREFIX)/include \
+          -isystem $(QNX_TARGET)/usr/include/c++/v1/:$(INSTALL_ROOT)/usr/include/c++/v1/ \
+          -D_QNX_SOURCE
 
 CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DCMAKE_INSTALL_PREFIX="$(PREFIX)" \
              -DCMAKE_STAGING_PREFIX="$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)" \
+             -DCMAKE_PROJECT_INCLUDE=$(PROJECT_ROOT)/project_hooks.cmake \
              -DCMAKE_MODULE_PATH="$(CMAKE_MODULE_PATH)" \
              -DCMAKE_FIND_ROOT_PATH="$(CMAKE_FIND_ROOT_PATH)" \
              -DCMAKE_BUILD_TYPE=$(CMAKE_BUILD_TYPE) \
@@ -85,6 +89,7 @@ CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DBUILD_opencv_python_bindings_generator=ON \
              -DOPENCV_TEST_DATA_INSTALL_PATH="/testdata" \
              -DOPENCV_PYTHON_INSTALL_TARGET=ON \
+             -DOPENCV_PYTHON2_SKIP_DETECTION=ON \
 
 ifndef NO_TARGET_OVERRIDE
 opencv_all:
