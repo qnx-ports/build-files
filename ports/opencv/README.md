@@ -31,7 +31,7 @@ git submodule update --init --recursive
 cd ~/qnx_workspace
 
 # Clone muslflt
-git clone https://gitlab.com/qnx/ports/muslflt.git
+git clone https://github.com/qnx-ports/muslflt.git
 
 # Build muslflt
 make -C build-files/ports/muslflt/ INSTALL_ROOT_nto=<staging-install-folder> USE_INSTALL_ROOT=true install QNX_PROJECT_ROOT="$(pwd)/muslflt" -j4
@@ -69,7 +69,7 @@ pip install -U pip Cython wheel
 source ~/qnx800/qnxsdp-env.sh
 
 # Clone muslflt
-git clone https://gitlab.com/qnx/ports/muslflt.git
+git clone https://github.com/qnx-ports/muslflt.git
 
 # Build muslflt
 make -C build-files/ports/muslflt/ INSTALL_ROOT_nto=<staging-install-folder> USE_INSTALL_ROOT=true install QNX_PROJECT_ROOT="$(pwd)/muslflt" -j4
