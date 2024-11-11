@@ -3,6 +3,8 @@
 Current these versions are tested:
 + 2.82.0
 
+See test reports in `tests/`.
+
 ## Compile Glib on a Linux host
 You'll need the patched version of glib for QNX, available at https://github.com/qnx-ports/glib . For QNX 7.0.0 use the `qnx700-$VER` branch. For QNX 7.1.0 and 8.0.0, simply use `qnx-$VER` branch.
 
