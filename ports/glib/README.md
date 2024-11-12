@@ -5,28 +5,54 @@ Current these versions are tested:
 
 See test reports in `tests/`.
 
-## Compile Glib on a Linux host
+## Compile Glib for SDP 7.1/8.0 on a Linux host
 You'll need the patched version of glib for QNX, available at https://github.com/qnx-ports/glib . For QNX 7.0.0 use the `qnx700-$VER` branch. For QNX 7.1.0 and 8.0.0, simply use `qnx-$VER` branch.
 
 To build, first enable your SDP, and then copy and edit `qnx$QNXVER.ini` to `qnx_cross.ini` to reflect your SDP location, CPU arch, etc. You can find a template for such file in `resources/meson` in this repo.
 
-Then, run:
+Here's a detailed instruction:
 
 ``` bash
+# Define some variables we will use later
+export QNX_VERSION=800
+export QNX_ARCH=aarch64le
+# Assuming your build-files repo is at ~/workspace/build-files
+cd ~/workspace
 # Using QNX's fork of glib
-https://github.com/qnx-ports/glib.git
+git clone https://github.com/qnx-ports/glib.git
 cd glib/
 # For QNX 7.1.0+, use the generic branch
 git checkout qnx-2.82.2
-# For QNX 7.0.0, use a special branch instead:
-git checkout qnx700-2.82.2
-# For QNX 8.0.0
-meson setup build-qnx800 --cross-file qnx_cross.ini -Dprefix=/usr -Dxattr=false
-meson compile -C build-qnx800
+# Generate build script
+meson setup build-qnx$QNX_VERSION --cross-file ~/workspace/build-files/resources/$QNX_ARCH/qnx$QNX_VERSION.ini -Dprefix=/usr -Dxattr=false
+meson compile -C build-qnx$QNX_VERSION
 # For installing into your SDP to be used as a dependency
-DESTDIR=/sdp/800/target/qnx meson install --no-rebuild -C build-qnx800
+DESTDIR=/sdp/800/target/qnx meson install --no-rebuild -C build-qnx$QNX_VERSION
 # For installing to image, or a clean folder to be transferred to test platform
-DESTDIR=/path/to/output meson install --no-rebuild -C build-qnx800
+DESTDIR=/path/to/output meson install --no-rebuild -C build-qnx$QNX_VERSION
 ```
 
 And build products will be available in `$TARGET_DIR`
+
+## Compile Glib for SDP 7.0
+For QNX 7.0, the general steps are the same but you'll need a special branch. Also by default images of QNX 7.0 uses `/system` as `/usr`, so there are some slight changes.
+
+```bash
+# Define some variables we will use later
+export QNX_VERSION=700
+export QNX_ARCH=aarch64le
+# Assuming your build-files repo is at ~/workspace/build-files, we will be cloning glib parallel to it
+cd ~/workspace
+# Using QNX's fork of glib
+git clone https://github.com/qnx-ports/glib.git
+cd glib/
+# For QNX 7.0.0, use a special branch for it
+git checkout qnx700-2.82.2
+# Generate build script. Notice the prefix here is /system
+meson setup build-qnx$QNX_VERSION --cross-file ~/workspace/build-files/resources/$QNX_ARCH/qnx$QNX_VERSION.ini -Dprefix=/system -Dxattr=false
+meson compile -C build-qnx$QNX_VERSION
+# For installing into your SDP to be used as a dependency
+DESTDIR=/sdp/700/target/qnx meson install --no-rebuild -C build-qnx$QNX_VERSION
+# For installing to image, or a clean folder to be transferred to test platform
+DESTDIR=/path/to/output meson install --no-rebuild -C build-qnx$QNX_VERSION
+```
