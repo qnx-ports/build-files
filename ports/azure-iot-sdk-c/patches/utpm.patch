@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index bbe04c9..704e289 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -173,6 +173,8 @@ if (${use_emulator})
+ else ()
+     if (WIN32)
+         target_link_libraries(utpm tbs)
++    elseif(QNX)
++        target_link_libraries(utpm)
+     else()
+         target_link_libraries(utpm dl)
+     endif()

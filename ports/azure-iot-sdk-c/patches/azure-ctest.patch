@@ -1,0 +1,19 @@
+diff --git a/src/ctest.c b/src/ctest.c
+index 8b72828..545b952 100644
+--- a/src/ctest.c
++++ b/src/ctest.c
+@@ -287,12 +287,12 @@ void long_double_ToString(char* string, size_t bufferSize, long_double val)
+ 
+ void char_ptr_ToString(char* string, size_t bufferSize, const char* val)
+ {
+-    (void)snprintf(string, bufferSize, "%s", val);
++    (void)snprintf(string, bufferSize, "%s", MU_P_OR_NULL(val));
+ }
+ 
+ void wchar_ptr_ToString(char* string, size_t bufferSize, const wchar_t* val)
+ {
+-    (void)snprintf(string, bufferSize, "%ls", val);
++    (void)snprintf(string, bufferSize, "%ls", MU_WP_OR_NULL(val));
+ }
+ 
+ void void_ptr_ToString(char* string, size_t bufferSize, const void* val)
