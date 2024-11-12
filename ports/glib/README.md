@@ -8,7 +8,7 @@ See test reports in `tests/`.
 ## Compile Glib for SDP 7.1/8.0 on a Linux host
 You'll need the patched version of glib for QNX, available at https://github.com/qnx-ports/glib . For QNX 7.0.0 use the `qnx700-$VER` branch. For QNX 7.1.0 and 8.0.0, simply use `qnx-$VER` branch.
 
-To build, first enable your SDP, and then copy and edit `qnx$QNXVER.ini` to `qnx_cross.ini` to reflect your SDP location, CPU arch, etc. You can find a template for such file in `resources/meson` in this repo.
+To build, first enable your SDP, and then use the cross compile config file available inside this repo under `/resources/meson`, then use meson setup to generate build script, meson compile to do the actual compiling, and finally meson install to install it to your SDP (as dependency for other project or development), or an empty folder so you can transfer it to an actual QNX system.
 
 Here's a detailed instruction:
 
