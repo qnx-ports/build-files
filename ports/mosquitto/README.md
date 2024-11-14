@@ -43,13 +43,18 @@ BUILD_TESTING=ON QNX_PROJECT_ROOT="$(pwd)/mosquitto" make -C build-files/ports/m
 
 # How to run tests
 
+Make sure the directories exist on the target:
+```bash
+mkdir -p /data/home/qnxuser/mqtt/lib
+```
+
 scp libraries and tests to the target (note, mDNS is configured from
 /boot/qnx_config.txt and uses qnxpi.local by default).
 ```bash
 TARGET_HOST=<target-ip-address-or-hostname>
 
-scp -r $QNX_TARGET/aarch64le/usr/local/bin/mqtt_tests qnxuser@$TARGET_HOST:/data/home/qnxuser/bin
-scp $QNX_TARGET/aarch64le/usr/local/lib/lib* qnxuser@$TARGET_HOST:/data/home/qnxuser/lib
+scp -r $QNX_TARGET/aarch64le/usr/local/bin/mqtt_tests/* qnxuser@$TARGET_HOST:/data/home/qnxuser/mqtt
+scp $QNX_TARGET/aarch64le/usr/local/lib/libmosquitto* qnxuser@$TARGET_HOST:/data/home/qnxuser/mqtt/lib
 ```
 
 Run tests on the target.
@@ -62,8 +67,11 @@ ssh qnxuser@$TARGET_HOST
 export SNAP_NAME=mosquitto
 
 # Change directory to the test directory
-cd /data/home/qnxuser/bin/mqtt_tests
+cd /data/home/qnxuser/mqtt
 TEST_PATH=${PWD}
+
+# Add libs to LD_LIBRARY_PATH
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PWD/lib
 
 # Generate ssl stuff
 cd test/ssl
