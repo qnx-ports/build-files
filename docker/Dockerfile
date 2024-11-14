@@ -118,7 +118,8 @@ RUN cd /usr/local/qnx && \
 	pytest-repeat \
 	pytest-rerunfailures \
 	pytest \
-	pybind11
+	pybind11 \
+	requests
 
 WORKDIR /home/${USER_NAME}
 
