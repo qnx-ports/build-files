@@ -2,6 +2,13 @@
 
 Please make sure you have com.qnx.qnx800.target.screen.img_codecs QNX package installed to your SDP.
 
+Before building opencv and its tests, you might want to first build and install `muslflt`
+under the same staging directory. Projects using opencv on QNX might also want to link to
+`muslflt` for consistent math behavior as other platforms. Without `muslflt`, some tests
+may fail and you may run into inconsistencies in results compared to other platforms.
+
+You can optionally set up a staging area folder (e.g. `/tmp/staging`) for `<staging-install-folder>`
+
 Use `$(nproc)` instead of `4` after `JLEVEL=` and `-j` if you want to use the maximum number of cores to build this project.
 32GB of RAM is recommended for using `JLEVEL=$(nproc)` or `-j$(nproc)`.
 
