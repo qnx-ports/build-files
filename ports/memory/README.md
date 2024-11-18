@@ -77,7 +77,8 @@ source ~/qnx800/qnxsdp-env.sh
 5. Clone the `memory` repo to the workspace
 ```bash
 #Navigate back to memory_wksp
-cd .. 
+#The docker container will put you in your home directory
+cd <path-to-workspace>
 
 #Pick one:
 #Via HTTPS
@@ -102,8 +103,8 @@ Some distributions of QNX have critical directories stored in a read-only partit
 TARGET_IP_ADDRESS=<target-ip-address-or-hostname>
 
 #If copying to an x86_64 install, change /aarch64le/ to /x86_64/
-scp $QNX_TARGET/aarch64le/usr/local/bin/foonathan_memory_test root@$TARGET_IP_ADDRESS:/usr/bin
-scp $QNX_TARGET/aarch64le/usr/local/lib/libfoonathan_memory* root@$TARGET_IP_ADDRESS:/usr/lib
+scp $QNX_TARGET/aarch64le/usr/bin/foonathan_memory_test root@$TARGET_IP_ADDRESS:/usr/bin
+scp $QNX_TARGET/aarch64le/usr/lib/libfoonathan_memory* root@$TARGET_IP_ADDRESS:/usr/lib
 ```
 
 2. Running Tests
@@ -129,17 +130,17 @@ TARGET_USER_FOR_INSTALL="root"
 ssh root@$TARGET_IP_ADDRESS "mkdir -p /data/home/$TARGET_USER_FOR_INSTALL/memory/lib"
 
 #If copying to an x86_64 install, change /aarch64le/ to /x86_64/
-scp $QNX_TARGET/aarch64le/usr/local/bin/foonathan_memory_test root@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER_FOR_INSTALL/memory/
-scp $QNX_TARGET/aarch64le/usr/local/lib/libfoonathan_memory* root@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER_FOR_INSTALL/memory/lib
-
-#Export new library path
-ssh root@$TARGET_IP_ADDRESS "export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/data/home/$TARGET_USER_FOR_INSTALL/memory/lib"
+scp $QNX_TARGET/aarch64le/usr/bin/foonathan_memory_test root@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER_FOR_INSTALL/memory/
+scp $QNX_TARGET/aarch64le/usr/lib/libfoonathan_memory* root@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER_FOR_INSTALL/memory/lib
 ```
 
 2. Running Tests
 ```bash
 #SSH into target
 ssh root@<target-ip-address-or-hostname>
+
+#Export new library path (Change root to whatever you set for TARGET_USER_FOR_INSTALL)
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/data/home/root/memory/lib
 
 #Run test binary
 cd ~/memory/            #NOTE: ~ will direct you to the current user's home directory, 
