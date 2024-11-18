@@ -51,7 +51,7 @@ MAKE_ARGS ?= -j $(firstword $(JLEVEL) 1)
 ifndef NO_TARGET_OVERRIDE
 memory_all:
 	@mkdir -p build
-	@cd build && cmake $(CMAKE_ARGS) $(QNX_PROJECT_ROOT)/../
+	@cd build && cmake $(CMAKE_ARGS) $(QNX_PROJECT_ROOT)/
 	@cd build && make VERBOSE=1 all $(MAKE_ARGS)
 
 install check: memory_all
