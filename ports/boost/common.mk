@@ -44,10 +44,10 @@ B2_OPTIONS = -q -d2 \
              runtime-link=shared link=shared variant=$(BOOST_VARIANT) define=BOOST_SYSTEM_NO_DEPRECATED \
              ${B2_EXTRA_OPTS}
 
-FLAGS   += -g -D_QNX_SOURCE
+FLAGS   += -g
 LDFLAGS += -Wl,--build-id=md5 -lang-c++ -lsocket
 
-FLAGS   += -Vgcc_nto$(CCVER) -Wno-ignored-attributes -I$(PROJECT_ROOT)/libs/predef/include/boost/predef/other
+FLAGS   +=  -std=c++17 -D_QNX_SOURCE -DBOOST_NO_CXX98_FUNCTION_BASE -Vgcc_nto$(CCVER) -Wno-ignored-attributes -I$(PROJECT_ROOT)/libs/predef/include/boost/predef/other
 LDFLAGS += -Vgcc_nto$(CCVER)
 
 #override 'all' target to bypass the default QNX build system
