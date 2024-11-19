@@ -1,7 +1,5 @@
 **NOTE**: QNX ports are only supported from a Linux host operating system
 
-vsomeip is currently supported only for SDP 7.1.
-
 Use `$(nproc)` instead of `4` after `JLEVEL=` and `-j` if you want to use the maximum number of cores to build this project.
 32GB of RAM is recommended for using `JLEVEL=$(nproc)` or `-j$(nproc)`.
 
@@ -16,7 +14,7 @@ git clone https://github.com/qnx-ports/build-files.git
 git clone https://github.com/qnx-ports/vsomeip.git  -b qnx_3.4.10
 # Optional: get googletest if you want to run vsomeip tests
 git clone https://github.com/qnx-ports/googletest.git -b qnx_v1.13.0
-GTEST_ROOT=$WORKSPACE/googletest
+export GTEST_ROOT=$WORKSPACE/googletest
 
 
 # Build the Docker image and create a container
@@ -27,8 +25,10 @@ cd build-files/docker
 # Now you are in the Docker container
 WORKSPACE=${PWD}
 
-# source qnxsdp-env.sh in
-source ~/qnx710/qnxsdp-env.sh
+# source qnxsdp-env.sh
+source ~/qnx800/qnxsdp-env.sh
+
+#source ~/qnx710/qnxsdp-env.sh
 
 # Clone boost
 cd ~/qnx_workspace
@@ -87,7 +87,7 @@ QNX_PROJECT_ROOT="$(pwd)/boost" make -C build-files/ports/boost install -j4
 # Build vsomeip
 # TEST_IP_MASTER should be your QNX target's ip address while TEST_IP_SLAVE should be your Ubuntu PC. It could be vice versa, but
 # the test instructions below follow the forementioned setup.
-TEST_IP_MASTER="<QNX-target-ip-address>" TEST_IP_SLAVE="<Ubuntu-ip-address>" QNX_PROJECT_ROOT="$(pwd)/vsomeip" make -C build-files/ports/vsomeip install -j4
+GTEST_ROOT=$GTEST_ROOT TEST_IP_MASTER="<QNX-target-ip-address>" TEST_IP_SLAVE="<Ubuntu-ip-address>" QNX_PROJECT_ROOT="$(pwd)/vsomeip" make -C build-files/ports/vsomeip install -j4
 ```
 
 # How to run tests
@@ -105,9 +105,9 @@ and uses qnxpi.local by default):
 ```bash
 TARGET_HOST=<target-ip-address-or-hostname>
 
-scp $QNX_TARGET/$CPUVARDIR/usr/local/lib/libboost* root@$TARGET_HOST:/data/home/qnxuser/lib
-scp $QNX_TARGET/$CPUVARDIR/usr/local/lib/libvsomeip3* root@$TARGET_HOST:/data/home/qnxuser/lib
-scp -r $QNX_TARGET/$CPUVARDIR/usr/local/bin/vsomeip_tests root@$TARGET_HOST:/data/home/qnxuser/bin
+scp $QNX_TARGET/$CPUVARDIR/usr/local/lib/libboost* qnxuser@$TARGET_HOST:/data/home/qnxuser/lib
+scp $QNX_TARGET/$CPUVARDIR/usr/local/lib/libvsomeip3* qnxuser@$TARGET_HOST:/data/home/qnxuser/lib
+scp -r $QNX_TARGET/$CPUVARDIR/usr/local/bin/vsomeip_tests qnxuser@$TARGET_HOST:/data/home/qnxuser/bin
 ```
 
 ssh into the target and chmod +x the tests:
@@ -116,14 +116,13 @@ ssh qnxuser@$TARGET_HOST
 chmod -R +x /data/home/qnxuser/bin/vsomeip_tests
 cd /data/home/qnxuser/bin/vsomeip_tests/test/network_tests
 
-# Only required for 3.4.10
-cp /data/home/qnxuser/vsomeip_tests/test/common/libvsomeip_utilities.so /data/home/qnxuser/lib
+cp /data/home/qnxuser/bin/vsomeip_tests/test/common/libvsomeip_utilities.so /data/home/qnxuser/lib
 ```
 
-We will use 2 devices for the tests: a QNX 7.1 target, and the host Linux PC.
+We will use 2 devices for the tests: a QNX target, and the host Linux PC.
 
 We will assume that TEST_IP_SLAVE is the ip address of the host Linux PC and that
-TEST_IP_MASTER is the ip address of the QNX 7.1 target.
+TEST_IP_MASTER is the ip address of the QNX target.
 
 ## Build vsomeip for your host PC
 
@@ -140,7 +139,7 @@ GTEST_ROOT=$WORKSPACE/googletest
 wget https://archives.boost.io/release/1.78.0/source/boost_1_78_0.tar.gz
 tar -xvzf ./boost_1_78_0.tar.gz
 cd boost_1_78_0
-./bootstrap
+./bootstrap.sh
 sudo ./b2 install
 cd -
 
@@ -150,7 +149,7 @@ git checkout 3.4.10
 # Apply a patch for suppressing a stringop-overflow error in interval_set_algo.hpp in boost
 git apply ~/qnx_workspace/build-files/ports/vsomeip/vsomeip_host.patch
 mkdir build && cd build
-cmake -DTEST_IP_SLAVE=<host-PC-ip-address> -DTEST_IP_MASTER=<target-ip-address> ../
+cmake -DGTEST_ROOT=$GTEST_ROOT -DTEST_IP_SLAVE=<host-PC-ip-address> -DTEST_IP_MASTER=<target-ip-address> ../
 make -j 4
 make build_tests -j 4
 cd test/network_tests
@@ -190,7 +189,7 @@ sh ./header_factory_test_send_receive_starter.sh
 
 ```bash
 # Run on target
-sh ./local_routing_test_starter_qnx.sh
+sh ./local_routing_test_starter.sh
 ```
 
 Run a set of routing tests:

@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index ab399a6..610cc84 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -71,7 +71,7 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+ if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+     # This is only relevant for GCC and causes warnings on Clang
+     set(EXPORTSYMBOLS "-Wl,-export-dynamic -Wl,--version-script=${CMAKE_CURRENT_SOURCE_DIR}/exportmap.gcc")
+-    set(OS_CXX_FLAGS "${OS_CXX_FLAGS} -pie -Wno-tsan -Wl,-z,relro,-z,now")
++    set(OS_CXX_FLAGS "${OS_CXX_FLAGS} -pie -Wno-tsan -Wno-stringop-overflow -Wl,-z,relro,-z,now")
+ endif()
+ 
+     set(NO_DEPRECATED "")

@@ -19,9 +19,6 @@ INSTALL_ROOT ?= $(INSTALL_ROOT_$(OS))
 #CMake config modules, etc.). Default is /usr/local
 PREFIX ?= /usr/local
 
-#where to find the vsomeip external dependencies, such as Boost
-VSOMEIP_EXTERNAL_DEPS_INSTALL ?= $(USE_ROOT_$(OS))
-
 #choose Release or Debug
 CMAKE_BUILD_TYPE ?= Release
 
@@ -35,7 +32,7 @@ TEST_IP_SLAVE ?= XXX.XXX.XXX.XXX
 ALL_DEPENDENCIES = vsomeip_all
 .PHONY: vsomeip_all
 
-FLAGS   += -g -D_QNX_SOURCE
+FLAGS   += -g -D_QNX_SOURCE -DBOOST_NO_CXX98_FUNCTION_BASE
 LDFLAGS += -Wl,--build-id=md5 -lang-c++ -lsocket
 
 include $(MKFILES_ROOT)/qtargets.mk
@@ -61,20 +58,18 @@ CMAKE_MODULE_PATH := $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/cmake;$(INSTALL_RO
 CFLAGS += -I$(INSTALL_ROOT)/$(PREFIX)/include
 
 CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
+             -DGTEST_ROOT=$(GTEST_ROOT) \
              -DCMAKE_INSTALL_PREFIX=$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX) \
-             -DCMAKE_CXX_STANDARD=14 \
+             -DCMAKE_CXX_STANDARD=17 \
              -DCMAKE_NO_SYSTEM_FROM_IMPORTED=TRUE \
              -DCMAKE_MODULE_PATH="$(CMAKE_MODULE_PATH)" \
              -DCMAKE_FIND_ROOT_PATH="$(CMAKE_FIND_ROOT_PATH)" \
-             -DVSOMEIP_EXTERNAL_DEPS_INSTALL=$(VSOMEIP_EXTERNAL_DEPS_INSTALL) \
              -DCMAKE_BUILD_TYPE=$(CMAKE_BUILD_TYPE) \
              -DCMAKE_MODULE_PATH=$(PROJECT_ROOT) \
              -DEXTRA_CMAKE_C_FLAGS="$(FLAGS)" \
              -DEXTRA_CMAKE_CXX_FLAGS="$(FLAGS)" \
              -DEXTRA_CMAKE_LINKER_FLAGS="$(LDFLAGS)" \
              -DINSTALL_INCLUDE_DIR=$(INSTALL_ROOT)/$(PREFIX)/include \
-             -DCPUVARDIR=$(CPUVARDIR) \
-             -DGCC_VER=${GCC_VER} \
              -DVSOMEIP_INSTALL_ROUTINGMANAGERD=ON \
              -DDISABLE_DLT=y
 
