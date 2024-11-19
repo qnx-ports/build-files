@@ -145,7 +145,7 @@ scp $QNX_TARGET/aarch64le/usr/lib/libzstd.so.1 qnxuser@$TARGET_HOST:/data/home/q
 scp $QNX_TARGET/aarch64le/lib/libpps.so.1 qnxuser@$TARGET_HOST:/data/home/qnxuser/lib 
 
 # Transfer all the neccesary libraries and plugins to the target
-scp -r $QNX_TARGET/aarch64le/usr/local/lib/lib* qnxuser@$TARGET_HOST:/data/home/qnxuser/lib 
+scp $QNX_TARGET/aarch64le/usr/local/lib/lib* qnxuser@$TARGET_HOST:/data/home/qnxuser/lib 
 scp -r $QNX_TARGET/aarch64le/usr/local/plugins/ qnxuser@$TARGET_HOST:/data/home/qnxuser/ 
 scp -r $QNX_TARGET/aarch64le/usr/local/qml/ qnxuser@$TARGET_HOST:/data/home/qnxuser/
 ```
@@ -205,7 +205,7 @@ scp $QNX_TARGET/aarch64le/usr/lib/libzstd.so.1 qnxuser@$TARGET_HOST:/data/home/q
 scp $QNX_TARGET/aarch64le/lib/libpps.so.1 qnxuser@$TARGET_HOST:/data/home/qnxuser/lib 
 
 # Transfer all the neccesary libraries and plugins to the target
-scp -r $QNX_TARGET/aarch64le/usr/local/lib/lib* qnxuser@$TARGET_HOST:/data/home/qnxuser/lib 
+scp $QNX_TARGET/aarch64le/usr/local/lib/lib* qnxuser@$TARGET_HOST:/data/home/qnxuser/lib 
 scp -r $QNX_TARGET/aarch64le/usr/local/plugins/ qnxuser@$TARGET_HOST:/data/home/qnxuser/ 
 scp -r $QNX_TARGET/aarch64le/usr/local/qml/ qnxuser@$TARGET_HOST:/data/home/qnxuser/
 
