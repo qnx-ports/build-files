@@ -137,6 +137,48 @@ BUILD_TESTING=OFF make -C build-files/ports/qt JLEVEL=4 install
 
 # How to run example
 ```bash
+# Build QT example using qt-cmake
+
+# Export path to qt-cmake
+export PATH=$QNX_TARGET/aarch64le/usr/local/bin:$PATH
+
+# cd to example source code
+cd ~/qnx_workspace/build-files/ports/qt/example
+
+# Run qt-cmake
+qt-cmake -DCMAKE_PREFIX_PATH=$QNX_TARGET/aarch64le/usr/ .
+
+# Build the example
+cmake --build .
+
+# Specify target ip address
+TARGET_HOST=<target-ip-address-or-hostname>
+
+# Transfer particles3d example to the target
+scp particles3d qnxuser@$TARGET_HOST:/data/home/qnxuser/ 
+```
+```bash
+# Build QT example using qmake
+
+# Export path to qmake
+export PATH=$QNX_TARGET/aarch64le/usr/local/bin:$PATH
+
+# cd to example source code
+cd ~/qnx_workspace/build-files/ports/qt/example
+
+# Run qmake
+qmake
+
+# Build the example
+make
+
+# Specify target ip address
+TARGET_HOST=<target-ip-address-or-hostname>
+
+# Transfer particles3d example to the target
+scp particles3d qnxuser@$TARGET_HOST:/data/home/qnxuser/ 
+```
+```bash
 # Specify target ip address
 TARGET_HOST=<target-ip-address-or-hostname>
 
@@ -148,24 +190,6 @@ scp $QNX_TARGET/aarch64le/lib/libpps.so.1 qnxuser@$TARGET_HOST:/data/home/qnxuse
 scp $QNX_TARGET/aarch64le/usr/local/lib/lib* qnxuser@$TARGET_HOST:/data/home/qnxuser/lib 
 scp -r $QNX_TARGET/aarch64le/usr/local/plugins/ qnxuser@$TARGET_HOST:/data/home/qnxuser/ 
 scp -r $QNX_TARGET/aarch64le/usr/local/qml/ qnxuser@$TARGET_HOST:/data/home/qnxuser/
-```
-```bash
-# Build RobotArm example
-
-# Export path to qt-cmake
-export PATH=$QNX_TARGET/aarch64le/usr/local/bin:$PATH
-
-# cd to robotarm example folder within qt source code
-cd ~/qnx_workspace/build-files/ports/qt/nto-aarch64-le/qt5/qtdoc/examples/demos/robotarm/
-
-# Run qt-cmake
-qt-cmake -DCMAKE_PREFIX_PATH=$QNX_TARGET/aarch64le/usr/ .
-
-# Build the example
-cmake --build .
-
-# Transfer RobotArm example to the target
-scp RobotArmApp qnxuser@$TARGET_HOST:/data/home/qnxuser/ 
 ```
 ```bash
 # ssh to the target
@@ -182,9 +206,9 @@ export QML2_IMPORT_PATH=/data/home/qnxuser/qml/
 # disable-EGL_KHR_surfaceless_context
 export QT_QPA_PLATFORM=qnx:rootwindow
 
-# Run the RobotArm example
+# Run the particles3d example
 cd /home/data/qnxuser
-./RobotArmApp
+./particles3d
 ```
 
 # How to run tests
