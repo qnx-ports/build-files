@@ -1,0 +1,13 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>StartupView.qml</file>
+        <file>images/dot.png</file>
+        <file>images/star3.png</file>
+        <file>images/color_table4.png</file>
+        <file>images/color_table5.png</file>
+        <file>data/qt_logo_in_4096.cbor</file>
+        <file>data/qt_logo_out_4096.cbor</file>
+        <file>data/heart_4096.cbor</file>
+    </qresource>
+</RCC>
