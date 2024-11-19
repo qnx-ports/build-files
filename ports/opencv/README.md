@@ -127,7 +127,7 @@ scp $QNX_TARGET/aarch64le/usr/local/lib/libopencv* qnxuser@$TARGET_HOST:/data/ho
 scp -r $QNX_TARGET/aarch64le/usr/local/bin/opencv_tests qnxuser@$TARGET_HOST:/data/home/qnxuser/opencv
 
 # If you built with a staging directory, use that location instead:
-#scp -r <staging-install-folder>/aarch64le/usr/local/lib/libopencv* qnxuser@$TARGET_HOST:/data/home/qnxuser/opencv/libs
+#scp <staging-install-folder>/aarch64le/usr/local/lib/libopencv* qnxuser@$TARGET_HOST:/data/home/qnxuser/opencv/libs
 #scp -r <staging-install-folder>/aarch64le/usr/local/bin/opencv_tests qnxuser@$TARGET_HOST:/data/home/qnxuser/opencv
 ```
 
