@@ -2,7 +2,7 @@ Currently these version combos are tested:
 + 1.82.0 on QNX 7.1.0
 
 ## Compile Rust toolchain for QNX 7.1 on a Linux host
-Currently rust compiler officially supports QNX 7.1 as a target, but since it's on Tier 3, we will need to compile to compiler ourselves.
+Currently rust compiler officially supports QNX 7.1 as a target, but since it's on Tier 3, we will need to compile the compiler ourselves.
 
 You'll first need `rustup` installed. Check https://rustup.rs for the latest instruction. When the setup script asks just use the default target for your platform.
 
@@ -38,7 +38,7 @@ cargo +qnx710-stage1 build --target aarch64-unknown-nto-qnx710 --release
 
 Just note that programs compiled under debug profiles can be quite large due to all the debug symbols and lack of optimization.
 
-## Tested crates
+## crates that builds without error
 We call libraries as crates in Rust.
 
 + tokio (>=1.4)
