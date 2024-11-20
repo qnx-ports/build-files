@@ -51,10 +51,11 @@ scp libraries and tests to the target (note, mDNS is configured from
 TARGET_HOST=<target-ip-address-or-hostname>
 
 # Move cJSON test binaries to your QNX target
-scp -r $QNX_TARGET/aarch64le/usr/bin/cJSON_tests/cJSON_tests qnxuser@$TARGET_HOST:/data/home/qnxuser/bin
+scp -r $QNX_TARGET/aarch64le/usr/local/bin/cJSON_tests qnxuser@$TARGET_HOST:/data/home/qnxuser/bin
 
-# Move the cJSON libraries to your QNX target
-scp $QNX_TARGET/aarch64le/usr/lib/libcjson* qnxuser@$TARGET_HOST:/data/home/qnxuser/lib
+# Move the cJSON and unity libraries to your QNX target
+scp $QNX_TARGET/aarch64le/usr/local/lib/libcjson* qnxuser@$TARGET_HOST:/data/home/qnxuser/lib
+scp $QNX_TARGET/aarch64le/usr/local/lib/libunity.so qnxuser@$TARGET_HOST:/data/home/qnxuser/lib
 ```
 
 Run tests on the target.
