@@ -143,9 +143,10 @@ RUN cd /usr/local/qnx && \
 	. ./env/bin/activate && \
 	python3 -m pip install -U \
 	pip \
-	empy \
+	empy==3.3.4 \
 	lark \
-	Cython \
+	lark-parser \
+	Cython==0.29.35 \
 	wheel \
 	colcon-common-extensions \
 	vcstool \

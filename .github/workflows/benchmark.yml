@@ -25,6 +25,12 @@ jobs:
         repository: qnx-ports/benchmark
         path: benchmark
 
+    - name: Checkout benchmark
+      uses: actions/checkout@v4
+      with:
+        repository: qnx-ports/benchmark
+        path: benchmark
+
     - name: Download SDP 8.0
       env:
         LICENSE_KEY: ${{ secrets.LICENSE_KEY }}
@@ -55,4 +61,5 @@ jobs:
         shell: bash
         run: |
           source ~/qnx800/qnxsdp-env.sh
+          BUILD_TESTING="OFF" QNX_PROJECT_ROOT="$(pwd)/googletest" make -C build-files/ports/googletest install -j$(nproc)
           QNX_PROJECT_ROOT="$(pwd)/benchmark" make -C build-files/ports/benchmark install -j$(nproc)

@@ -1,4 +1,4 @@
-name: Build tinyxml2
+name: tinyxml2
 
 on:
   push:

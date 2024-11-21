@@ -28,7 +28,7 @@ jobs:
     - name: Checkout meson
       uses: actions/checkout@v4
       with:
-        repository: qnx-ports/meson
+        repository: mesonbuild/meson
         path: meson
         ref: 110642dd7
 

@@ -19,11 +19,13 @@ jobs:
       with:
         path: build-files
 
-    - name: Checkout tinyxml2
-      uses: actions/checkout@v4
-      with:
-        repository: qnx-ports/tinyxml2
-        path: tinyxml2
+    - name: Checkout cairo
+      run: |
+        git clone https://gitlab.freedesktop.org/cairo/cairo.git && cd cairo && git checkout 1.18.0
+
+    - name: Checkout pixman
+      run: |
+        git clone https://gitlab.freedesktop.org/pixman/pixman.git && cd pixman && git checkout pixman-0.43.4
 
     - name: Download SDP 8.0
       env:
@@ -47,7 +49,7 @@ jobs:
       run: |
         cd build-files/docker && ./docker-build-qnx-image.sh
 
-    - name: Build tinyxml2
+    - name: Build cairo
       uses: addnab/docker-run-action@v3
       with:
         image: qnx800:latest
@@ -55,4 +57,13 @@ jobs:
         shell: bash
         run: |
           source ~/qnx800/qnxsdp-env.sh
-          BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/tinyxml2" make -C build-files/ports/tinyxml2 install -j$(nproc)
+          mkdir -p output
+          cd pixman
+          git checkout pixman-0.43.4
+          meson setup build-qnx800 --cross-file ../build-files/resources/meson/aarch64le/workflows/qnx800.ini -Dprefix=/usr -Dopenmp=disabled
+          meson compile -C build-qnx800
+          DESTDIR=/home/runner/qnx800/target/qnx meson install --no-rebuild -C build-qnx800
+          cd ../cairo
+          meson setup build-qnx800 --cross-file ../build-files/resources/meson/aarch64le/workflows/qnx800.ini -Dprefix=/usr -Dtests=disabled
+          meson compile -C build-qnx800
+          DESTDIR=/home/runner/output meson install --no-rebuild -C build-qnx800

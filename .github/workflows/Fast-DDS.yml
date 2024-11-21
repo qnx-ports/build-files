@@ -70,14 +70,14 @@ jobs:
         run: |
           source ~/qnx800/qnxsdp-env.sh
           WORKSPACE=$PWD
-          cd $WORKSPACE/thirdparty/asio
-          git apply $WORKSPACE/build_qnx/qnx_patches/asio_qnx.patch
-          cd $WORKSPACE/thirdparty/fastcdr
-          git apply $WORKSPACE/build_qnx/qnx_patches/fastcdr_qnx.patch
-          cd $WORKSPACE/thirdparty/tinyxml2
-          unix2dos $WORKSPACE/build_qnx/qnx_patches/tinyxml2_qnx.patch
-          git apply $WORKSPACE/build_qnx/qnx_patches/tinyxml2_qnx.patch
+          cd $WORKSPACE/Fast-DDS/thirdparty/asio
+          git apply $WORKSPACE/Fast-DDS/build_qnx/qnx_patches/asio_qnx.patch
+          cd $WORKSPACE/Fast-DDS/thirdparty/fastcdr
+          git apply $WORKSPACE/Fast-DDS/build_qnx/qnx_patches/fastcdr_qnx.patch
+          cd $WORKSPACE/Fast-DDS/thirdparty/tinyxml2
+          unix2dos $WORKSPACE/Fast-DDS/build_qnx/qnx_patches/tinyxml2_qnx.patch
+          git apply $WORKSPACE/Fast-DDS/build_qnx/qnx_patches/tinyxml2_qnx.patch
           cd $WORKSPACE/googletest
           git apply $WORKSPACE/build_qnx/qnx_patches/googletest_qnx.patch
-          cd $WORKSPACE/build_qnx
+          cd $WORKSPACE/Fast-DDS/build_qnx
           make install  -j$(nproc)

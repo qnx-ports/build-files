@@ -24,7 +24,12 @@ jobs:
       with:
         repository: qnx-ports/Fast-CDR
         path: Fast-CDR
-        submodules: recursive
+
+    - name: Checkout googletest
+      uses: actions/checkout@v4
+      with:
+        repository: qnx-ports/Fast-CDR
+        path: Fast-CDR/test/googletest
 
     - name: Download SDP 8.0
       env:

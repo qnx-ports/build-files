@@ -29,6 +29,10 @@ source ~/qnx800/qnxsdp-env.sh
 # Clone benchmark
 cd ~/qnx_workspace
 git clone https://github.com/qnx-ports/benchmark.git
+git clone https://github.com/qnx-ports/googletest
+
+# Build googletest
+BUILD_TESTING="OFF" QNX_PROJECT_ROOT="$(pwd)/googletest" make -C build-files/ports/googletest install -j4
 
 # Build benchmark
 QNX_PROJECT_ROOT="$(pwd)/benchmark" make -C build-files/ports/benchmark JLEVEL=4 install
