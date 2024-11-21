@@ -1,9 +1,12 @@
 name: Build QNX Ports
 
 on:
-  schedule:
-    # Runs every week at 00:00 UTC on Monday
-    - cron: '0 0 * * 1'
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
 
@@ -15,6 +18,24 @@ jobs:
       uses: actions/checkout@v4
       with:
         path: build-files
+
+    - name: Checkout abseil-cpp
+      uses: actions/checkout@v4
+      with:
+        repository: qnx-ports/abseil-cpp
+        path: abseil-cpp
+
+    - name: Checkout muslflt
+      uses: actions/checkout@v4
+      with:
+        repository: qnx-ports/muslflt
+        path: muslflt
+
+    - name: Checkout googletest
+      uses: actions/checkout@v4
+      with:
+        repository: qnx-ports/googletest
+        path: googletest
 
     - name: Checkout tinyxml2
       uses: actions/checkout@v4
@@ -39,16 +60,34 @@ jobs:
         cp -r ~/.qnx/license ${{ github.workspace }}/.qnx
         echo "Downloading QNX SDP ..."
         ${{ github.workspace }}/qnxinstall/qnxsoftwarecenter/qnxsoftwarecenter_clt -mirror -cleanInstall -destination ${{ github.workspace }}/qnx800 -installBaseline com.qnx.qnx800 -myqnx.user="$MYQNX_USER" -myqnx.password="$MYQNX_PASSWORD"
+        cp -r ${{ github.workspace }}/qnx800 ./qnx800_fresh
 
     - name: Build the Docker image
       run: |
         cd build-files/docker && ./docker-build-qnx-image.sh
 
+    - name: Build abseil-cpp
+      uses: addnab/docker-run-action@v3
+      with:
+          image: qnx800:latest
+          options: --privileged -v ${{ github.workspace }}:/home/runner
+          shell: bash
+          run: |
+            rm -rf ~/qnx800
+            cp -r ~/qnx800_fresh ~/qnx800
+            source ~/qnx800/qnxsdp-env.sh
+            BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/googletest" make -C build-files/ports/googletest install -j$(nproc)
+            QNX_PROJECT_ROOT="$(pwd)/muslflt" make -C build-files/ports/muslflt/ install -j$(nproc)
+            QNX_PROJECT_ROOT="$(pwd)/abseil-cpp" make -C build-files/ports/abseil-cpp -j$(nproc) install
+
     - name: Build tinyxml2
       uses: addnab/docker-run-action@v3
       with:
           image: qnx800:latest
-          options: --net=host --privileged -v ${{ github.workspace }}:/home/runner
+          options: --privileged -v ${{ github.workspace }}:/home/runner
           shell: bash
           run: |
-            BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/tinyxml2" make -C build-files/ports/tinyxml2 install -j4
+            rm -rf ~/qnx800
+            cp -r ~/qnx800_fresh ~/qnx800
+            source ~/qnx800/qnxsdp-env.sh
+            BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/tinyxml2" make -C build-files/ports/tinyxml2 install -j$(nproc)
