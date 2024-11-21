@@ -11,7 +11,7 @@ on:
 jobs:
 
   build:
-    runs-on: build-files
+    runs-on: build-files-runner
     if: |
       (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
       (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'bash'))
