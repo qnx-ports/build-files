@@ -38,6 +38,10 @@ jobs:
           echo "Downloading QNX SDP ..."
           ${{ github.workspace }}/qnxinstall/qnxsoftwarecenter/qnxsoftwarecenter_clt -mirror -cleanInstall -destination ${{ github.workspace }}/qnx800 -installBaseline com.qnx.qnx800 -myqnx.user="$MYQNX_USER" -myqnx.password="$MYQNX_PASSWORD"
 
+      - name: Build the Docker image
+        run: |
+          cd build-files/docker && ./docker-build-qnx-image.sh
+
       - name: Build tinyxml2
         uses: addnab/docker-run-action@v3
         with:
