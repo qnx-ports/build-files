@@ -1,4 +1,4 @@
-name: Build cJSON
+name: capnproto
 
 on:
   push:
@@ -19,11 +19,17 @@ jobs:
       with:
         path: build-files
 
-    - name: Checkout cJSON
+    - name: Checkout capnproto
       uses: actions/checkout@v4
       with:
-        repository: qnx-ports/cJSON
-        path: cJSON
+        repository: qnx-ports/capnproto
+        path: capnproto
+
+    - name: Checkout muslflt
+      uses: actions/checkout@v4
+      with:
+        repository: qnx-ports/muslflt
+        path: muslflt
 
     - name: Download SDP 8.0
       env:
@@ -42,18 +48,18 @@ jobs:
         cp -r ~/.qnx/license ${{ github.workspace }}/.qnx
         echo "Downloading QNX SDP ..."
         ${{ github.workspace }}/qnxinstall/qnxsoftwarecenter/qnxsoftwarecenter_clt -mirror -cleanInstall -destination ${{ github.workspace }}/qnx800 -installBaseline com.qnx.qnx800 -myqnx.user="$MYQNX_USER" -myqnx.password="$MYQNX_PASSWORD"
-        cp -r ${{ github.workspace }}/qnx800 ./qnx800_fresh
 
     - name: Build the Docker image
       run: |
         cd build-files/docker && ./docker-build-qnx-image.sh
 
-    - name: Build tinyxml2
+    - name: Build capnproto
       uses: addnab/docker-run-action@v3
       with:
         image: qnx800:latest
-        options: --privileged -v ${{ github.workspace }}:/home/runner
+        options: -v ${{ github.workspace }}:/home/runner
         shell: bash
         run: |
           source ~/qnx800/qnxsdp-env.sh
-          BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/cJSON" make -C build-files/ports/cJSON install -j$(nproc)
+          QNX_PROJECT_ROOT="$(pwd)/muslflt" make -C build-files/ports/muslflt/ install -j$(nproc)
+          BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/capnproto" make -C build-files/ports/capnproto install -j$(nproc)

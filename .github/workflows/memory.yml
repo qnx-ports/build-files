@@ -1,4 +1,4 @@
-name: Build tinyxml2
+name: memory
 
 on:
   push:
@@ -19,11 +19,11 @@ jobs:
       with:
         path: build-files
 
-    - name: Checkout tinyxml2
+    - name: Checkout memory
       uses: actions/checkout@v4
       with:
-        repository: qnx-ports/tinyxml2
-        path: tinyxml2
+        repository: qnx-ports/memory
+        path: memory
 
     - name: Download SDP 8.0
       env:
@@ -42,18 +42,17 @@ jobs:
         cp -r ~/.qnx/license ${{ github.workspace }}/.qnx
         echo "Downloading QNX SDP ..."
         ${{ github.workspace }}/qnxinstall/qnxsoftwarecenter/qnxsoftwarecenter_clt -mirror -cleanInstall -destination ${{ github.workspace }}/qnx800 -installBaseline com.qnx.qnx800 -myqnx.user="$MYQNX_USER" -myqnx.password="$MYQNX_PASSWORD"
-        cp -r ${{ github.workspace }}/qnx800 ./qnx800_fresh
 
     - name: Build the Docker image
       run: |
         cd build-files/docker && ./docker-build-qnx-image.sh
 
-    - name: Build tinyxml2
+    - name: Build memory
       uses: addnab/docker-run-action@v3
       with:
         image: qnx800:latest
-        options: --privileged -v ${{ github.workspace }}:/home/runner
+        options: -v ${{ github.workspace }}:/home/runner
         shell: bash
         run: |
           source ~/qnx800/qnxsdp-env.sh
-          BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/tinyxml2" make -C build-files/ports/tinyxml2 install -j$(nproc)
+          QNX_PROJECT_ROOT="$(pwd)/memory" make -C build-files/ports/memory install -j$(nproc)
