@@ -1,0 +1,67 @@
+name: capnproto
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+
+  build:
+    runs-on: build-files-runner
+    if: |
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'capnproto'))
+    steps:
+    - name: Checkout build-files
+      uses: actions/checkout@v4
+      with:
+        path: build-files
+
+    - name: Checkout capnproto
+      uses: actions/checkout@v4
+      with:
+        repository: qnx-ports/capnproto
+        path: capnproto
+
+    - name: Checkout muslflt
+      uses: actions/checkout@v4
+      with:
+        repository: qnx-ports/muslflt
+        path: muslflt
+
+    - name: Download SDP 8.0
+      env:
+        LICENSE_KEY: ${{ secrets.LICENSE_KEY }}
+        MYQNX_USER: ${{ secrets.MYQNX_USER }}
+        MYQNX_PASSWORD: ${{ secrets.MYQNX_PASSWORD }}
+      run: |
+        echo "Downloading QNX Software Center ..."
+        mkdir ${{ github.workspace }}/.qnx
+        curl -v --cookie-jar ${{ github.workspace }}/.qnx/myqnxcookies.auth --form "userlogin=$MYQNX_USER" --form "password=$MYQNX_PASSWORD" -X POST https://www.qnx.com/account/login.html > login_response.html
+        curl -v -L --cookie ${{ github.workspace }}/.qnx/myqnxcookies.auth https://www.qnx.com/download/download/77351/qnx-setup-2.0.3-202408131717-linux.run > qnx-setup-lin.run
+        chmod a+x qnx-setup-lin.run
+        ./qnx-setup-lin.run force-override disable-auto-start agree-to-license-terms ${{ github.workspace }}/qnxinstall
+        echo "Installing License ..."
+        ${{ github.workspace }}/qnxinstall/qnxsoftwarecenter/qnxsoftwarecenter_clt -syncLicenseKeys -myqnx.user="$MYQNX_USER" -myqnx.password="$MYQNX_PASSWORD" -addLicenseKey $LICENSE_KEY
+        cp -r ~/.qnx/license ${{ github.workspace }}/.qnx
+        echo "Downloading QNX SDP ..."
+        ${{ github.workspace }}/qnxinstall/qnxsoftwarecenter/qnxsoftwarecenter_clt -mirror -cleanInstall -destination ${{ github.workspace }}/qnx800 -installBaseline com.qnx.qnx800 -myqnx.user="$MYQNX_USER" -myqnx.password="$MYQNX_PASSWORD"
+
+    - name: Build the Docker image
+      run: |
+        cd build-files/docker && ./docker-build-qnx-image.sh
+
+    - name: Build capnproto
+      uses: addnab/docker-run-action@v3
+      with:
+        image: qnx800:latest
+        options: -v ${{ github.workspace }}:/home/runner
+        shell: bash
+        run: |
+          source ~/qnx800/qnxsdp-env.sh
+          QNX_PROJECT_ROOT="$(pwd)/muslflt" make -C build-files/ports/muslflt/ install -j$(nproc)
+          BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/capnproto" make -C build-files/ports/capnproto install -j$(nproc)

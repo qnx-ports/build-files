@@ -1,4 +1,4 @@
-name: Build QNX Ports
+name: Fast-CDR
 
 on:
   push:
@@ -11,37 +11,27 @@ on:
 jobs:
 
   build:
-    runs-on: ubuntu-22.04
-
+    runs-on: build-files-runner
+    if: |
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'Fast-CDR'))
     steps:
     - name: Checkout build-files
       uses: actions/checkout@v4
       with:
         path: build-files
 
-    - name: Checkout abseil-cpp
+    - name: Checkout Fast-CDR
       uses: actions/checkout@v4
       with:
-        repository: qnx-ports/abseil-cpp
-        path: abseil-cpp
-
-    - name: Checkout muslflt
-      uses: actions/checkout@v4
-      with:
-        repository: qnx-ports/muslflt
-        path: muslflt
+        repository: qnx-ports/Fast-CDR
+        path: Fast-CDR
 
     - name: Checkout googletest
       uses: actions/checkout@v4
       with:
-        repository: qnx-ports/googletest
-        path: googletest
-
-    - name: Checkout tinyxml2
-      uses: actions/checkout@v4
-      with:
-        repository: qnx-ports/tinyxml2
-        path: tinyxml2
+        repository: qnx-ports/Fast-CDR
+        path: Fast-CDR/test/googletest
 
     - name: Download SDP 8.0
       env:
@@ -60,34 +50,17 @@ jobs:
         cp -r ~/.qnx/license ${{ github.workspace }}/.qnx
         echo "Downloading QNX SDP ..."
         ${{ github.workspace }}/qnxinstall/qnxsoftwarecenter/qnxsoftwarecenter_clt -mirror -cleanInstall -destination ${{ github.workspace }}/qnx800 -installBaseline com.qnx.qnx800 -myqnx.user="$MYQNX_USER" -myqnx.password="$MYQNX_PASSWORD"
-        cp -r ${{ github.workspace }}/qnx800 ./qnx800_fresh
 
     - name: Build the Docker image
       run: |
         cd build-files/docker && ./docker-build-qnx-image.sh
 
-    - name: Build abseil-cpp
+    - name: Build Fast-CDR
       uses: addnab/docker-run-action@v3
       with:
-          image: qnx800:latest
-          options: --privileged -v ${{ github.workspace }}:/home/runner
-          shell: bash
-          run: |
-            rm -rf ~/qnx800
-            cp -r ~/qnx800_fresh ~/qnx800
-            source ~/qnx800/qnxsdp-env.sh
-            BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/googletest" make -C build-files/ports/googletest install -j$(nproc)
-            QNX_PROJECT_ROOT="$(pwd)/muslflt" make -C build-files/ports/muslflt/ install -j$(nproc)
-            QNX_PROJECT_ROOT="$(pwd)/abseil-cpp" make -C build-files/ports/abseil-cpp -j$(nproc) install
-
-    - name: Build tinyxml2
-      uses: addnab/docker-run-action@v3
-      with:
-          image: qnx800:latest
-          options: --privileged -v ${{ github.workspace }}:/home/runner
-          shell: bash
-          run: |
-            rm -rf ~/qnx800
-            cp -r ~/qnx800_fresh ~/qnx800
-            source ~/qnx800/qnxsdp-env.sh
-            BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/tinyxml2" make -C build-files/ports/tinyxml2 install -j$(nproc)
+        image: qnx800:latest
+        options: -v ${{ github.workspace }}:/home/runner
+        shell: bash
+        run: |
+          source ~/qnx800/qnxsdp-env.sh
+          BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/Fast-CDR" make -C build-files/ports/Fast-CDR install -j$(nproc)

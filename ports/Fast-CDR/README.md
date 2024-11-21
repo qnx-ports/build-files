@@ -29,11 +29,11 @@ cd ~/qnx_workspace
 # Clone Fast-CDR
 git clone https://github.com/qnx-ports/Fast-CDR
 
-# Add git submodules 
+# Add git submodules
 NOTE: In case you do not want to build the test, you can skip this submodule addition part as well as set the BUILD_TESTING=OFF in the build command mentioned below
 
-cd Fast-CDR
-git submodule update --init
+cd Fast-CDR/test
+git clone https://github.com/qnx-ports/googletest
 cd -
 
 # Build Fast-CDR
@@ -52,7 +52,7 @@ git clone https://github.com/qnx-ports/Fast-CDR
 source ~/qnx800/qnxsdp-env.sh
 cd ~/qnx_workspace
 
-# Add git submodules 
+# Add git submodules
 NOTE: In case you do not want to build the test, you can skip this submodule addition part as well as set the BUILD_TESTING=OFF in the build command mentioned below
 
 cd Fast-CDR
@@ -65,7 +65,7 @@ QNX_PROJECT_ROOT="$(pwd)/Fast-CDR" make -C build-files/ports/Fast-CDR/ INSTALL_R
 
 # How to run tests
 
-**Note**: Below steps are for running the tests on a RPi4 target. 
+**Note**: Below steps are for running the tests on a RPi4 target.
 
 Move the libraries and tests to the target
 ```bash
