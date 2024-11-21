@@ -28,7 +28,7 @@ jobs:
         MYQNX_USER: ${{ secrets.MYQNX_USER }}
         MYQNX_PASSWORD: ${{ secrets.MYQNX_PASSWORD }}
       run: |
-        ./build-files/.github/workflows/download-sdp.sh
+        ./build-files/.github/workflows/download-sdp.sh $LICENSE_KEY $MYQNX_USER $MYQNX_PASSWORD 2>&1 /dev/null
 
     - name: Build the Docker image
       run: |

@@ -1,5 +1,9 @@
 #!/bin/bash
 
+WORKSPACE=$1
+MYQNX_USER=$2
+MYQNX_PASSWORD=$3
+
 echo "Downloading QNX Software Center ..."
 mkdir $WORKSPACE/.qnx
 curl -v --cookie-jar /.qnx/myqnxcookies.auth --form "userlogin=$MYQNX_USER" --form "password=$MYQNX_PASSWORD" -X POST https://www.qnx.com/account/login.html > login_response.html
