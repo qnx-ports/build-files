@@ -1,0 +1,44 @@
+name: Build QNX Ports
+
+on:
+  schedule:
+    # Runs every week at 00:00 UTC on Monday
+    - cron: '0 0 * * 1'
+
+jobs:
+
+  build:
+    runs-on: ubuntu-22.04
+
+    steps:
+    - name: Checkout build-files
+      uses: actions/checkout@v4
+      with:
+        path: build-files
+
+    - name: Checkout tinyxml2
+      uses: actions/checkout@v4
+      with:
+        repository: qnx-ports/tinyxml2
+        path: tinyxml2
+
+    - name: Download SDP 8.0
+      env:
+        LICENSE_KEY: ${{ secrets.LICENSE_KEY }}
+        MYQNX_USER: ${{ secrets.MYQNX_USER }}
+        MYQNX_PASSWORD: ${{ secrets.MYQNX_PASSWORD }}
+      run: |
+        ./build-files/.github/workflows/download-sdp.sh
+
+    - name: Build the Docker image
+      run: |
+        cd build-files/docker && ./docker-build-qnx-image.sh
+
+    - name: Build tinyxml2
+      uses: addnab/docker-run-action@v3
+      with:
+          image: qnx800:latest
+          options: --net=host --privileged -v ${{ github.workspace }}:/home/runner
+          shell: bash
+          run: |
+            BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/tinyxml2" make -C build-files/ports/tinyxml2 install -j4
