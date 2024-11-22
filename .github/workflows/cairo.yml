@@ -67,6 +67,8 @@ jobs:
         run: |
           source ~/qnx800/qnxsdp-env.sh
           mkdir -p output
+          export QNX_VERSION=800
+          export QNX_ARCH=aarch64le
           cd pixman
           git checkout pixman-0.43.4
           /usr/local/qnx/env/bin/meson setup build-qnx800 --cross-file ../build-files/resources/meson/aarch64le/workflows/qnx800.ini -Dprefix=/usr -Dopenmp=disabled
