@@ -9,6 +9,64 @@ Cross-compiled on Ubuntu 24.04 for:
 
 Instructions for compiling and running tests are listed below.
 
+
+# Compile c-ares for SDP 7.1/8.0 in a Docker Container
+### *Pre-requisites:*
+
+#### `gtest` and `gmock` must be installed on your target.
+Go to https://github.com/qnx-ports/build-files/tree/c-ares_files/ports/googletest and follow the instructions.
+
+### *Steps:*
+1. Create a new workspace or navigate to a desired one
+```bash
+mkdir c-ares_wksp && cd c-ares_wksp
+```
+
+2. Clone the  `build_files` repo
+```bash
+#Pick one:
+#Via HTTPS
+git clone https://github.com/qnx-ports/build-files.git
+
+#Via SSH
+git clone git@github.com:qnx-ports/build-files.git 
+```
+
+3. Build the Docker image and crease a container
+```bash
+cd build-files/docker
+./docker-build-qnx-image.sh
+./docker-create-container.sh
+```
+
+4. Source your SDP (Installed from QNX Software Center)
+```bash
+#QNX 8.0 will be in the directory ~/qnx800/
+#QNX 7.1 will be in the directory ~/qnx710/
+source ~/qnx800/qnxsdp-env.sh
+```
+
+5. Clone the `c-ares` repo to the workspace
+```bash
+#Navigate back to memory_wksp
+#The docker container will put you in your home directory
+cd <path-to-workspace>
+
+#Pick one:
+#Via HTTPS
+git clone https://github.com/qnx-ports/c-ares.git
+
+#Via SSH
+git clone git@github.com:qnx-ports/c-ares.git 
+```
+
+6. Build the project in your workspace from Step 1
+```bash
+QNX_PROJECT_ROOT="$(PWD)/c-ares" make -C build-files/ports/c-ares install -j4
+```
+
+
+
 # Compile c-ares for SDP 7.1/8.0 on an Ubuntu Host
 ### *Pre-requisites:*
 #### `autoconf` must be installed on your host system.
