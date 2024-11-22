@@ -1,5 +1,4 @@
 ### NOTE: Currently only c-ares v1.30.0 is supported. v1.34.3 support is being worked on.
-### TODO: Docker Instructions
 
 ### Tested for QNX 7.1 and 8.0 SDPs
 Cross-compiled on Ubuntu 24.04 for:
@@ -140,12 +139,13 @@ TARGET_USER_FOR_INSTALL="root"
 ssh root@$TARGET_IP_ADDRESS "mkdir -p /data/home/$TARGET_USER_FOR_INSTALL/c-ares/lib"
 
 #If copying to an x86_64 install, change /aarch64le/ to /x86_64/
-scp $QNX_TARGET/aarch64le/usr/bin/foonathan_memory_test root@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER_FOR_INSTALL/c-ares/
+scp $QNX_TARGET/aarch64le/tests/cares/arestest root@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER_FOR_INSTALL/c-ares/
 scp $QNX_TARGET/aarch64le/usr/lib/libcares* root@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER_FOR_INSTALL/c-ares/lib
 
 #gmock and gtest must be installed on the target.
 #If you did not do so during their build process, tranfer the shared objects over now.
-scp $QNX_TARGET/aarch64le/tests/cares/arestest root@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER_FOR_INSTALL/c-ares/lib
+#If copying to an x86_64 install, change /aarch64le/ to /x86_64/
+scp $QNX_TARGET/aarch64le/usr/lib/libgtest* root@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER_FOR_INSTALL/c-ares/lib
 scp $QNX_TARGET/aarch64le/usr/lib/libgmock* root@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER_FOR_INSTALL/c-ares/lib
 ```
 
