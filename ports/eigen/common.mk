@@ -38,6 +38,8 @@ LDFLAGS += -Wl,--build-id=md5
 
 include $(MKFILES_ROOT)/qtargets.mk
 
+BUILD_TESTING ?= OFF
+
 #Search paths for all of CMake's find_* functions --
 #headers, libraries, etc.
 #
@@ -74,6 +76,7 @@ CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DEIGEN_TEST_CXX11=ON \
              -DEIGEN_INSTALLED_TESTS=ON \
              -DEIGEN_REAL_CXX_COMPILER=nto$(CPU)-g++ \
+             -DBUILD_TESTING=$(BUILD_TESTING) \
 
 MAKE_ARGS ?= -j $(firstword $(JLEVEL) 1)
 

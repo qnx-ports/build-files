@@ -21,11 +21,12 @@ jobs:
       with:
         path: build-files
 
-    - name: Checkout tinyxml2
+    - name: Checkout glib
       uses: actions/checkout@v4
       with:
-        repository: qnx-ports/tinyxml2
-        path: tinyxml2
+        repository: qnx-ports/glib
+        path: glib
+        ref: qnx-2.82.2
 
     - name: Download SDP 8.0
       env:
@@ -49,7 +50,7 @@ jobs:
       run: |
         cd build-files/docker && ./docker-build-qnx-image.sh
 
-    - name: Build tinyxml2
+    - name: Build glib
       uses: addnab/docker-run-action@v3
       with:
         image: qnx800:latest
@@ -57,4 +58,10 @@ jobs:
         shell: bash
         run: |
           source ~/qnx800/qnxsdp-env.sh
-          BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/tinyxml2" make -C build-files/ports/tinyxml2 install -j$(nproc)
+          export QNX_VERSION=800
+          export QNX_ARCH=aarch64le
+          mkdir -p output
+          cd glib
+          /usr/local/qnx/env/bin/meson setup build-qnx$QNX_VERSION --cross-file ../build-files/resources/meson/aarch64le/workflows/qnx800.ini -Dprefix=/usr -Dxattr=false
+          /usr/local/qnx/env/bin/meson compile -C build-qnx$QNX_VERSION
+          DESTDIR=/home/runner/output /usr/local/qnx/env/bin/meson install --no-rebuild -C build-qnx$QNX_VERSION

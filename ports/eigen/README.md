@@ -46,7 +46,8 @@ QNX_PROJECT_ROOT="$(pwd)/muslflt" INSTALL_ROOT_nto=<staging-install-folder> USE_
 git clone https://github.com/qnx-ports/eigen.git
 
 # Build eigen
-QNX_PROJECT_ROOT="$(pwd)/eigen" make -C build-files/ports/eigen INSTALL_ROOT_nto=<staging-install-folder> USE_INSTALL_ROOT=true JLEVEL=4 install
+# Set BUILD_TESTING to ON to test eigen
+BUILD_TESTING=OFF QNX_PROJECT_ROOT="$(pwd)/eigen" make -C build-files/ports/eigen INSTALL_ROOT_nto=<staging-install-folder> USE_INSTALL_ROOT=true JLEVEL=4 install
 ```
 
 # Compile the port for QNX on Ubuntu host

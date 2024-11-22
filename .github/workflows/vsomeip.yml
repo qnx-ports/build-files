@@ -73,8 +73,9 @@ jobs:
         run: |
           WORKSPACE=$PWD
           source ~/qnx800/qnxsdp-env.sh
+          export GTEST_ROOT=/home/runner/googletest
           cd $WORKSPACE/boost/libs/interprocess && git apply $WORKSPACE/build-files/ports/boost/interprocess_1.78.0_qnx_7.1.patch
           cd $WORKSPACE/boost/tools/build && git apply $WORKSPACE/build-files/ports/boost/tools_qnx.patch
           cd $WORKSPACE
           QNX_PROJECT_ROOT="$(pwd)/boost" make -C build-files/ports/boost install -j$(nproc)
-          QNX_PROJECT_ROOT="$(pwd)/vsomeip" make -C build-files/ports/vsomeip install -j$(nproc)
+          GTEST_ROOT=$GTEST_ROOT QNX_PROJECT_ROOT="$(pwd)/vsomeip" make -C build-files/ports/vsomeip install -j$(nproc)

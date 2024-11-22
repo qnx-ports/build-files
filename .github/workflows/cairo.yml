@@ -25,6 +25,13 @@ jobs:
       run: |
         git clone https://gitlab.freedesktop.org/cairo/cairo.git && cd cairo && git checkout 1.18.0
 
+    - name: Checkout glib
+      uses: actions/checkout@v4
+      with:
+        repository: qnx-ports/glib
+        path: glib
+        ref: qnx-2.82.2
+
     - name: Checkout pixman
       run: |
         git clone https://gitlab.freedesktop.org/pixman/pixman.git && cd pixman && git checkout pixman-0.43.4
@@ -60,12 +67,18 @@ jobs:
         run: |
           source ~/qnx800/qnxsdp-env.sh
           mkdir -p output
+          export QNX_VERSION=800
+          export QNX_ARCH=aarch64le
           cd pixman
           git checkout pixman-0.43.4
-          meson setup build-qnx800 --cross-file ../build-files/resources/meson/aarch64le/workflows/qnx800.ini -Dprefix=/usr -Dopenmp=disabled
-          meson compile -C build-qnx800
-          DESTDIR=/home/runner/qnx800/target/qnx meson install --no-rebuild -C build-qnx800
+          /usr/local/qnx/env/bin/meson setup build-qnx800 --cross-file ../build-files/resources/meson/aarch64le/workflows/qnx800.ini -Dprefix=/usr -Dopenmp=disabled
+          /usr/local/qnx/env/bin/meson compile -C build-qnx800
+          DESTDIR=/home/runner/qnx800/target/qnx /usr/local/qnx/env/bin/meson install --no-rebuild -C build-qnx800
+          cd ../glib
+          /usr/local/qnx/env/bin/meson setup build-qnx$QNX_VERSION --cross-file ../build-files/resources/meson/aarch64le/workflows/qnx800.ini -Dprefix=/usr -Dxattr=false
+          /usr/local/qnx/env/bin/meson compile -C build-qnx$QNX_VERSION
+          DESTDIR=/home/runner/qnx800/target/qnx /usr/local/qnx/env/bin/meson install --no-rebuild -C build-qnx$QNX_VERSION
           cd ../cairo
-          meson setup build-qnx800 --cross-file ../build-files/resources/meson/aarch64le/workflows/qnx800.ini -Dprefix=/usr -Dtests=disabled
-          meson compile -C build-qnx800
-          DESTDIR=/home/runner/output meson install --no-rebuild -C build-qnx800
+          /usr/local/qnx/env/bin/meson setup build-qnx800 --cross-file ../build-files/resources/meson/aarch64le/workflows/qnx800.ini -Dprefix=/usr -Dtests=disabled
+          /usr/local/qnx/env/bin/meson compile -C build-qnx800
+          DESTDIR=/home/runner/output /usr/local/qnx/env/bin/meson install --no-rebuild -C build-qnx800

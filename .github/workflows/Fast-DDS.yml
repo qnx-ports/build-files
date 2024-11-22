@@ -80,6 +80,6 @@ jobs:
           unix2dos $WORKSPACE/Fast-DDS/build_qnx/qnx_patches/tinyxml2_qnx.patch
           git apply $WORKSPACE/Fast-DDS/build_qnx/qnx_patches/tinyxml2_qnx.patch
           cd $WORKSPACE/Fast-DDS/googletest
-          git apply $WORKSPACE/build_qnx/qnx_patches/googletest_qnx.patch
+          git apply $WORKSPACE/Fast-DDS/build_qnx/qnx_patches/googletest_qnx.patch
           cd $WORKSPACE/Fast-DDS/build_qnx
           make install  -j$(nproc)
