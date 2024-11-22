@@ -73,7 +73,7 @@ jobs:
           /usr/local/qnx/env/bin/meson compile -C build-qnx800
           DESTDIR=/home/runner/qnx800/target/qnx /usr/local/qnx/env/bin/meson install --no-rebuild -C build-qnx800
           cd ../glib
-          /usr/local/qnx/env/bin/meson setup build-qnx$QNX_VERSION --cross-file ~/workspace/build-files/resources/$QNX_ARCH/qnx$QNX_VERSION.ini -Dprefix=/usr -Dxattr=false
+          /usr/local/qnx/env/bin/meson setup build-qnx$QNX_VERSION --cross-file ../build-files/resources/meson/aarch64le/workflows/qnx800.ini -Dprefix=/usr -Dxattr=false
           /usr/local/qnx/env/bin/meson compile -C build-qnx$QNX_VERSION
           DESTDIR=/home/runner/qnx800/target/qnx /usr/local/qnx/env/bin/meson install --no-rebuild -C build-qnx$QNX_VERSION
           cd ../cairo

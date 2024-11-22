@@ -31,7 +31,9 @@ cd -
 # Create a staging area for the GTK4 build, for example, `/tmp/staging`
 # This is required for the GTK4 port due to the sheer amount of files it installs,
 # and the fact that clearing all installed files is required for a fully clean build of GTK4.
-make -C build-files/ports/gtk INSTALL_ROOT_nto=/tmp/staging USE_INSTALL_ROOT=true QNX_PROJECT_ROOT="$(pwd)/gtk" JLEVEL=4 install
+# Edit INSTALL_ROOT_nto in qconf_override.mk to change the stage path.
+export QCONF_OVERRIDE=$PWD/build-files/resources/qconf_override/qconf_override.mk
+make -C build-files/ports/gtk QNX_PROJECT_ROOT="$(pwd)/gtk" JLEVEL=4 install
 ```
 
 # Compile the port for QNX on Ubuntu host
@@ -53,7 +55,8 @@ cd -
 source ~/qnx800/qnxsdp-env.sh
 
 # Build gtk
-QNX_PROJECT_ROOT="$(pwd)/gtk" INSTALL_ROOT_nto=/tmp/staging USE_INSTALL_ROOT=true make -C build-files/ports/gtk JLEVEL=$(nproc) install
+export QCONF_OVERRIDE=$PWD/build-files/resources/qconf_override/qconf_override.mk
+QNX_PROJECT_ROOT="$(pwd)/gtk" make -C build-files/ports/gtk JLEVEL=$(nproc) install
 ```
 
 # How to run the gtk4 demo

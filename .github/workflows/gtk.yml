@@ -64,5 +64,5 @@ jobs:
         shell: bash
         run: |
           source ~/qnx800/qnxsdp-env.sh
-          mkdir -p staging
-          INSTALL_ROOT_nto=/home/runner/staging USE_INSTALL_ROOT=true QNX_PROJECT_ROOT="$(pwd)/gtk" make -C build-files/ports/gtk install -j$(nproc)
+          export QCONF_OVERRIDE=/home/runner/build-files/resources/qconf_override/qconf_override.mk
+          QNX_PROJECT_ROOT="$(pwd)/gtk" make -C build-files/ports/gtk install -j$(nproc)
