@@ -52,7 +52,6 @@ RUN apt update && apt install -y \
 	sassc \
 	libglib2.0-bin \
 	libglib2.0-dev \
-	meson \
 	ninja-build \
 	net-tools \
 	tree
@@ -165,7 +164,8 @@ RUN cd /usr/local/qnx && \
 	pytest-rerunfailures \
 	pytest \
 	pybind11 \
-	requests
+	requests \
+	meson==1.0.1
 
 WORKDIR /home/${USER_NAME}
 
