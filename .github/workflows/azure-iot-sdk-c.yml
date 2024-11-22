@@ -26,6 +26,7 @@ jobs:
       with:
         repository: qnx-ports/azure-iot-sdk-c
         path: azure-iot-sdk-c
+        submodules: recursive
 
     - name: Download SDP 8.0
       env:

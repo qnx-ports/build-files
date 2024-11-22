@@ -52,6 +52,7 @@ RUN apt update && apt install -y \
 	sassc \
 	libglib2.0-bin \
 	libglib2.0-dev \
+	meson \
 	ninja-build \
 	net-tools \
 	tree

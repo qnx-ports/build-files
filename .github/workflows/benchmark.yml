@@ -27,11 +27,11 @@ jobs:
         repository: qnx-ports/benchmark
         path: benchmark
 
-    - name: Checkout benchmark
+    - name: Checkout googletest
       uses: actions/checkout@v4
       with:
-        repository: qnx-ports/benchmark
-        path: benchmark
+        repository: qnx-ports/googletest
+        path: googletest
 
     - name: Download SDP 8.0
       env:

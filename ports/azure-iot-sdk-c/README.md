@@ -26,12 +26,14 @@ cd build-files/docker
 source ~/qnx800/qnxsdp-env.sh
 cd ~/qnx_workspace
 
+# Clone azure-iot-sdk-c
+git clone https://github.com/qnx-ports/azure-iot-sdk-c.git && cd azure-iot-sdk-c
+git submodule update --init --recursive
+cd -
+
 # Apply third_party patches
 cd ~/qnx_workspace/build-files/ports/azure-iot-sdk-c
 ./scripts/patch.sh ~/qnx_workspace/azure-iot-sdk-c
-
-# Clone azure-iot-sdk-c
-git clone https://github.com/qnx-ports/azure-iot-sdk-c.git
 
 # Build azure-iot-sdk-c
 QNX_PROJECT_ROOT="$(pwd)/azure-iot-sdk-c" make -C build-files/ports/azure-iot-sdk-c/ INSTALL_ROOT_nto=<staging-install-folder> USE_INSTALL_ROOT=true install -j4
@@ -48,6 +50,11 @@ git clone https://github.com/qnx-ports/azure-iot-sdk-c.git
 # source qnxsdp-env.sh
 source ~/qnx800/qnxsdp-env.sh
 
+# Clone azure-iot-sdk-c
+git clone https://github.com/qnx-ports/azure-iot-sdk-c.git && cd azure-iot-sdk-c
+git submodule update --init --recursive
+cd -
+
 # Apply third_party patches
 cd ~/qnx_workspace/build-files/ports/azure-iot-sdk-c
 ./scripts/patch.sh ~/qnx_workspace/azure-iot-sdk-c
@@ -58,7 +65,7 @@ QNX_PROJECT_ROOT="$(pwd)/azure-iot-sdk-c" make -C build-files/ports/azure-iot-sd
 
 # How to run tests
 
-**Note**: Below steps are for running the tests on a RPi4 target. 
+**Note**: Below steps are for running the tests on a RPi4 target.
 
 Move the libraries and tests to the target
 ```bash
