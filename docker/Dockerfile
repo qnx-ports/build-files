@@ -165,7 +165,7 @@ RUN cd /usr/local/qnx && \
 	pytest \
 	pybind11 \
 	requests \
-	meson==1.0.1
+	meson==1.3.0
 
 WORKDIR /home/${USER_NAME}
 
