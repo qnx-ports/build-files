@@ -30,7 +30,7 @@ jobs:
     - name: Checkout googletest
       uses: actions/checkout@v4
       with:
-        repository: qnx-ports/Fast-CDR
+        repository: qnx-ports/googletest
         path: Fast-CDR/test/googletest
 
     - name: Download SDP 8.0

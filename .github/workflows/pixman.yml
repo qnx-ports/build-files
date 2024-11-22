@@ -58,6 +58,6 @@ jobs:
           mkdir -p output
           cd pixman
           git checkout pixman-0.43.4
-          meson setup build-qnx800 --cross-file ../build-files/resources/meson/aarch64le/workflows/qnx800.ini -Dprefix=/usr -Dopenmp=disabled
-          meson compile -C build-qnx800
-          DESTDIR=/home/runner/output meson install --no-rebuild -C build-qnx800
+          /usr/local/qnx/env/bin/meson setup build-qnx800 --cross-file ../build-files/resources/meson/aarch64le/workflows/qnx800.ini -Dprefix=/usr -Dopenmp=disabled
+          /usr/local/qnx/env/bin/meson compile -C build-qnx800
+          DESTDIR=/home/runner/output /usr/local/qnx/env/bin/meson install --no-rebuild -C build-qnx800
