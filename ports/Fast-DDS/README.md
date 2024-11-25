@@ -69,6 +69,9 @@ JLEVEL=4 make install
 
 - Testing
 
+**NOTE**: Before running the tests make sure you have libsqlite3.so.1 from
+com.qnx.qnx800.osr.sqlite3 installed in LD_LIBRARY_PATH on the target.
+
 Copy host files to the target (note, mDNS is configured from
 /boot/qnx_config.txt and uses qnxpi.local by default).
 ```bash
@@ -94,14 +97,16 @@ To setup and run only the unit tests on the target.
 ssh qnxuser@$TARGET_HOST
 
 # Run the tests
-# NOTE: Some tests are currently stuck. It may be more helpful to run them
-# individually.
 cd /data/home/qnxuser/Fast-DDS_test
 
 export CERTS_PATH=$PWD/certs
 
-for test in $(find ./unittest -type f | grep Tests) ; do
-    chmod +x $test
-    ./$test
+# Note some tests hang and will be skipped. SystemInfoTests is fixed in 8.0.2.
+TESTROOT=$PWD
+for test in $(find ./unittest -type f | grep Tests | grep -E -v "(SystemInfoTests|UDPv6Tests|UDPv4Tests)") ; do
+    cd $TESTROOT/$(dirname $test)
+    chmod +x $TESTROOT/$test
+    $TESTROOT/$test
 done
+cd $TESTROOT
 ```
