@@ -9,7 +9,7 @@ function hook_configure {
 	export PKG_CONFIG_LIBDIR=${INSTALL_ROOT_nto}/${cpudir}/usr/lib/pkgconfig
 
     ${QNX_PROJECT_ROOT}/configure --prefix=${INSTALL_ROOT_nto}/${cpudir}/usr --includedir=${INSTALL_ROOT_HDR} --host=${machine} \
-	CPPFLAGS="${CPPFLAGS} -D_QNX_SOURCE" LIBS="-lregex" --disable-symbol-hiding --enable-test-override --enable-qcc-compat
+	CPPFLAGS="${CPPFLAGS} -D_QNX_SOURCE" LIBS="-lregex" --disable-symbol-hiding --enable-tests-build-override --enable-qcc-compat
 	
 
 
