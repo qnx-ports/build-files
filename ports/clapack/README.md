@@ -10,17 +10,16 @@ Instructions for compiling and running tests are listed below.
 mkdir clapack_wksp && cd clapack_wksp
 ```
 
-
 2. Clone `build_files` and `clapack`
 ```bash
 #Pick one:
 #Via HTTPS
 git clone https://github.com/qnx-ports/build-files.git
-git clone --TODO--
+git clone https://github.com/qnx-ports/clapack.git
 
 #Via SSH
 git clone git@github.com:qnx-ports/build-files.git 
-git clone --TODO--
+git clone git@github.com:qnx-ports/clapack.git
 ```
 
 3. Source your SDP (Installed from QNX Software Center)
@@ -51,12 +50,74 @@ rm -r -f build-files/ports/clapack/nto-aarch64-le/build
 rm -r -f build-files/ports/clapack/nto-x86_64-o/build
 ```
 
-# Docker --TODO--
+# Compile CLAPACK for SDP 7.1/8.0 in Docker
+1. Create new workspace or navigate to a desired one
+```bash
+mkdir clapack_wksp && cd clapack_wksp
+```
+
+2. Clone the `build_files` repo
+```bash
+#Pick one:
+#Via HTTPS
+git clone https://github.com/qnx-ports/build-files.git
+
+#Via SSH
+git clone git@github.com:qnx-ports/build-files.git 
+```
+
+3. Build the Docker image and create a container
+```bash
+cd build-files/docker
+./docker-build-qnx-image.sh
+./docker-create-container.sh
+```
+
+4. Source your SDP (Installed from QNX Software Center)
+```bash
+#QNX 8.0 will be in the directory ~/qnx800/
+#QNX 7.1 will be in the directory ~/qnx710/
+source ~/qnx800/qnxsdp-env.sh
+```
+
+5. Clone the `clapack` repo
+```bash
+#Navigate back to memory_wksp
+#The docker container will put you in your home directory
+cd <path-to-workspace>
+
+#Pick one:
+#Via HTTPS
+git clone https://github.com/qnx-ports/clapack.git
+
+#Via SSH
+git clone git@github.com:qnx-ports/clapack.git 
+```
+
+6. Build the project in your workspace from Step 1
+```bash
+#Default:
+make -C build-files/ports/clapack install
+
+#If you cloned clapack to somewhere else, you can specify the correct path to the directory as such:
+QNX_PROJECT_ROOT=/path/to/clapack make -C build-files/ports/clapack install
+
+#By default, tests are built for the shell /bin/sh . If you have mounted the target IFS's differently, you can specify the path to your desired shell as follows:
+TEST_TARGET_SHELL=/path/to/sh make -C build-files/ports/clapack install
+```
+
+
+**NOTE**: Before rebuilding, you may need to delete the `/build` subdirectories and their contents in the `build-files/ports/clapack/*/*` subfolders. This should be done when changing from SDP 7.1 to 8 or vice versa.
+```bash
+#From your workspace:
+rm -r -f build-files/ports/clapack/linux-x86_64-o/build
+rm -r -f build-files/ports/clapack/nto-aarch64-le/build
+rm -r -f build-files/ports/clapack/nto-x86_64-o/build
+```
+
 
 # Running Tests on a Target
 Some distributions of QNX have critical directories stored in a read-only partition (`/`, `/system`, `/etc`, etc). Included in these are the default `bin` and `lib` directories. If this is the case, follow the "Installing in home directory" instructions
-
-### Installing in /usr/ (default) --TODO--
 
 
 ### Installing in home directory SDP 8.0
