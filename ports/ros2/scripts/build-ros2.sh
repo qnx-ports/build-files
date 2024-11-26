@@ -5,7 +5,7 @@ trap 'last_command=$current_command; current_command=$BASH_COMMAND' DEBUG
 start=$(date +%s.%N)
 
 build(){
-    
+
     if [ "${CPU}" == "aarch64" ]; then
         CPUVARDIR=aarch64le
         CPUVAR=aarch64le
@@ -53,11 +53,11 @@ build(){
 
     # Remove build files under test
     find ./install/${CPUVARDIR}/test -name "CMakeFiles" -exec rm -rf {} +
-    find ./install/${CPUVARDIR}/test -name "*.o" -exec rm -f {} +
-    find ./install/${CPUVARDIR}/test -name "Makefile" -exec rm -f {} +
-    find ./install/${CPUVARDIR}/test -name "*.cmake" -exec rm -f {} +
-    find ./install/${CPUVARDIR}/test -name "*.txt" -exec rm -f {} +
-    find ./install/${CPUVARDIR}/test -name "*.make" -exec rm -f {} +
+    find ./install/${CPUVARDIR}/test -name "*.o" -exec rm -rf {} +
+    find ./install/${CPUVARDIR}/test -name "Makefile" -exec rm -rf {} +
+    find ./install/${CPUVARDIR}/test -name "*.cmake" -exec rm -rf {} +
+    find ./install/${CPUVARDIR}/test -name "*.txt" -exec rm -rf {} +
+    find ./install/${CPUVARDIR}/test -name "*.make" -exec rm -rf {} +
     find ./install/${CPUVARDIR}/test -name "ament_*" -exec rm -rf {} +
 
     # Install googletest
