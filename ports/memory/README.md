@@ -38,8 +38,7 @@ QNX_PROJECT_ROOT="$(pwd)/memory" make -C build-files/ports/memory install -j4
 **NOTE**: Before rebuilding, you may need to delete the `/build` subdirectories and their contents in `build-files/ports/memory/nto/aarch64/le` and `build-files/ports/memory/nto/x86_64/so`. This MUST be done when changing from SDP 7.1 to 8 or vice versa, as it will link against the wrong shared objects and not show an error until testing.
 ```bash
 #From your workspace:
-rm -r -f build-files/ports/memory/nto/x86_64/so/build
-rm -r -f build-files/ports/memory/nto/aarch64/le/build
+make -C build-files/ports/memory clean
 ```
 
 # Compile memory for SDP 7.1/8.0 in a Docker Container
@@ -91,6 +90,11 @@ git clone git@github.com:qnx-ports/memory.git
 6. Build the project in your workspace from Step 1
 ```bash
 QNX_PROJECT_ROOT="$(pwd)/memory" make -C build-files/ports/memory install -j4
+
+**NOTE**: Before rebuilding, you may need to delete the `/build` subdirectories and their contents in `build-files/ports/memory/nto/aarch64/le` and `build-files/ports/memory/nto/x86_64/so`. This MUST be done when changing from SDP 7.1 to 8 or vice versa, as it will link against the wrong shared objects and not show an error until testing.
+```bash
+#From your workspace:
+make -C build-files/ports/memory clean
 ```
 
 # Running Tests on a Target
@@ -103,17 +107,18 @@ Some distributions of QNX have critical directories stored in a read-only partit
 TARGET_IP_ADDRESS=<target-ip-address-or-hostname>
 
 #If copying to an x86_64 install, change /aarch64le/ to /x86_64/
-scp $QNX_TARGET/aarch64le/usr/bin/foonathan_memory_test root@$TARGET_IP_ADDRESS:/usr/bin
-scp $QNX_TARGET/aarch64le/usr/lib/libfoonathan_memory* root@$TARGET_IP_ADDRESS:/usr/lib
+scp $QNX_TARGET/aarch64le/usr/bin/foonathan_memory_test qnxuser@$TARGET_IP_ADDRESS:/usr/bin
+scp $QNX_TARGET/aarch64le/usr/lib/libfoonathan_memory* qnxuser@$TARGET_IP_ADDRESS:/usr/lib
 ```
 
 2. Running Tests
 ```bash
 #SSH into target
-ssh root@<target-ip-address-or-hostname>
+ssh qnxuser@<target-ip-address-or-hostname>
 
 #Run test binary
 cd /usr/bin
+chmod 744 foonathan_memory_test
 ./foonathan_memory_test
 ```
 
@@ -123,28 +128,29 @@ cd /usr/bin
 #Set your target's IP here
 TARGET_IP_ADDRESS=<target-ip-address-or-hostname>
 
-#Select the home directory to install to (this will install to /data/home/root)
-TARGET_USER_FOR_INSTALL="root"
+#Select the home directory to install to (this will install to /data/home/qnxuser)
+TARGET_USER_FOR_INSTALL="qnxuser"
 
 #Create new directories on the target
-ssh root@$TARGET_IP_ADDRESS "mkdir -p /data/home/$TARGET_USER_FOR_INSTALL/memory/lib"
+ssh qnxuser@$TARGET_IP_ADDRESS "mkdir -p /data/home/$TARGET_USER_FOR_INSTALL/memory/lib"
 
 #If copying to an x86_64 install, change /aarch64le/ to /x86_64/
-scp $QNX_TARGET/aarch64le/usr/bin/foonathan_memory_test root@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER_FOR_INSTALL/memory/
-scp $QNX_TARGET/aarch64le/usr/lib/libfoonathan_memory* root@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER_FOR_INSTALL/memory/lib
+scp $QNX_TARGET/aarch64le/usr/bin/foonathan_memory_test qnxuser@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER_FOR_INSTALL/memory/
+scp $QNX_TARGET/aarch64le/usr/lib/libfoonathan_memory* qnxuser@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER_FOR_INSTALL/memory/lib
 ```
 
 2. Running Tests
 ```bash
 #SSH into target
-ssh root@<target-ip-address-or-hostname>
+ssh qnxuser@<target-ip-address-or-hostname>
 
-#Export new library path (Change root to whatever you set for TARGET_USER_FOR_INSTALL)
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/data/home/root/memory/lib
+#Export new library path (Change qnxuser to whatever you set for TARGET_USER_FOR_INSTALL)
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/data/home/qnxuser/memory/lib
 
 #Run test binary
 cd ~/memory/            #NOTE: ~ will direct you to the current user's home directory, 
                         #which may be incorrect depending on your choices above. 
                         #Navigate to /data/home to see all user home directories
+chmod 744 foonathan_memory_test
 ./foonathan_memory_test
 ```
