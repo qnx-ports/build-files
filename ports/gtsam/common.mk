@@ -31,7 +31,11 @@ LDFLAGS += -Wl,--build-id=md5 -lregex
 
 include $(MKFILES_ROOT)/qtargets.mk
 
-GTSAM_ROOT = $(PROJECT_ROOT)/../
+GTSAM_ROOT = $(PROJECT_ROOT)/../../../gtsam
+
+ifdef QNX_PROJECT_ROOT
+GTSAM_ROOT=$(QNX_PROJECT_ROOT)
+endif
 
 # Add the line below
 CMAKE_ARGS = -DEPROSIMA_BUILD_TESTS=ON \
