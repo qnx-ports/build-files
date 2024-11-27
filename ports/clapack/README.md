@@ -122,32 +122,32 @@ Some distributions of QNX have critical directories stored in a read-only partit
 #Set your target's IP here
 TARGET_IP_ADDRESS=<target-ip-address-or-hostname>
 
-#Select the home directory to install to (this will install to /data/home/root)
-TARGET_USER_FOR_INSTALL="root"
+#Select the home directory to install to (this will install to /data/home/qnxuser)
+TARGET_USER_FOR_INSTALL="qnxuser"
 
 #Create new directories on the target
-ssh root@$TARGET_IP_ADDRESS "mkdir -p /data/home/$TARGET_USER_FOR_INSTALL/clapack/lib"
-ssh root@$TARGET_IP_ADDRESS "mkdir -p /data/home/$TARGET_USER_FOR_INSTALL/clapack/test"
+ssh qnxuser@$TARGET_IP_ADDRESS "mkdir -p /data/home/$TARGET_USER_FOR_INSTALL/clapack/lib"
+ssh qnxuser@$TARGET_IP_ADDRESS "mkdir -p /data/home/$TARGET_USER_FOR_INSTALL/clapack/test"
 
 #If copying to an x86_64 install, change /aarch64le/ to /x86_64/
-scp $QNX_TARGET/aarch64le/usr/local/bin/clapack_tests/* root@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER_FOR_INSTALL/clapack/test
-scp $QNX_TARGET/aarch64le/usr/lib/libf2c.so* root@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER_FOR_INSTALL/clapack/lib
-scp $QNX_TARGET/aarch64le/usr/lib/liblapack.so* root@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER_FOR_INSTALL/clapack/lib
-scp $QNX_TARGET/aarch64le/usr/lib/libblas.so* root@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER_FOR_INSTALL/clapack/lib
-scp $QNX_TARGET/aarch64le/usr/lib/libopenblas.so* root@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER_FOR_INSTALL/clapack/lib
-scp $QNX_TARGET/aarch64le/usr/lib/libtmglib.so* root@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER_FOR_INSTALL/clapack/lib
+scp $QNX_TARGET/aarch64le/usr/local/bin/clapack_tests/* qnxuser@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER_FOR_INSTALL/clapack/test
+scp $QNX_TARGET/aarch64le/usr/lib/libf2c.so* qnxuser@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER_FOR_INSTALL/clapack/lib
+scp $QNX_TARGET/aarch64le/usr/lib/liblapack.so* qnxuser@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER_FOR_INSTALL/clapack/lib
+scp $QNX_TARGET/aarch64le/usr/lib/libblas.so* qnxuser@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER_FOR_INSTALL/clapack/lib
+scp $QNX_TARGET/aarch64le/usr/lib/libopenblas.so* qnxuser@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER_FOR_INSTALL/clapack/lib
+scp $QNX_TARGET/aarch64le/usr/lib/libtmglib.so* qnxuser@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER_FOR_INSTALL/clapack/lib
 ```
 
 2. Running Tests
 ```bash
 #SSH into target
-ssh root@<target-ip-address-or-hostname>
+ssh qnxuser@<target-ip-address-or-hostname>
 
-#Export new library path (Change root to whatever you set for TARGET_USER_FOR_INSTALL)
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/data/home/root/clapack/lib
+#Export new library path (Change qnxuser to whatever you set for TARGET_USER_FOR_INSTALL)
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/data/home/qnxuser/clapack/lib
 
-#Change to test directory (Change root to whatever you set for TARGET_USER_FOR_INSTALL)
-cd /data/home/root/clapack/test
+#Change to test directory (Change qnxuser to whatever you set for TARGET_USER_FOR_INSTALL)
+cd /data/home/qnxuser/clapack/test
 
 #Note: as tests are .sh files, you may need to give them permissions
 chmod 744 *.sh
@@ -181,32 +181,32 @@ Note that each individual test script is composed of hundreds to thousands of te
 #Set your target's IP here
 TARGET_IP_ADDRESS=<target-ip-address-or-hostname>
 
-#Select the home directory to install to (this will install to /data/home/root)
-TARGET_USER_FOR_INSTALL="root"
+#Select the home directory to install to (this will install to /data/home/qnxuser)
+TARGET_USER_FOR_INSTALL="qnxuser"
 
 #Create new directories on the target
-ssh root@$TARGET_IP_ADDRESS "mkdir -p /data/home/$TARGET_USER_FOR_INSTALL/clapack/lib"
-ssh root@$TARGET_IP_ADDRESS "mkdir -p /data/home/$TARGET_USER_FOR_INSTALL/clapack/test"
+ssh qnxuser@$TARGET_IP_ADDRESS "mkdir -p /data/home/$TARGET_USER_FOR_INSTALL/clapack/lib"
+ssh qnxuser@$TARGET_IP_ADDRESS "mkdir -p /data/home/$TARGET_USER_FOR_INSTALL/clapack/test"
 
 #If copying to an x86_64 install, change /aarch64le/ to /x86_64/
-scp $QNX_TARGET/aarch64le/usr/local/bin/clapack_tests/* root@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER_FOR_INSTALL/clapack/test
-scp $QNX_TARGET/aarch64le/usr/local/lib/libf2c.so* root@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER_FOR_INSTALL/clapack/lib
-scp $QNX_TARGET/aarch64le/usr/local/lib/liblapack.so* root@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER_FOR_INSTALL/clapack/lib
-scp $QNX_TARGET/aarch64le/usr/local/lib/libblas.so* root@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER_FOR_INSTALL/clapack/lib
-scp $QNX_TARGET/aarch64le/usr/local/lib/libopenblas.so* root@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER_FOR_INSTALL/clapack/lib
-scp $QNX_TARGET/aarch64le/usr/local/lib/libtmglib.so* root@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER_FOR_INSTALL/clapack/lib
+scp $QNX_TARGET/aarch64le/usr/local/bin/clapack_tests/* qnxuser@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER_FOR_INSTALL/clapack/test
+scp $QNX_TARGET/aarch64le/usr/local/lib/libf2c.so* qnxuser@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER_FOR_INSTALL/clapack/lib
+scp $QNX_TARGET/aarch64le/usr/local/lib/liblapack.so* qnxuser@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER_FOR_INSTALL/clapack/lib
+scp $QNX_TARGET/aarch64le/usr/local/lib/libblas.so* qnxuser@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER_FOR_INSTALL/clapack/lib
+scp $QNX_TARGET/aarch64le/usr/local/lib/libopenblas.so* qnxuser@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER_FOR_INSTALL/clapack/lib
+scp $QNX_TARGET/aarch64le/usr/local/lib/libtmglib.so* qnxuser@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER_FOR_INSTALL/clapack/lib
 ```
 
 2. Running Tests
 ```bash
 #SSH into target
-ssh root@<target-ip-address-or-hostname>
+ssh qnxuser@<target-ip-address-or-hostname>
 
-#Export new library path (Change root to whatever you set for TARGET_USER_FOR_INSTALL)
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/data/home/root/clapack/lib
+#Export new library path (Change qnxuser to whatever you set for TARGET_USER_FOR_INSTALL)
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/data/home/qnxuser/clapack/lib
 
-#Change to test directory (Change root to whatever you set for TARGET_USER_FOR_INSTALL)
-cd /data/home/root/clapack/test
+#Change to test directory (Change qnxuser to whatever you set for TARGET_USER_FOR_INSTALL)
+cd /data/home/qnxuser/clapack/test
 
 #Note: as tests are .sh files, you may need to give them permissions
 chmod 744 *.sh
