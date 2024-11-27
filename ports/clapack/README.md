@@ -45,9 +45,7 @@ TEST_TARGET_SHELL=/path/to/sh make -C build-files/ports/clapack install
 **NOTE**: Before rebuilding, you may need to delete the `/build` subdirectories and their contents in the `build-files/ports/clapack/*/*` subfolders. This should be done when changing from SDP 7.1 to 8 or vice versa.
 ```bash
 #From your workspace:
-rm -r -f build-files/ports/clapack/linux-x86_64-o/build
-rm -r -f build-files/ports/clapack/nto-aarch64-le/build
-rm -r -f build-files/ports/clapack/nto-x86_64-o/build
+make -C build-files/ports/clapack clean
 ```
 
 # Compile CLAPACK for SDP 7.1/8.0 in Docker
@@ -110,9 +108,7 @@ TEST_TARGET_SHELL=/path/to/sh make -C build-files/ports/clapack install
 **NOTE**: Before rebuilding, you may need to delete the `/build` subdirectories and their contents in the `build-files/ports/clapack/*/*` subfolders. This should be done when changing from SDP 7.1 to 8 or vice versa.
 ```bash
 #From your workspace:
-rm -r -f build-files/ports/clapack/linux-x86_64-o/build
-rm -r -f build-files/ports/clapack/nto-aarch64-le/build
-rm -r -f build-files/ports/clapack/nto-x86_64-o/build
+make -C build-files/ports/clapack clean
 ```
 
 
