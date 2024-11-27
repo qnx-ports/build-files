@@ -87,6 +87,9 @@ scp $QNX_TARGET/aarch64le/usr/lib/libfastrtps.so.2.10 qnxuser@$TARGET_HOST:/data
 scp $QNX_TARGET/aarch64le/usr/lib/libfastcdr.so.1 qnxuser@$TARGET_HOST:/data/home/qnxuser/lib
 scp $QNX_TARGET/aarch64le/usr/lib/libtinyxml2.so.6 qnxuser@$TARGET_HOST:/data/home/qnxuser/lib
 scp $QNX_TARGET/aarch64le/usr/lib/libfoonathan_memory-0.7.3.so qnxuser@$TARGET_HOST:/data/home/qnxuser/lib
+
+# Copy files for configuring tests to the target.
+scp ~/qnx_workspace/build-files/ports/Fast-DDS/test_hosts.txt qnxuser@$TARGET_HOST:/data/home/qnxuser/Fast-DDS_test
 ```
 
 Both examples and unit tests will now be on the target.
@@ -100,6 +103,9 @@ ssh qnxuser@$TARGET_HOST
 cd /data/home/qnxuser/Fast-DDS_test
 
 export CERTS_PATH=$PWD/certs
+
+# Create alias records for LocatorTests
+su root -c "cat test_hosts.txt >> /data/var/etc/hosts"
 
 # Note some tests hang and will be skipped. SystemInfoTests is fixed in 8.0.2.
 TESTROOT=$PWD
