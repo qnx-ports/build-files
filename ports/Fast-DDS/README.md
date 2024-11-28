@@ -35,7 +35,7 @@ cd build-files/docker
 ```bash
 # Prerequisite: Install muslflt
 # Clone muslflt
-git clone https://gitlab.com/qnx/ports/muslflt.git
+git clone https://github.com/qnx-ports/muslflt.git
 # Build muslflt
 QNX_PROJECT_ROOT="$(pwd)/muslflt" make -C build-files/ports/muslflt/ INSTALL_ROOT_nto=<staging-install-folder> USE_INSTALL_ROOT=true install -j4
 
