@@ -111,6 +111,11 @@ To setup and run only the unit tests on the target.
 ```bash
 # ssh into the target
 ssh qnxuser@$TARGET_HOST
+# login as root so that we can create lock files (to root writable /var/lock)
+login root
+
+# Update library path
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/data/home/qnxuser/lib
 
 # Run the tests
 cd /data/home/qnxuser/Fast-DDS_test
