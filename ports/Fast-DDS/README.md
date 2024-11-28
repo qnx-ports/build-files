@@ -2,6 +2,13 @@
 
 **NOTE**: QNX ports are only supported from a Linux host operating system
 
+Before building Fast-DDS and its tests, you might want to first build and install `muslflt`
+under the same staging directory. Projects using Fast-DDS on QNX might also want to link to
+`muslflt` for consistent math behavior as other platforms. Without `muslflt`, some tests
+may fail and you may run into inconsistencies in results compared to other platforms.
+
+You can optionally set up a staging area folder (e.g. `/tmp/staging`) for `<staging-install-folder>`
+
 Use `$(nproc)` instead of `4` after `JLEVEL=` and `-j` if you want to use the maximum number of cores to build this project.
 32GB of RAM is recommended for using `JLEVEL=$(nproc)` or `-j$(nproc)`.
 - Setup your QNX SDP environment
@@ -26,6 +33,12 @@ cd build-files/docker
 ```
 
 ```bash
+# Prerequisite: Install muslflt
+# Clone muslflt
+git clone https://gitlab.com/qnx/ports/muslflt.git
+# Build muslflt
+QNX_PROJECT_ROOT="$(pwd)/muslflt" make -C build-files/ports/muslflt/ INSTALL_ROOT_nto=<staging-install-folder> USE_INSTALL_ROOT=true install -j4
+
 # Get Fast-DDS
 git clone https://github.com/qnx-ports/Fast-DDS.git && cd Fast-DDS
 git checkout qnx_2.10.1
@@ -64,7 +77,7 @@ git apply $WORKSPACE/build_qnx/qnx_patches/googletest_qnx.patch
 
 # Build
 cd $WORKSPACE/build_qnx
-JLEVEL=4 make install
+JLEVEL=4 make INSTALL_ROOT_nto=<staging-install-folder> USE_INSTALL_ROOT=true install
 ```
 
 - Testing
