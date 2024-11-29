@@ -126,6 +126,7 @@ QNX_PROJECT_ROOT="$(PWD)/c-ares" make -C build-files/ports/c-ares install -j4
 #From your workspace:
 rm -rf build-files/ports/c-ares/nto-*/!(GNUmakefile)
 #Removes everything from the nto-aarch64-le and nto-x86_86-o directories except the GNU makefile
+#Note: make clean currently does not work.
 ```
 
 # Running Tests on a Target
