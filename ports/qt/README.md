@@ -31,7 +31,7 @@ source ~/qnx800/qnxsdp-env.sh
 
 # Build QT for host machine
 cd ~/qnx_workspace/build-files/ports/qt/nto-aarch64-le
-git clone --recurse-submodules https://github.com/qt/qt5.git --branch 6.8
+git clone --recurse-submodules https://github.com/qt/qt5.git --branch 6.8.1
 mkdir qthostbuild && mkdir qthost
 cd qthostbuild
 cmake -GNinja \
