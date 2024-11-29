@@ -33,6 +33,10 @@ include $(MKFILES_ROOT)/qtargets.mk
 
 GTSAM_ROOT = $(PROJECT_ROOT)/../../../gtsam
 
+ifndef QNX_TARGET_DATASET_DIR
+QNX_TARGET_DATASET_DIR= /data/home/root/gtsam/test
+endif
+
 ifdef QNX_PROJECT_ROOT
 GTSAM_ROOT=$(QNX_PROJECT_ROOT)
 endif
@@ -55,7 +59,8 @@ CMAKE_ARGS = -DEPROSIMA_BUILD_TESTS=ON \
              -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON \
              -DCMAKE_AR=$(QNX_HOST)/usr/bin/nto$(CPU)-ar \
              -DCMAKE_RANLIB=${QNX_HOST}/usr/bin/nto${CPU}-ranlib \
-			 -DCPUVARDIR=$(CPUVARDIR)
+			 -DCPUVARDIR=$(CPUVARDIR) \
+             -DQNX_TARGET_DATASET_DIR=$(QNX_TARGET_DATASET_DIR)
 
 MAKE_ARGS ?= -j $(firstword $(JLEVEL) 1)
 
