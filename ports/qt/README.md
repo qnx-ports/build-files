@@ -3,14 +3,6 @@
 Use `$(nproc)` instead of `4` after `JLEVEL=` and `-j` if you want to use the maximum number of cores to build this project.
 32GB of RAM is recommended for using `JLEVEL=$(nproc)` or `-j$(nproc)`.
 
-
-# Pre-requisites
-
-Install these packages on QNX Software Center:
-
-1. QNX SDP 8.0 OS services – PPS (filter: pps) 
-2. QNX SDP 8.0 Cairo (filter: egl) 
-
 # Compile the port for QNX in a Docker container
 
 Pre-requisite: Install Docker on Ubuntu https://docs.docker.com/engine/install/ubuntu/
@@ -182,11 +174,10 @@ scp particles3d qnxuser@$TARGET_HOST:/data/home/qnxuser/
 # Specify target ip address
 TARGET_HOST=<target-ip-address-or-hostname>
 
-# Transfer all the necessary libraries downloaded from QNX Software Center
+# Transfer the necessary QNX SDP 8.0 libraries 
 scp $QNX_TARGET/aarch64le/usr/lib/libzstd.so.1 qnxuser@$TARGET_HOST:/data/home/qnxuser/lib 
-scp $QNX_TARGET/aarch64le/lib/libpps.so.1 qnxuser@$TARGET_HOST:/data/home/qnxuser/lib 
 
-# Transfer all the neccesary libraries and plugins to the target
+# Transfer the neccesary QT libraries and plugins to the target
 scp $QNX_TARGET/aarch64le/usr/local/lib/lib* qnxuser@$TARGET_HOST:/data/home/qnxuser/lib 
 scp -r $QNX_TARGET/aarch64le/usr/local/plugins/ qnxuser@$TARGET_HOST:/data/home/qnxuser/ 
 scp -r $QNX_TARGET/aarch64le/usr/local/qml/ qnxuser@$TARGET_HOST:/data/home/qnxuser/
@@ -224,11 +215,10 @@ BUILD_TESTING=ON make -C build-files/ports/qt JLEVEL=4 install
 # Specify target ip address
 TARGET_HOST=<target-ip-address-or-hostname>
 
-# Transfer all the necessary libraries downloaded from QNX Software Center
+# Transfer the necessary QNX SDP 8.0 libraries 
 scp $QNX_TARGET/aarch64le/usr/lib/libzstd.so.1 qnxuser@$TARGET_HOST:/data/home/qnxuser/lib 
-scp $QNX_TARGET/aarch64le/lib/libpps.so.1 qnxuser@$TARGET_HOST:/data/home/qnxuser/lib 
 
-# Transfer all the neccesary libraries and plugins to the target
+# Transfer the neccesary QT libraries and plugins to the target
 scp $QNX_TARGET/aarch64le/usr/local/lib/lib* qnxuser@$TARGET_HOST:/data/home/qnxuser/lib 
 scp -r $QNX_TARGET/aarch64le/usr/local/plugins/ qnxuser@$TARGET_HOST:/data/home/qnxuser/ 
 scp -r $QNX_TARGET/aarch64le/usr/local/qml/ qnxuser@$TARGET_HOST:/data/home/qnxuser/
