@@ -61,8 +61,7 @@ CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DQT_FEATURE_eglfs=OFF   \
              -DQT_FEATURE_brotli=OFF \
              -DQT_FEATURE_backtrace=OFF \
-             -DQT_FEATURE_mmrenderer=ON   \
-             -DQT_FEATURE_qqnx_pps=ON   \
+             -DQT_FEATURE_qqnx_pps=OFF   \
              -DBUILD_qtactiveqt=OFF   \
              -DBUILD_qtconnectivity=OFF   \
              -DBUILD_qtgrpc=OFF   \
