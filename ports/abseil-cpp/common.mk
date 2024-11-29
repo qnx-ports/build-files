@@ -32,6 +32,11 @@ GENERATE_PINFO_FILES ?= TRUE
 ALL_DEPENDENCIES = abseil-cpp_all
 .PHONY: abseil-cpp_all install check clean
 
+#QNX 7.1 Compat
+ifdef QNX_SEVEN_COMPAT
+FLAGS += -D_QNX_SOURCE
+endif
+
 CFLAGS += $(FLAGS)
 
 include $(MKFILES_ROOT)/qtargets.mk
