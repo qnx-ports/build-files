@@ -26,7 +26,7 @@ jobs:
       with:
         repository: qt/qt5
         path: build-files/ports/qt/nto-aarch64-le/qt5
-        ref: 6.8
+        ref: 6.8.1
         submodules: recursive
 
     - name: Download SDP 8.0
