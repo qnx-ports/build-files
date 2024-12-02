@@ -53,6 +53,10 @@ git clone https://github.com/qnx-ports/abseil-cpp.git
 
 # Build abseil-cpp
 QNX_PROJECT_ROOT="$(pwd)/abseil-cpp" make -C build-files/ports/abseil-cpp INSTALL_ROOT_nto=<staging-install-folder> USE_INSTALL_ROOT=true JLEVEL=4 install
+
+# If building for QNX 7.1, set the QNX_SEVEN_COMPAT environment variable
+QNX_SEVEN_COMPAT="true" QNX_PROJECT_ROOT="$(pwd)/abseil-cpp" make -C build-files/ports/abseil-cpp INSTALL_ROOT_nto=<staging-install-folder> USE_INSTALL_ROOT=true JLEVEL=4 install
+
 ```
 
 # Compile the port for QNX on Ubuntu host
@@ -78,6 +82,9 @@ QNX_PROJECT_ROOT="$(pwd)/muslflt" make -C build-files/ports/muslflt/ INSTALL_ROO
 
 # Build
 QNX_PROJECT_ROOT="$(pwd)/abseil-cpp" make -C build-files/ports/abseil-cpp INSTALL_ROOT_nto=<staging-install-folder> USE_INSTALL_ROOT=true JLEVEL=4 install
+
+# If building for QNX 7.1, set the QNX_SEVEN_COMPAT environment variable
+QNX_SEVEN_COMPAT="true" QNX_PROJECT_ROOT="$(pwd)/abseil-cpp" make -C build-files/ports/abseil-cpp INSTALL_ROOT_nto=<staging-install-folder> USE_INSTALL_ROOT=true JLEVEL=4 install
 ```
 
 # How to run tests
