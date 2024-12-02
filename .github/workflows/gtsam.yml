@@ -57,7 +57,7 @@ jobs:
       run: |
         cd build-files/docker && ./docker-build-qnx-image.sh
 
-    - name: Build boost
+    - name: Build gtsam
       uses: addnab/docker-run-action@v3
       with:
         image: qnx800:latest
@@ -68,5 +68,5 @@ jobs:
           cd boost/tools/build
           git apply ../../../build-files/ports/boost/tools_qnx.patch
           cd -
-          QNX_PROJECT_ROOT="$(pwd)/boost" make -C build-files/ports/boost install -j$(nproc)
+          PREFIX="/usr" QNX_PROJECT_ROOT="$(pwd)/boost" make -C build-files/ports/boost install -j$(nproc)
           QNX_PROJECT_ROOT="$(pwd)/gtsam" make -C build-files/ports/gtsam install -j$(nproc)
