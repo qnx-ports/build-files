@@ -11,7 +11,7 @@ on:
 jobs:
 
   build:
-    runs-on: build-files-runner
+    runs-on: self-hosted
     if: |
       (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
       (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'Fast-CDR'))
