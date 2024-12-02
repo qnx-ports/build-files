@@ -26,6 +26,8 @@ CMAKE_BUILD_TYPE ?= Release
 ALL_DEPENDENCIES = GTSAM_all
 .PHONY: GTSAM_all install check clean
 
+#Required for 7.0
+FLAGS += -D_QNX_SOURCE
 CFLAGS += $(FLAGS)
 LDFLAGS += -Wl,--build-id=md5 -lregex
 
@@ -60,7 +62,7 @@ CMAKE_ARGS = -DEPROSIMA_BUILD_TESTS=ON \
              -DCMAKE_AR=$(QNX_HOST)/usr/bin/nto$(CPU)-ar \
              -DCMAKE_RANLIB=${QNX_HOST}/usr/bin/nto${CPU}-ranlib \
 			 -DCPUVARDIR=$(CPUVARDIR) \
-             -DQNX_TARGET_DATASET_DIR=$(QNX_TARGET_DATASET_DIR)
+             -DQNX_TARGET_DATASET_DIR=$(QNX_TARGET_DATASET_DIR) 
 
 MAKE_ARGS ?= -j $(firstword $(JLEVEL) 1)
 
