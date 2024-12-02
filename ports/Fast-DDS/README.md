@@ -123,11 +123,11 @@ cd /data/home/qnxuser/Fast-DDS_test
 export CERTS_PATH=$PWD/certs
 
 # Create alias records for LocatorTests
-su root -c "cat test_hosts.txt >> /data/var/etc/hosts"
+cat test_hosts.txt >> /data/var/etc/hosts
 
 # Note some tests hang and will be skipped. SystemInfoTests is fixed in 8.0.2.
 TESTROOT=$PWD
-for test in $(find ./unittest -type f | grep Tests | grep -E -v "(SystemInfoTests|UDPv6Tests|UDPv4Tests)") ; do
+for test in $(find ./unittest -type f | grep Tests | grep -v "SystemInfoTests") ; do
     cd $TESTROOT/$(dirname $test)
     chmod +x $TESTROOT/$test
     $TESTROOT/$test
