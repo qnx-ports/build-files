@@ -53,8 +53,9 @@ jobs:
       uses: addnab/docker-run-action@v3
       with:
         image: qnx800:latest
-        options: -v ${{ github.workspace }}:/home/runner
+        options: -v ${{ github.workspace }}:/opt/ci
         shell: bash
         run: |
-          source ~/qnx800/qnxsdp-env.sh
+          cd /opt/ci
+          source ./qnx800/qnxsdp-env.sh
           BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/tinyxml2" make -C build-files/ports/tinyxml2 install -j$(nproc)
