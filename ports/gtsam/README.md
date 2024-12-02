@@ -223,7 +223,8 @@ scp $QNX_TARGET/aarch64le/usr/local/lib/libboost* qnxuser@$TARGET_IP_ADDRESS:/da
 scp $QNX_TARGET/aarch64le/usr/lib/libgtsam* qnxuser@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER_FOR_INSTALL/gtsam/lib
 
 #tests and provided test script
-scp $QNX_TARGET/aarch64le/usr/bin/gtsam_tests/test* qnxuser@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER_FOR_INSTALL/gtsam/test
+scp <path-to-your-workspace>/build-files/ports/gtsam/nto-aarch64/le/build/gtsam/*/tests/test* qnxuser@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER_FOR_INSTALL/gtsam/test
+scp <path-to-your-workspace>/build-files/ports/gtsam/nto-aarch64/le/build/tests/test* qnxuser@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER_FOR_INSTALL/gtsam/test
 scp <path-to-your-workspace>/build-files/ports/gtsam/run_tests.sh qnxuser@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER_FOR_INSTALL/gtsam/test
 
 #Test data
