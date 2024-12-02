@@ -15,15 +15,10 @@ Instructions for compiling and running tests are listed below.
 #### __`boost` must be installed in $QNX_TARGET__
 1. Go to https://github.com/qnx-ports/build-files/tree/c-ares_files/ports/boost and follow the instructions in the README. 
 
-2. __FOR SDP 8.0:__ Before building `boost`, navigate to build-files/ports/boost/common.mk and change the following:
+2. __FOR SDP 8.0:__ When building `boost`, set PREFIX to '/usr' for SDP 8.0:
 ```bash
-#===Line 24===
-# For SDP 7.1 set PREFIX as:
-PREFIX ?= /usr/local
-# For SDP 8.0 set PREFIX as:
-PREFIX ?= /usr
-
-#--TODO-- verify this is actually what fixed the build
+#Modified build command for boost
+PREFIX="/usr" QNX_PROJECT_ROOT="$(pwd)/boost" make -C build-files/ports/boost/ install -j4 
 ```
 
 ### *Steps:* --TODO--
@@ -182,6 +177,8 @@ cd tools/build && git apply ../../../build-files/ports/boost/tools_qnx.patch
 # Build boost (WARNING: This process can take upwards of 20 minutes)
 cd ../../..
 make -C build-files/ports/boost/ install QNX_PROJECT_ROOT="$(pwd)/boost" -j4
+#If building for SDP 8.0 or later, use:
+PREFIX="/usr" make -C build-files/ports/boost/ install QNX_PROJECT_ROOT="$(pwd)/boost" -j4
 ```
 
 7. Build gtsam in your workspace from Step 1
