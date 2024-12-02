@@ -32,6 +32,7 @@ jobs:
       with:
         repository: qnx-ports/c-ares
         path: c-ares
+        ref: 
 
     - name: Download SDP 8.0
       env:
