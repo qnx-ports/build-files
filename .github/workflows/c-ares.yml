@@ -64,8 +64,8 @@ jobs:
         shell: bash
         run: |
           source ~/qnx800/qnxsdp-env.sh
+          BUILD_TESTING="OFF" QNX_PROJECT_ROOT="$(pwd)/googletest" make -C build-files/ports/googletest install -j$(nproc)
           cd ~/c-ares
           ./buildconf
           cd ~
-          BUILD_TESTING="OFF" QNX_PROJECT_ROOT="$(pwd)/googletest" make -C build-files/ports/googletest install -j$(nproc)
           QNX_PROJECT_ROOT="$(pwd)/c-ares" make -C build-files/ports/c-ares install -j$(nproc)
