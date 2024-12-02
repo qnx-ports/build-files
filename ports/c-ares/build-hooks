@@ -5,8 +5,8 @@ function hook_configure {
 # Fortify define should be in CPPFLAGS
     CPPFLAGS="${CPPFLAGS} -D_FORTIFY_SOURCE=2 -O2"
     CFLAGS=`echo ${CFLAGS} | gawk '{sub("-D_FORTIFY_SOURCE=2", ""); print}'`
-	export PKG_CONFIG_PATH=
-	export PKG_CONFIG_LIBDIR=${INSTALL_ROOT_nto}/${cpudir}/usr/lib/pkgconfig:${INSTALL_ROOT_nto}/${cpudir}/usr/local/lib/pkgconfig
+	export PKG_CONFIG_PATH=${INSTALL_ROOT_nto}/${cpudir}/usr/lib/pkgconfig:${INSTALL_ROOT_nto}/${cpudir}/usr/local/lib/pkgconfig
+	#export PKG_CONFIG_LIBDIR=
 
     ${QNX_PROJECT_ROOT}/configure --prefix=${INSTALL_ROOT_nto}/${cpudir}/usr --includedir=${INSTALL_ROOT_HDR} --host=${machine} \
 	CPPFLAGS="${CPPFLAGS} -D_QNX_SOURCE" LIBS="-lregex" --disable-symbol-hiding --enable-tests-build-override --enable-qcc-compat
