@@ -57,7 +57,6 @@ jobs:
         options: -v ${{ github.workspace }}:/home/runner
         shell: bash
         run: |
-          WORKSPACE=$PWD
           source ~/qnx800/qnxsdp-env.sh
           QNX_PROJECT_ROOT="$(pwd)/sqlite_orm" make -C build-files/ports/sqlite_orm JLEVEL=4 install
           
