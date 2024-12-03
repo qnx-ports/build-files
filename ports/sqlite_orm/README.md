@@ -78,7 +78,8 @@ ssh qnxuser@$TARGET_HOST
 cd /home/data/qnxuser
 ./unit_tests
 ```
-### Known issues with sqlite_orm testing
+### All test pass except virtual table test
 ```bash
-
+# Fails because FTS5 module is not installed or enabled on sqlite
+./unit_tests "virtual table"
 ```
