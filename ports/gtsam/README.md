@@ -82,8 +82,8 @@ touch nto-<unused-arhcitecture>/Makefile.dnm
 #Run this in gtsam_wksp or whatever you named your original directory
 #Changing the -j option can improve build time (see make documentation)
 QNX_PROJECT_ROOT="$PWD/gtsam" make -C build-files/ports/gtsam install -j4
-#To build tests, also define QNX_BUILD_TESTS
-QNX_BUILD_TESTS="yes" QNX_PROJECT_ROOT="$PWD/gtsam" make -C build-files/ports/gtsam install -j4
+#To build tests, also define QNX_BUILD_TESTS and QNX_TARGET_DATASET_DIR
+QNX_BUILD_TESTS="yes" QNX_TARGET_DATASET_DIR="/data/home/qnxuser/gtsam/test" QNX_PROJECT_ROOT="$PWD/gtsam" make -C build-files/ports/gtsam install -j4
 ```
 
 **NOTE**: Before rebuilding, you may need to delete the `/build` subdirectories and their contents in `build-files/ports/gtsam/nto-aarch64/le/build` and `build-files/ports/gtsam/nto-x86_64/o/build`. This MUST be done when changing from SDP 7.1 to 8 or vice versa, as it will link against the wrong shared objects and not show an error until testing.
@@ -187,8 +187,8 @@ PREFIX="/usr" make -C build-files/ports/boost/ install QNX_PROJECT_ROOT="$(pwd)/
 #Run this in gtsam_wksp or whatever you named your original directory
 #Changing the -j option can improve build time (see make documentation)
 QNX_PROJECT_ROOT="$PWD/gtsam" make -C build-files/ports/gtsam install -j4
-#To build tests, also define QNX_BUILD_TESTS
-QNX_BUILD_TESTS="yes" QNX_PROJECT_ROOT="$PWD/gtsam" make -C build-files/ports/gtsam install -j4
+#To build tests, also define QNX_BUILD_TESTS and QNX_TARGET_DATASET_DIR
+QNX_BUILD_TESTS="yes" QNX_TARGET_DATASET_DIR="/data/home/qnxuser/gtsam/test" QNX_PROJECT_ROOT="$PWD/gtsam" make -C build-files/ports/gtsam install -j4
 ```
 
 **NOTE**: Before rebuilding, you may need to delete the `/build` subdirectories and their contents in `build-files/ports/gtsam/nto-aarch64/le/build` and `build-files/ports/gtsam/nto-x86_64/o/build`. This MUST be done when changing from SDP 7.1 to 8 or vice versa, as it will link against the wrong shared objects and not show an error until testing.
@@ -211,6 +211,9 @@ TARGET_IP_ADDRESS=<target-ip-address-or-hostname>
 #Select the home directory to install to (this will install to /data/home/qnxuser)
 TARGET_USER_FOR_INSTALL="qnxuser"
 
+#Set the path to your workspace
+PATH_TO_YOUR_WORKSPACE="/path/to/your/workspace"
+
 #Create new directories on the target
 ssh qnxuser@$TARGET_IP_ADDRESS "mkdir -p /data/home/$TARGET_USER_FOR_INSTALL/gtsam/lib"
 ssh qnxuser@$TARGET_IP_ADDRESS "mkdir -p /data/home/$TARGET_USER_FOR_INSTALL/gtsam/test/gtsam_examples/Data/Balbianello"
@@ -219,17 +222,21 @@ ssh qnxuser@$TARGET_IP_ADDRESS "mkdir -p /data/home/$TARGET_USER_FOR_INSTALL/gts
 #boost
 scp $QNX_TARGET/aarch64le/usr/local/lib/libboost* qnxuser@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER_FOR_INSTALL/gtsam/lib
 
+#metis
+scp $QNX_TARGET/aarch64le/usr/lib/libmetis* qnxuser@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER_FOR_INSTALL/gtsam/lib
+
 #gtsam
 scp $QNX_TARGET/aarch64le/usr/lib/libgtsam* qnxuser@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER_FOR_INSTALL/gtsam/lib
 
 #tests and provided test script
-scp <path-to-your-workspace>/build-files/ports/gtsam/nto-aarch64/le/build/gtsam/*/tests/test* qnxuser@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER_FOR_INSTALL/gtsam/test
-scp <path-to-your-workspace>/build-files/ports/gtsam/nto-aarch64/le/build/tests/test* qnxuser@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER_FOR_INSTALL/gtsam/test
-scp <path-to-your-workspace>/build-files/ports/gtsam/run_tests.sh qnxuser@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER_FOR_INSTALL/gtsam/test
+scp $PATH_TO_YOUR_WORKSPACE/build-files/ports/gtsam/nto-aarch64/le/build/gtsam/*/tests/test* qnxuser@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER_FOR_INSTALL/gtsam/test
+scp $PATH_TO_YOUR_WORKSPACE/build-files/ports/gtsam/nto-aarch64/le/build/tests/test* qnxuser@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER_FOR_INSTALL/gtsam/test
+scp $PATH_TO_YOUR_WORKSPACE/build-files/ports/gtsam/run_tests.sh qnxuser@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER_FOR_INSTALL/gtsam/test
 
 #Test data
-scp <path-to-your-workspace>/gtsam/examples/Data/* qnxuser@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER_FOR_INSTALL/gtsam/test/gtsam_examples/Data
-scp <path-to-your-workspace>/gtsam/examples/Data/Balbianello/* qnxuser@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER_FOR_INSTALL/gtsam/test/gtsam_examples/Data/Balbianello
+scp $PATH_TO_YOUR_WORKSPACE/gtsam/examples/Data/* qnxuser@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER_FOR_INSTALL/gtsam/test/gtsam_examples/Data
+scp $PATH_TO_YOUR_WORKSPACE/gtsam/examples/Data/Balbianello/* qnxuser@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER_FOR_INSTALL/gtsam/test/gtsam_examples/Data/Balbianello
+scp $PATH_TO_YOUR_WORKSPACE/gtsam/gtsam_unstable/discrete/examples/!(*.txt|*.cpp) qnxuser@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER_FOR_INSTALL/gtsam/test/
 ```
 
 2. Running Tests

@@ -35,9 +35,8 @@ include $(MKFILES_ROOT)/qtargets.mk
 
 GTSAM_ROOT = $(PROJECT_ROOT)/../../../gtsam
 
-ifndef QNX_TARGET_DATASET_DIR
-QNX_TARGET_DATASET_DIR= /data/home/root/gtsam/test
-endif
+QNX_TARGET_DATASET_DIR ?= /data/home/root/gtsam/test
+
 
 ifdef QNX_PROJECT_ROOT
 GTSAM_ROOT=$(QNX_PROJECT_ROOT)
