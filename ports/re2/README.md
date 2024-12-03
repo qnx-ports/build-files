@@ -61,6 +61,10 @@ BUILD_TESTING="OFF" QNX_PROJECT_ROOT="$(pwd)/abseil-cpp" make -C build-files/por
 
 5. Build the project in your workspace from Step 1
 ```bash
+# Do not set QNX_BUILD_TESTS to anything if you do not want tests built.
+# With Tests
+OSLIST=nto QNX_BUILD_TESTS="yes" QNX_PROJECT_ROOT="$(pwd)/re2" make -C build-files/ports/re2 install -j$(nproc)
+# Without Tests
 OSLIST=nto QNX_PROJECT_ROOT="$(pwd)/re2" make -C build-files/ports/re2 install -j$(nproc)
 ```
 
@@ -133,6 +137,10 @@ BUILD_TESTING="OFF" QNX_PROJECT_ROOT="$(pwd)/abseil-cpp" make -C build-files/por
 
 6. Build the project in your workspace from Step 1
 ```bash
+# Do not set QNX_BUILD_TESTS to anything if you do not want tests built.
+# With Tests
+OSLIST=nto QNX_BUILD_TESTS="yes" QNX_PROJECT_ROOT="$(pwd)/re2" make -C build-files/ports/re2 install -j$(nproc)
+# Without Tests
 OSLIST=nto QNX_PROJECT_ROOT="$(pwd)/re2" make -C build-files/ports/re2 install -j$(nproc)
 ```
 
@@ -172,10 +180,10 @@ scp $QNX_TARGET/aarch64le/usr/local/lib/libre2* qnxuser@$TARGET_IP_ADDRESS:/data
 
 #Tests
 scp $QNX_TARGET/aarch64le/usr/local/bin/re2_tests/libtesting* qnxuser@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER_FOR_INSTALL/re2/lib
-scp $QNX_TARGET/aarch64le/usr/local/bin/re2_tests/*_test qnxuser@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER_FOR_INSTALL/memory/test
+scp $QNX_TARGET/aarch64le/usr/local/bin/re2_tests/*_test qnxuser@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER_FOR_INSTALL/re2/test
 
 #Testing Script (replace path-to-your-workspace with the one you cloned build-files into)
-scp <path-to-your-workspace>/build-files/ports/re2/run_tests.sh qnxuser@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER_FOR_INSTALL/memory/test
+scp <path-to-your-workspace>/build-files/ports/re2/run_tests.sh qnxuser@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER_FOR_INSTALL/re2/test
 ```
 
 2. Running Tests
