@@ -13,7 +13,7 @@ Instructions for compiling and running tests are listed below.
 ### *Pre-requisites:*
 
 #### `gtest` and `gmock` must be installed on your target.
-Go to https://github.com/qnx-ports/build-files/tree/c-ares_files/ports/googletest and follow the instructions, or follow the instructions below which 
+Go to https://github.com/qnx-ports/build-files/tree/c-ares_files/ports/googletest and follow the instructions, or follow the instructions below which include them in the build process.
 
 ### *Steps:*
 1. Create a new workspace or navigate to a desired one
