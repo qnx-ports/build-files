@@ -5,7 +5,7 @@ include $(QCONFIG)
 
 NAME=gflags
 
-DIST_BASE=$(PRODUCT_ROOT)/../../../clapack
+DIST_BASE=$(PRODUCT_ROOT)/../../../gflags
 
 ifdef QNX_PROJECT_ROOT
 DIST_BASE=$(QNX_PROJECT_ROOT)
