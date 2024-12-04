@@ -68,7 +68,7 @@ OSLIST=nto QNX_BUILD_TESTS="yes" QNX_PROJECT_ROOT="$(pwd)/re2" make -C build-fil
 OSLIST=nto QNX_PROJECT_ROOT="$(pwd)/re2" make -C build-files/ports/re2 install -j$(nproc)
 ```
 
-**NOTE**: Before rebuilding, you may need to delete the `/build` subdirectories and their contents in `build-files/ports/memory/nto-aarch64-le` and `build-files/ports/re2/nto-x86_64-o`. This MUST be done when changing from SDP 7.1 to 8 or vice versa, as it will link against the wrong shared objects and not show an error until testing.
+**NOTE**: Before rebuilding, you may need to delete the `/build` subdirectories and their contents in `build-files/ports/re2/nto-aarch64-le` and `build-files/ports/re2/nto-x86_64-o`. This MUST be done when changing from SDP 7.1 to 8 or vice versa, as it will link against the wrong shared objects and not show an error until testing.
 ```bash
 #From your workspace:
 make -C build-files/ports/re2 clean 
@@ -144,7 +144,7 @@ OSLIST=nto QNX_BUILD_TESTS="yes" QNX_PROJECT_ROOT="$(pwd)/re2" make -C build-fil
 OSLIST=nto QNX_PROJECT_ROOT="$(pwd)/re2" make -C build-files/ports/re2 install -j$(nproc)
 ```
 
-**NOTE**: Before rebuilding, you may need to delete the `/build` subdirectories and their contents in `build-files/ports/memory/nto-aarch64-le` and `build-files/ports/re2/nto-x86_64-o`. This MUST be done when changing from SDP 7.1 to 8 or vice versa, as it will link against the wrong shared objects and not show an error until testing.
+**NOTE**: Before rebuilding, you may need to delete the `/build` subdirectories and their contents in `build-files/ports/re2/nto-aarch64-le` and `build-files/ports/re2/nto-x86_64-o`. This MUST be done when changing from SDP 7.1 to 8 or vice versa, as it will link against the wrong shared objects and not show an error until testing.
 ```bash
 #From your workspace:
 make -C build-files/ports/re2 clean 
@@ -165,7 +165,8 @@ TARGET_IP_ADDRESS=<target-ip-address-or-hostname>
 TARGET_USER_FOR_INSTALL="qnxuser"
 
 #Create new directories on the target
-ssh qnxuser@$TARGET_IP_ADDRESS "mkdir -p /data/home/$TARGET_USER_FOR_INSTALL/memory/lib"
+ssh qnxuser@$TARGET_IP_ADDRESS "mkdir -p /data/home/$TARGET_USER_FOR_INSTALL/re2/lib"
+ssh qnxuser@$TARGET_IP_ADDRESS "mkdir -p /data/home/$TARGET_USER_FOR_INSTALL/re2/test"
 
 #If copying to an x86_64 install, change /aarch64le/ to /x86_64/
 #Dependencies
