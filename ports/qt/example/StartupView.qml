@@ -4,10 +4,41 @@ import QtQuick3D
 import QtQuick3D.Particles3D
 
 ApplicationWindow {
+    id: appWindow
     visible: true
 
-    // Main content view that fills the screen
-    
+    // Properties for FPS calculation
+    property int frameCount: 0
+    property double lastUpdateTime: 0
+    property double fps: 0
+    property int dummyValue: 0
+
+    // Text element to display FPS
+    Text {
+        id: fpsText
+        anchors.top: parent.top
+        anchors.left: parent.left
+        anchors.margins: 10
+        color: "white"
+        text: "FPS: " + fps.toFixed(1)
+        font.pixelSize: 20
+        z: 1000  // Ensure the text is on top
+    }
+
+    FrameAnimation {
+        onTriggered: {
+            frameCount++
+            var currentTime = Date.now()
+            var delta = currentTime - lastUpdateTime
+            if (delta >= 1000) {
+                fps = (frameCount * 1000) / delta
+                frameCount = 0
+                lastUpdateTime = currentTime
+                console.log("FPS: " + fps.toFixed(1))
+            }
+        }
+        running: true
+    }
     Item {
         id: mainWindow
         anchors.fill: parent
