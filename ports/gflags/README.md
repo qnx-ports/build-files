@@ -64,7 +64,7 @@ git clone git@github.com:qnx-ports/build-files.git
 git clone git@github.com:qnx-ports/gflags.git 
 ```
 
-3. Build the Docker image and crease a container
+3. Build the Docker image and create a container
 ```bash
 cd build-files/docker
 ./docker-build-qnx-image.sh
