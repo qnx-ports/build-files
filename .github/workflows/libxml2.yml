@@ -5,12 +5,12 @@ on:
     branches:
       - main
     paths:
-      - 'libxml2/**'
+      - 'ports/libxml2/**'
   pull_request:
     branches:
       - main
     paths:
-      - 'libxml2/**'
+      - 'ports/libxml2/**'
 
 jobs:
   build:
