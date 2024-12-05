@@ -1,3 +1,5 @@
+# ComputeLibrary for QNX uses CMake for SDP 8.0 and scons for SDP 7.1
+
 ifndef QCONFIG
 QCONFIG=qconfig.mk
 endif
@@ -38,6 +40,13 @@ LDFLAGS += -Wl,--build-id=md5
 
 include $(MKFILES_ROOT)/qtargets.mk
 
+# Figure out if it's SDP 7.1 or SDP 8.0
+FSNOTIFY_EXISTS = $(wildcard $(QNX_TARGET)/$(CPUVARDIR)/lib/libfsnotify.so)
+SDP_VERSION = 8.0
+ifeq ($(FSNOTIFY_EXISTS),)
+    SDP_VERSION = 7.1
+endif
+
 #Search paths for all of CMake's find_* functions --
 #headers, libraries, etc.
 #
@@ -75,7 +84,28 @@ CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DARM_COMPUTE_BUILD_EXAMPLES=$(BUILD_EXAMPLES) \
              -DARM_COMPUTE_BUILD_TESTING=$(BUILD_TESTING)
 
+SCONS_ARGS = -Q \
+             debug=1 \
+             arch=armv8a \
+             os=qnx \
+             build_dir=arm64nowerror \
+             standalone=0 \
+             opencl=0 \
+             openmp=0 \
+             validation_tests=1 \
+             neon=1 \
+             toolchain_prefix=" " \
+             cppthreads=1 \
+             compiler_prefix="" \
+             extra_cxx_flags="-D_QNX_SOURCE=1" \
+             Werror=0 \
+             reference_openmp=0 \
+             build_dir=$(PROJECT_ROOT)/nto-aarch64-le/build \
+             install_dir=$(computelibrary_INSTALL_ROOT) \
+            -j 12
+
 ifndef NO_TARGET_OVERRIDE
+ifeq ($(SDP_VERSION), 8.0)
 computelibrary_all:
 	@mkdir -p build
 	@cd build && cmake $(CMAKE_ARGS) $(QNX_PROJECT_ROOT)
@@ -90,4 +120,16 @@ clean iclean spotless:
 	rm -rf build
 
 uninstall:
+else
+computelibrary_all:
+	@cd $(QNX_PROJECT_ROOT) && scons $(SCONS_ARGS)
+
+install check: computelibrary_all
+	@cd $(QNX_PROJECT_ROOT) && scons $(SCONS_ARGS)
+
+clean iclean spotless:
+	rm -rf $(PROJECT_ROOT)/nto-aarch64-le/build
+
+uninstall:
+endif
 endif

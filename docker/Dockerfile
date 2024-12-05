@@ -54,7 +54,8 @@ RUN apt update && apt install -y \
 	libglib2.0-dev \
 	ninja-build \
 	net-tools \
-	tree
+	tree \
+	scons
 
 # Install QT dependancies
 RUN apt-get update && apt-get install -y \
