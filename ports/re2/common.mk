@@ -2,11 +2,20 @@ ifndef QCONFIG
 QCONFIG=qconfig.mk
 endif
 include $(QCONFIG)
+
 include $(MKFILES_ROOT)/qmacros.mk
 
-NAME=abseil-cpp
+# Prevent qtargets.mk from re-including qmacros.mk
+define VARIANT_TAG
+endef
 
-QNX_PROJECT_ROOT ?= $(PRODUCT_ROOT)/../../
+NAME=re2
+
+DIST_BASE=$(PRODUCT_ROOT)/../../../re2
+
+ifdef QNX_PROJECT_ROOT
+DIST_BASE=$(QNX_PROJECT_ROOT)
+endif
 
 #$(INSTALL_ROOT_$(OS)) is pointing to $QNX_TARGET
 #by default, unless it was manually re-routed to
@@ -25,19 +34,13 @@ PREFIX ?= /usr/local
 #choose Release or Debug
 CMAKE_BUILD_TYPE ?= Release
 
-#set the following to FALSE if generating .pinfo files is causing problems
-GENERATE_PINFO_FILES ?= TRUE
-
 #override 'all' target to bypass the default QNX build system
-ALL_DEPENDENCIES = abseil-cpp_all
-.PHONY: abseil-cpp_all install check clean
+ALL_DEPENDENCIES = re2_all
+.PHONY: re2_all install check clean
 
-#QNX 7.1 Compat
-ifdef QNX_SEVEN_COMPAT
-FLAGS += -D_QNX_SOURCE
-endif
-
-CFLAGS += $(FLAGS)
+FLAGS   += -g -D_QNX_SOURCE
+LDFLAGS += -Wl,--build-id=md5
+#CFLAGS += $(FLAGS)
 
 include $(MKFILES_ROOT)/qtargets.mk
 
@@ -59,38 +62,33 @@ CMAKE_MODULE_PATH := $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/cmake;$(INSTALL_RO
 #Headers from INSTALL_ROOT need to be made available by default
 #because CMake and pkg-config do not necessary add it automatically
 #if the include path is "default"
-CFLAGS += -I$(INSTALL_ROOT)/$(PREFIX)/include -I$(QNX_TARGET)/$(PREFIX)/include
+CFLAGS +=   -I$(INSTALL_ROOT)/$(PREFIX)/include -I$(QNX_TARGET)/$(PREFIX)/include
 
+# Add the line below
 CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
-             -DCMAKE_PROJECT_INCLUDE=$(PROJECT_ROOT)/project_hooks.cmake \
              -DCMAKE_INSTALL_PREFIX="$(PREFIX)" \
              -DCMAKE_STAGING_PREFIX="$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)" \
              -DCMAKE_FIND_ROOT_PATH="$(CMAKE_FIND_ROOT_PATH)" \
              -DCMAKE_MODULE_PATH="$(CMAKE_MODULE_PATH)" \
-             -DCMAKE_INSTALL_INCLUDEDIR="$(INSTALL_ROOT)/$(PREFIX)/include" \
-             -DCMAKE_BUILD_TYPE=$(CMAKE_BUILD_TYPE) \
              -DCMAKE_SYSTEM_PROCESSOR=$(CPUVARDIR) \
-             -DEXTRA_CMAKE_C_FLAGS="$(CFLAGS)" \
-             -DEXTRA_CMAKE_CXX_FLAGS="$(CFLAGS)" \
-             -DEXTRA_CMAKE_ASM_FLAGS="$(FLAGS)" \
+             -DCMAKE_BUILD_TYPE=$(CMAKE_BUILD_TYPE) \
+             -DEXTRA_CMAKE_C_FLAGS="$(FLAGS)" \
+             -DEXTRA_CMAKE_CXX_FLAGS="$(FLAGS)" \
              -DEXTRA_CMAKE_LINKER_FLAGS="$(LDFLAGS)" \
-             -DBUILD_SHARED_LIBS=ON \
-             -DBUILD_TESTING=ON \
-             -DABSL_BUILD_TESTING=ON \
+             -DCMAKE_NO_SYSTEM_FROM_IMPORTED=ON \
+             -DRE2_BUILD_TESTING=ON \
              -DCPU=$(CPU) \
-             -DABSL_RUN_TESTS=OFF \
-             -DABSL_ENABLE_INSTALL=ON \
-             -DABSL_USE_EXTERNAL_GOOGLETEST=ON
+             -DBUILD_SHARED_LIBS=ON
 
 MAKE_ARGS ?= -j $(firstword $(JLEVEL) 1)
 
 ifndef NO_TARGET_OVERRIDE
-abseil-cpp_all:
+re2_all:
 	@mkdir -p build
-	@cd build && cmake $(CMAKE_ARGS) $(QNX_PROJECT_ROOT)
+	@cd build && cmake $(CMAKE_ARGS) $(DIST_BASE)
 	@cd build && make VERBOSE=1 all $(MAKE_ARGS)
 
-install check: abseil-cpp_all
+install check: re2_all
 	@echo Installing...
 	@cd build && make VERBOSE=1 install $(MAKE_ARGS)
 	@echo Done.
