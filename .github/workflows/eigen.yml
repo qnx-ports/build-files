@@ -1,12 +1,21 @@
 name: eigen
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
+    paths:
+      - '.github/workflows/eigen.yml'
+      - 'docker/**'
+      - 'ports/eigen/**'
   pull_request:
     branches:
       - main
+    paths:
+      - '.github/workflows/eigen.yml'
+      - 'docker/**'
+      - 'ports/eigen/**'
 
 jobs:
 

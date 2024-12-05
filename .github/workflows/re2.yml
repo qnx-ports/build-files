@@ -1,12 +1,21 @@
 name: re2
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
+    paths:
+      - '.github/workflows/re2.yml'
+      - 'docker/**'
+      - 'ports/re2/**'
   pull_request:
     branches:
       - main
+    paths:
+      - '.github/workflows/re2.yml'
+      - 'docker/**'
+      - 'ports/re2/**'
 
 jobs:
 
@@ -20,7 +29,7 @@ jobs:
       uses: actions/checkout@v4
       with:
         path: build-files
-    
+
     - name: Checkout googletest
       uses: actions/checkout@v4
       with:

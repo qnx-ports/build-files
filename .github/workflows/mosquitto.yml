@@ -1,12 +1,21 @@
 name: mosquitto
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
+    paths:
+      - '.github/workflows/mosquitto.yml'
+      - 'docker/**'
+      - 'ports/mosquitto/**'
   pull_request:
     branches:
       - main
+    paths:
+      - '.github/workflows/mosquitto.yml'
+      - 'docker/**'
+      - 'ports/mosquitto/**'
 
 jobs:
 

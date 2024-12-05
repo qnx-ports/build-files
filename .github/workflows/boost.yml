@@ -1,12 +1,21 @@
 name: boost
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
+    paths:
+      - '.github/workflows/boost.yml'
+      - 'docker/**'
+      - 'ports/boost/**'
   pull_request:
     branches:
       - main
+    paths:
+      - '.github/workflows/boost.yml'
+      - 'docker/**'
+      - 'ports/boost/**'
 
 jobs:
 

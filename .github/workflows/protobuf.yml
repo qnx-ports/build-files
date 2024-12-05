@@ -1,12 +1,21 @@
 name: protobuf
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
+    paths:
+      - '.github/workflows/protobuf.yml'
+      - 'docker/**'
+      - 'ports/protobuf/**'
   pull_request:
     branches:
       - main
+    paths:
+      - '.github/workflows/protobuf.yml'
+      - 'docker/**'
+      - 'ports/protobuf/**'
 
 jobs:
 

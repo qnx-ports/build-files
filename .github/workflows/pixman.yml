@@ -1,12 +1,21 @@
 name: pixman
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
+    paths:
+      - '.github/workflows/pixman.yml'
+      - 'docker/**'
+      - 'ports/pixman/**'
   pull_request:
     branches:
       - main
+    paths:
+      - '.github/workflows/pixman.yml'
+      - 'docker/**'
+      - 'ports/pixman/**'
 
 jobs:
 

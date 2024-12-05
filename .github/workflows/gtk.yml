@@ -1,12 +1,21 @@
 name: gtk
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
+    paths:
+      - '.github/workflows/gtk.yml'
+      - 'docker/**'
+      - 'ports/gtk/**'
   pull_request:
     branches:
       - main
+    paths:
+      - '.github/workflows/gtk.yml'
+      - 'docker/**'
+      - 'ports/gtk/**'
 
 jobs:
 

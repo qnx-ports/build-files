@@ -1,12 +1,21 @@
 name: cpuinfo
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
+    paths:
+      - '.github/workflows/cpuinfo.yml'
+      - 'docker/**'
+      - 'ports/cpuinfo/**'
   pull_request:
     branches:
       - main
+    paths:
+      - '.github/workflows/cpuinfo.yml'
+      - 'docker/**'
+      - 'ports/cpuinfo/**'
 
 jobs:
 

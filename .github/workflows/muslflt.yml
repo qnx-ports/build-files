@@ -1,12 +1,21 @@
 name: muslflt
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
+    paths:
+      - '.github/workflows/muslflt.yml'
+      - 'docker/**'
+      - 'ports/muslflt/**'
   pull_request:
     branches:
       - main
+    paths:
+      - '.github/workflows/muslflt.yml'
+      - 'docker/**'
+      - 'ports/muslflt/**'
 
 jobs:
 
