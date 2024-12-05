@@ -15,6 +15,9 @@ on:
 jobs:
   build:
     runs-on: self-hosted
+    if: |
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'libxml2'))
     steps:
     - name: Checkout libxml2
       run: |
