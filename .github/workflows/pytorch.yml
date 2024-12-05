@@ -8,14 +8,14 @@ on:
     paths:
       - '.github/workflows/pytorch.yml'
       - 'docker/**'
-      - 'ports/protobuf/**'
+      - 'ports/pytorch/**'
   pull_request:
     branches:
       - main
     paths:
       - '.github/workflows/pytorch.yml'
       - 'docker/**'
-      - 'ports/protobuf/**'
+      - 'ports/pytorch/**'
 
 jobs:
 
