@@ -2,14 +2,15 @@
 #     Default aims at PWD/libxml2 (relative to calling location, not the file (unlike make))
 echo "Setting up environment variables and source."
 if [[ -z ${QNX_PROJECT_ROOT} ]] then
-    DIST_BASE="${PWD}/libxml2"
+    DIST_BASE="../../../../libxml2"
     echo "QNX_PROJECT_ROOT not set, source set to ${DIST_BASE}"
 else
     DIST_BASE=${QNX_PROJECT_ROOT}
     echo "Source set to ${DIST_BASE}"
 fi
 
-## Set up via autogen.sh
+
+## Verify we are pointed at the right place autogen.sh
 #      Test to determine if we have the correct DIST_BASE,
 #      then run autogen
 
@@ -21,8 +22,98 @@ else
     exit
 fi
 
-# 
+
+## Set up via generating configure from autogen.sh
 # Spawn child process & wait for resolution (prevents current directory messup)
 cd ${DIST_BASE} && ./autogen.sh &
 pid_child_process=$!
 wait ${pid_child_process}
+# Same as above, but we are now cleaning the falsely configured files 
+# (autogen with configure passthrough does not work for QNX)
+cd ${DIST_BASE} && make distclean &
+pid_child_process=$!
+wait ${pid_child_process}
+
+
+## hook_configure
+function hook_configure {
+    ${DIST_BASE}/configure \
+        ${ac_host:+"--host=${ac_host}"} \
+        ${ac_build:+"--build=${ac_build}"} \
+        ${configure_opts} \
+        ${ac_params:+${CC:+"CC=${CC}"}} \
+        ${ac_params:+${CFLAGS:+"CFLAGS=${CFLAGS}"}} \
+        ${ac_params:+${CPPFLAGS:+"CPPFLAGS=${CPPFLAGS}"}} \
+        ${ac_params:+${LDFLAGS:+"LDFLAGS=${LDFLAGS}"}} \
+        ${ac_params:+${CXX:+"CXX=${CXX}"}} \
+        ${ac_params:+${CXXFLAGS:+"CXXFLAGS=-O2 ${CXXFLAGS}"}} \
+        ${ac_params:+${ac_autotools:+${ac_autotools}}} \
+        || Error "configure failed";
+}
+
+
+## hook_preconfigure
+# Responsible for build file cleanup and env variable setup on a per-configure basis
+function hook_preconfigure {
+    ##Safety Check & Cleanup
+    if [[ ${PWD} == +(*nto-*-le|*nto-*-o) ]]; then
+        rm -rf !(GNUmakefile)
+    else
+        echo "ERROR: Invalid build directory. Please double check all settings"
+        exit
+    fi
+
+    ## Set Configure Options
+    configure_opts="${configure_opts} --srcdir=${DIST_BASE}"
+    configure_opts="${configure_opts} --prefix=${INSTALL_ROOT_nto}/usr"
+    configure_opts="${configure_opts} --exec-prefix=${INSTALL_ROOT_nto}/${cpudir}/usr"
+    configure_opts="${configure_opts} --without-python"
+}
+
+## hook_postmake
+# Responsible for building and installing tests
+function hook_postmake {
+
+    ## Build and Install tests if install, all, or no targets listed
+    if [ "${make_cmds}" == "install" ] || [ "${make_cmds}" == "all" ] || [ "${make_cmds}" == "" ]; then
+
+        ## Check if BUILD_TESTS is set to false
+        if [[ $BUILD_TESTS == "false" ]]; then
+            echo "Building Tests is Disabled"
+        else
+            echo "Building Tests..."
+
+            ## Set up build & install directories
+            TEST_INSTALL_DIR=${INSTALL_ROOT}/${cpudir}/usr/local/libxml2_tests #Absolute
+            TEST_BUILD_DIR="libxml_tests_make"                                 #Relative
+            mkdir -p "${TEST_INSTALL_DIR}"
+            mkdir -p "${TEST_BUILD_DIR}/.libs"
+
+            ## Parse through generated Makefile to find test programs
+            #   Example Parsed Line:
+            #    check_PROGRAMS = runsuite$(EXEEXT) runtest$(EXEEXT) \
+            #    runxmlconf$(EXEEXT) testModule$(EXEEXT) testapi$(EXEEXT) \
+            #    testchar$(EXEEXT) testdict$(EXEEXT) testlimits$(EXEEXT) \
+            #    testparser$(EXEEXT) testrecurse$(EXEEXT)
+            TEST_BINS=$(grep -iA3 "check_programs =" Makefile | sed -e 's/check_PROGRAMS =/ /g' | sed -e 's/\$(EXEEXT)/ /g' | sed -e 's/ \\/ /g')
+            #grep finds lines that include check_programs in the makefile (-A is case insensitive, 3 is # of lines after to include.)
+            #seds are replacing parts with whitespace, specifically the check_PROGRAMS =, $(EXEEXT)'s, and the backslashes
+
+            ## Compile tests into TEST_BUILD_DIR
+            for test in ${TEST_BINS[@]};do
+                make $test
+                ${CP_HOST} ".libs/${test}" "${TEST_BUILD_DIR}"
+            done
+
+            ## Copy over required files for tests and required .so file in .lib
+            ${CP_HOST} ".libs/test*so" "${TEST_BUILD_DIR}/.lib/"
+            ${CP_HOST} -r "${DIST_BASE}/test" ${TEST_BUILD_DIR}
+            ${CP_HOST} -r "${DIST_BASE}/result" ${TEST_BUILD_DIR}
+
+            ## Install & Cleanup
+            ${CP_HOST} -r ${TEST_BUILD_DIR} ${TEST_INSTALL_DIR}
+            rm -rf ${TEST_BUILD_DIR}
+
+        fi # BUILD_TESTS
+    fi # Make Targets
+}
