@@ -4,9 +4,15 @@ on:
   push:
     branches:
       - main
+    paths:
+      - 'docker/**'
+      - 'ports/lighttpd1.4/**'
   pull_request:
     branches:
       - main
+    paths:
+      - 'docker/**'
+      - 'ports/lighttpd1.4/**'
 
 jobs:
 

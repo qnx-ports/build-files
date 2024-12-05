@@ -4,9 +4,15 @@ on:
   push:
     branches:
       - main
+    paths:
+      - 'docker/**'
+      - 'ports/libyuv/**'
   pull_request:
     branches:
       - main
+    paths:
+      - 'docker/**'
+      - 'ports/libyuv/**'
 
 jobs:
 

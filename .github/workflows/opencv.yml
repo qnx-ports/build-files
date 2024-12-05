@@ -4,9 +4,15 @@ on:
   push:
     branches:
       - main
+    paths:
+      - 'docker/**'
+      - 'ports/opencv/**'
   pull_request:
     branches:
       - main
+    paths:
+      - 'docker/**'
+      - 'ports/opencv/**'
 
 jobs:
 
