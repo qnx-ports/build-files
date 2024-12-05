@@ -1,3 +1,4 @@
+include ../common.mk
 ifndef QCONFIG
 QCONFIG=qconfig.mk
 endif
