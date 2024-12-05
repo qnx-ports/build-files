@@ -1,16 +1,19 @@
 name: bash
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
     paths:
+      - '.github/workflows/bash.yml'
       - 'docker/**'
       - 'ports/bash/**'
   pull_request:
     branches:
       - main
     paths:
+      - '.github/workflows/bash.yml'
       - 'docker/**'
       - 'ports/bash/**'
 

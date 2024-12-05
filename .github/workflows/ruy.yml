@@ -1,16 +1,19 @@
 name: ruy
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
     paths:
+      - '.github/workflows/ruy.yml'
       - 'docker/**'
       - 'ports/ruy/**'
   pull_request:
     branches:
       - main
     paths:
+      - '.github/workflows/ruy.yml'
       - 'docker/**'
       - 'ports/ruy/**'
 

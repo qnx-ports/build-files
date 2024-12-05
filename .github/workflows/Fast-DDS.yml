@@ -1,16 +1,19 @@
 name: Fast-DDS
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
     paths:
+      - '.github/workflows/Fast-DDS.yml'
       - 'docker/**'
       - 'ports/Fast-DDS/**'
   pull_request:
     branches:
       - main
     paths:
+      - '.github/workflows/Fast-DDS.yml'
       - 'docker/**'
       - 'ports/Fast-DDS/**'
 

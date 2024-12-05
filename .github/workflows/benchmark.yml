@@ -1,16 +1,19 @@
 name: benchmark
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
     paths:
+      - '.github/workflows/benchmark.yml'
       - 'docker/**'
       - 'ports/benchmark/**'
   pull_request:
     branches:
       - main
     paths:
+      - '.github/workflows/benchmark.yml'
       - 'docker/**'
       - 'ports/benchmark/**'
 

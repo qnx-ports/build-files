@@ -1,16 +1,19 @@
 name: re2
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
     paths:
+      - '.github/workflows/re2.yml'
       - 'docker/**'
       - 'ports/re2/**'
   pull_request:
     branches:
       - main
     paths:
+      - '.github/workflows/re2.yml'
       - 'docker/**'
       - 'ports/re2/**'
 

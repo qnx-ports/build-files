@@ -1,16 +1,19 @@
 name: ComputeLibrary
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
     paths:
+      - '.github/workflows/ComputeLibrary.yml'
       - 'docker/**'
       - 'ports/ComputeLibrary/**'
   pull_request:
     branches:
       - main
     paths:
+      - '.github/workflows/ComputeLibrary.yml'
       - 'docker/**'
       - 'ports/ComputeLibrary/**'
 

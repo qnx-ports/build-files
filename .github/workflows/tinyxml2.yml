@@ -1,16 +1,19 @@
 name: tinyxml2
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
     paths:
+      - '.github/workflows/tinyxml2.yml'
       - 'docker/**'
       - 'ports/tinyxml2/**'
   pull_request:
     branches:
       - main
     paths:
+      - '.github/workflows/tinyxml2.yml'
       - 'docker/**'
       - 'ports/tinyxml2/**'
 
