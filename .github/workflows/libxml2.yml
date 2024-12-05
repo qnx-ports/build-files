@@ -19,6 +19,11 @@ jobs:
       (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
       (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'libxml2'))
     steps:
+    - name: Checkout build-files
+      uses: actions/checkout@v4
+      with:
+        path: build-files
+
     - name: Checkout libxml2
       run: |
         git clone https://gitlab.gnome.org/GNOME/libxml2.git
