@@ -68,6 +68,7 @@ CMAKE_COMMON_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cma
                     -DEXTRA_CMAKE_ASM_FLAGS="$(FLAGS)" \
                     -DEXTRA_CMAKE_LINKER_FLAGS="$(LDFLAGS)" \
                     -DBUILD_SHARED_LIBS=1 \
+                    -Dprotobuf_ABSL_PROVIDER=package \
                     -Dprotobuf_USE_EXTERNAL_GTEST=OFF \
                     -Dprotobuf_INSTALL=ON \
                     -Dprotobuf_ABSOLUTE_TEST_PLUGIN_PATH=OFF

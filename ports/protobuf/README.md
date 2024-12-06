@@ -27,6 +27,7 @@ source ~/qnx800/qnxsdp-env.sh
 cd ~/qnx_workspace
 git clone https://github.com/qnx-ports/protobuf.git && cd protobuf
 git submodule update --init
+git apply ~/qnx_workspace/build-files/ports/protobuf/qnx.patch
 cd ~/qnx_workspace
 
 # Build protobuf
@@ -43,6 +44,7 @@ git clone https://github.com/qnx-ports/protobuf.git
 # Build numpy
 cd protobuf
 git submodule update --init
+git apply ../build-files/ports/protobuf/qnx.patch
 cd -
 
 # source qnxsdp-env.sh
