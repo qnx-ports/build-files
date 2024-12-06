@@ -75,4 +75,4 @@ jobs:
               --with-zlib \
               --with-python=no
           make
-          make DESTDIR=/home/runner/output make install
+          make DESTDIR=/home/runner/output install
