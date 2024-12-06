@@ -9,7 +9,6 @@ else
     echo "Source set to ${DIST_BASE}"
 fi
 
-
 ## Verify we are pointed at the right place autogen.sh
 #      Test to determine if we have the correct DIST_BASE,
 #      then run autogen
@@ -63,10 +62,17 @@ function hook_preconfigure {
         exit
     fi
 
+    if [[ ${OS} == "*nto*" ]]; then
+        echo "\n\n\n nto \n\n\n"
+    else
+        echo "\n\n\n undetected \n\n\n"
+    fi
+    INSTALL_ROOT=${INSTALL_ROOT_nto}
+
     ## Set Configure Options
     configure_opts="${configure_opts} --srcdir=${DIST_BASE}"
-    configure_opts="${configure_opts} --prefix=${INSTALL_ROOT_nto}/usr"
-    configure_opts="${configure_opts} --exec-prefix=${INSTALL_ROOT_nto}/${cpudir}/usr"
+    configure_opts="${configure_opts} --prefix=${INSTALL_ROOT}/usr"
+    configure_opts="${configure_opts} --exec-prefix=${INSTALL_ROOT}/${cpudir}/usr"
     configure_opts="${configure_opts} --without-python"
 }
 
@@ -82,10 +88,11 @@ function hook_postmake {
             echo "Building Tests is Disabled"
         else
             echo "Building Tests..."
+             INSTALL_ROOT=${INSTALL_ROOT_nto}
 
             ## Set up build & install directories
-            TEST_INSTALL_DIR=${INSTALL_ROOT}/${cpudir}/usr/local/libxml2_tests #Absolute
-            TEST_BUILD_DIR="libxml_tests_make"                                 #Relative
+            TEST_INSTALL_DIR=${INSTALL_ROOT}/${cpudir}/usr/local/
+            TEST_BUILD_DIR="${PWD}/libxml2_tests"
             mkdir -p "${TEST_INSTALL_DIR}"
             mkdir -p "${TEST_BUILD_DIR}/.libs"
 
@@ -106,12 +113,14 @@ function hook_postmake {
             done
 
             ## Copy over required files for tests and required .so file in .lib
-            ${CP_HOST} ".libs/test*so" "${TEST_BUILD_DIR}/.lib/"
+            ${CP_HOST} .libs/testdso.so* "${TEST_BUILD_DIR}/.lib/"
+            ${CP_HOST} -r ../xmlconf "${TEST_BUILD_DIR}"
+            ${CP_HOST} ../run_libxml2_tests.sh "${TEST_BUILD_DIR}"
             ${CP_HOST} -r "${DIST_BASE}/test" ${TEST_BUILD_DIR}
             ${CP_HOST} -r "${DIST_BASE}/result" ${TEST_BUILD_DIR}
 
             ## Install & Cleanup
-            ${CP_HOST} -r ${TEST_BUILD_DIR} ${TEST_INSTALL_DIR}
+            ${CP_HOST} -r "${TEST_BUILD_DIR}" ${TEST_INSTALL_DIR}
             rm -rf ${TEST_BUILD_DIR}
 
         fi # BUILD_TESTS
