@@ -68,5 +68,5 @@ jobs:
         shell: bash
         run: |
           source ~/qnx800/qnxsdp-env.sh
-          QNX_PROJECT_ROOT="$(pwd)/sqlite_orm" make -C build-files/ports/sqlite_orm JLEVEL=4 install
+          QNX_PROJECT_ROOT="$(pwd)/sqlite_orm" make -C build-files/ports/sqlite_orm JLEVEL=${nproc} install
           

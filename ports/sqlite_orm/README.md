@@ -67,15 +67,19 @@ cd ~/qnx_workspace
 # Specify target ip address
 TARGET_HOST=<target-ip-address-or-hostname>
 
+# Transfer sqlite library to target
+scp $QNX_TARGET/aarch64le/usr/lib/libsqlite3.so.1 qnxuser@$TARGET_HOST:/data/home/qnxuser/lib
+
 # Transfer the unit_test to target
-scp build-files/ports/sqlite_orm/nto-aarch64/le/build/tests/unit_tests qnxuser@$TARGET_HOST:/data/home/qnxuser
+scp build-files/ports/sqlite_orm/nto-aarch64-le/build/tests/unit_tests qnxuser@$TARGET_HOST:/data/home/qnxuser/bin
 ```
 ```bash
 # ssh to the target
 ssh qnxuser@$TARGET_HOST
 
 # Run test script
-cd /home/data/qnxuser
+export LD_LIBRARY_PATH=/data/home/qnxuser/lib:$LD_LIBRARY_PATH
+cd /home/data/qnxuser/bin
 ./unit_tests
 ```
 ### All test pass except virtual table test
