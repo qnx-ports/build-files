@@ -60,7 +60,7 @@ jobs:
         run: |
           source ~/qnx800/qnxsdp-env.sh
           export TARGET=aarch64-unknown-nto-qnx8.0.0
-          cd libxml2\
+          cd libxml2
           git checkout v2.13.5
           ./configure \
               --build=x86_64-unknown-linux-gnu \
