@@ -25,9 +25,10 @@ jobs:
       with:
         path: build-files
 
-    - name: Checkout libxml2
+    - name: Fetch libxml2
       run: |
-        git clone https://gitlab.gnome.org/GNOME/libxml2.git
+        wget https://download.gnome.org/sources/libxml2/2.13/libxml2-2.13.5.tar.xz
+        tar xvf libxml2-2.13.5.tar.xz
 
     - name: Download SDP 8.0
       env:
@@ -61,7 +62,6 @@ jobs:
           source ~/qnx800/qnxsdp-env.sh
           export TARGET=aarch64-unknown-nto-qnx8.0.0
           cd libxml2
-          git checkout v2.13.5
           ./configure \
               --build=x86_64-unknown-linux-gnu \
               --host=$TARGET \
