@@ -27,8 +27,8 @@ jobs:
 
     - name: Fetch libxml2
       run: |
-        wget https://download.gnome.org/sources/libxml2/2.13/libxml2-2.13.5.tar.xz
-        tar xvf libxml2-2.13.5.tar.xz
+        curl -O https://download.gnome.org/sources/libxml2/2.13/libxml2-2.13.5.tar.xz
+        tar xf libxml2-2.13.5.tar.xz
 
     - name: Download SDP 8.0
       env:
