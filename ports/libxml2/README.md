@@ -128,9 +128,9 @@ This section assumes you installed from source using the recursive makefile stru
 ```bash
 # Set up environment variables
 # Set to whichever user you will be logging into on the target
-$TARGET_USER_FOR_INSTALL="qnxuser"
+TARGET_USER_FOR_INSTALL="qnxuser"
 # Set to the target's IP address
-$TARGET_IP_ADDRESS=<target-ip-address>
+TARGET_IP_ADDRESS=<target-ip-address>
 
 # Create needed directories on the target
 ssh  $TARGET_USER_FOR_INSTALL@$TARGET_IP_ADDRESS "mkdir -p /data/home/$TARGET_USER_FOR_INSTALL/libxml2/lib"
