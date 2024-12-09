@@ -82,7 +82,7 @@ source ~/qnx800/qnxsdp-env.sh
 5. Build the project in your workspace from Step 1
 ```bash
 # Navigate back to your workspace
-cd <path-to-your-workspace.
+cd <path-to-your-workspace>
 # Build
 QNX_PROJECT_ROOT="$(pwd)/libxml2" make -C build-files/ports/libxml2 install -j4
 ```
@@ -137,7 +137,7 @@ ssh  $TARGET_USER_FOR_INSTALL@$TARGET_IP_ADDRESS "mkdir -p /data/home/$TARGET_US
 ssh  $TARGET_USER_FOR_INSTALL@$TARGET_IP_ADDRESS "mkdir -p /data/home/$TARGET_USER_FOR_INSTALL/libxml2/test/.lib"
 
 # Change aarch64 to x86_64 depending on your architecture.
-scp -r $QNX_TARGET/aarch64le/usr/lib/libxml* $TARGET_USER_FOR_INSTALL@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER_FOR_INSTALL/libxml2/lib
+scp $QNX_TARGET/aarch64le/usr/lib/libxml* $TARGET_USER_FOR_INSTALL@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER_FOR_INSTALL/libxml2/lib
 scp -r $QNX_TARGET/aarch64le/usr/local/libxml2_tests/.lib $TARGET_USER_FOR_INSTALL@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER_FOR_INSTALL/libxml2/test
 scp -r $QNX_TARGET/aarch64le/usr/local/libxml2_tests/* $TARGET_USER_FOR_INSTALL@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER_FOR_INSTALL/libxml2/test
 ```
