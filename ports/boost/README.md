@@ -33,6 +33,7 @@ cd ~/qnx_workspace
 
 # Build boost
 make -C build-files/ports/boost/ install QNX_PROJECT_ROOT="$(pwd)/boost" -j4
+# If building for SDP 8.0, also set PREFIX="/usr"
 
 # Build and install tests
 ./build-files/ports/boost/build_and_install_tests.sh
