@@ -80,6 +80,8 @@ jobs:
               --with-python=no
           make
           make DESTDIR=/home/runner/output install
+          echo "\n\n\n\nDEBUG"
+          automake --version
   build_source:
     runs-on: self-hosted
     if: |
@@ -128,6 +130,4 @@ jobs:
         shell: bash
         run: |
           source ~/qnx800/qnxsdp-env.sh
-          apt-get update
-          apt-get upgrade
           QNX_PROJECT_ROOT="$(pwd)/libxml2" make -C build-files/ports/libxml2 install -j${nproc}
