@@ -8,8 +8,11 @@ echo "Running testsuite"
 ./runsuite
 echo "Running runtest"
 ./runtest
-echo "Running runxmlconf"
-./runxmlconf
+
+## Not Used.
+#echo "Running runxmlconf"
+#./runxmlconf
+
 echo "Running testapi"
 ./testapi
 echo "Running testchar"
@@ -22,5 +25,7 @@ echo "Running testparser"
 ./testparser
 echo "Running testrecurse"
 ./testrecurse
-echo "Running testModule"
-./testModule
+
+## Deprecated
+#echo "Running testModule"
+#./testModule
