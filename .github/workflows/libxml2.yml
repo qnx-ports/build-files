@@ -128,4 +128,6 @@ jobs:
         shell: bash
         run: |
           source ~/qnx800/qnxsdp-env.sh
+          sudo apt-get autoremove automake
+          sudo apt-get install automake
           QNX_PROJECT_ROOT="$(pwd)/libxml2" make -C build-files/ports/libxml2 install -j${nproc}
