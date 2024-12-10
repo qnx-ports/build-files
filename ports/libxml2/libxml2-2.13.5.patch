@@ -1,0 +1,30 @@
+From 52697efe54086a60099644bf8a07d7ab5addc73a Mon Sep 17 00:00:00 2001
+From: Jai Moraes <jmoraes@blackberry.com>
+Date: Mon, 9 Dec 2024 15:18:05 -0500
+Subject: [PATCH] patch
+
+---
+ SAX2.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/SAX2.c b/SAX2.c
+index 32db6b4..48c09eb 100644
+--- a/SAX2.c
++++ b/SAX2.c
+@@ -429,8 +429,13 @@ xmlSAX2ResolveEntity(void *ctx, const xmlChar *publicId, const xmlChar *systemId
+         if (res < 0)
+             xmlSAX2ErrMemory(ctxt);
+         else
++#ifdef __QNX__
++            xmlWarnMsg(ctxt, XML_ERR_INVALID_URI,
++                       "Can't resolve URI: %s\n", systemId==NULL?" ":systemId);
++#else
+             xmlWarnMsg(ctxt, XML_ERR_INVALID_URI,
+                        "Can't resolve URI: %s\n", systemId);
++#endif
+         return(NULL);
+     }
+     if (xmlStrlen(URI) > XML_MAX_URI_LENGTH) {
+-- 
+2.43.0
+
