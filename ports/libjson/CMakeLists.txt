@@ -4,12 +4,13 @@
 #--------------------------------------------
 # Verify correct version
 cmake_minimum_required ( VERSION 3.5 )
+project ( libjson )
 
 #--------------------------------------------
 # Set up environment variables
-set ( MAJOR_VERSION 1 )
-set ( MINOR_VERSION 0 )
-set ( MICRO_VERSION 0 )
+set ( MAJOR_VERSION %MAJOR% )
+set ( MINOR_VERSION %MINOR% )
+set ( MICRO_VERSION %MICRO% )
 
 #--------------------------------------------
 # Library

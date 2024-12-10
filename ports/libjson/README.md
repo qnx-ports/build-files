@@ -29,7 +29,14 @@ git clone git@github.com:qnx-ports/build-files.git
 git clone git@github.com:vincenthz/libjson.git
 ```
 
-3. *Optional* Set up the Docker Container
+3. *Optional* Checkout preferred commit. Building libjson is only tested on commit `a63d882`, version 1.0.0. While this script will generate correctly versioned .so files for any similar libjson distribution, functionality has not been tested for any other version.
+```bash
+cd libjson
+git checkout a63d882
+cd ..
+```
+
+4. *Optional* Set up the Docker Container
 ```bash
 cd build-files/docker
 ./docker-build-qnx-image.sh
@@ -40,14 +47,14 @@ cd build-files/docker
 cd <path-to-your-workspace>
 ```
 
-4. Source your SDP
+5. Source your SDP
 ```bash
 #QNX 8.0 will be in the directory ~/qnx800/
 #QNX 7.1 will be in the directory ~/qnx710/
 source ~/qnx800/qnxsdp-env.sh
 ```
 
-5. Build `libjson` tests & shared objects from your workspace
+6. Build `libjson` tests & shared objects from your workspace
 ```bash
 QNX_PROJECT_ROOT="$(pwd)/libjson" make -C build-files/ports/libjson install -j4
 ```

@@ -53,6 +53,7 @@ ifndef NO_TARGET_OVERRIDE
 libjson_all:
 	@mkdir -p build
 	@cp ../CMakeLists.txt $(QNX_PROJECT_ROOT)/
+	@../get-version.sh
 	@cd build && cmake $(CMAKE_ARGS) $(QNX_PROJECT_ROOT)/
 	@cd build && make $(MAKE_ARGS) all
 
