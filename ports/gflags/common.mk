@@ -33,7 +33,6 @@ include $(MKFILES_ROOT)/qtargets.mk
 
 CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DCMAKE_INSTALL_PREFIX=$(gflags_INSTALL_ROOT)/$(CPUVARDIR)/usr \
-             -DQNX_INCLUDE_INSTALL_DIR=$(gflags_INSTALL_ROOT)/usr/include \
              -DGFLAGS_REGISTER_INSTALL_PREFIX=OFF \
              -DCMAKE_BUILD_TYPE=$(CMAKE_BUILD_TYPE) \
              -DCMAKE_SYSTEM_PROCESSOR=$(CPUVARDIR) \
