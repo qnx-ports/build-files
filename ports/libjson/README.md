@@ -65,11 +65,11 @@ ssh $TARGET_USER@$TARGET_IP_ADDRESS "mkdir -p /data/home/$TARGET_USER/libjson/li
 
 # Install Test Setup
 #->Change aarch64le to match your architecture (i.e. x86_64, etc)
-scp -r $QNX_TARGET/aarch64le/usr/local/libjson_tests/* $TARGET_USER@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER/libjson
+scp -r $QNX_TARGET/aarch64le/usr/local/bin/libjson_tests/* $TARGET_USER@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER/libjson
 
 # OPTIONAL: Installed shared objects
 #->These are NOT required for tests, as they are not linked per the recommendation of the libjson authors.
-scp $QNX_TARGET/aarch64le/usr/lib/libjson.so* $TARGET_USER@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER/libjson/lib
+scp $QNX_TARGET/aarch64le/usr/local/lib/libjson.so* $TARGET_USER@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER/libjson/lib
 ```
 
 2. Running Tests

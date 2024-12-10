@@ -31,8 +31,13 @@ CFLAGS += $(FLAGS)
 
 include $(MKFILES_ROOT)/qtargets.mk
 
+PREFIX ?= /usr/local
+
 CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
-             -DCMAKE_INSTALL_PREFIX=$(libjson_INSTALL_ROOT)/$(CPUVARDIR)/usr \
+             -DCMAKE_INSTALL_PREFIX=$(PREFIX) \
+             -DCMAKE_INSTALL_LIBDIR=$(libjson_INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/lib \
+             -DCMAKE_INSTALL_BINDIR=$(libjson_INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/bin \
+             -DCMAKE_INSTALL_INCLUDEDIR=$(libjson_INSTALL_ROOT)/$(PREFIX)/include \
              -DCMAKE_BUILD_TYPE=$(CMAKE_BUILD_TYPE) \
              -DCMAKE_SYSTEM_PROCESSOR=$(CPUVARDIR) \
              -DEXTRA_CMAKE_C_FLAGS="$(CFLAGS)" \

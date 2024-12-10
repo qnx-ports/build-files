@@ -32,19 +32,19 @@ add_executable ( jsonlint
 # Installation
 install (
     TARGETS             json
-    DESTINATION         lib
+    DESTINATION         ${CMAKE_INSTALL_LIBDIR}
 )
 install (
     TARGETS             jsonlint
-    DESTINATION         local/libjson_tests
+    DESTINATION         ${CMAKE_INSTALL_BINDIR}/libjson_tests
 )
 install (
     DIRECTORY           tests/
-    DESTINATION         local/libjson_tests/test
+    DESTINATION         ${CMAKE_INSTALL_BINDIR}/libjson_tests/test
 )
 install (
     FILES               json.h
-    DESTINATION         include/libjson
+    DESTINATION         ${CMAKE_INSTALL_INCLUDEDIR}
 )
 
 
