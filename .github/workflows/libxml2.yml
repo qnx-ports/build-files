@@ -95,7 +95,7 @@ jobs:
     - name: Checkout libxml2
       uses: actions/checkout@v4
       with:
-        repository: qnx-ports/libxml2
+        repository: GNOME/libxml2
         path: libxml2
 
     - name: Download SDP 8.0
