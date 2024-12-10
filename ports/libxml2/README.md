@@ -103,21 +103,28 @@ git clone git@github.com:qnx-ports/build-files.git
 git clone git@github.com:GNOME/libxml2.git
 ```
 
-3. Build the Docker image and create a container
+3. *Optional* Checkout tested commit. These files are only tested on commit `5505d23`. While they should work on similar versions, functionality is not guaranteed.
+```bash
+cd libxml2
+git checkout 5505d23
+cd ..
+```
+
+4. Build the Docker image and create a container
 ```bash
 cd build-files/docker
 ./docker-build-qnx-image.sh
 ./docker-create-container.sh
 ```
 
-4. Source your SDP (Installed from QNX Software Center)
+5. Source your SDP (Installed from QNX Software Center)
 ```bash
 #QNX 8.0 will be in the directory ~/qnx800/
 #QNX 7.1 will be in the directory ~/qnx710/
 source ~/qnx800/qnxsdp-env.sh
 ```
 
-5. Build the project in your workspace from Step 1
+6. Build the project in your workspace from Step 1
 ```bash
 # Navigate back to your workspace
 cd <path-to-your-workspace>
