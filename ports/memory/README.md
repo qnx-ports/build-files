@@ -1,3 +1,5 @@
+# Foonathan Memory [![Build](https://github.com/qnx-ports/build-files/actions/workflows/memory.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/memory.yml)
+
 ### Tested for QNX 7.1 and 8.0 SDPs
 Cross-compiled on Ubuntu 24.04 for:
 - QNX 8.0 aarch64le on Raspberry Pi 4
@@ -19,8 +21,8 @@ git clone https://github.com/qnx-ports/build-files.git
 git clone https://github.com/qnx-ports/memory.git
 
 #Via SSH
-git clone git@github.com:qnx-ports/build-files.git 
-git clone git@github.com:qnx-ports/memory.git 
+git clone git@github.com:qnx-ports/build-files.git
+git clone git@github.com:qnx-ports/memory.git
 ```
 
 3. Source your SDP (Installed from QNX Software Center)
@@ -56,7 +58,7 @@ mkdir memory_wksp && cd memory_wksp
 git clone https://github.com/qnx-ports/build-files.git
 
 #Via SSH
-git clone git@github.com:qnx-ports/build-files.git 
+git clone git@github.com:qnx-ports/build-files.git
 ```
 
 3. Build the Docker image and create a container
@@ -148,8 +150,8 @@ ssh qnxuser@<target-ip-address-or-hostname>
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/data/home/qnxuser/memory/lib
 
 #Run test binary
-cd ~/memory/            #NOTE: ~ will direct you to the current user's home directory, 
-                        #which may be incorrect depending on your choices above. 
+cd ~/memory/            #NOTE: ~ will direct you to the current user's home directory,
+                        #which may be incorrect depending on your choices above.
                         #Navigate to /data/home to see all user home directories
 chmod 744 foonathan_memory_test
 ./foonathan_memory_test

@@ -1,4 +1,4 @@
-# Compile the port for QNX
+# azure-iot-sdk-c [![Build](https://github.com/qnx-ports/build-files/actions/workflows/azure-iot-sdk-c.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/azure-iot-sdk-c.yml)
 
 **Note**: QNX ports are only supported from a **Linux host** operating system
 

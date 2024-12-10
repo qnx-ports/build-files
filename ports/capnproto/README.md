@@ -1,4 +1,4 @@
-# Compile the port for QNX
+# capnproto [![Build](https://github.com/qnx-ports/build-files/actions/workflows/capnproto.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/capnproto.yml)
 
 **Note**: QNX ports are only supported from a **Linux host** operating system
 

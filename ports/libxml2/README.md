@@ -1,3 +1,5 @@
+# libxml2 [![Build](https://github.com/qnx-ports/build-files/actions/workflows/libxml2.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/libxml2.yml)
+
 Currently these versions are tested:
 + 2.13.5
 

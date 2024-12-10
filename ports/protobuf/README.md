@@ -1,4 +1,4 @@
-# Compile the port for QNX
+# protobuf [![Build](https://github.com/qnx-ports/build-files/actions/workflows/protobuf.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/protobuf.yml)
 
 **NOTE**: QNX ports are only supported from a Linux host operating system
 
@@ -57,7 +57,7 @@ source ~/qnx800/qnxsdp-env.sh
 
 Create directories on the target.
 
-Assuming your `INSTALL_ROOT_nto` is 
+Assuming your `INSTALL_ROOT_nto` is
 
 ```bash
 mkdir -p /data/home/qnxuser/protobuf/libs
@@ -69,7 +69,7 @@ Set up the test environment (note, mDNS is configured from
 TARGET_HOST=<target-ip-address-or-hostname>
 ```
 Now we copy protobuf test binaries and data to target. We need to first go to the correct directory.
-If you used `INSTALL_ROOT_nto`, run 
+If you used `INSTALL_ROOT_nto`, run
 ```bash
 cd $INSTALL_ROOT_nto/aarch64le/usr/local/
 ```

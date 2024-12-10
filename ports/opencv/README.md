@@ -1,3 +1,5 @@
+# OpenCV [![Build](https://github.com/qnx-ports/build-files/actions/workflows/opencv.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/opencv.yml)
+
 **NOTE**: QNX ports are only supported from a Linux host operating system
 
 Please make sure you have com.qnx.qnx800.target.screen.img_codecs QNX package installed to your SDP.

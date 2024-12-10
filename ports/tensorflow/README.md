@@ -1,3 +1,5 @@
+# Tensorflow Lite [![Build](https://github.com/qnx-ports/build-files/actions/workflows/tensorflow.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/tensorflow.yml)
+
 Use `$(nproc)` instead of `4` after `JLEVEL=` and `-j` if you want to use the maximum number of cores to build this project.
 32GB of RAM is recommended for using `JLEVEL=$(nproc)` or `-j$(nproc)`.
 

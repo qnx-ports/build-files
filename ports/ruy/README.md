@@ -1,3 +1,5 @@
+# ruy [![Build](https://github.com/qnx-ports/build-files/actions/workflows/ruy.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/ruy.yml)
+
 **NOTE**: QNX ports are only supported from a Linux host operating system
 
 **WARNING**: Ruy is currently used as a dependency of tensorflow, and you shouldn't expect it working when building it solely.

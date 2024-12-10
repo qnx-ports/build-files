@@ -1,3 +1,5 @@
+# gflags [![Build](https://github.com/qnx-ports/build-files/actions/workflows/gflags.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/gflags.yml)
+
 ### Tested for QNX 7.1 and 8.0 SDPs
 Cross-compiled on Ubuntu 24.04 for:
 - QNX 8.0 aarch64le on Raspberry Pi 4
@@ -20,8 +22,8 @@ git clone https://github.com/qnx-ports/build-files.git
 git clone https://github.com/qnx-ports/gflags.git
 
 #Via SSH
-git clone git@github.com:qnx-ports/build-files.git 
-git clone git@github.com:qnx-ports/gflags.git 
+git clone git@github.com:qnx-ports/build-files.git
+git clone git@github.com:qnx-ports/gflags.git
 ```
 
 3. Source your SDP (Installed from QNX Software Center)
@@ -60,8 +62,8 @@ git clone https://github.com/qnx-ports/build-files.git
 git clone https://github.com/qnx-ports/gflags.git
 
 #Via SSH
-git clone git@github.com:qnx-ports/build-files.git 
-git clone git@github.com:qnx-ports/gflags.git 
+git clone git@github.com:qnx-ports/build-files.git
+git clone git@github.com:qnx-ports/gflags.git
 ```
 
 3. Build the Docker image and create a container
@@ -133,8 +135,8 @@ ssh qnxuser@<target-ip-address-or-hostname>
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/data/home/qnxuser/gflags/lib
 
 #Run test binary
-cd ~/gflags/test        #NOTE: ~ will direct you to the current user's home directory, 
-                        #which may be incorrect depending on your choices above. 
+cd ~/gflags/test        #NOTE: ~ will direct you to the current user's home directory,
+                        #which may be incorrect depending on your choices above.
                         #Navigate to /data/home to see all user home directories
 chmod 744 gflag_*
 ./qnxtest.sh

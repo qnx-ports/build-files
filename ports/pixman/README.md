@@ -1,3 +1,5 @@
+# pixman [![Build](https://github.com/qnx-ports/build-files/actions/workflows/pixman.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/pixman.yml)
+
 Current these versions are tested:
 + 0.43.4
 

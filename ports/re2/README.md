@@ -1,3 +1,5 @@
+# re2 [![Build](https://github.com/qnx-ports/build-files/actions/workflows/re2.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/re2.yml)
+
 ### Tested for QNX 7.1 and 8.0 SDPs
 Cross-compiled on Ubuntu 24.04 for:
 - QNX 8.0 aarch64le on Raspberry Pi 4
@@ -31,12 +33,12 @@ git clone https://github.com/qnx-ports/abseil-cpp.git
 git clone https://github.com/qnx-ports/re2.git
 
 #Via SSH
-git clone git@github.com:qnx-ports/build-files.git 
+git clone git@github.com:qnx-ports/build-files.git
 git clone git@github.com:qnx-ports/googletest.git
 git clone git@github.com:qnx-ports/benchmark.git
 git clone git@github.com:qnx-ports/muslflt.git
 git clone git@github.com:qnx-ports/abseil-cpp.git
-git clone git@github.com:qnx-ports/re2.git 
+git clone git@github.com:qnx-ports/re2.git
 ```
 
 3. Source your SDP (Installed from QNX Software Center)
@@ -71,7 +73,7 @@ OSLIST=nto QNX_PROJECT_ROOT="$(pwd)/re2" make -C build-files/ports/re2 install -
 **NOTE**: Before rebuilding, you may need to delete the `/build` subdirectories and their contents in `build-files/ports/re2/nto-aarch64-le` and `build-files/ports/re2/nto-x86_64-o`. This MUST be done when changing from SDP 7.1 to 8 or vice versa, as it will link against the wrong shared objects and not show an error until testing.
 ```bash
 #From your workspace:
-make -C build-files/ports/re2 clean 
+make -C build-files/ports/re2 clean
 ```
 
 # Compile re2 for SDP 7.1/8.0 in a Docker container
@@ -100,12 +102,12 @@ git clone https://github.com/qnx-ports/abseil-cpp.git
 git clone https://github.com/qnx-ports/re2.git
 
 #Via SSH
-git clone git@github.com:qnx-ports/build-files.git 
+git clone git@github.com:qnx-ports/build-files.git
 git clone git@github.com:qnx-ports/googletest.git
 git clone git@github.com:qnx-ports/benchmark.git
 git clone git@github.com:qnx-ports/muslflt.git
 git clone git@github.com:qnx-ports/abseil-cpp.git
-git clone git@github.com:qnx-ports/re2.git 
+git clone git@github.com:qnx-ports/re2.git
 ```
 
 3. Build the Docker image and create a container
@@ -147,7 +149,7 @@ OSLIST=nto QNX_PROJECT_ROOT="$(pwd)/re2" make -C build-files/ports/re2 install -
 **NOTE**: Before rebuilding, you may need to delete the `/build` subdirectories and their contents in `build-files/ports/re2/nto-aarch64-le` and `build-files/ports/re2/nto-x86_64-o`. This MUST be done when changing from SDP 7.1 to 8 or vice versa, as it will link against the wrong shared objects and not show an error until testing.
 ```bash
 #From your workspace:
-make -C build-files/ports/re2 clean 
+make -C build-files/ports/re2 clean
 ```
 
 # Running Tests on a Target
@@ -196,8 +198,8 @@ ssh qnxuser@<target-ip-address-or-hostname>
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/data/home/qnxuser/re2/lib
 
 #Run test binary
-cd ~/re2/test           #NOTE: ~ will direct you to the current user's home directory, 
-                        #which may be incorrect depending on your choices above. 
+cd ~/re2/test           #NOTE: ~ will direct you to the current user's home directory,
+                        #which may be incorrect depending on your choices above.
                         #Navigate to /data/home to see all user home directories
 ./run_tests.sh &2>1 | tee re2_test.out
 ```

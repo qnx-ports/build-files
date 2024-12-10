@@ -1,3 +1,5 @@
+[![Build](https://github.com/qnx-ports/build-files/actions/workflows/libyuv.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/libyuv.yml)
+
 Note: libyuv is currently only supported for aarch64le.
 
 # Compile the port for QNX in a Docker container

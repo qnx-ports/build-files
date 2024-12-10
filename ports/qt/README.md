@@ -1,3 +1,5 @@
+# QT [![Build](https://github.com/qnx-ports/build-files/actions/workflows/qt.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/qt.yml)
+
 **NOTE**: QNX ports are only supported from a Linux host operating system
 
 Use `$(nproc)` instead of `4` after `JLEVEL=` and `-j` if you want to use the maximum number of cores to build this project.
@@ -147,7 +149,7 @@ cmake --build .
 TARGET_HOST=<target-ip-address-or-hostname>
 
 # Transfer particles3d example to the target
-scp particles3d qnxuser@$TARGET_HOST:/data/home/qnxuser/ 
+scp particles3d qnxuser@$TARGET_HOST:/data/home/qnxuser/
 ```
 ```bash
 # Build QT example using qmake
@@ -168,18 +170,18 @@ make
 TARGET_HOST=<target-ip-address-or-hostname>
 
 # Transfer particles3d example to the target
-scp particles3d qnxuser@$TARGET_HOST:/data/home/qnxuser/ 
+scp particles3d qnxuser@$TARGET_HOST:/data/home/qnxuser/
 ```
 ```bash
 # Specify target ip address
 TARGET_HOST=<target-ip-address-or-hostname>
 
-# Transfer the necessary QNX SDP 8.0 libraries 
-scp $QNX_TARGET/aarch64le/usr/lib/libzstd.so.1 qnxuser@$TARGET_HOST:/data/home/qnxuser/lib 
+# Transfer the necessary QNX SDP 8.0 libraries
+scp $QNX_TARGET/aarch64le/usr/lib/libzstd.so.1 qnxuser@$TARGET_HOST:/data/home/qnxuser/lib
 
 # Transfer the neccesary QT libraries and plugins to the target
-scp $QNX_TARGET/aarch64le/usr/local/lib/lib* qnxuser@$TARGET_HOST:/data/home/qnxuser/lib 
-scp -r $QNX_TARGET/aarch64le/usr/local/plugins/ qnxuser@$TARGET_HOST:/data/home/qnxuser/ 
+scp $QNX_TARGET/aarch64le/usr/local/lib/lib* qnxuser@$TARGET_HOST:/data/home/qnxuser/lib
+scp -r $QNX_TARGET/aarch64le/usr/local/plugins/ qnxuser@$TARGET_HOST:/data/home/qnxuser/
 scp -r $QNX_TARGET/aarch64le/usr/local/qml/ qnxuser@$TARGET_HOST:/data/home/qnxuser/
 ```
 ```bash
@@ -187,9 +189,9 @@ scp -r $QNX_TARGET/aarch64le/usr/local/qml/ qnxuser@$TARGET_HOST:/data/home/qnxu
 ssh qnxuser@$TARGET_HOST
 
 # Export the path
-export LD_LIBRARY_PATH=/data/home/qnxuser/lib/:$LD_LIBRARY_PATH 
-export QT_PLUGIN_PATH=/data/home/qnxuser/plugins/ 
-export QML2_IMPORT_PATH=/data/home/qnxuser/qml/ 
+export LD_LIBRARY_PATH=/data/home/qnxuser/lib/:$LD_LIBRARY_PATH
+export QT_PLUGIN_PATH=/data/home/qnxuser/plugins/
+export QML2_IMPORT_PATH=/data/home/qnxuser/qml/
 # QNX platform options are:
 # no-fullscreen
 # flush-screen-context
@@ -215,12 +217,12 @@ BUILD_TESTING=ON make -C build-files/ports/qt JLEVEL=4 install
 # Specify target ip address
 TARGET_HOST=<target-ip-address-or-hostname>
 
-# Transfer the necessary QNX SDP 8.0 libraries 
-scp $QNX_TARGET/aarch64le/usr/lib/libzstd.so.1 qnxuser@$TARGET_HOST:/data/home/qnxuser/lib 
+# Transfer the necessary QNX SDP 8.0 libraries
+scp $QNX_TARGET/aarch64le/usr/lib/libzstd.so.1 qnxuser@$TARGET_HOST:/data/home/qnxuser/lib
 
 # Transfer the neccesary QT libraries and plugins to the target
-scp $QNX_TARGET/aarch64le/usr/local/lib/lib* qnxuser@$TARGET_HOST:/data/home/qnxuser/lib 
-scp -r $QNX_TARGET/aarch64le/usr/local/plugins/ qnxuser@$TARGET_HOST:/data/home/qnxuser/ 
+scp $QNX_TARGET/aarch64le/usr/local/lib/lib* qnxuser@$TARGET_HOST:/data/home/qnxuser/lib
+scp -r $QNX_TARGET/aarch64le/usr/local/plugins/ qnxuser@$TARGET_HOST:/data/home/qnxuser/
 scp -r $QNX_TARGET/aarch64le/usr/local/qml/ qnxuser@$TARGET_HOST:/data/home/qnxuser/
 
 # Run script to transfer test to target
@@ -237,9 +239,9 @@ scp scripts/run_tests.sh qnxuser@$TARGET_HOST:/data/home/qnxuser
 ssh qnxuser@$TARGET_HOST
 
 # Export the path
-export LD_LIBRARY_PATH=/data/home/qnxuser/lib/:$LD_LIBRARY_PATH 
-export QT_PLUGIN_PATH=/data/home/qnxuser/plugins/ 
-export QML2_IMPORT_PATH=/data/home/qnxuser/qml/ 
+export LD_LIBRARY_PATH=/data/home/qnxuser/lib/:$LD_LIBRARY_PATH
+export QT_PLUGIN_PATH=/data/home/qnxuser/plugins/
+export QML2_IMPORT_PATH=/data/home/qnxuser/qml/
 export QT_QPA_PLATFORM=qnx
 
 # Run test script
@@ -253,7 +255,7 @@ export TMPDIR=/home/data/qnxuser/temp
 sh run_tests.sh <subdirectory>
 
 # Summary of the result is stored in test_result.txt
-cat qt-test/<subdirectory>/test_results.txt 
+cat qt-test/<subdirectory>/test_results.txt
 ```
 ### Known issues with QT testing
 ```bash
@@ -265,8 +267,8 @@ cat qt-test/<subdirectory>/test_results.txt
 su
 # when prompted with password the password is root
 
-# Slay fullscreen-winmgr 
-slay fullscreen-winmgr 
+# Slay fullscreen-winmgr
+slay fullscreen-winmgr
 exit
 
 # Continue with testing

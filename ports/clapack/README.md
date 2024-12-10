@@ -1,3 +1,5 @@
+# clapack [![Build](https://github.com/qnx-ports/build-files/actions/workflows/clapack.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/clapack.yml)
+
 ### Tested so far:
 Cross-compiled on Ubuntu 24.04 via WSL for:
 - QNX 8.0 aarch64le on Raspberry Pi 4
@@ -18,7 +20,7 @@ git clone https://github.com/qnx-ports/build-files.git
 git clone https://github.com/qnx-ports/clapack.git
 
 #Via SSH
-git clone git@github.com:qnx-ports/build-files.git 
+git clone git@github.com:qnx-ports/build-files.git
 git clone git@github.com:qnx-ports/clapack.git
 ```
 
@@ -61,7 +63,7 @@ mkdir clapack_wksp && cd clapack_wksp
 git clone https://github.com/qnx-ports/build-files.git
 
 #Via SSH
-git clone git@github.com:qnx-ports/build-files.git 
+git clone git@github.com:qnx-ports/build-files.git
 ```
 
 3. Build the Docker image and create a container
@@ -89,7 +91,7 @@ cd <path-to-workspace>
 git clone https://github.com/qnx-ports/clapack.git
 
 #Via SSH
-git clone git@github.com:qnx-ports/clapack.git 
+git clone git@github.com:qnx-ports/clapack.git
 ```
 
 6. Build the project in your workspace from Step 1

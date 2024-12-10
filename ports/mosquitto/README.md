@@ -1,3 +1,5 @@
+# Mosquitto [![Build](https://github.com/qnx-ports/build-files/actions/workflows/mosquitto.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/mosquitto.yml)
+
 **NOTE**: QNX ports are only supported from a Linux host operating system
 
 Use `$(nproc)` instead of `4` after `JLEVEL=` and `-j` if you want to use the maximum number of cores to build this project.

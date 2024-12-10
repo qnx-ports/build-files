@@ -1,3 +1,5 @@
+# glib [![Build](https://github.com/qnx-ports/build-files/actions/workflows/glib.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/glib.yml)
+
 **NOTE**: currently only aarch64le is supported.
 
 Current these versions are tested:

@@ -1,4 +1,4 @@
-# Compile the port for QNX
+# Fast-CDR [![Build](https://github.com/qnx-ports/build-files/actions/workflows/Fast-CDR.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/Fast-CDR.yml)
 
 **Note**: QNX ports are only supported from a **Linux host** operating system
 
