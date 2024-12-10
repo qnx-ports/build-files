@@ -93,16 +93,24 @@ git clone https://github.com/qnx-ports/protobuf.git
 cd protobuf
 git submodule update --init
 git apply ../build-files/ports/protobuf/qnx.patch
+git switch qnx-main
+git pull
 cd -
 QNX_PROJECT_ROOT="$(pwd)/protobuf" make -C build-files/ports/protobuf install JLEVEL=16
 
 # Clone grpc
 git clone https://github.com/qnx-ports/grpc.git && cd grpc
 git submodule update --init
-cd -
+
+cd third_party/googletest
+git remote add qnx https://github.com/qnx-ports/googletest.git
+git fetch --all
+git switch qnx_v1.13.0 
+git pull
+cd ../../../
 
 # Build grpc
-QNX_PROJECT_ROOT="$(pwd)/grpc" make -C build-files/ports/grpc/ install JLEVEL=16
+QNX_PROJECT_ROOT="$(pwd)/grpc" HOST_PROTOC_PATH="$(pwd)/build-files/ports/protobuf/host_protoc" make -C build-files/ports/grpc/ install JLEVEL=16
 ```
 
 # How to run tests

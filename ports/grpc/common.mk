@@ -47,6 +47,8 @@ CMAKE_FIND_ROOT_PATH := $(QNX_TARGET);$(QNX_TARGET)/$(CPUVARDIR);$(INSTALL_ROOT)
 #installed in.
 CMAKE_MODULE_PATH := $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/cmake;$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/lib/cmake
 
+HOST_PROTOC_PATH ?= $(PROJECT_ROOT)/../protobuf/host_protoc
+
 ifneq ($(wildcard ${QNX_TARGET}/usr/include/vm_sockets.h),)
 CFLAGS += -DQNX_HAVE_VSOCK
 endif
@@ -85,6 +87,7 @@ CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DgRPC_BUILD_GRPC_NODE_PLUGIN=OFF \
              -DgRPC_BUILD_GRPC_CSHARP_PLUGIN=OFF \
              -DgRPC_BUILD_GRPC_CPP_PLUGIN=ON \
+             -DHOST_PROTOC_PATH=$(HOST_PROTOC_PATH) \
              -DQNX_Protobuf=${INSTALL_ROOT}/$(CPUVARDIR)/lib/cmake/protobuf
 
 #-DProtobuf_ROOT=${HOME}/local/lib/cmake/protobuf
