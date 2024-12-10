@@ -17,28 +17,26 @@ add_library ( json SHARED
     json.c
 )
 set_target_properties ( json PROPERTIES
-    VERSION     ${MAJOR_VERSION}.${MINOR_VERSION}.${MICRO_VERSION}
-    SOVERSION   ${MAJOR_VERSION}
+    VERSION             ${MAJOR_VERSION}.${MINOR_VERSION}.${MICRO_VERSION}
+    SOVERSION           ${MAJOR_VERSION}
 )
 
 #-------------------------------------------
 # Test Executable
 add_executable ( jsonlint
     jsonlint.c
-)
-target_link_libraries ( jsonlint
-    PRIVATE     json
+    json.c
 )
 
 #-------------------------------------------
 # Installation
 install (
     TARGETS             json
-    LIBRARY DESTINATION lib
+    DESTINATION         lib
 )
 install (
     TARGETS             jsonlint
-    RUNTIME DESTINATION local/libjson_tests
+    DESTINATION         local/libjson_tests
 )
 install (
     DIRECTORY           tests/
