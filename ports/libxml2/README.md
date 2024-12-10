@@ -1,4 +1,8 @@
-### Tested for QNX 7.1 and 8.0 SDPs
+# libxml2 [![Build](https://github.com/qnx-ports/build-files/actions/workflows/libxml2.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/libxml2.yml)
+
+Currently these versions are tested:
++ 2.13.5
+
 Cross-compiled on Ubuntu 24.04 for:
 - QNX 8.0 aarch64le on Raspberry Pi 4
 

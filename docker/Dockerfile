@@ -101,6 +101,10 @@ RUN apt-get update && apt-get install -y \
 	libxslt1-dev \
 	freeglut3-dev
 
+# Attempt to upgrade autoconf
+RUN apt-get update && \
+	apt-get -y install autoconf
+
 # Install python 3.11
 RUN add-apt-repository ppa:deadsnakes/ppa -y && \
 	apt update && \
