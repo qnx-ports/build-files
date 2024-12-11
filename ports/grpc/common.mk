@@ -87,8 +87,7 @@ CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DgRPC_BUILD_GRPC_NODE_PLUGIN=OFF \
              -DgRPC_BUILD_GRPC_CSHARP_PLUGIN=OFF \
              -DgRPC_BUILD_GRPC_CPP_PLUGIN=ON \
-             -DHOST_PROTOC_PATH=$(HOST_PROTOC_PATH) \
-             -DQNX_Protobuf=${INSTALL_ROOT}/$(CPUVARDIR)/lib/cmake/protobuf
+             -DHOST_PROTOC_PATH=$(HOST_PROTOC_PATH)
 
 #-DProtobuf_ROOT=${HOME}/local/lib/cmake/protobuf
 CMAKE_ARGS +=   -DBENCHMARK_ENABLE_WERROR=OFF \

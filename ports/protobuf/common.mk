@@ -58,7 +58,7 @@ CMAKE_COMMON_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cma
                     -DCMAKE_C_COMPILER_TARGET=gcc_nto$(CPUVARDIR) \
                     -DCMAKE_INSTALL_PREFIX="$(PREFIX)" \
                     -DCMAKE_INSTALL_INCLUDEDIR="$(INSTALL_ROOT)/$(PREFIX)/include" \
-                    -DCMAKE_STAGING_PREFIX="$(INSTALL_ROOT)/$(CPUVARDIR)" \
+                    -DCMAKE_STAGING_PREFIX="$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)" \
                     -DCMAKE_MODULE_PATH="$(CMAKE_MODULE_PATH)" \
                     -DCMAKE_FIND_ROOT_PATH="$(CMAKE_FIND_ROOT_PATH)" \
                     -DCMAKE_BUILD_TYPE=$(CMAKE_BUILD_TYPE) \
