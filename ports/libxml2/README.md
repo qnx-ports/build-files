@@ -84,8 +84,8 @@ cd <path-to-your-workspace>
 QNX_PROJECT_ROOT=${pwd}/libxml2 make -C build-files/ports/libxml2 install
 ```
 
-# Compile libxml2 from source for SDP 7.1/8.0 in a Docker Container
-Requires Docker: https://docs.docker.com/engine/install/
+# Compile libxml2 from source for SDP 7.1/8.0 
+Optionally Requires Docker: https://docs.docker.com/engine/install/
 
 1. Create a new workspace or navigate to an existing one
 ```bash
@@ -110,11 +110,16 @@ git checkout 5505d23
 cd ..
 ```
 
-4. Build the Docker image and create a container
+4. *Optional* Build in a Docker Container: Build the Docker image and create a container, then update configure.ac to be compatible.
 ```bash
+# Start the docker container
 cd build-files/docker
 ./docker-build-qnx-image.sh
 ./docker-create-container.sh
+
+# Configure libxml to be compatible
+cd <your-workspace>
+sed -i "s/1.16.3/1.16.1/g" libxml2/configure.ac
 ```
 
 5. Source your SDP (Installed from QNX Software Center)
@@ -125,41 +130,6 @@ source ~/qnx800/qnxsdp-env.sh
 ```
 
 6. Build the project in your workspace from Step 1
-```bash
-# Navigate back to your workspace
-cd <path-to-your-workspace>
-# Build
-QNX_PROJECT_ROOT="$(pwd)/libxml2" make -C build-files/ports/libxml2 install -j4
-```
-
-
-# Compile libxml2 from source for SDP 7.1/8.0 on an Ubuntu Host
-Requires Docker: https://docs.docker.com/engine/install/
-
-1. Create a new workspace or navigate to an existing one
-```bash
-mkdir libxml2_wksp && cd libxml2_wksp
-```
-
-2. Clone the `build-files` and `libxml2` repos
-```bash
-#Via HTTPS
-git clone https://github.com/qnx-ports/build-files.git
-git clone https://github.com/GNOME/libxml2.git
-
-#Via SSH
-git clone git@github.com:qnx-ports/build-files.git 
-git clone git@github.com:GNOME/libxml2.git
-```
-
-3. Source your SDP (Installed from QNX Software Center)
-```bash
-#QNX 8.0 will be in the directory ~/qnx800/
-#QNX 7.1 will be in the directory ~/qnx710/
-source ~/qnx800/qnxsdp-env.sh
-```
-
-4. Build the project in your workspace from Step 1
 ```bash
 # Navigate back to your workspace
 cd <path-to-your-workspace>
