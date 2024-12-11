@@ -48,7 +48,7 @@ jobs:
       uses: addnab/docker-run-action@v3
       with:
         image: qnx800:latest
-        options: -v ${{ github.workspace }}:/home/runner
+        options: -v ${{ github.workspace }}:/home/runner -e MAKEFLAGS=${{ env.MAKEFLAGS }}
         shell: bash
         run: |
           source ~/qnx800/qnxsdp-env.sh
