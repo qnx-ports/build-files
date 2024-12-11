@@ -31,7 +31,7 @@ ALL_DEPENDENCIES = grpc_all
 .PHONY: grpc_all install check clean
 
 CFLAGS += $(FLAGS) -D__EXT_QNX -D_QNX_SOURCE
-CFLAGS += -I$(INSTALL_ROOT)/$(PREFIX)/include
+CFLAGS += -I$(INSTALL_ROOT)/$(PREFIX)/include -Wno-attributes
 #Search paths for all of CMake's find_* functions --
 #headers, libraries, etc.
 #
@@ -119,7 +119,7 @@ grpc_host:
 	cmake $(HOST_CMAKE_ARGS) $(QNX_PROJECT_ROOT) && \
 	cmake --build . --target grpc_cpp_plugin $(GENERATOR_ARGS)
 
-grpc_target:
+grpc_target: grpc_host
 	@mkdir -p build
 	@cd build && cmake $(CMAKE_ARGS) $(QNX_PROJECT_ROOT)
 	@cd build && cmake --build . $(GENERATOR_ARGS)
