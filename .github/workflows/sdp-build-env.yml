@@ -57,4 +57,5 @@ jobs:
       run: |
         cd build-files/docker
         ./docker-build-qnx-image.sh
+        docker image tag qnx800:latest ghcr.io/qnx-ports/sdp-build-env@latest
         docker push ghcr.io/qnx-ports/sdp-build-env@latest
