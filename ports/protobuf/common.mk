@@ -92,7 +92,8 @@ protobuf: protoc_host
 	cd protobuf && cmake $(CMAKE_COMMON_ARGS) -DWITH_PROTOC=$(HOST_PROTOC_PATH)/protoc -Dprotobuf_BUILD_LIBUPB=OFF $(QNX_PROJECT_ROOT)
 	cd protobuf && cmake --build . $(GENERATOR_ARGS)
 
-protoc_target:
+# Force sequential build of targets because the final exported cmake config might be different
+protoc_target: protobuf
 	mkdir -p protoc
 	cd protoc && cmake $(CMAKE_COMMON_ARGS) -Dprotobuf_BUILD_TESTS=OFF -Dprotobuf_BUILD_LIBUPB=ON $(QNX_PROJECT_ROOT)
 	cd protoc && cmake --build . $(GENERATOR_ARGS)
