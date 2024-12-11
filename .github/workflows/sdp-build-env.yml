@@ -59,7 +59,7 @@ jobs:
     - name: Build interactive SDP build environment image
       run: |
         # Cleanup first
-        docker container rm tmp
+        docker container rm tmp || true
         cd build-files/docker
         ./docker-build-qnx-image.sh
         docker image tag qnx800:latest ghcr.io/qnx-ports/sdp800-build-env:latest
