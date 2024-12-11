@@ -92,6 +92,7 @@ git clone git@github.com:qnx-ports/memory.git
 6. Build the project in your workspace from Step 1
 ```bash
 QNX_PROJECT_ROOT="$(pwd)/memory" make -C build-files/ports/memory install -j4
+```
 
 **NOTE**: Before rebuilding, you may need to delete the `/build` subdirectories and their contents in `build-files/ports/memory/nto/aarch64/le` and `build-files/ports/memory/nto/x86_64/so`. This MUST be done when changing from SDP 7.1 to 8 or vice versa, as it will link against the wrong shared objects and not show an error until testing.
 ```bash
