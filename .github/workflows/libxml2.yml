@@ -128,4 +128,5 @@ jobs:
         shell: bash
         run: |
           source ~/qnx800/qnxsdp-env.sh
+          sed -i 's/1.16.3/1.16.1/g' libxml2/configure.ac
           QNX_PROJECT_ROOT="$(pwd)/libxml2" make -C build-files/ports/libxml2 install -j${nproc}
