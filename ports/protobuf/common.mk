@@ -58,7 +58,7 @@ CMAKE_COMMON_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cma
                     -DCMAKE_C_COMPILER_TARGET=gcc_nto$(CPUVARDIR) \
                     -DCMAKE_INSTALL_PREFIX="$(PREFIX)" \
                     -DCMAKE_INSTALL_INCLUDEDIR="$(INSTALL_ROOT)/$(PREFIX)/include" \
-                    -DCMAKE_STAGING_PREFIX="$(INSTALL_ROOT)/$(CPUVARDIR)" \
+                    -DCMAKE_STAGING_PREFIX="$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)" \
                     -DCMAKE_MODULE_PATH="$(CMAKE_MODULE_PATH)" \
                     -DCMAKE_FIND_ROOT_PATH="$(CMAKE_FIND_ROOT_PATH)" \
                     -DCMAKE_BUILD_TYPE=$(CMAKE_BUILD_TYPE) \
@@ -68,6 +68,7 @@ CMAKE_COMMON_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cma
                     -DEXTRA_CMAKE_ASM_FLAGS="$(FLAGS)" \
                     -DEXTRA_CMAKE_LINKER_FLAGS="$(LDFLAGS)" \
                     -DBUILD_SHARED_LIBS=1 \
+                    -Dprotobuf_ABSL_PROVIDER=package \
                     -Dprotobuf_USE_EXTERNAL_GTEST=OFF \
                     -Dprotobuf_INSTALL=ON \
                     -Dprotobuf_ABSOLUTE_TEST_PLUGIN_PATH=OFF
