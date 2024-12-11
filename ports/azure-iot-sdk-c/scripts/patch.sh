@@ -1,7 +1,7 @@
 #!/bin/bash
 
 patch_dir=${PWD}/patches
-torch_dir=$1
+azure_dir=$1
 
 # Function for apply a patch
 # $1 arg is the directory
@@ -14,8 +14,8 @@ qnx_patch () {
 }
 
 # Apply QNX patches
-qnx_patch ${torch_dir}/c-utility c-utility.patch
-qnx_patch ${torch_dir}/deps/azure-ctest azure-ctest.patch
-qnx_patch ${torch_dir}/provisioning_client/deps/utpm utpm.patch
+qnx_patch ${azure_dir}/c-utility c-utility.patch
+qnx_patch ${azure_dir}/deps/azure-ctest azure-ctest.patch
+qnx_patch ${azure_dir}/provisioning_client/deps/utpm utpm.patch
 
 echo "Some of these patches add untracked files to git! If experiencing issues consider using 'git clean -xdff' to clear the untracked files."
