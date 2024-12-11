@@ -47,16 +47,16 @@ jobs:
     - name: Build pixman
       uses: addnab/docker-run-action@v3
       with:
-        image: qnx800:latest
+        image: ghcr.io/qnx-ports/sdp800-build-env:latest
         options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
         shell: bash
         run: |
           ls -al ~
-          source ~/qnx800/qnxsdp-env.sh
+          source ~/qnx/800/qnxsdp-env.sh
           cd workspace
           mkdir -p output
           cd pixman
           git checkout pixman-0.43.4
           /usr/local/qnx/env/bin/meson setup build-qnx800 --cross-file ../build-files/resources/meson/aarch64le/workflows/qnx800.ini -Dprefix=/usr -Dopenmp=disabled
           /usr/local/qnx/env/bin/meson compile -C build-qnx800
-          DESTDIR=/home/runner/output /usr/local/qnx/env/bin/meson install --no-rebuild -C build-qnx800
+          DESTDIR=/home/runner/workspace/output /usr/local/qnx/env/bin/meson install --no-rebuild -C build-qnx800
