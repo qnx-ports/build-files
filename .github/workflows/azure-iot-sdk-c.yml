@@ -68,4 +68,7 @@ jobs:
         shell: bash
         run: |
           source ~/qnx800/qnxsdp-env.sh
+          WORKSPACE=$PWD
+          cd $WORKSPACE/build-files/ports/azure-iot-sdk-c/scripts
+          ./patch.sh $WORKSPACE/azure-iot-sdk-c
           QNX_PROJECT_ROOT="$(pwd)/azure-iot-sdk-c" make -C build-files/ports/azure-iot-sdk-c install -j$(nproc)
