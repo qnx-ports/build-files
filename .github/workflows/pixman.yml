@@ -48,10 +48,11 @@ jobs:
       uses: addnab/docker-run-action@v3
       with:
         image: qnx800:latest
-        options: -v ${{ github.workspace }}:/home/runner -e MAKEFLAGS=${{ env.MAKEFLAGS }}
+        options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
         shell: bash
         run: |
           source ~/qnx800/qnxsdp-env.sh
+          cd workspace
           mkdir -p output
           cd pixman
           git checkout pixman-0.43.4
