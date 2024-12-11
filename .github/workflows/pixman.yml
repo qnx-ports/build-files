@@ -21,8 +21,7 @@ jobs:
     if: |
       (github.event_name == 'workflow_dispatch') ||
       (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
-      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'pixman')) ||
-      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'ci'))
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'pixman'))
     steps:
     - name: Checkout build-files
       uses: actions/checkout@v4
@@ -51,7 +50,6 @@ jobs:
         options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
         shell: bash
         run: |
-          ls -al ~
           source ~/qnx/800/qnxsdp-env.sh
           cd workspace
           mkdir -p output
