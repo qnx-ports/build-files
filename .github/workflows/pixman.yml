@@ -51,6 +51,7 @@ jobs:
         options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
         shell: bash
         run: |
+          ls -al ~
           source ~/qnx800/qnxsdp-env.sh
           cd workspace
           mkdir -p output
