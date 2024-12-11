@@ -62,7 +62,7 @@ jobs:
         ./docker-build-qnx-image.sh
         docker image tag qnx800:latest ghcr.io/qnx-ports/sdp800-build-env:latest
         docker create --name tmp ghcr.io/qnx-ports/sdp800-build-env:latest
-        docker cp ~/qnx tmp:/home/runner
-        docker cp ~/.qnx tmp:/home/runner
+        docker cp ${{ github.workspace }}/qnx tmp:/home/runner
+        docker cp ${{ github.workspace }}/.qnx tmp:/home/runner
         docker commit tmp ghcr.io/qnx-ports/sdp800-build-env:latest
         docker push ghcr.io/qnx-ports/sdp800-build-env:latest
