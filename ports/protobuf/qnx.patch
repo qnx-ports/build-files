@@ -1,0 +1,13 @@
+diff --git a/third_party/utf8_range/utf8_validity.h b/third_party/utf8_range/utf8_validity.h
+index 1f251d0fe..ee57d5aa2 100644
+--- a/third_party/utf8_range/utf8_validity.h
++++ b/third_party/utf8_range/utf8_validity.h
+@@ -9,7 +9,7 @@
+ 
+ #include <cstddef>
+ 
+-#include "absl/strings/string_view.h"
++#include <absl/strings/string_view.h>
+ 
+ namespace utf8_range {
+ 
