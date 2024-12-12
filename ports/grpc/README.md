@@ -97,8 +97,6 @@ QNX_PROJECT_ROOT="$(pwd)/benchmark" make -C build-files/ports/benchmark JLEVEL=1
 git clone https://github.com/qnx-ports/protobuf.git
 cd protobuf
 git submodule update --init
-git switch qnx-main
-git pull
 cd -
 QNX_PROJECT_ROOT="$(pwd)/protobuf" make -C build-files/ports/protobuf install JLEVEL=16
 
