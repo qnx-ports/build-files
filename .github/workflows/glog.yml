@@ -35,13 +35,13 @@ jobs:
         repository: qnx-ports/glog
         path: glog
     
-        - name: Checkout gflags
+    - name: Checkout gflags
       uses: actions/checkout@v4
       with:
         repository: qnx-ports/gflags
         path: glog
     
-        - name: Checkout googletest
+    - name: Checkout googletest
       uses: actions/checkout@v4
       with:
         repository: qnx-ports/googletest
