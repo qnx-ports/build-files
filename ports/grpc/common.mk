@@ -31,7 +31,7 @@ ALL_DEPENDENCIES = grpc_all
 .PHONY: grpc_all install check clean
 
 CFLAGS += $(FLAGS) -D__EXT_QNX -D_QNX_SOURCE
-CFLAGS += -I$(INSTALL_ROOT)/$(PREFIX)/include -Wno-attributes
+CFLAGS += -I$(INSTALL_ROOT)/$(PREFIX)/include
 #Search paths for all of CMake's find_* functions --
 #headers, libraries, etc.
 #
