@@ -44,10 +44,9 @@ CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DEXTRA_CMAKE_ASM_FLAGS="$(FLAGS)" \
              -DEXTRA_CMAKE_LINKER_FLAGS="$(LDFLAGS)" \
 			 -DCMAKE_DEBUG_POSTFIX="" \
-			 -Dgflags_DIR=$(INSTALL_ROOT)/$(CPUVARDIR)/usr/lib/cmake/gflags \
+			 -Dgflags_DIR=$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/lib/cmake/gflags \
 			 -DGTest_DIR=$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/lib/cmake/GTest \
-			 -DBUILD_TESTING=ON \
-             -DCPU=$(CPU)
+			 -DBUILD_TESTING=ON 
 
 MAKE_ARGS ?= -j $(firstword $(JLEVEL) 1)
 
@@ -60,6 +59,7 @@ glog_all:
 install check:
 	@echo Installing...
 	@cd build && make VERBOSE=1 install $(MAKE_ARGS)
+	@cp ../run_tests.sh $(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/bin/glog_tests
 	@echo Done
 
 clean iclean spotless:

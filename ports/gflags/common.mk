@@ -7,6 +7,8 @@ NAME=gflags
 
 DIST_BASE=$(PRODUCT_ROOT)/../../../gflags
 
+PREFIX ?= /usr/local
+
 ifdef QNX_PROJECT_ROOT
 DIST_BASE=$(QNX_PROJECT_ROOT)
 endif
@@ -15,7 +17,7 @@ endif
 #by default, unless it was manually re-routed to
 #a staging area by setting both INSTALL_ROOT_nto
 #and USE_INSTALL_ROOT
-gflags_INSTALL_ROOT ?= $(INSTALL_ROOT_$(OS))
+INSTALL_ROOT ?= $(INSTALL_ROOT_$(OS))
 
 #choose Release or Debug
 CMAKE_BUILD_TYPE ?= Release
@@ -32,7 +34,10 @@ CFLAGS += $(FLAGS)
 include $(MKFILES_ROOT)/qtargets.mk
 
 CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
-             -DCMAKE_INSTALL_PREFIX=$(gflags_INSTALL_ROOT)/$(CPUVARDIR)/usr \
+             -DCMAKE_INSTALL_PREFIX=$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX) \
+             -DCMAKE_INSTALL_LIBDIR=$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/lib \
+             -DCMAKE_INSTALL_BINDIR=$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/bin \
+			 -DCMAKE_INSTALL_INCLUDEDIR=$(INSTALL_ROOT)/$(PREFIX)/include \
              -DGFLAGS_REGISTER_INSTALL_PREFIX=OFF \
              -DCMAKE_BUILD_TYPE=$(CMAKE_BUILD_TYPE) \
              -DCMAKE_SYSTEM_PROCESSOR=$(CPUVARDIR) \
