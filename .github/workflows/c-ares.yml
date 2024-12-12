@@ -1,13 +1,19 @@
 name: c-ares
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
+    paths:
+      - '.github/workflows/c-ares.yml'
+      - 'ports/c-ares/**'
   pull_request:
     branches:
       - main
-
+    paths:
+      - '.github/workflows/c-ares.yml'
+      - 'ports/c-ares/**'
 jobs:
 
   build:
