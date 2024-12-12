@@ -1,4 +1,7 @@
-### NOTE: Currently only c-ares v1.30.0 is supported. v1.34.3 support is being worked on.
+# IMPORTANT:
+QNX c-ares is now available from https://qnx.haxx.se/ for direct download.
+
+It is recommended you follow the instructions there.
 
 ### Tested for QNX 7.1 and 8.0 SDPs
 Cross-compiled on Ubuntu 24.04 for:
@@ -9,11 +12,21 @@ Cross-compiled on Ubuntu 24.04 for:
 Instructions for compiling and running tests are listed below.
 
 
-# Compile c-ares for SDP 7.1/8.0 in a Docker Container
+# Compile c-ares for SDP 7.1/8.0 on an Ubuntu Host or in a Docker Container
 ### *Pre-requisites:*
+
+#### `autoconf` must be installed on your host system.
+```bash
+# Ubuntu
+sudo apt-get update
+sudo apt-get install autoconf
+```
 
 #### `gtest` and `gmock` must be installed on your target.
 Go to https://github.com/qnx-ports/build-files/tree/c-ares_files/ports/googletest and follow the instructions, or follow the instructions below which include them in the build process.
+
+#### Docker is required if building in a container:
+https://docs.docker.com/engine/install/
 
 ### *Steps:*
 1. Create a new workspace or navigate to a desired one
@@ -31,7 +44,7 @@ git clone https://github.com/qnx-ports/build-files.git
 git clone git@github.com:qnx-ports/build-files.git 
 ```
 
-3. Build the Docker image and crease a container
+3. *Optional* Build the Docker image and crease a container
 ```bash
 cd build-files/docker
 ./docker-build-qnx-image.sh
@@ -70,64 +83,11 @@ BUILD_TESTING="OFF" QNX_PROJECT_ROOT="$(pwd)/googletest" make -C build-files/por
 QNX_PROJECT_ROOT="$(PWD)/c-ares" make -C build-files/ports/c-ares install -j4
 ```
 
-
-
-# Compile c-ares for SDP 7.1/8.0 on an Ubuntu Host
-### *Pre-requisites:*
-#### `autoconf` must be installed on your host system.
+**Before Rebuilding**: Make sure to clean your build area to prevent incorrect installations. This is required when switching between SDP 8 and 7.1 or vice versa.
 ```bash
-# Ubuntu
-sudo apt-get update
-sudo apt-get install autoconf
-```
-#### `gtest` and `gmock` must be installed on your target.
-Go to https://github.com/qnx-ports/build-files/tree/c-ares_files/ports/googletest and follow the instructions.
-
-### *Steps:*
-1. Create a new workspace or navigate to a desired one
-```bash
-mkdir c-ares_wksp && cd c-ares_wksp
+QNX_PROJECT_ROOT="$(pwd)/googletest" make -C build-files/ports/googletest clean
 ```
 
-2. Clone the `c-ares` and `build_files` repos
-```bash
-#Pick one:
-#Via HTTPS
-git clone https://github.com/qnx-ports/c-ares.git
-git clone https://github.com/qnx-ports/memory.git
-
-#Via SSH
-git clone git@github.com:qnx-ports/c-ares.git 
-git clone git@github.com:qnx-ports/memory.git 
-```
-
-3. Source your SDP (Installed from QNX Software Center)
-```bash
-#QNX 8.0 will be in the directory ~/qnx800/
-#QNX 7.1 will be in the directory ~/qnx710/
-source ~/qnx800/qnxsdp-env.sh
-```
-
-4. Run autoconf in the c-ares directory
-```bash
-cd c-ares
-autoreconf -fi
-cd ..
-```
-
-
-5. Build the project in your workspace from Step 1
-```bash
-QNX_PROJECT_ROOT="$(PWD)/c-ares" make -C build-files/ports/c-ares install -j4
-```
-
-**NOTE**: Before rebuilding, you may need to clean the QNX build directories `nto-aarch64-le` and `nto-x86_64-o`. This MUST be done when changing from SDP 7.1 to 8 or vice versa, as it will link against the wrong shared objects and not show an error until testing.
-```bash
-#From your workspace:
-rm -rf build-files/ports/c-ares/nto-*/!(GNUmakefile)
-#Removes everything from the nto-aarch64-le and nto-x86_86-o directories except the GNU makefile
-#Note: make clean currently does not work.
-```
 
 # Running Tests on a Target
 Some distributions of QNX have critical directories stored in a read-only partition (`/`, `/system`, `/etc`, etc). Included in these are the default `bin` and `lib` directories. If this is the case, follow the "Installing in home directory" instructions
