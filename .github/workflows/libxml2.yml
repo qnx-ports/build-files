@@ -45,7 +45,7 @@ jobs:
         options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
         shell: bash
         run: |
-          source ~/qnx800/qnxsdp-env.sh
+          source ~/qnx/800/qnxsdp-env.sh
           export TARGET=aarch64-unknown-nto-qnx8.0.0
           cd ~/workspace
           curl -O https://download.gnome.org/sources/libxml2/2.13/libxml2-2.13.5.tar.xz
@@ -90,7 +90,7 @@ jobs:
         registry: ghcr.io
         username: ${{github.actor}}
         password: ${{secrets.GITHUB_TOKEN}}
-        
+
     - name: Pull build environment
       run: |
         docker pull ghcr.io/qnx-ports/sdp800-build-env:latest
@@ -102,7 +102,7 @@ jobs:
         options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
         shell: bash
         run: |
-          source ~/qnx800/qnxsdp-env.sh
+          source ~/qnx/800/qnxsdp-env.sh
           cd ~/workspace
           sed -i 's/1.16.3/1.16.1/g' libxml2/configure.ac
           QNX_PROJECT_ROOT="$(pwd)/libxml2" make -C build-files/ports/libxml2 install -j${nproc}

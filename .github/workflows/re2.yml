@@ -77,7 +77,7 @@ jobs:
         options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
         shell: bash
         run: |
-          source ~/qnx800/qnxsdp-env.sh
+          source ~/qnx/800/qnxsdp-env.sh
           cd ~/workspace
           BUILD_TESTING="OFF" QNX_PROJECT_ROOT="$(pwd)/googletest" make -C build-files/ports/googletest install -j$(nproc)
           QNX_PROJECT_ROOT="$(pwd)/benchmark" make -C build-files/ports/benchmark install -j$(nproc)

@@ -52,6 +52,6 @@ jobs:
         options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
         shell: bash
         run: |
-          source ~/qnx800/qnxsdp-env.sh
+          source ~/qnx/800/qnxsdp-env.sh
           cd ~/workspace
           QNX_PROJECT_ROOT="$(pwd)/memory" make -C build-files/ports/memory install -j$(nproc)

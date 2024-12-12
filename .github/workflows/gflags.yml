@@ -53,6 +53,6 @@ jobs:
         options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
         shell: bash
         run: |
-          source ~/qnx800/qnxsdp-env.sh
+          source ~/qnx/800/qnxsdp-env.sh
           cd ~/workspace
           OSLIST="nto" QNX_PROJECT_ROOT="$(pwd)/gflags" make -C build-files/ports/gflags install -j$(nproc)
