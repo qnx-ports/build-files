@@ -55,4 +55,4 @@ jobs:
         run: |
           source ~/qnx/800/qnxsdp-env.sh
           cd ~/workspace
-          BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/bash" make -C build-files/ports/bash install -j$(nproc)
+          BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/bash" make -C build-files/ports/bash install

@@ -57,4 +57,4 @@ jobs:
           source ~/qnx/800/qnxsdp-env.sh
           cd ~/workspace
           source /usr/local/qnx/env/bin/activate
-          QNX_PROJECT_ROOT="$(pwd)/numpy" make -C build-files/ports/numpy install -j$(nproc)
+          QNX_PROJECT_ROOT="$(pwd)/numpy" make -C build-files/ports/numpy install

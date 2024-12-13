@@ -69,6 +69,6 @@ jobs:
           source ~/qnx/800/qnxsdp-env.sh
           cd ~/workspace
           source /usr/local/qnx/env/bin/activate
-          QNX_PROJECT_ROOT="$(pwd)/muslflt" make -C build-files/ports/muslflt/ -j$(nproc)
-          QNX_PROJECT_ROOT="$(pwd)/numpy" make -C build-files/ports/numpy install -j$(nproc)
-          BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/opencv" make -C build-files/ports/opencv USE_INSTALL_ROOT=true install -j$(nproc)
+          QNX_PROJECT_ROOT="$(pwd)/muslflt" make -C build-files/ports/muslflt/ 
+          QNX_PROJECT_ROOT="$(pwd)/numpy" make -C build-files/ports/numpy install 
+          BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/opencv" make -C build-files/ports/opencv USE_INSTALL_ROOT=true install 

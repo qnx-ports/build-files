@@ -80,4 +80,4 @@ jobs:
           cd $WORKSPACE/Fast-DDS/googletest
           git apply $WORKSPACE/Fast-DDS/build_qnx/qnx_patches/googletest_qnx.patch
           cd $WORKSPACE/Fast-DDS/build_qnx
-          make install  -j$(nproc)
+          make install 

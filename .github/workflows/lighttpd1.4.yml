@@ -58,4 +58,4 @@ jobs:
           cd lighttpd1.4
           ./autogen.sh
           cd -
-          QNX_PROJECT_ROOT="$(pwd)/lighttpd1.4" make -C build-files/ports/lighttpd1.4 install -j$(nproc)
+          QNX_PROJECT_ROOT="$(pwd)/lighttpd1.4" make -C build-files/ports/lighttpd1.4 install 

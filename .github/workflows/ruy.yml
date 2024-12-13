@@ -56,4 +56,4 @@ jobs:
         run: |
           source ~/qnx/800/qnxsdp-env.sh
           cd ~/workspace
-          QNX_PROJECT_ROOT="$(pwd)/ruy" make -C build-files/ports/ruy install -j$(nproc)
+          QNX_PROJECT_ROOT="$(pwd)/ruy" make -C build-files/ports/ruy install 

@@ -57,7 +57,7 @@ jobs:
           source /usr/local/qnx/env/bin/activate
           cd ~/workspace
           export QNX_SDP_VERSION=qnx800
-          PREFIX="/usr" QNX_PROJECT_ROOT="$(pwd)/googletest" make -C build-files/ports/googletest install -j$(nproc)
+          PREFIX="/usr" QNX_PROJECT_ROOT="$(pwd)/googletest" make -C build-files/ports/googletest install 
           cd build-files/ports/ros2
           mkdir -p src
           vcs import src < ros2.repos

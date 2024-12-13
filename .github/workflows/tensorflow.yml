@@ -67,5 +67,5 @@ jobs:
           cmake ../tensorflow/tensorflow/lite/tools/cmake/native_tools/flatbuffers
           cmake --build .
           cd ~/workspace
-          QNX_PROJECT_ROOT="$(pwd)/numpy" make -C build-files/ports/numpy install -j$(nproc)
-          QNX_PROJECT_ROOT="$(pwd)/tensorflow" QNX_PATCH_DIR="$(pwd)/build-files/ports/tensorflow/patches" TFLITE_HOST_TOOLS_DIR="$(pwd)/flatc-native-build/flatbuffers-flatc/bin/" make -C build-files/ports/tensorflow install -j$(nproc)
+          QNX_PROJECT_ROOT="$(pwd)/numpy" make -C build-files/ports/numpy install 
+          QNX_PROJECT_ROOT="$(pwd)/tensorflow" QNX_PATCH_DIR="$(pwd)/build-files/ports/tensorflow/patches" TFLITE_HOST_TOOLS_DIR="$(pwd)/flatc-native-build/flatbuffers-flatc/bin/" make -C build-files/ports/tensorflow install 

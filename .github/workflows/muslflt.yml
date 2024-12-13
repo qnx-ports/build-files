@@ -55,4 +55,4 @@ jobs:
         run: |
           source ~/qnx/800/qnxsdp-env.sh
           cd ~/workspace
-          QNX_PROJECT_ROOT="$(pwd)/muslflt" make -C build-files/ports/muslflt install -j$(nproc)
+          QNX_PROJECT_ROOT="$(pwd)/muslflt" make -C build-files/ports/muslflt install 

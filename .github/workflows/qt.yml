@@ -73,4 +73,4 @@ jobs:
           cmake --build . --parallel
           cmake --install .
           cd $WORKSPACE
-          BUILD_TESTING=OFF make -C build-files/ports/qt install -j$(nproc)
+          BUILD_TESTING=OFF make -C build-files/ports/qt install 

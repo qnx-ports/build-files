@@ -60,4 +60,4 @@ jobs:
           cd boost/tools/build
           git apply ../../../build-files/ports/boost/tools_qnx.patch
           cd ~/workspace
-          QNX_PROJECT_ROOT="$(pwd)/boost" make -C build-files/ports/boost install -j$(nproc)
+          QNX_PROJECT_ROOT="$(pwd)/boost" make -C build-files/ports/boost install

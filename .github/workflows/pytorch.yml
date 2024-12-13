@@ -64,4 +64,4 @@ jobs:
           ./scripts/patch.sh $WORKSPACE/pytorch
           cd $WORKSPACE
           export BUILD_PYTORCH_MOBILE_WITH_HOST_TOOLCHAIN=1
-          BUILD_TESTING=ON BUILD_LITE_INTERPRETER=ON QNX_PROJECT_ROOT="$(pwd)/pytorch" make -C build-files/ports/pytorch install -j$(nproc)
+          BUILD_TESTING=ON BUILD_LITE_INTERPRETER=ON QNX_PROJECT_ROOT="$(pwd)/pytorch" make -C build-files/ports/pytorch install 
