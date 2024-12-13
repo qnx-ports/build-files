@@ -7,14 +7,12 @@ on:
       - main
     paths:
       - '.github/workflows/cairo.yml'
-      - 'docker/**'
       - 'ports/cairo/**'
   pull_request:
     branches:
       - main
     paths:
       - '.github/workflows/cairo.yml'
-      - 'docker/**'
       - 'ports/cairo/**'
 
 jobs:
@@ -46,36 +44,26 @@ jobs:
       run: |
         git clone https://gitlab.freedesktop.org/pixman/pixman.git && cd pixman && git checkout pixman-0.43.4
 
-    - name: Download SDP 8.0
-      env:
-        LICENSE_KEY: ${{ secrets.LICENSE_KEY }}
-        MYQNX_USER: ${{ secrets.MYQNX_USER }}
-        MYQNX_PASSWORD: ${{ secrets.MYQNX_PASSWORD }}
-      run: |
-        echo "Downloading QNX Software Center ..."
-        mkdir ${{ github.workspace }}/.qnx
-        curl -v --cookie-jar ${{ github.workspace }}/.qnx/myqnxcookies.auth --form "userlogin=$MYQNX_USER" --form "password=$MYQNX_PASSWORD" -X POST https://www.qnx.com/account/login.html > login_response.html
-        curl -v -L --cookie ${{ github.workspace }}/.qnx/myqnxcookies.auth https://www.qnx.com/download/download/77351/qnx-setup-2.0.3-202408131717-linux.run > qnx-setup-lin.run
-        chmod a+x qnx-setup-lin.run
-        ./qnx-setup-lin.run force-override disable-auto-start agree-to-license-terms ${{ github.workspace }}/qnxinstall
-        echo "Installing License ..."
-        ${{ github.workspace }}/qnxinstall/qnxsoftwarecenter/qnxsoftwarecenter_clt -syncLicenseKeys -myqnx.user="$MYQNX_USER" -myqnx.password="$MYQNX_PASSWORD" -addLicenseKey $LICENSE_KEY
-        cp -r ~/.qnx/license ${{ github.workspace }}/.qnx
-        echo "Downloading QNX SDP ..."
-        ${{ github.workspace }}/qnxinstall/qnxsoftwarecenter/qnxsoftwarecenter_clt -mirror -cleanInstall -destination ${{ github.workspace }}/qnx800 -installBaseline com.qnx.qnx800 -myqnx.user="$MYQNX_USER" -myqnx.password="$MYQNX_PASSWORD"
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v3
+      with:
+        registry: ghcr.io
+        username: ${{github.actor}}
+        password: ${{secrets.GITHUB_TOKEN}}
 
-    - name: Build the Docker image
+    - name: Pull build environment
       run: |
-        cd build-files/docker && ./docker-build-qnx-image.sh
+        docker pull ghcr.io/qnx-ports/sdp800-build-env:latest
 
     - name: Build cairo
       uses: addnab/docker-run-action@v3
       with:
-        image: qnx800:latest
-        options: -v ${{ github.workspace }}:/home/runner
+        image: ghcr.io/qnx-ports/sdp800-build-env:latest
+        options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
         shell: bash
         run: |
-          source ~/qnx800/qnxsdp-env.sh
+          source ~/qnx/800/qnxsdp-env.sh
+          cd ~/workspace
           mkdir -p output
           export QNX_VERSION=800
           export QNX_ARCH=aarch64le
@@ -83,12 +71,12 @@ jobs:
           git checkout pixman-0.43.4
           /usr/local/qnx/env/bin/meson setup build-qnx800 --cross-file ../build-files/resources/meson/aarch64le/workflows/qnx800.ini -Dprefix=/usr -Dopenmp=disabled
           /usr/local/qnx/env/bin/meson compile -C build-qnx800
-          DESTDIR=/home/runner/qnx800/target/qnx /usr/local/qnx/env/bin/meson install --no-rebuild -C build-qnx800
+          DESTDIR=/home/runner/qnx/800/target/qnx /usr/local/qnx/env/bin/meson install --no-rebuild -C build-qnx800
           cd ../glib
           /usr/local/qnx/env/bin/meson setup build-qnx$QNX_VERSION --cross-file ../build-files/resources/meson/aarch64le/workflows/qnx800.ini -Dprefix=/usr -Dxattr=false
           /usr/local/qnx/env/bin/meson compile -C build-qnx$QNX_VERSION
-          DESTDIR=/home/runner/qnx800/target/qnx /usr/local/qnx/env/bin/meson install --no-rebuild -C build-qnx$QNX_VERSION
+          DESTDIR=/home/runner/qnx/800/target/qnx /usr/local/qnx/env/bin/meson install --no-rebuild -C build-qnx$QNX_VERSION
           cd ../cairo
           /usr/local/qnx/env/bin/meson setup build-qnx800 --cross-file ../build-files/resources/meson/aarch64le/workflows/qnx800.ini -Dprefix=/usr -Dtests=disabled
           /usr/local/qnx/env/bin/meson compile -C build-qnx800
-          DESTDIR=/home/runner/output /usr/local/qnx/env/bin/meson install --no-rebuild -C build-qnx800
+          DESTDIR=/home/runner/workspace/output /usr/local/qnx/env/bin/meson install --no-rebuild -C build-qnx800
