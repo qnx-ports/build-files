@@ -79,8 +79,8 @@ jobs:
         run: |
           source ~/qnx/800/qnxsdp-env.sh
           cd ~/workspace
-          BUILD_TESTING="OFF" QNX_PROJECT_ROOT="$(pwd)/googletest" make -C build-files/ports/googletest install -j$(nproc)
-          QNX_PROJECT_ROOT="$(pwd)/benchmark" make -C build-files/ports/benchmark install -j$(nproc)
-          QNX_PROJECT_ROOT="$(pwd)/muslflt" make -C build-files/ports/muslflt/ install -j$(nproc)
-          BUILD_TESTING="OFF" QNX_PROJECT_ROOT="$(pwd)/abseil-cpp" make -C build-files/ports/abseil-cpp install -j$(nproc)
-          OSLIST=nto QNX_PROJECT_ROOT="$(pwd)/re2" make -C build-files/ports/re2 install -j$(nproc)
+          BUILD_TESTING="OFF" QNX_PROJECT_ROOT="$(pwd)/googletest" make -C build-files/ports/googletest install 
+          QNX_PROJECT_ROOT="$(pwd)/benchmark" make -C build-files/ports/benchmark install 
+          QNX_PROJECT_ROOT="$(pwd)/muslflt" make -C build-files/ports/muslflt/ install 
+          BUILD_TESTING="OFF" QNX_PROJECT_ROOT="$(pwd)/abseil-cpp" make -C build-files/ports/abseil-cpp install 
+          OSLIST=nto QNX_PROJECT_ROOT="$(pwd)/re2" make -C build-files/ports/re2 install 
