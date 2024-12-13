@@ -36,6 +36,7 @@ cd ~/qnx_workspace/build-files/ports/azure-iot-sdk-c
 ./scripts/patch.sh ~/qnx_workspace/azure-iot-sdk-c
 
 # Build azure-iot-sdk-c
+cd ~/qnx_workspace
 QNX_PROJECT_ROOT="$(pwd)/azure-iot-sdk-c" make -C build-files/ports/azure-iot-sdk-c/ INSTALL_ROOT_nto=<staging-install-folder> USE_INSTALL_ROOT=true install -j4
 ```
 
@@ -50,8 +51,8 @@ git clone https://github.com/qnx-ports/azure-iot-sdk-c.git
 # source qnxsdp-env.sh
 source ~/qnx800/qnxsdp-env.sh
 
-# Clone azure-iot-sdk-c
-git clone https://github.com/qnx-ports/azure-iot-sdk-c.git && cd azure-iot-sdk-c
+# Perform submodule updates
+cd azure-iot-sdk-c
 git submodule update --init --recursive
 cd -
 
@@ -60,6 +61,7 @@ cd ~/qnx_workspace/build-files/ports/azure-iot-sdk-c
 ./scripts/patch.sh ~/qnx_workspace/azure-iot-sdk-c
 
 # Build
+cd ~/qnx_workspace
 QNX_PROJECT_ROOT="$(pwd)/azure-iot-sdk-c" make -C build-files/ports/azure-iot-sdk-c/ INSTALL_ROOT_nto=<staging-install-folder> USE_INSTALL_ROOT=true install -j4
 ```
 

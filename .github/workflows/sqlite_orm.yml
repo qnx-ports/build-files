@@ -1,4 +1,4 @@
-name: azure-iot-sdk-c
+name: sqlite_orm
 
 on:
   workflow_dispatch:
@@ -6,16 +6,16 @@ on:
     branches:
       - main
     paths:
-      - '.github/workflows/azure-iot-sdk-c.yml'
+      - '.github/workflows/sqlite_orm.yml'
       - 'docker/**'
-      - 'ports/azure-iot-sdk-c/**'
+      - 'ports/sqlite_orm/**'
   pull_request:
     branches:
       - main
     paths:
-      - '.github/workflows/azure-iot-sdk-c.yml'
+      - '.github/workflows/sqlite_orm.yml'
       - 'docker/**'
-      - 'ports/azure-iot-sdk-c/**'
+      - 'ports/sqlite_orm/**'
 
 jobs:
 
@@ -24,19 +24,19 @@ jobs:
     if: |
       (github.event_name == 'workflow_dispatch') ||
       (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
-      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'azure-iot-sdk-c'))
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'sqlite_orm'))
     steps:
     - name: Checkout build-files
       uses: actions/checkout@v4
       with:
         path: build-files
 
-    - name: Checkout azure-iot-sdk-c
+    - name: Checkout sqlite_orm
       uses: actions/checkout@v4
       with:
-        repository: qnx-ports/azure-iot-sdk-c
-        path: azure-iot-sdk-c
-        submodules: recursive
+        repository: fnc12/sqlite_orm
+        path: sqlite_orm
+        ref: v1.9
 
     - name: Download SDP 8.0
       env:
@@ -60,7 +60,7 @@ jobs:
       run: |
         cd build-files/docker && ./docker-build-qnx-image.sh
 
-    - name: Build azure-iot-sdk
+    - name: Build sqlite_orm
       uses: addnab/docker-run-action@v3
       with:
         image: qnx800:latest
@@ -68,8 +68,5 @@ jobs:
         shell: bash
         run: |
           source ~/qnx800/qnxsdp-env.sh
-          WORKSPACE=$PWD
-          cd $WORKSPACE/build-files/ports/azure-iot-sdk-c
-          ./scripts/patch.sh $WORKSPACE/azure-iot-sdk-c
-          cd $WORKSPACE
-          QNX_PROJECT_ROOT="$(pwd)/azure-iot-sdk-c" make -C build-files/ports/azure-iot-sdk-c install -j$(nproc)
+          QNX_PROJECT_ROOT="$(pwd)/sqlite_orm" make -C build-files/ports/sqlite_orm JLEVEL=${nproc} install
+          

@@ -7,46 +7,8 @@ Cross-compiled on Ubuntu 24.04 for:
 
 Instructions for compiling and running tests are listed below.
 
-# Compile gflags for SDP 7.1/8.0 on an Ubuntu Host
-1. Create a new workspace or navigate to a desired one
-```bash
-mkdir gflags_wksp && cd gflags_wksp
-```
-
-
-2. Clone the `gflags` and `build_files` repos
-```bash
-#Pick one:
-#Via HTTPS
-git clone https://github.com/qnx-ports/build-files.git
-git clone https://github.com/qnx-ports/gflags.git
-
-#Via SSH
-git clone git@github.com:qnx-ports/build-files.git
-git clone git@github.com:qnx-ports/gflags.git
-```
-
-3. Source your SDP (Installed from QNX Software Center)
-```bash
-#QNX 8.0 will be in the directory ~/qnx800/
-#QNX 7.1 will be in the directory ~/qnx710/
-source ~/qnx800/qnxsdp-env.sh
-```
-
-4. Build the project in your workspace from Step 1
-```bash
-OSLIST="nto" QNX_PROJECT_ROOT="$(pwd)/gflags" make -C build-files/ports/gflags install -j4
-```
-
-**NOTE**: Prior to rebuilding, it is good practice to clean your build files. This is REQUIRED when switching between SDP variations (i.e. 8.0 -> 7.1)
-
-```bash
-#From your workspace:
-make -C build-files/ports/gflags clean
-```
-
-# Compile gflags for SDP 7.1/8.0 in a Docker Container
-Requires Docker: https://docs.docker.com/engine/install/
+# Compile gflags for SDP 7.1/8.0 on an Ubuntu Host or in a Docker Container
+Optional step requires Docker: https://docs.docker.com/engine/install/
 
 1. Create a new workspace or navigate to a desired one
 ```bash
@@ -66,7 +28,7 @@ git clone git@github.com:qnx-ports/build-files.git
 git clone git@github.com:qnx-ports/gflags.git
 ```
 
-3. Build the Docker image and create a container
+3. *Optional* Build the Docker image and create a container
 ```bash
 cd build-files/docker
 ./docker-build-qnx-image.sh
@@ -82,11 +44,13 @@ source ~/qnx800/qnxsdp-env.sh
 
 5. Build the project in your workspace from Step 1
 ```bash
+
 #Navigate back to gflags_wksp
 #The docker container will put you in your home directory
 cd <path-to-workspace>
 
 PREFIX="/usr" OSLIST="nto" QNX_PROJECT_ROOT="$(pwd)/gflags" make -C build-files/ports/gflags install -j4
+
 ```
 
 **NOTE**: Prior to rebuilding, it is good practice to clean your build files. This is REQUIRED when switching between SDP variations (i.e. 8.0 -> 7.1)

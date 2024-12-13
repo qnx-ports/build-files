@@ -7,13 +7,17 @@ Cross-compiled on Ubuntu 24.04 for:
 
 Instructions for compiling and running tests are listed below.
 
-# Compile re2 for SDP 7.1/8.0 on an Ubuntu Host
+
+# Compile re2 for SDP 7.1/8.0 on an Ubuntu Host or in a Docker container
 ### *Dependencies:*
 The following libraries are required. Information on installing these can be found in https://github.com/qnx-ports/build-files, though their installation is included in the steps below.
 - `googletest`, https://github.com/qnx-ports/googletest
 - `benchmark`, https://github.com/qnx-ports/benchmark
 - `muslflt`, https://github.com/qnx-ports/muslflt
 - `abseil-cpp`, https://github.com/qnx-ports/abseil-cpp
+
+If building in a Docker Container, Docker is required:
+https://docs.docker.com/engine/install/
 
 ### *Steps:*
 1. Create a new workspace or navigate to a desired one
@@ -41,76 +45,7 @@ git clone git@github.com:qnx-ports/abseil-cpp.git
 git clone git@github.com:qnx-ports/re2.git
 ```
 
-3. Source your SDP (Installed from QNX Software Center)
-```bash
-#QNX 8.0 will be in the directory ~/qnx800/
-#QNX 7.1 will be in the directory ~/qnx710/
-source ~/qnx800/qnxsdp-env.sh
-```
-
-4. Build dependencies in order in your workspace from Step 1. Skip those you already have installed.
-```bash
-#1. googletest
-BUILD_TESTING="OFF" QNX_PROJECT_ROOT="$(pwd)/googletest" make -C build-files/ports/googletest install -j$(nproc)
-#2. benchmark
-QNX_PROJECT_ROOT="$(pwd)/benchmark" make -C build-files/ports/benchmark install -j$(nproc)
-#3. muslflt
-QNX_PROJECT_ROOT="$(pwd)/muslflt" make -C build-files/ports/muslflt/ install -j$(nproc)
-#4. abseil-cpp
-BUILD_TESTING="OFF" QNX_PROJECT_ROOT="$(pwd)/abseil-cpp" make -C build-files/ports/abseil-cpp install -j$(nproc)
-```
-
-
-5. Build the project in your workspace from Step 1
-```bash
-# Do not set QNX_BUILD_TESTS to anything if you do not want tests built.
-# With Tests
-OSLIST=nto QNX_BUILD_TESTS="yes" QNX_PROJECT_ROOT="$(pwd)/re2" make -C build-files/ports/re2 install -j$(nproc)
-# Without Tests
-OSLIST=nto QNX_PROJECT_ROOT="$(pwd)/re2" make -C build-files/ports/re2 install -j$(nproc)
-```
-
-**NOTE**: Before rebuilding, you may need to delete the `/build` subdirectories and their contents in `build-files/ports/re2/nto-aarch64-le` and `build-files/ports/re2/nto-x86_64-o`. This MUST be done when changing from SDP 7.1 to 8 or vice versa, as it will link against the wrong shared objects and not show an error until testing.
-```bash
-#From your workspace:
-make -C build-files/ports/re2 clean
-```
-
-# Compile re2 for SDP 7.1/8.0 in a Docker container
-### *Dependencies:*
-The following libraries are required. Information on installing these can be found in https://github.com/qnx-ports/build-files, though their installation is included in the steps below.
-- `googletest`, https://github.com/qnx-ports/googletest
-- `benchmark`, https://github.com/qnx-ports/benchmark
-- `muslflt`, https://github.com/qnx-ports/muslflt
-- `abseil-cpp`, https://github.com/qnx-ports/abseil-cpp
-
-### *Steps:*
-1. Create a new workspace or navigate to a desired one
-```bash
-mkdir re2_wksp && cd re2_wksp
-```
-
-2. Clone `re2`, `build_files`, and the required libraries. You can skip dependancies you already have installed in $QNX_TARGET.
-```bash
-#Pick one:
-#Via HTTPS
-git clone https://github.com/qnx-ports/build-files.git
-git clone https://github.com/qnx-ports/googletest.git
-git clone https://github.com/qnx-ports/benchmark.git
-git clone https://github.com/qnx-ports/muslflt.git
-git clone https://github.com/qnx-ports/abseil-cpp.git
-git clone https://github.com/qnx-ports/re2.git
-
-#Via SSH
-git clone git@github.com:qnx-ports/build-files.git
-git clone git@github.com:qnx-ports/googletest.git
-git clone git@github.com:qnx-ports/benchmark.git
-git clone git@github.com:qnx-ports/muslflt.git
-git clone git@github.com:qnx-ports/abseil-cpp.git
-git clone git@github.com:qnx-ports/re2.git
-```
-
-3. Build the Docker image and create a container
+3. *Optional* Build the Docker image and create a container
 ```bash
 cd build-files/docker
 ./docker-build-qnx-image.sh

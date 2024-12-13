@@ -7,7 +7,9 @@ Cross-compiled on Ubuntu 24.04 for:
 
 Instructions for compiling and running tests are listed below.
 
-# Compile memory for SDP 7.1/8.0 on an Ubuntu Host
+# Compile memory for SDP 7.1/8.0 on an Ubuntu Host or in a Docker Container
+Optionally requires Docker: https://docs.docker.com/engine/install/
+
 1. Create a new workspace or navigate to a desired one
 ```bash
 mkdir memory_wksp && cd memory_wksp
@@ -25,42 +27,6 @@ git clone git@github.com:qnx-ports/build-files.git
 git clone git@github.com:qnx-ports/memory.git
 ```
 
-3. Source your SDP (Installed from QNX Software Center)
-```bash
-#QNX 8.0 will be in the directory ~/qnx800/
-#QNX 7.1 will be in the directory ~/qnx710/
-source ~/qnx800/qnxsdp-env.sh
-```
-
-4. Build the project in your workspace from Step 1
-```bash
-QNX_PROJECT_ROOT="$(pwd)/memory" make -C build-files/ports/memory install -j4
-```
-
-**NOTE**: Before rebuilding, you may need to delete the `/build` subdirectories and their contents in `build-files/ports/memory/nto/aarch64/le` and `build-files/ports/memory/nto/x86_64/so`. This MUST be done when changing from SDP 7.1 to 8 or vice versa, as it will link against the wrong shared objects and not show an error until testing.
-```bash
-#From your workspace:
-make -C build-files/ports/memory clean
-```
-
-# Compile memory for SDP 7.1/8.0 in a Docker Container
-Requires Docker: https://docs.docker.com/engine/install/
-
-1. Create a new workspace or navigate to a desired one
-```bash
-mkdir memory_wksp && cd memory_wksp
-```
-
-2. Clone the  `build_files` repo
-```bash
-#Pick one:
-#Via HTTPS
-git clone https://github.com/qnx-ports/build-files.git
-
-#Via SSH
-git clone git@github.com:qnx-ports/build-files.git
-```
-
 3. Build the Docker image and create a container
 ```bash
 cd build-files/docker
@@ -75,23 +41,10 @@ cd build-files/docker
 source ~/qnx800/qnxsdp-env.sh
 ```
 
-5. Clone the `memory` repo to the workspace
+5. Build the project in your workspace from Step 1
 ```bash
-#Navigate back to memory_wksp
-#The docker container will put you in your home directory
-cd <path-to-workspace>
-
-#Pick one:
-#Via HTTPS
-git clone https://github.com/qnx-ports/memory.git
-
-#Via SSH
-git clone git@github.com:qnx-ports/memory.git
+QNX_PROJECT_ROOT="$(PWD)/memory" make -C build-files/ports/memory install -j4
 ```
-
-6. Build the project in your workspace from Step 1
-```bash
-QNX_PROJECT_ROOT="$(pwd)/memory" make -C build-files/ports/memory install -j4
 
 **NOTE**: Before rebuilding, you may need to delete the `/build` subdirectories and their contents in `build-files/ports/memory/nto/aarch64/le` and `build-files/ports/memory/nto/x86_64/so`. This MUST be done when changing from SDP 7.1 to 8 or vice versa, as it will link against the wrong shared objects and not show an error until testing.
 ```bash
