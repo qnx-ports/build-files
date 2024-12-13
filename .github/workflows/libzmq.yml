@@ -55,5 +55,5 @@ jobs:
         run: |
           source ~/qnx/800/qnxsdp-env.sh
           cd workspace
-          make -C libzmq/build_qnx JLEVEL=${nproc} install
+          make -C libzmq/build_qnx install
           

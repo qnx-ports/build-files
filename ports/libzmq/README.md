@@ -46,8 +46,6 @@ git clone https://github.com/zeromq/libzmq.git && cd libzmq
 # Checkout version 4.3.5
 git checkout v4.3.5
 
-# Now you are in the Docker container
-
 # source qnxsdp-env.sh to build for QNX 7.1
 source ~/qnx710/qnxsdp-env.sh
 
