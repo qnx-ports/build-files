@@ -81,4 +81,43 @@ make -C build-files/ports/glog clean
 ```
 
 # Running Tests on a Target
---TODO--
+Some distributions of QNX have critical directories stored in a read-only partition (`/`, `/system`, `/etc`, etc). Included in these are the default `bin` and `lib` directories. The instructions below install said libraries in a separate lib folder for this reason.
+
+### Installation in home directory
+1. Installation
+```bash
+## Setup environment variables
+# Set your target's IP
+TARGET_IP=<target-ip-address-here>
+# Choose the user to install this for
+TARGET_USER="qnxuser"
+#Select the prefix you used when building
+PREFIX="/usr/local"
+
+## Create new directories on target
+ssh $TARGET_USER@$TARGET_IP "mkdir -p /data/home/$TARGET_USER/glog/lib && mkdir -p /data/home/$TARGET_USER/glog/test"
+
+## If copying to an x86_64 machine, switch aarch64le to x86_64
+# Test Binaries, Scripts, Inputs
+scp -r $QNX_TARGET/aarch64le/$PREFIX/bin/glog_tests/* $TARGET_USER@$TARGET_IP:/data/home/$TARGET_USER/glog/test
+
+# Library .so files
+#-> Match libglog, libgtest, libgmock, libgflag
+scp $QNX_TARGET/aarch64le/$PREFIX/lib/libg[mtlf][oel][acsg]*.so* $TARGET_USER@$TARGET_IP:/data/home/$TARGET_USER/glog/lib
+```
+
+2. Running Tests
+```bash
+# SSH Into Target
+ssh qnxuser@<target-ip-address-or-hostname>
+
+# Export new library path
+export export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/data/home/qnxuser/glog/lib
+
+# Run test binaries
+cd ~/glog/test         #NOTE: ~ will direct you to the current user's home directory,
+                        #which may be incorrect depending on your choices above.
+                        #Navigate to /data/home to see all user home directories
+chmod 744 *
+./run_tests.sh
+```

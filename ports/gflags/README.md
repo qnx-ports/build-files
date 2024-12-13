@@ -86,7 +86,7 @@ source ~/qnx800/qnxsdp-env.sh
 #The docker container will put you in your home directory
 cd <path-to-workspace>
 
-OSLIST="nto" QNX_PROJECT_ROOT="$(pwd)/gflags" make -C build-files/ports/gflags install -j4
+PREFIX="/usr" OSLIST="nto" QNX_PROJECT_ROOT="$(pwd)/gflags" make -C build-files/ports/gflags install -j4
 ```
 
 **NOTE**: Prior to rebuilding, it is good practice to clean your build files. This is REQUIRED when switching between SDP variations (i.e. 8.0 -> 7.1)
