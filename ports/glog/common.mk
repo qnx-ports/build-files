@@ -3,7 +3,7 @@ QCONFIG=qconfig.mk
 endif
 include $(QCONFIG)
 
-NAME=gflags
+NAME=glog 
 
 DIST_BASE=$(PRODUCT_ROOT)/../../../gflags
 
@@ -20,51 +20,50 @@ endif
 INSTALL_ROOT ?= $(INSTALL_ROOT_$(OS))
 
 #choose Release or Debug
-CMAKE_BUILD_TYPE ?= Release
-
-#set the following to FALSE if generating .pinfo files is causing problems
-GENERATE_PINFO_FILES ?= TRUE
+CMAKE_BUILD_TYPE ?= Debug
 
 #override 'all' target to bypass the default QNX build system
-ALL_DEPENDENCIES = gflags_all
-.PHONY: gflags_all install check clean test
+ALL_DEPENDENCIES = glog_all
+.PHONY: glog_all install check clean test
 
 CFLAGS += $(FLAGS)
 
 include $(MKFILES_ROOT)/qtargets.mk
 
+CFLAGS += -I$(INSTALL_ROOT)/$(PREFIX)/include
+
 CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
-             -DCMAKE_INSTALL_PREFIX=$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX) \
+             -DCMAKE_INSTALL_PREFIX=$(PREFIX) \
              -DCMAKE_INSTALL_LIBDIR=$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/lib \
              -DCMAKE_INSTALL_BINDIR=$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/bin \
              -DCMAKE_INSTALL_INCLUDEDIR=$(INSTALL_ROOT)/$(PREFIX)/include \
-             -DGFLAGS_REGISTER_INSTALL_PREFIX=OFF \
              -DCMAKE_BUILD_TYPE=$(CMAKE_BUILD_TYPE) \
              -DCMAKE_SYSTEM_PROCESSOR=$(CPUVARDIR) \
              -DEXTRA_CMAKE_C_FLAGS="$(CFLAGS)" \
              -DEXTRA_CMAKE_CXX_FLAGS="$(CFLAGS)" \
              -DEXTRA_CMAKE_ASM_FLAGS="$(FLAGS)" \
              -DEXTRA_CMAKE_LINKER_FLAGS="$(LDFLAGS)" \
-             -DBUILD_SHARED_LIBS=1 \
-             -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON \
-             -DBUILD_TESTING=ON \
-             -DCPU=$(CPU)
+             -DCMAKE_DEBUG_POSTFIX="" \
+             -Dgflags_DIR=$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/lib/cmake/gflags \
+             -DGTest_DIR=$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/lib/cmake/GTest \
+             -DBUILD_TESTING=ON 
 
 MAKE_ARGS ?= -j $(firstword $(JLEVEL) 1)
 
 ifndef NO_TARGET_OVERRIDE
-gflags_all:
+glog_all:
 	@mkdir -p build
-	@cd build && cmake $(CMAKE_ARGS) $(DIST_BASE)
+	@cd build && cmake $(CMAKE_ARGS) $(DIST_BASE)/
 	@cd build && make VERBOSE=1 all $(MAKE_ARGS)
 
-install check: gflags_all
+install check: glog_all
 	@echo Installing...
 	@cd build && make VERBOSE=1 install $(MAKE_ARGS)
-	@echo Done.
+	@cp ../run_tests.sh $(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/bin/glog_tests
+	@echo Done
 
 clean iclean spotless:
-	rm -rf build
+	rm -fr build
 
 uninstall:
 endif
