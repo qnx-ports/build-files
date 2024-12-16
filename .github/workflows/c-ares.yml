@@ -60,8 +60,8 @@ jobs:
         run: |
           source ~/qnx/800/qnxsdp-env.sh
           cd ~/workspace
-          PREFIX="/usr" BUILD_TESTING="OFF" QNX_PROJECT_ROOT="$(pwd)/googletest" make -C build-files/ports/googletest install -j$(nproc)
+          PREFIX="/usr" BUILD_TESTING="OFF" QNX_PROJECT_ROOT="$(pwd)/googletest" make -C build-files/ports/googletest install
           cd ~/workspace/c-ares
           ./buildconf
           cd ~/workspace
-          QNX_PROJECT_ROOT="$(pwd)/c-ares" make -C build-files/ports/c-ares install -j$(nproc)
+          QNX_PROJECT_ROOT="$(pwd)/c-ares" make -C build-files/ports/c-ares install

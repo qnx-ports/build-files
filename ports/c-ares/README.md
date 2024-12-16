@@ -1,5 +1,5 @@
 # c-ares [![Build](https://github.com/qnx-ports/build-files/actions/workflows/c-ares.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/c-ares.yml)
-
+ 
 # IMPORTANT:
 QNX c-ares is now available from https://qnx.haxx.se/ for direct download.
 
