@@ -71,7 +71,7 @@ scp $QNX_TARGET/aarch64le/usr/lib/libzmq.so.5 qnxuser@$TARGET_HOST:/data/home/qn
 scp $QNX_TARGET/aarch64le/usr/bin/test_* qnxuser@$TARGET_HOST:/data/home/qnxuser/bin
 
 # Transfer test script to target
-scp build-files/ports/libzmq/script/run_tests.sh qnxuser@$TARGET_HOST:/data/home/qnxuser/bin
+scp build-files/ports/libzmq/scripts/run_tests.sh qnxuser@$TARGET_HOST:/data/home/qnxuser/bin
 ```
 ```bash
 # ssh to the target
