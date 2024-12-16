@@ -32,7 +32,7 @@ jobs:
     - name: Checkout gflags
       uses: actions/checkout@v4
       with:
-        repository: qnx-ports/gflags
+        repository: gflags/gflags
         path: gflags
 
     - name: Login to GitHub Container Registry
