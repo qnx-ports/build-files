@@ -27,23 +27,33 @@ git clone git@github.com:qnx-ports/build-files.git
 git clone git@github.com:qnx-ports/memory.git
 ```
 
-3. Build the Docker image and create a container
+3. **Optional** Checkout tested commit: Checkout Commit `016c9fb` from foonathan memory, which is tested by us.
+```bash
+cd memory
+git checkout 016c9fb
+cd ..
+```
+
+4. **Optional** Build the Docker image and create a container
 ```bash
 cd build-files/docker
 ./docker-build-qnx-image.sh
 ./docker-create-container.sh
+
+#Docker will put you in your home directory.
+cd <path-to-your-workspace>
 ```
 
-4. Source your SDP (Installed from QNX Software Center)
+5. Source your SDP (Installed from QNX Software Center)
 ```bash
 #QNX 8.0 will be in the directory ~/qnx800/
 #QNX 7.1 will be in the directory ~/qnx710/
 source ~/qnx800/qnxsdp-env.sh
 ```
 
-5. Build the project in your workspace from Step 1
+6. Build the project in your workspace from Step 1
 ```bash
-QNX_PROJECT_ROOT="$(PWD)/memory" make -C build-files/ports/memory install -j4
+QNX_PROJECT_ROOT="$PWD/memory" make -C build-files/ports/memory install -j4
 ```
 
 **NOTE**: Before rebuilding, you may need to delete the `/build` subdirectories and their contents in `build-files/ports/memory/nto/aarch64/le` and `build-files/ports/memory/nto/x86_64/so`. This MUST be done when changing from SDP 7.1 to 8 or vice versa, as it will link against the wrong shared objects and not show an error until testing.
