@@ -60,8 +60,9 @@ jobs:
         shell: bash
         run: |
           source ~/qnx/800/qnxsdp-env.sh
+          cd ~/workspace
           cd boost/tools/build
           git apply ../../../build-files/ports/boost/tools_qnx.patch
-          cd -
+          cd ~/workspace
           PREFIX="/usr/local" QNX_PROJECT_ROOT="$(pwd)/boost" make -C build-files/ports/boost install
           PREFIX="/usr/local" QNX_PROJECT_ROOT="$(pwd)/gtsam" make -C build-files/ports/gtsam install
