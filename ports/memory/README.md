@@ -20,18 +20,21 @@ mkdir memory_wksp && cd memory_wksp
 #Pick one:
 #Via HTTPS
 git clone https://github.com/qnx-ports/build-files.git
-git clone https://github.com/qnx-ports/memory.git
+git clone https://github.com/foonathan/memory.git
 
 #Via SSH
 git clone git@github.com:qnx-ports/build-files.git
-git clone git@github.com:qnx-ports/memory.git
+git clone git@github.com:foonathan/memory.git
 ```
 
-3. **Optional** Checkout tested commit: Checkout Commit `016c9fb` from foonathan memory, which is tested by us.
+3. **Optional** Checkout tested commit: Checkout Commit `v0.7-3` from foonathan memory, which is tested by us and is the only version on which the test patch will work.
 ```bash
+#Checkout the correct tag
 cd memory
-git checkout 016c9fb
+git checkout v0.7-3
 cd ..
+#Apply the desired patch
+patch memory/test/CMakeLists.txt < build-files/ports/memory/memory_0.7-3_patch.patch
 ```
 
 4. **Optional** Build the Docker image and create a container

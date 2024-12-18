@@ -26,7 +26,7 @@ ALL_DEPENDENCIES = memory_all
 .PHONY: memory_all install check clean
 
 CFLAGS += $(FLAGS)
-LDFLAGS += -Wl,--build-id=md5
+LDFLAGS += -Wl,--build-id=md5 -lc++ -lm
 
 define PINFO
 endef
@@ -51,16 +51,12 @@ MAKE_ARGS ?= -j $(firstword $(JLEVEL) 1)
 ifndef NO_TARGET_OVERRIDE
 memory_all:
 	@mkdir -p build
-	@if ! grep -q QNX "$(QNX_PROJECT_ROOT)/test/CMakeLists.txt" ; then echo "if(QNX)" >> $(QNX_PROJECT_ROOT)/test/CMakeLists.txt; echo "install(TARGETS foonathan_memory_test DESTINATION bin/) #QNX" >> $(QNX_PROJECT_ROOT)/test/CMakeLists.txt; echo "endif() #QNX" >> $(QNX_PROJECT_ROOT)/test/CMakeLists.txt; fi
 	@cd build && cmake $(CMAKE_ARGS) $(QNX_PROJECT_ROOT)/
 	@cd build && make VERBOSE=1 all $(MAKE_ARGS)
-	@if grep -q QNX "$(QNX_PROJECT_ROOT)/test/CMakeLists.txt" ; then sed -i "/QNX/d" $(QNX_PROJECT_ROOT)/test/CMakeLists.txt ; fi
 
 install check: memory_all
 	@echo Installing...
-	@if ! grep -q QNX "$(QNX_PROJECT_ROOT)/test/CMakeLists.txt" ; then echo "if(QNX)" >> $(QNX_PROJECT_ROOT)/test/CMakeLists.txt; echo "install(TARGETS foonathan_memory_test DESTINATION bin/) #QNX" >> $(QNX_PROJECT_ROOT)/test/CMakeLists.txt; echo "endif() #QNX" >> $(QNX_PROJECT_ROOT)/test/CMakeLists.txt; fi
 	@cd build && make VERBOSE=1 install all $(MAKE_ARGS)
-	@if grep -q QNX "$(QNX_PROJECT_ROOT)/test/CMakeLists.txt" ; then sed -i "/QNX/d" $(QNX_PROJECT_ROOT)/test/CMakeLists.txt ; fi
 	@echo Done.
 
 clean iclean spotless:
