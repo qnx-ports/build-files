@@ -1,0 +1,70 @@
+name: tftp-hpa
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/tftp-hpa.yml'
+      - 'ports/tftp-hpa/**'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/tftp-hpa.yml'
+      - 'ports/tftp-hpa/**'
+
+jobs:
+  build:
+    runs-on: self-hosted
+    if: |
+      (github.event_name == 'workflow_dispatch') ||
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'tftp-hpa'))
+    steps:
+    - name: Checkout build-files
+      uses: actions/checkout@v4
+      with:
+        path: build-files
+
+    - name: Fetch tftp-hpa
+      run: |
+        curl -O https://www.kernel.org/pub/software/network/tftp/tftp-hpa/tftp-hpa-5.2.tar.gz
+        tar xf tftp-hpa-5.2.tar.gz
+
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v3
+      with:
+        registry: ghcr.io
+        username: ${{github.actor}}
+        password: ${{secrets.GITHUB_TOKEN}}
+
+    - name: Pull build environment
+      run: |
+        docker pull ghcr.io/qnx-ports/sdp800-build-env:latest
+
+    - name: Build tftp-hpa
+      uses: addnab/docker-run-action@v3
+      with:
+        image: ghcr.io/qnx-ports/sdp800-build-env:latest
+        options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
+        shell: bash
+        run: |
+          source ~/qnx/800/qnxsdp-env.sh
+          cd workspace
+          mkdir -p output
+          cd tftp-hpa-5.2
+          # Apply patches
+          patch -p1 < ~/workspace/build-files/tftp-hpa/fix-build-gcc-10.patch
+          patch -p1 < ~/workspace/build-files/tftp-hpa/qnx-sa-restart.patch
+          # Configure
+          ./configure \
+              --build=x86_64-unknown-linux-gnu \
+              --host=$TARGET \
+              --prefix=/usr \
+              --mandir=/usr/share/man
+          # Make
+          make
+          # Install
+          DESTDIR=/home/runner/workspace/output make install
