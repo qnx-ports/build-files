@@ -67,4 +67,4 @@ jobs:
           # Make
           make
           # Install
-          make install DESTDIR=/home/runner/workspace/output
+          make install INSTALLROOT=/home/runner/workspace/output

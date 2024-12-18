@@ -32,7 +32,7 @@ patch -p1 < ../qnx-sa-restart.patch
 # Actual compiling
 make
 # Install result to a temporary folder for transfer to QNX
-make DESTDIR=$OUTPUT_DIR install
+make INSTALLROOT=$OUTPUT_DIR install
 ```
 
 # Testing client & server
