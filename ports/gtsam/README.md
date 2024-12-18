@@ -211,32 +211,20 @@ TARGET_IP_ADDRESS=<target-ip-address-or-hostname>
 #Select the home directory to install to (this will install to /data/home/qnxuser)
 TARGET_USER_FOR_INSTALL="qnxuser"
 
-#Set the path to your workspace
-PATH_TO_YOUR_WORKSPACE="/path/to/your/workspace"
+#Set the prefix you sued when building (if not set, /usr/local)
+PREFIX="/usr/local"
 
 #Create new directories on the target
-ssh qnxuser@$TARGET_IP_ADDRESS "mkdir -p /data/home/$TARGET_USER_FOR_INSTALL/gtsam/lib"
-ssh qnxuser@$TARGET_IP_ADDRESS "mkdir -p /data/home/$TARGET_USER_FOR_INSTALL/gtsam/test/gtsam_examples/Data/Balbianello"
+ssh $TARGET_USER_FOR_INSTALL@$TARGET_IP_ADDRESS "mkdir -p /data/home/$TARGET_USER_FOR_INSTALL/gtsam/lib"
+ssh $TARGET_USER_FOR_INSTALL@$TARGET_IP_ADDRESS "mkdir -p /data/home/$TARGET_USER_FOR_INSTALL/gtsam/test/gtsam_examples/Data/Balbianello"
 
 #If copying to an x86_64 install, change /aarch64le/ to /x86_64/
-#boost
-scp $QNX_TARGET/aarch64le/usr/local/lib/libboost* qnxuser@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER_FOR_INSTALL/gtsam/lib
-
-#metis
-scp $QNX_TARGET/aarch64le/usr/lib/libmetis* qnxuser@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER_FOR_INSTALL/gtsam/lib
-
-#gtsam
-scp $QNX_TARGET/aarch64le/usr/lib/libgtsam* qnxuser@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER_FOR_INSTALL/gtsam/lib
+scp $QNX_TARGET/aarch64le/$PREFIX/lib/libboost* $TARGET_USER_FOR_INSTALL@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER_FOR_INSTALL/gtsam/lib
+scp $QNX_TARGET/aarch64le/$PREFIX/lib/libmetis* $TARGET_USER_FOR_INSTALL@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER_FOR_INSTALL/gtsam/lib
+scp $QNX_TARGET/aarch64le/$PREFIX/lib/libgtsam* $TARGET_USER_FOR_INSTALL@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER_FOR_INSTALL/gtsam/lib
 
 #tests and provided test script
-scp $PATH_TO_YOUR_WORKSPACE/build-files/ports/gtsam/nto-aarch64/le/build/gtsam/*/tests/test* qnxuser@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER_FOR_INSTALL/gtsam/test
-scp $PATH_TO_YOUR_WORKSPACE/build-files/ports/gtsam/nto-aarch64/le/build/tests/test* qnxuser@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER_FOR_INSTALL/gtsam/test
-scp $PATH_TO_YOUR_WORKSPACE/build-files/ports/gtsam/run_tests.sh qnxuser@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER_FOR_INSTALL/gtsam/test
-
-#Test data
-scp $PATH_TO_YOUR_WORKSPACE/gtsam/examples/Data/* qnxuser@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER_FOR_INSTALL/gtsam/test/gtsam_examples/Data
-scp $PATH_TO_YOUR_WORKSPACE/gtsam/examples/Data/Balbianello/* qnxuser@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER_FOR_INSTALL/gtsam/test/gtsam_examples/Data/Balbianello
-scp $PATH_TO_YOUR_WORKSPACE/gtsam/gtsam_unstable/discrete/examples/!(*.txt|*.cpp) qnxuser@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER_FOR_INSTALL/gtsam/test/
+scp -r $QNX_TARGET/aarch64le/$PREFIX/bin/gtsam_tests/* $TARGET_USER_FOR_INSTALL@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER_FOR_INSTALL/gtsam/test
 ```
 
 2. Running Tests

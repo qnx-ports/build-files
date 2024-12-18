@@ -36,7 +36,7 @@ include $(MKFILES_ROOT)/qtargets.mk
 GTSAM_ROOT = $(PROJECT_ROOT)/../../../gtsam
 
 QNX_TARGET_DATASET_DIR ?= /data/home/root/gtsam/test
-
+PREFIX ?= /usr/local
 
 ifdef QNX_PROJECT_ROOT
 GTSAM_ROOT=$(QNX_PROJECT_ROOT)
@@ -47,10 +47,10 @@ CMAKE_ARGS = -DEPROSIMA_BUILD_TESTS=ON \
              -DCMAKE_NO_SYSTEM_FROM_IMPORTED=TRUE \
              -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DCMAKE_SYSTEM_PROCESSOR=$(CPUVARDIR) \
-             -DCMAKE_INSTALL_PREFIX=$(GTSAM_INSTALL_ROOT)/$(CPUVARDIR)/usr \
-             -DCMAKE_INSTALL_LIBDIR=$(GTSAM_INSTALL_ROOT)/$(CPUVARDIR)/usr/lib \
-             -DINCLUDE_INSTALL_DIR=$(GTSAM_INSTALL_ROOT)/usr/include \
-             -DCMAKE_INSTALL_INCLUDEDIR=$(GTSAM_INSTALL_ROOT)/usr/include \
+             -DCMAKE_INSTALL_PREFIX=$(GTSAM_INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX) \
+             -DCMAKE_INSTALL_LIBDIR=$(GTSAM_INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/lib \
+             -DINCLUDE_INSTALL_DIR=$(GTSAM_INSTALL_ROOT)/$(PREFIX)/include \
+             -DCMAKE_INSTALL_INCLUDEDIR=$(GTSAM_INSTALL_ROOT)/$(PREFIX)/include \
              -DCMAKE_BUILD_TYPE=$(CMAKE_BUILD_TYPE) \
              -DEXTRA_CMAKE_C_FLAGS="$(CFLAGS)" \
              -DEXTRA_CMAKE_CXX_FLAGS="$(CFLAGS)" \
@@ -72,7 +72,18 @@ GTSAM_all:
 	@cd build && make VERBOSE=1 all $(MAKE_ARGS)
 
 install check: GTSAM_all
+	@echo "Installing..."
 	@cd build && make VERBOSE=1 install $(MAKE_ARGS)
+	@echo "Copying tests to staging area..."
+	@mkdir -p $(GTSAM_INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/bin/gtsam_tests/gtsam_examples/Data/Balbianello
+	@cp build/gtsam/*/tests/test* $(GTSAM_INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/bin/gtsam_tests
+	@cp build/tests/test* $(GTSAM_INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/bin/gtsam_tests
+	@cp build/gtsam_unstable/*/tests/test* $(GTSAM_INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/bin/gtsam_tests
+	@cp $(PROJECT_ROOT)/run_tests.sh $(GTSAM_INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/bin/gtsam_tests
+	@cp -r $(GTSAM_ROOT)/examples/Data/* $(GTSAM_INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/bin/gtsam_tests/gtsam_examples/Data
+	@cp $(GTSAM_ROOT)/gtsam_unstable/discrete/examples/*.csv $(GTSAM_INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/bin/gtsam_tests
+	@cp $(GTSAM_ROOT)/gtsam_unstable/discrete/examples/*.xls $(GTSAM_INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/bin/gtsam_tests
+	@echo "Done."
 
 clean iclean spotless:
 	@rm -rf build
