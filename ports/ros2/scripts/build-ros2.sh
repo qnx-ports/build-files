@@ -73,8 +73,7 @@ build(){
     PYTHON3_PATH=$(which python3)
 
     # Uncomment this line and comment the next line depending on where the python3 is located on your target
-    #grep -rinl "\#\!$PYTHON3_PATH" ./opt/ros/humble | xargs -d '\n' sed -i '1 i #!/usr/bin/python3'
-    grep -rinl "\#\!$PYTHON3_PATH" ./opt/ros/humble | xargs -d '\n' sed -i '1 i #!/system/xbin/python3'
+    grep -rinl "\#\!$PYTHON3_PATH" ./opt/ros/humble | xargs -d '\n' sed -i "1 i #!$QNX_PYTHON3_PATH"
     grep -rinl "\#\!$PYTHON3_PATH" ./opt/ros/humble | xargs -d '\n' sed -i '2 d'
 
     tar -czf ros2_humble.tar.gz ./opt/ros/humble
