@@ -56,8 +56,8 @@ jobs:
           mkdir -p output
           cd tftp-hpa-5.2
           # Apply patches
-          patch -p1 < ~/workspace/build-files/tftp-hpa/fix-build-gcc-10.patch
-          patch -p1 < ~/workspace/build-files/tftp-hpa/qnx-sa-restart.patch
+          patch -p1 < ~/workspace/build-files/ports/tftp-hpa/fix-build-gcc-10.patch
+          patch -p1 < ~/workspace/build-files/ports/tftp-hpa/qnx-sa-restart.patch
           # Configure
           ./configure \
               --build=x86_64-unknown-linux-gnu \
