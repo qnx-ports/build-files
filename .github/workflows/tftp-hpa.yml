@@ -61,10 +61,10 @@ jobs:
           # Configure
           ./configure \
               --build=x86_64-unknown-linux-gnu \
-              --host=$TARGET \
+              --host=aarch64-unknown-nto-qnx8.0.0 \
               --prefix=/usr \
               --mandir=/usr/share/man
           # Make
           make
           # Install
-          DESTDIR=/home/runner/workspace/output make install
+          make install DESTDIR=/home/runner/workspace/output
