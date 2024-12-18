@@ -1,4 +1,4 @@
-*WARNING*: tftp is not a secure protocol. Use only on local/trusted network!
+**WARNING**: tftp is NOT a secure protocol. Use only on local/trusted network!
 
 Currently tested version and SDP combos:
 + 5.2 on QNX 8.0/7.1
