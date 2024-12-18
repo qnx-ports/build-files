@@ -26,7 +26,7 @@ ALL_DEPENDENCIES = memory_all
 .PHONY: memory_all install check clean
 
 CFLAGS += $(FLAGS)
-LDFLAGS += -Wl,--build-id=md5
+LDFLAGS += -Wl,--build-id=md5 -lc++ -lm
 
 define PINFO
 endef

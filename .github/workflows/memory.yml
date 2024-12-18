@@ -32,7 +32,7 @@ jobs:
     - name: Checkout memory
       uses: actions/checkout@v4
       with:
-        repository: qnx-ports/memory
+        repository: foonathan/memory
         path: memory
 
     - name: Login to GitHub Container Registry
@@ -45,7 +45,7 @@ jobs:
       run: |
         docker pull ghcr.io/qnx-ports/sdp800-build-env:latest
 
-    - name: Build memory
+    - name: Build memory v0.7-3 (tag checkout does not work)
       uses: addnab/docker-run-action@v3
       with:
         image: ghcr.io/qnx-ports/sdp800-build-env:latest
@@ -54,4 +54,8 @@ jobs:
         run: |
           source ~/qnx/800/qnxsdp-env.sh
           cd ~/workspace
+          cd memory
+          git checkout 0f07757
+          cd ~/workspace
+          patch memory/test/CMakeLists.txt < build-files/ports/memory/memory_0.7-3_patch.patch
           QNX_PROJECT_ROOT="$(pwd)/memory" make -C build-files/ports/memory install
