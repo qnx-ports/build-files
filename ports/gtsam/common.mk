@@ -29,7 +29,7 @@ ALL_DEPENDENCIES = GTSAM_all
 #Required for 7.0
 FLAGS += -D_QNX_SOURCE
 CFLAGS += $(FLAGS)
-LDFLAGS += -Wl,--build-id=md5 -lregex
+LDFLAGS += -Wl,--build-id=md5 -lregex -lc++ -lm
 
 include $(MKFILES_ROOT)/qtargets.mk
 
@@ -52,7 +52,7 @@ CMAKE_ARGS = -DEPROSIMA_BUILD_TESTS=ON \
              -DINCLUDE_INSTALL_DIR=$(GTSAM_INSTALL_ROOT)/$(PREFIX)/include \
              -DCMAKE_INSTALL_INCLUDEDIR=$(GTSAM_INSTALL_ROOT)/$(PREFIX)/include \
              -DCMAKE_BUILD_TYPE=$(CMAKE_BUILD_TYPE) \
-             -DEXTRA_CMAKE_C_FLAGS="$(CFLAGS)" \
+             -DEXTRA_CMAKE_C_FLAGS="$(CFLAGS) -std=c++14" \
              -DEXTRA_CMAKE_CXX_FLAGS="$(CFLAGS)" \
              -DEXTRA_CMAKE_ASM_FLAGS="$(FLAGS)" \
              -DEXTRA_CMAKE_LINKER_FLAGS="$(LDFLAGS)" \
@@ -61,6 +61,7 @@ CMAKE_ARGS = -DEPROSIMA_BUILD_TESTS=ON \
              -DCMAKE_AR=$(QNX_HOST)/usr/bin/nto$(CPU)-ar \
              -DCMAKE_RANLIB=${QNX_HOST}/usr/bin/nto${CPU}-ranlib \
 			 -DCPUVARDIR=$(CPUVARDIR) \
+			 -DCXX11=ON \
              -DQNX_TARGET_DATASET_DIR=$(QNX_TARGET_DATASET_DIR) 
 
 MAKE_ARGS ?= -j $(firstword $(JLEVEL) 1)
