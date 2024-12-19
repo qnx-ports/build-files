@@ -65,4 +65,4 @@ jobs:
           git apply ../../../build-files/ports/boost/tools_qnx.patch
           cd ~/workspace
           PREFIX="/usr/local" QNX_PROJECT_ROOT="$(pwd)/boost" make -C build-files/ports/boost install
-          PREFIX="/usr/local" QNX_PROJECT_ROOT="$(pwd)/gtsam" make -C build-files/ports/gtsam install
+          PREFIX="/usr/local" QNX_PROJECT_ROOT="$(pwd)/gtsam" INSTALL_TESTS="false" make -C build-files/ports/gtsam install

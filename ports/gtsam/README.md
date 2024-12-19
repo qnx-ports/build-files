@@ -96,7 +96,7 @@ make -C build-files/ports/gtsam clean
 
 ### *Prerequisites:*
 #### __`boost` must be installed in $QNX_TARGET__
-Instructions for building boost are included in the steps below for building in a Docker Container
+Instructions for building boost are included in the steps below.
 
 ### *Steps:* 
 
@@ -178,8 +178,6 @@ cd tools/build && git apply ../../../build-files/ports/boost/tools_qnx.patch
 # Build boost (WARNING: This process can take upwards of 20 minutes)
 cd ../../..
 make -C build-files/ports/boost/ install QNX_PROJECT_ROOT="$(pwd)/boost" -j4
-#If building for SDP 8.0 or later, use:
-PREFIX="/usr" make -C build-files/ports/boost/ install QNX_PROJECT_ROOT="$(pwd)/boost" -j4
 ```
 
 7. Build gtsam in your workspace from Step 1
