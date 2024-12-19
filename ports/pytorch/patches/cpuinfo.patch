@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index b5db1a7..43bcb9d 100644
+index b5db1a7..e8ce32b 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -105,7 +105,7 @@ IF(NOT CMAKE_SYSTEM_NAME)
@@ -11,23 +11,36 @@ index b5db1a7..43bcb9d 100644
    IF(${CMAKE_VERSION} VERSION_GREATER_EQUAL "3.14" AND NOT IS_APPLE_OS)
      MESSAGE(WARNING
        "Target operating system \"${CMAKE_SYSTEM_NAME}\" is not supported in cpuinfo. "
-@@ -157,7 +157,14 @@ ENDIF()
+@@ -157,7 +157,27 @@ ENDIF()
  # ---[ cpuinfo library
  SET(CPUINFO_SRCS src/api.c src/cache.c src/init.c src/log.c)
  
 -IF(CPUINFO_SUPPORTED_PLATFORM)
-+if(QNX)
++IF(QNX)
 +  LIST(APPEND CPUINFO_SRCS
 +  src/qnx/api.c
 +  src/arm/uarch.c
 +  )
-+endif()
++  IF(CPUINFO_TARGET_PROCESSOR MATCHES "^(i[3-6]86|AMD64|x86(_64)?)$")
++    LIST(APPEND CPUINFO_SRCS
++      src/x86/init.c
++      src/x86/info.c
++      src/x86/vendor.c
++      src/x86/uarch.c
++      src/x86/name.c
++      src/x86/topology.c
++      src/x86/isa.c
++      src/x86/cache/init.c
++      src/x86/cache/descriptor.c
++      src/x86/cache/deterministic.c)
++  ENDIF()
++ENDIF()
 +
 +IF(CPUINFO_SUPPORTED_PLATFORM AND !QNX)
    IF(NOT CMAKE_SYSTEM_NAME STREQUAL "Emscripten" AND (CPUINFO_TARGET_PROCESSOR MATCHES "^(i[3-6]86|AMD64|x86(_64)?)$" OR IOS_ARCH MATCHES "^(i386|x86_64)$"))
      LIST(APPEND CPUINFO_SRCS
        src/x86/init.c
-@@ -234,6 +241,9 @@ IF(CPUINFO_SUPPORTED_PLATFORM)
+@@ -234,6 +254,9 @@ IF(CPUINFO_SUPPORTED_PLATFORM)
    ENDIF()
  ENDIF()
  
@@ -37,7 +50,7 @@ index b5db1a7..43bcb9d 100644
  IF(CPUINFO_LIBRARY_TYPE STREQUAL "default")
    ADD_LIBRARY(cpuinfo ${CPUINFO_SRCS})
  ELSEIF(CPUINFO_LIBRARY_TYPE STREQUAL "shared")
-@@ -782,6 +792,7 @@ IF(CPUINFO_SUPPORTED_PLATFORM AND CPUINFO_BUILD_MOCK_TESTS)
+@@ -782,6 +805,7 @@ IF(CPUINFO_SUPPORTED_PLATFORM AND CPUINFO_BUILD_MOCK_TESTS)
    ENDIF()
  ENDIF()
  
@@ -45,7 +58,7 @@ index b5db1a7..43bcb9d 100644
  # ---[ cpuinfo unit tests
  IF(CPUINFO_SUPPORTED_PLATFORM AND CPUINFO_BUILD_UNIT_TESTS)
    ADD_EXECUTABLE(init-test test/init.cc)
-@@ -833,6 +844,7 @@ IF(CPUINFO_SUPPORTED_PLATFORM AND CPUINFO_BUILD_UNIT_TESTS)
+@@ -833,6 +857,7 @@ IF(CPUINFO_SUPPORTED_PLATFORM AND CPUINFO_BUILD_UNIT_TESTS)
      ADD_TEST(NAME cache-test COMMAND cache-test)
    ENDIF()
  ENDIF()
@@ -53,7 +66,7 @@ index b5db1a7..43bcb9d 100644
  
  # ---[ Helper and debug tools
  IF(CPUINFO_SUPPORTED_PLATFORM AND CPUINFO_BUILD_TOOLS)
-@@ -854,7 +866,7 @@ IF(CPUINFO_SUPPORTED_PLATFORM AND CPUINFO_BUILD_TOOLS)
+@@ -854,7 +879,7 @@ IF(CPUINFO_SUPPORTED_PLATFORM AND CPUINFO_BUILD_TOOLS)
    TARGET_LINK_LIBRARIES(cache-info PRIVATE cpuinfo)
    INSTALL(TARGETS cache-info RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
  
@@ -1984,7 +1997,7 @@ index ed37c07..9d205f5 100644
  }
 diff --git a/src/qnx/api.c b/src/qnx/api.c
 new file mode 100644
-index 0000000..4e72266
+index 0000000..9a7b553
 --- /dev/null
 +++ b/src/qnx/api.c
 @@ -0,0 +1,1876 @@
