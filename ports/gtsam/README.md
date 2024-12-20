@@ -3,6 +3,7 @@ Compiling gtsam can take upwards of 30 minutes depending on your host machine. I
 
 Tested cross-compiling on WSL Ubuntu 24.04 for:
 - QNX 8.0 aarch64le on Raspberry Pi 4
+- QNX 7.1 x86_64 on QEMU
 
 Instructions for compiling and running tests are listed below.
 
@@ -209,7 +210,7 @@ TARGET_IP_ADDRESS=<target-ip-address-or-hostname>
 #Select the home directory to install to (this will install to /data/home/qnxuser)
 TARGET_USER_FOR_INSTALL="qnxuser"
 
-#Set the prefix you sued when building (if not set, /usr/local)
+#Set the prefix you used when building (if not set, /usr/local)
 PREFIX="/usr/local"
 
 #Create new directories on the target
@@ -220,6 +221,9 @@ ssh $TARGET_USER_FOR_INSTALL@$TARGET_IP_ADDRESS "mkdir -p /data/home/$TARGET_USE
 scp $QNX_TARGET/aarch64le/$PREFIX/lib/libboost* $TARGET_USER_FOR_INSTALL@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER_FOR_INSTALL/gtsam/lib
 scp $QNX_TARGET/aarch64le/$PREFIX/lib/libmetis* $TARGET_USER_FOR_INSTALL@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER_FOR_INSTALL/gtsam/lib
 scp $QNX_TARGET/aarch64le/$PREFIX/lib/libgtsam* $TARGET_USER_FOR_INSTALL@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER_FOR_INSTALL/gtsam/lib
+
+#For 7.1, Copy the following as well:
+scp $QNX_TARGET/aarch64le/usr/lib/libicu* $TARGET_USER_FOR_INSTALL@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER_FOR_INSTALL/gtsam/lib
 
 #tests and provided test script
 scp -r $QNX_TARGET/aarch64le/$PREFIX/bin/gtsam_tests/* $TARGET_USER_FOR_INSTALL@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER_FOR_INSTALL/gtsam/test
