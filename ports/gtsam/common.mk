@@ -77,14 +77,14 @@ install check: GTSAM_all
 	@cd build && make VERBOSE=1 install $(MAKE_ARGS)
 	@echo "Copying tests to staging area..."
 	@mkdir -p $(GTSAM_INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/bin/gtsam_tests/gtsam_examples/Data/Balbianello
-	@if [ $INSTALL_TESTS = "true" ] ; then cp build/gtsam/*/tests/test* $(GTSAM_INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/bin/gtsam_tests ; fi
-	@if [ $INSTALL_TESTS = "true" ] ; then cp build/tests/test* $(GTSAM_INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/bin/gtsam_tests ; fi
-	@if [ $INSTALL_TESTS = "true" ] ; then cp build/gtsam_unstable/*/tests/test* $(GTSAM_INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/bin/gtsam_tests ; fi
-	@if [ $INSTALL_TESTS = "true" ] ; then cp $(PROJECT_ROOT)/run_tests.sh $(GTSAM_INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/bin/gtsam_tests ; fi
-	@if [ $INSTALL_TESTS = "true" ] ; then cp -r $(GTSAM_ROOT)/examples/Data/* $(GTSAM_INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/bin/gtsam_tests/gtsam_examples/Data ; fi
-	@if [ $INSTALL_TESTS = "true" ] ; then cp $(GTSAM_ROOT)/gtsam_unstable/discrete/examples/*.csv $(GTSAM_INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/bin/gtsam_tests ; fi
-	@if [ $INSTALL_TESTS = "true" ] ; then cp $(GTSAM_ROOT)/gtsam_unstable/discrete/examples/*.xls $(GTSAM_INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/bin/gtsam_tests ; fi
-	@echo "Done."
+	@if [ $(INSTALL_TESTS) = "true" ] ; then cp build/gtsam/*/tests/test* $(GTSAM_INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/bin/gtsam_tests ; echo "-GTSAM Tests" ; fi
+	@if [ $(INSTALL_TESTS) = "true" ] ; then cp build/tests/test* $(GTSAM_INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/bin/gtsam_tests ; echo "-General Tests" ; fi
+	@if [ $(INSTALL_TESTS) = "true" ] ; then cp build/gtsam_unstable/*/tests/test* $(GTSAM_INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/bin/gtsam_tests ; echo "-Unstable Tests" ; fi
+	@if [ $(INSTALL_TESTS) = "true" ] ; then cp $(PROJECT_ROOT)/run_tests.sh $(GTSAM_INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/bin/gtsam_tests ; echo "-Testing Script" ; fi
+	@if [ $(INSTALL_TESTS) = "true" ] ; then cp -r $(GTSAM_ROOT)/examples/Data/* $(GTSAM_INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/bin/gtsam_tests/gtsam_examples/Data ; echo "-General Data" ; fi
+	@if [ $(INSTALL_TESTS) = "true" ] ; then cp $(GTSAM_ROOT)/gtsam_unstable/discrete/examples/*.csv $(GTSAM_INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/bin/gtsam_tests ; echo "-.csv Data" ; fi
+	@if [ $(INSTALL_TESTS) = "true" ] ; then cp $(GTSAM_ROOT)/gtsam_unstable/discrete/examples/*.xls $(GTSAM_INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/bin/gtsam_tests ; echo "-.xls Data" ; fi
+	@echo "Done." ;
 
 clean iclean spotless:
 	@rm -rf build

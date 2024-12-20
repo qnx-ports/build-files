@@ -7,7 +7,7 @@ Tested cross-compiling on WSL Ubuntu 24.04 for:
 Instructions for compiling and running tests are listed below.
 
 
-
+## Currently only GTSAM v4.1.1 is available.
 
 # Compile gtsam for SDP 7.1/8.0 on an Ubuntu Host
 
@@ -111,12 +111,12 @@ mkdir gtsam_wksp && cd gtsam_wksp
 #Pick one:
 #Via HTTPS
 git clone https://github.com/qnx-ports/build-files.git
-git clone https://github.com/qnx-ports/boost.git
+git clone https://github.com/boostorg/boost.git
 git clone https://github.com/qnx-ports/gtsam.git
 
 #Via SSH
 git clone git@github.com:qnx-ports/build-files.git 
-git clone git@github.com:qnx-ports/boost.git
+git clone git@github.com:boostorg/boost.git
 git clone git@github.com:qnx-ports/gtsam.git 
 ```
 
@@ -237,5 +237,15 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/data/home/qnxuser/gtsam/lib
 cd ~/gtsam/test         #NOTE: ~ will direct you to the current user's home directory, 
                         #which may be incorrect depending on your choices above. 
                         #Navigate to /data/home to see all user home directories
-./run_tests.sh &2>1 | tee gtsam_tests.out
+./run_tests.sh
 ```
+**Note:** The following checks are disabled, as they fail due to floating point error.
+- testDataset: Read and Write
+- testSerializationDataset: non-binary comparison
+- testEssentialMatrixFactor: two 3D point tests
+
+
+**Note:** The following tests are modified to work in QNX.
+- testFindSeparator: Changed to follow tiebreaking rules
+- testScheduler: Changed to properly find data files
+- testMatrix: Changed to explicitly identify correct function
