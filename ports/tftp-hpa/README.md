@@ -1,3 +1,5 @@
+# tftp [![Build](https://github.com/qnx-ports/build-files/actions/workflows/tftp-hpa.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/tftp-hpa.yml)
+
 **WARNING**: tftp is NOT a secure protocol. Use only on local/trusted network!
 
 Currently tested version and SDP combos:
