@@ -23,6 +23,8 @@ BOOST_INSTALL_ROOT ?= $(INSTALL_ROOT_$(OS))
 #CMake config modules, etc.). Default is /usr/local
 PREFIX ?= /usr/local
 
+BOOST_CPP_VERSION_FLAG ?= -std=c++11
+
 ifneq ($(wildcard $(QNX_TARGET)/usr/include/python3.11),)
 	PYTHON_VERSION = 3.11
 	PYTHON_USER_CONFIG=user-config-python311.jam
@@ -47,7 +49,7 @@ B2_OPTIONS = -q -d2 \
 FLAGS   += -g
 LDFLAGS += -Wl,--build-id=md5 -lang-c++ -lsocket
 
-FLAGS   +=  -std=c++11 -D_QNX_SOURCE -DBOOST_NO_CXX98_FUNCTION_BASE -Vgcc_nto$(CCVER) -Wno-ignored-attributes -I$(PROJECT_ROOT)/libs/predef/include/boost/predef/other
+FLAGS   +=  $(BOOST_CPP_VERSION_FLAG) -D_QNX_SOURCE -DBOOST_NO_CXX98_FUNCTION_BASE -Vgcc_nto$(CCVER) -Wno-ignored-attributes -I$(PROJECT_ROOT)/libs/predef/include/boost/predef/other
 LDFLAGS += -Vgcc_nto$(CCVER)
 
 #override 'all' target to bypass the default QNX build system

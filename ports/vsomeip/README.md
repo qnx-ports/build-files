@@ -47,7 +47,7 @@ cd tools/build && git apply $WORKSPACE/build-files/ports/boost/tools_qnx.patch
 cd $WORKSPACE
 
 # Build and install boost
-QNX_PROJECT_ROOT="$(pwd)/boost" make -C build-files/ports/boost install -j4
+BOOST_CPP_VERSION_FLAG="-std=c++17" QNX_PROJECT_ROOT="$(pwd)/boost" make -C build-files/ports/boost install -j4
 
 # Build vsomeip
 # TEST_IP_MASTER should be your QNX target's ip address while TEST_IP_SLAVE should be your Ubuntu PC. It could be vice versa, but
@@ -84,7 +84,7 @@ cd tools/build && git apply $WORKSPACE/build-files/ports/boost/tools_qnx.patch
 cd $WORKSPACE
 
 # Build and install boost
-QNX_PROJECT_ROOT="$(pwd)/boost" make -C build-files/ports/boost install -j4
+BOOST_CPP_VERSION_FLAG="-std=c++17" QNX_PROJECT_ROOT="$(pwd)/boost" make -C build-files/ports/boost install -j4
 
 # Build vsomeip
 # TEST_IP_MASTER should be your QNX target's ip address while TEST_IP_SLAVE should be your Ubuntu PC. It could be vice versa, but
