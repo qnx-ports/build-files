@@ -24,7 +24,7 @@ INSTALL_ROOT ?= $(INSTALL_ROOT_$(OS))
 PREFIX ?= /usr/local
 
 #choose Release or Debug
-CMAKE_BUILD_TYPE ?= Debug
+CMAKE_BUILD_TYPE ?= Release
 
 #override 'all' target to bypass the default QNX build system
 ALL_DEPENDENCIES = grpc_all

@@ -136,9 +136,17 @@ cd $QNX_TARGET/aarch64le
 
 ```bash
 
-scp .lib/libprotobuf.so* qnxuser@$TARGET_HOST:~/lib
-scp ./liblibutf8_* qnxuser@$TARGET_HOST:~/lib
-scp ./lib/libprotoc.so* qnxuser@$TARGET_HOST:~/lib
+scp ./usr/local/lib/libprotobuf.so* qnxuser@$TARGET_HOST:~/lib
+scp ./usr/local/lib/libutf8_* qnxuser@$TARGET_HOST:~/lib
+scp ./usr/local/lib/libprotoc.so* qnxuser@$TARGET_HOST:~/lib
+scp ./usr/local/lib/libgtest.so* qnxuser@$TARGET_HOST:~/lib
+scp ./usr/local/lib/libabsl_* qnxuser@$TARGET_HOST:~/lib
+scp ./usr/local/lib/libgpr* qnxuser@$TARGET_HOST:~/lib
+scp ./usr/local/lib/libre2* qnxuser@$TARGET_HOST:~/lib
+scp ./usr/local/lib/libgrpc* qnxuser@$TARGET_HOST:~/lib
+scp ./usr/local/lib/libupb* qnxuser@$TARGET_HOST:~/lib
+scp ./usr/lib/libcares* qnxuser@$TARGET_HOST:~/lib
+scp ./usr/local/lib/libaddress* qnxuser@$TARGET_HOST:~/lib
 
 scp -r ./usr/local/bin/grpc_tests qnxuser@$TARGET_HOST:~/
 ```
@@ -152,9 +160,23 @@ ssh qnxuser@$TARGET_HOST
 cd /data/home/qnxuser
 
 ntpdate -sb 0.pool.ntp.org 1.pool.ntp.org 
-export TMPDIR=/var  
+mkdir -p /tmp
+export TMPDIR=/tmp
 python3 -m ensurepip --root /  
 python3 -m pip install six
+```
+
+For `QNX710`, you need to edit `/etc/hosts` file to have the following content:
+
+```
+#
+# Host Database
+#
+127.0.0.1       localhost.localdomain localhost
+::1             localhost.localdomain localhost
+```
+
+```bash
 cd ~/grpc_tests
 python3 ./tools/run_tests/run_tests.py -l c++
 ```

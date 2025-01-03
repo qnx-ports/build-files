@@ -58,7 +58,7 @@ source ~/qnx800/qnxsdp-env.sh
 
 # Build gtk
 export QCONF_OVERRIDE=$PWD/build-files/resources/qconf_override/qconf_override.mk
-QNX_PROJECT_ROOT="$(pwd)/gtk" make -C build-files/ports/gtk JLEVEL=$(nproc) install
+QNX_PROJECT_ROOT="$(pwd)/gtk" make INSTALL_ROOT_nto=/tmp/staging USE_INSTALL_ROOT=true -C build-files/ports/gtk JLEVEL=$(nproc) install
 ```
 
 # How to run the gtk4 demo
