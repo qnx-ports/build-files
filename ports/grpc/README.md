@@ -160,7 +160,8 @@ ssh qnxuser@$TARGET_HOST
 cd /data/home/qnxuser
 
 ntpdate -sb 0.pool.ntp.org 1.pool.ntp.org 
-export TMPDIR=/var  
+mkdir -p /tmp
+export TMPDIR=/tmp
 python3 -m ensurepip --root /  
 python3 -m pip install six
 ```
