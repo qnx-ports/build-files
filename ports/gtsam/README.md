@@ -1,7 +1,5 @@
-# gtsam [![Build](https://github.com/qnx-ports/build-files/actions/workflows/gtsam.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/gtsam.yml)
-
-## __======= WARNING =======__
-Compiling gtsam can take upwards of 30 minutes depending on your host machine. It also depends on boost, which can take a similar amount of time to compile if you have not done so already.
+## __======= WARNING =======__  
+Compiling gtsam can take upwards of 30 minutes depending on your host machine. It also depends on boost, which can take a similar amount of time to compile if you have not done so already. 
 
 Tested cross-compiling on WSL Ubuntu 24.04 for:
 - QNX 8.0 aarch64le on Raspberry Pi 4
@@ -16,15 +14,15 @@ Instructions for compiling and running tests are listed below.
 
 ### *Prerequisites:*
 #### __`boost` must be installed in $QNX_TARGET__
-1. Go to https://github.com/qnx-ports/build-files/tree/c-ares_files/ports/boost and follow the instructions in the README.
+1. Go to https://github.com/qnx-ports/build-files/tree/c-ares_files/ports/boost and follow the instructions in the README. 
 
 2. __FOR SDP 8.0:__ When building `boost`, set PREFIX to '/usr' for SDP 8.0:
 ```bash
 #Modified build command for boost
-PREFIX="/usr" QNX_PROJECT_ROOT="$(pwd)/boost" make -C build-files/ports/boost/ install -j4
+PREFIX="/usr" QNX_PROJECT_ROOT="$(pwd)/boost" make -C build-files/ports/boost/ install -j4 
 ```
 
-### *Steps:*
+### *Steps:* 
 
 1. Create a new workspace or navigate to a desired one
 ```bash
@@ -39,8 +37,8 @@ git clone https://github.com/qnx-ports/build-files.git
 git clone https://github.com/qnx-ports/gtsam.git
 
 #Via SSH
-git clone git@github.com:qnx-ports/build-files.git
-git clone git@github.com:qnx-ports/gtsam.git
+git clone git@github.com:qnx-ports/build-files.git 
+git clone git@github.com:qnx-ports/gtsam.git 
 ```
 
 3. Source your SDP (Installed from QNX Software Center)
@@ -65,7 +63,7 @@ ls nto-*
 # ...
 ```
 ```bash
-#4.3 Identify which of the above you will not be using and navigate into its folder.
+#4.3 Identify which of the above you will not be using and navigate into its folder. 
 #i.e., Raspberry Pi is an aarch64 architecture, thus we would not need x86_64
 cd nto-x86_64
 ```
@@ -101,7 +99,7 @@ make -C build-files/ports/gtsam clean
 #### __`boost` must be installed in $QNX_TARGET__
 Instructions for building boost are included in the steps below.
 
-### *Steps:*
+### *Steps:* 
 
 
 1. Create a new workspace or navigate to a desired one
@@ -118,9 +116,9 @@ git clone https://github.com/boostorg/boost.git
 git clone https://github.com/qnx-ports/gtsam.git
 
 #Via SSH
-git clone git@github.com:qnx-ports/build-files.git
+git clone git@github.com:qnx-ports/build-files.git 
 git clone git@github.com:boostorg/boost.git
-git clone git@github.com:qnx-ports/gtsam.git
+git clone git@github.com:qnx-ports/gtsam.git 
 ```
 
 3. Build the Docker image and create a container
@@ -152,7 +150,7 @@ ls nto-*
 # ...
 ```
 ```bash
-#4.3 Identify which of the above you will not be using and navigate into its folder.
+#4.3 Identify which of the above you will not be using and navigate into its folder. 
 #i.e., Raspberry Pi is an aarch64 architecture, thus we would not need x86_64
 cd nto-x86_64
 ```
@@ -198,7 +196,7 @@ QNX_BUILD_TESTS="yes" QNX_TARGET_DATASET_DIR="/data/home/qnxuser/gtsam/test" QNX
 make -C build-files/ports/gtsam clean
 ```
 
-# Running Tests on a Target
+# Running Tests on a Target 
 Some distributions of QNX have critical directories stored in a read-only partition (`/`, `/system`, `/etc`, etc). Included in these are the default `bin` and `lib` directories. If this is the case, follow the "Installing in home directory" instructions.
 
 Instructions for compiling and running tests are listed below.
@@ -222,7 +220,7 @@ ssh $TARGET_USER_FOR_INSTALL@$TARGET_IP_ADDRESS "mkdir -p /data/home/$TARGET_USE
 #If copying to an x86_64 install, change /aarch64le/ to /x86_64/
 scp $QNX_TARGET/aarch64le/$PREFIX/lib/libboost* $TARGET_USER_FOR_INSTALL@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER_FOR_INSTALL/gtsam/lib
 scp $QNX_TARGET/aarch64le/$PREFIX/lib/libmetis* $TARGET_USER_FOR_INSTALL@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER_FOR_INSTALL/gtsam/lib
-scp $QNX_TARGET/aarch64le/$PREFIX/lib/libgtsam* $TARGET_USER_FOR_INSTALL@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER_FOR_INSTALL/gtsam/lib
+scp $QNX_TARGET/aarch64le/$PREFIX/lib/lib*gtsam* $TARGET_USER_FOR_INSTALL@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER_FOR_INSTALL/gtsam/lib
 
 #For 7.1, Copy the following as well:
 scp $QNX_TARGET/aarch64le/usr/lib/libicu* $TARGET_USER_FOR_INSTALL@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER_FOR_INSTALL/gtsam/lib
@@ -240,15 +238,14 @@ ssh qnxuser@<target-ip-address-or-hostname>
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/data/home/qnxuser/gtsam/lib
 
 #Run test binary
-cd ~/gtsam/test         #NOTE: ~ will direct you to the current user's home directory,
-                        #which may be incorrect depending on your choices above.
+cd ~/gtsam/test         #NOTE: ~ will direct you to the current user's home directory, 
+                        #which may be incorrect depending on your choices above. 
                         #Navigate to /data/home to see all user home directories
 ./run_tests.sh
 ```
-**Note:** The following checks are disabled, as they fail due to floating point error.
-- testDataset: Read and Write
-- testSerializationDataset: non-binary comparison
-- testEssentialMatrixFactor: two 3D point tests
+
+**Note:** The following tests fail due to floating point error, and are not indicative of an error.
+- testSfmData lines 134, 144, 156
 
 
 **Note:** The following tests are modified to work in QNX.
