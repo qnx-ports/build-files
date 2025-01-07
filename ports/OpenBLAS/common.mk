@@ -57,7 +57,7 @@ CMAKE_MODULE_PATH := $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/cmake;$(INSTALL_RO
 #because CMake and pkg-config do not necessary add it automatically
 #if the include path is "default"
 CFLAGS += -I$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/include \
-		  -I$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/include \
+          -I$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/include \
           -Wno-unused -Wno-parentheses -Wno-maybe-uninitialized
 
 # Add choice to build and install tests
@@ -70,7 +70,7 @@ CPP_THREAD_SAFETY_TEST ?= ON
 
 CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DCMAKE_SYSTEM_PROCESSOR="$(CPUVARDIR)" \
-			 -DCMAKE_C_FLAGS="$(CFLAGS)" \
+             -DCMAKE_C_FLAGS="$(CFLAGS)" \
              -DCMAKE_CXX_FLAGS="$(CFLAGS)" \
              -DCMAKE_ASM_FLAGS="$(FLAGS)" \
              -DCMAKE_EXE_LINKER_FLAGS="$(LDFLAGS)" \
@@ -87,7 +87,7 @@ CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DUSE_OPENMP=$(USE_OPENMP) \
              -DCPP_THREAD_SAFETY_TEST=$(CPP_THREAD_SAFETY_TEST) \
              -DTARGET="$(OPENBLAS_TARGET)" \
-			 -DNOFORTRAN=1\
+             -DNOFORTRAN=1\
 
 MAKE_ARGS ?= -j $(firstword $(JLEVEL) 1)
 
