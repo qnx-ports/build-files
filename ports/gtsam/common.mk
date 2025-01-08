@@ -17,7 +17,7 @@ NAME=gtsam
 #and USE_INSTALL_ROOT
 GTSAM_INSTALL_ROOT ?= $(INSTALL_ROOT_$(OS))
 
-GTSAM_VERSION = .4.1.1
+GTSAM_VERSION = .4.3a0
 
 #choose Release or Debug
 CMAKE_BUILD_TYPE ?= Release
@@ -52,7 +52,7 @@ CMAKE_ARGS = -DCMAKE_NO_SYSTEM_FROM_IMPORTED=TRUE \
              -DINCLUDE_INSTALL_DIR=$(GTSAM_INSTALL_ROOT)/$(PREFIX)/include \
              -DCMAKE_INSTALL_INCLUDEDIR=$(GTSAM_INSTALL_ROOT)/$(PREFIX)/include \
              -DCMAKE_BUILD_TYPE=$(CMAKE_BUILD_TYPE) \
-             -DEXTRA_CMAKE_C_FLAGS="$(CFLAGS) -std=c++14" \
+             -DEXTRA_CMAKE_C_FLAGS="$(CFLAGS)" \
              -DEXTRA_CMAKE_CXX_FLAGS="$(CFLAGS)" \
              -DEXTRA_CMAKE_ASM_FLAGS="$(FLAGS)" \
              -DEXTRA_CMAKE_LINKER_FLAGS="$(LDFLAGS)" \
@@ -82,6 +82,7 @@ install check: GTSAM_all
 	@if [ $(INSTALL_TESTS) = "true" ] ; then cp -r $(GTSAM_ROOT)/examples/Data/* $(GTSAM_INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/bin/gtsam_tests/gtsam_examples/Data ; echo "-General Data" ; fi
 	@if [ $(INSTALL_TESTS) = "true" ] ; then cp $(GTSAM_ROOT)/gtsam_unstable/discrete/examples/*.csv $(GTSAM_INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/bin/gtsam_tests ; echo "-.csv Data" ; fi
 	@if [ $(INSTALL_TESTS) = "true" ] ; then cp $(GTSAM_ROOT)/gtsam_unstable/discrete/examples/*.xls $(GTSAM_INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/bin/gtsam_tests ; echo "-.xls Data" ; fi
+	@if [ $(INSTALL_TESTS) = "true" ] ; then cp $(GTSAM_ROOT)/gtsam/nonlinear/tests/priorFactor.xml $(GTSAM_INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/bin/gtsam_tests ; echo "-priorFactor.xml" ; fi
 	@echo "Done." ;
 
 clean iclean spotless:

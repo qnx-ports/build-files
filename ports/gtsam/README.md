@@ -246,6 +246,8 @@ cd ~/gtsam/test         #NOTE: ~ will direct you to the current user's home dire
 
 **Note:** The following tests fail due to floating point error, and are not indicative of an error.
 - testSfmData lines 134, 144, 156
+- testSerializationDataset lines 36, 37, 50, 51
+- testEssentialMatrixFactor lines 67, 70
 
 
 **Note:** The following tests are modified to work in QNX.
