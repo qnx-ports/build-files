@@ -64,8 +64,10 @@ jobs:
           cd boost/tools/build
           git apply ../../../build-files/ports/boost/tools_qnx.patch
           cd ~/workspace
-          PREFIX="/usr/local" QNX_PROJECT_ROOT="$(pwd)/boost" make -C build-files/ports/boost install
-          PREFIX="/usr/local" QNX_PROJECT_ROOT="$(pwd)/gtsam" INSTALL_TESTS="false" make -C build-files/ports/gtsam install
+          echo "HEY LEO - MAKEFLAGS:"
+          echo $MAKEFLAGS
+          PREFIX="/usr/local" QNX_PROJECT_ROOT="$(pwd)/boost" make -C build-files/ports/boost install -j$(nproc)
+          PREFIX="/usr/local" QNX_PROJECT_ROOT="$(pwd)/gtsam" INSTALL_TESTS="false" make -C build-files/ports/gtsam install -j$(nproc)
 
   build-4_3a0develop:
     runs-on: self-hosted
@@ -116,5 +118,7 @@ jobs:
           cd boost/tools/build
           git apply ../../../build-files/ports/boost/tools_qnx.patch
           cd ~/workspace
-          PREFIX="/usr/local" QNX_PROJECT_ROOT="$(pwd)/boost" make -C build-files/ports/boost install
-          PREFIX="/usr/local" QNX_PROJECT_ROOT="$(pwd)/gtsam" INSTALL_TESTS="false" make -C build-files/ports/gtsam install
+          echo "HEY LEO - MAKEFLAGS:"
+          echo $MAKEFLAGS
+          PREFIX="/usr/local" QNX_PROJECT_ROOT="$(pwd)/boost" make -C build-files/ports/boost install -j$(nproc)
+          PREFIX="/usr/local" QNX_PROJECT_ROOT="$(pwd)/gtsam" INSTALL_TESTS="false" make -C build-files/ports/gtsam install -j$(nproc)
