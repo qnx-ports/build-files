@@ -59,6 +59,7 @@ jobs:
         options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
         shell: bash
         run: |
-          source ~/qnx800/qnxsdp-env.sh
+          source ~/qnx/800/qnxsdp-env.sh
+          cd workspace
           export QCONF_OVERRIDE=/home/runner/build-files/resources/qconf_override/qconf_override.mk
           QNX_PROJECT_ROOT="$(pwd)/gtk" make -C build-files/ports/gtk install -j$(nproc)
