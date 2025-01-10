@@ -55,10 +55,11 @@ jobs:
     - name: Build gtk
       uses: addnab/docker-run-action@v3
       with:
-        image: qnx800:latest
+        image: ghcr.io/qnx-ports/sdp800-build-env:latest
         options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
         shell: bash
         run: |
-          source ~/qnx800/qnxsdp-env.sh
-          export QCONF_OVERRIDE=/home/runner/build-files/resources/qconf_override/qconf_override.mk
-          QNX_PROJECT_ROOT="$(pwd)/gtk" make -C build-files/ports/gtk install -j$(nproc)
+          source ~/qnx/800/qnxsdp-env.sh
+          cd workspace
+          export QCONF_OVERRIDE=~/workspace/build-files/resources/qconf_override/qconf_override.mk
+          QNX_PROJECT_ROOT="$(pwd)/gtk" make -C build-files/ports/gtk install
