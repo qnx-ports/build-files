@@ -61,5 +61,4 @@ jobs:
         run: |
           source ~/qnx/800/qnxsdp-env.sh
           cd workspace
-          export QCONF_OVERRIDE=~/workspace/build-files/resources/qconf_override/qconf_override.mk
-          QNX_PROJECT_ROOT="$(pwd)/gtk" make -C build-files/ports/gtk install
+          QNX_PROJECT_ROOT="$(pwd)/gtk" make INSTALL_ROOT_nto=/tmp/staging USE_INSTALL_ROOT=true -C build-files/ports/gtk JLEVEL=$(nproc) install
