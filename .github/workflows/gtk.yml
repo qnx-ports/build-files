@@ -55,7 +55,7 @@ jobs:
     - name: Build gtk
       uses: addnab/docker-run-action@v3
       with:
-        image: qnx800:latest
+        image: ghcr.io/qnx-ports/sdp800-build-env:latest
         options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
         shell: bash
         run: |
