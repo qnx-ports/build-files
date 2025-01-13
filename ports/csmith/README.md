@@ -44,3 +44,6 @@ source ~/qnx800/qnxsdp-env.sh
 # Build csmith
 QNX_PROJECT_ROOT="$(pwd)/csmith" make -C build-files/ports/csmith install -j4
 ```
+
+# Tests
+Not avaliable
