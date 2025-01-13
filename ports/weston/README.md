@@ -101,6 +101,9 @@ OSLIST=nto make -C qnx/build install JLEVEL=4 install
 ```bash
 TARGET_HOST=<target-ip-address-or-hostname>
 
+# Path where libraries are stored are crucial to running weston smoothly
+# If you would like to change the pathing feel free to modify config files in weston/qnx/build/nto/config.h
+
 # Transfer weston libraries to the target
 scp -r ~/qnx800/target/qnx/aarch64le/usr/lib/libweston* qnxuser@$TARGET_HOST:/data/home/qnxuser/lib
 scp -r ~/qnx800/target/qnx/aarch64le/usr/lib/weston qnxuser@$TARGET_HOST:/data/home/qnxuser/lib
