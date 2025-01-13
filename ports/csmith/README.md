@@ -47,3 +47,20 @@ QNX_PROJECT_ROOT="$(pwd)/csmith" make -C build-files/ports/csmith install -j4
 
 # Tests
 Not avaliable
+
+# Deploy binaries via SSH
+```bash
+#Set your target's IP here
+TARGET_IP_ADDRESS=<target-ip-address-or-hostname>
+TARGET_USER=<target-username>
+
+scp -r ~\qnx800\target\qnx\aarch64le\usr\local\bin\csmith $TARGET_USER@$TARGET_IP_ADDRESS:~/bin
+scp -r ~\qnx800\target\qnx\aarch64le\usr\local\lib\libcsmith.* $TARGET_USER@$TARGET_IP_ADDRESS:~/lib
+```
+
+If `~/lib` or `~bin` directory do not exist, create them with:
+```bash
+ssh $TARGET_USER@$TARGET_IP_ADDRESS "mkdir -p ~/bin"
+ssh $TARGET_USER@$TARGET_IP_ADDRESS "mkdir -p ~/lib"
+````
+
