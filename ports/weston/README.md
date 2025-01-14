@@ -12,6 +12,11 @@ Presequisites to install Weston:
 # Compile the port for QNX in a Docker container
 
 Pre-requisite: Install Docker on Ubuntu https://docs.docker.com/engine/install/ubuntu/
+
+Install meson if you decide not to use docker
+```bash
+sudo apt install meson
+```
 ```bash
 # Create a workspace
 mkdir -p ~/qnx_workspace && cd ~/qnx_workspace
@@ -31,6 +36,9 @@ source ~/qnx800/qnxsdp-env.sh
 ### Build glib
 
 ```bash
+# Change the path in ~/qnx-ports/build-files/resources/meson/$QNX_ARCH/qnx$QNX_VERSION.ini to your qnx_sdp_path
+# This file will be used to build pixman, glib, and cairo
+
 # Clone and build glib for both architecture
 cd ~/qnx_workspace
 git clone https://github.com/qnx-ports/glib.git
@@ -42,7 +50,7 @@ export QNX_VERSION=800
 export QNX_ARCH=aarch64le
 meson setup build-qnx$QNX_VERSION --cross-file ~/qnx_workspace/build-files/resources/$QNX_ARCH/qnx$QNX_VERSION.ini -Dprefix=/usr -Dxattr=false
 meson compile -C build-qnx$QNX_VERSION
-DESTDIR=/path/to/qnx$QNX_VERSION/target/qnx/${architecture} meson install --no-rebuild -C build-qnx800
+DESTDIR=/path/to/qnx$QNX_VERSION/target/qnx/${QNX_ARCH} meson install --no-rebuild -C build-qnx800
 ```
 
 ### Build pixman
@@ -62,7 +70,7 @@ export QNX_VERSION=800
 export QNX_ARCH=aarch64le
 meson setup build-qnx$QNX_VERSION --cross-file ~/qnx-ports/build-files/resources/meson/$QNX_ARCH/qnx$QNX_VERSION.ini -Dprefix=/usr -Dopenmp=disabled
 meson compile -C build-qnx$QNX_VERSION
-DESTDIR=/path/to/qnx$QNX_VERSION/target/qnx/${architecture} meson install --no-rebuild -C build-qnx800
+DESTDIR=/path/to/qnx$QNX_VERSION/target/qnx/${QNX_ARCH} meson install --no-rebuild -C build-qnx800
 ```
 
 ### Build cairo
@@ -83,14 +91,14 @@ export QNX_VERSION=800
 export QNX_ARCH=aarch64le
 meson setup build-qnx$QNX_VERSION --cross-file ~/qnx-ports/build-files/resources/meson/$QNX_ARCH/qnx$QNX_VERSION.ini -Dprefix=/usr -Dtests=disabled
 meson compile -C build-qnx$QNX_VERSION
-DESTDIR=/path/to/qnx$QNX_VERSION/target/qnx/${architecture} meson install --no-rebuild -C build-qnx800
+DESTDIR=/path/to/qnx$QNX_VERSION/target/qnx/${QNX_ARCH} meson install --no-rebuild -C build-qnx800
 ```
 
 ### Build Weston
 
 ```bash
 cd ~/qnx_workspace
-https://github.com/qnx-ports/weston.git
+git clone https://github.com/qnx-ports/weston.git
 cd weston
 git checkout qnx-v11.0.3
 OSLIST=nto make -C qnx/build install JLEVEL=4 install
