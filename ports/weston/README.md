@@ -105,41 +105,60 @@ OSLIST=nto make -C qnx/build install JLEVEL=4 install
 ```
 
 # Run weston examples on the target
-
+Path where libraries are stored are crucial to running weston smoothly. If you would like to change the pathing feel free to modify config files in weston/qnx/build/nto/config.h
 ```bash
-TARGET_HOST=<target-ip-address-or-hostname>
+# Run script to tranfer libraries and executbles to the target
+cd ~/qnx_workspace/build-files/ports/weston/scripts
+./transfer.sh
 
-# Path where libraries are stored are crucial to running weston smoothly
-# If you would like to change the pathing feel free to modify config files in weston/qnx/build/nto/config.h
-
-# Transfer weston libraries to the target
-scp -r ~/qnx800/target/qnx/aarch64le/usr/lib/libweston* qnxuser@$TARGET_HOST:/data/home/qnxuser/lib
-scp -r ~/qnx800/target/qnx/aarch64le/usr/lib/weston qnxuser@$TARGET_HOST:/data/home/qnxuser/lib
-scp -r ~/qnx800/target/qnx/aarch64le/usr/libexec qnxuser@$TARGET_HOST:/data/home/qnxuser/lib
-
-# Transfer weston executables to the target
-scp ~/qnx800/target/qnx/aarch64le/usr/sbin/weston qnxuser@$TARGET_HOST:/data/home/qnxuser/bin
-scp ~/qnx800/target/qnx/aarch64le/usr/bin/weston-* qnxuser@$TARGET_HOST:/data/home/qnxuser/bin
-
-# Transfer weston data to the target
-scp -r ~/qnx800/target/qnx/usr/share/weston qnxuser@$TARGET_HOST:/data/home/qnxuser/
-scp -r ~/qnx800/target/qnx/etc/xdg qnxuser@$TARGET_HOST:/data/home/qnxuser
-
-# Transfer wayland libraries to the target
-scp -r ~/qnx800/target/qnx/aarch64le/usr/lib/libwayland* qnxuser@$TARGET_HOST:/data/home/qnxuser/lib
-
-# Transfer dependacy libraries to the target
-scp ~/qnx800/target/qnx/aarch64le/usr/lib/libmemstream* qnxuser@$TARGET_HOST:/data/home/qnxuser/lib
-scp ~/qnx800/target/qnx/aarch64le/usr/lib/libpixman* qnxuser@$TARGET_HOST:/data/home/qnxuser/lib
-scp ~/qnx800/target/qnx/aarch64le/usr/lib/libepoll* qnxuser@$TARGET_HOST:/data/home/qnxuser/lib
-scp ~/qnx800/target/qnx/aarch64le/usr/lib/libtimerfd* qnxuser@$TARGET_HOST:/data/home/qnxuser/lib
-scp ~/qnx800/target/qnx/aarch64le/usr/lib/libsignalfd* qnxuser@$TARGET_HOST:/data/home/qnxuser/lib
-scp ~/qnx800/target/qnx/aarch64le/usr/lib/libeventfd* qnxuser@$TARGET_HOST:/data/home/qnxuser/lib
-
-# Transfer xkbcommon dependancy
-scp ~/qnx800/target/qnx/aarch64le/usr/lib/libxkbcommon* qnxuser@$TARGET_HOST:/data/home/qnxuser/lib
-scp -r ~/qnx800/target/qnx/usr/share/xkb qnxuser@$TARGET_HOST:/data/home/qnxuser/
+#Example inputs
+#Enter the QNX800 folder directory path (e.g., ~/qnx800): /home/flionardo/qnx800
+#Enter the target IP address: 107.195.40.66
+#Enter the password for the target user: qnxuser
 ```
+## Structure
+he following assumes that all dependency packages (from SDP) **and** all components built as part of this project are installed to the same location on the host machine. This location is referred to as `$INSTALL_DIR`. Adjust process accordingly if components built from this project are installed elsewhere.
+
+Usually, in the default QNX host machine configuration, `$INSTALL_DIR`=`$QNX_TARGET`. `$PROCESSOR` indicates the target-specific install folder (i.e. aarch64le or x86_64).
+
+Weston:
+- `$INSTALL_DIR`/etc/xdg
+    - --> /etc/xdg
+- `$INSTALL_DIR`/usr/share/weston
+    - --> /system/share/weston
+- `$INSTALL_DIR`/`$PROCESSOR`/usr/lib/libweston
+    - --> /data/home/qnxuser/lib/libweston/
+- `$INSTALL_DIR`/`$PROCESSOR`/usr/lib/weston
+    - --> /data/home/qnxuser/lib/weston/
+- `$INSTALL_DIR`/`$PROCESSOR`/usr/libexec
+    - --> /data/home/qnxuser/lib/libexec
+- `$INSTALL_DIR`/`$PROCESSOR`/usr/bin/weston_tests
+    - --> /data/home/qnxuser/weston_tests
+- `$INSTALL_DIR`/`$PROCESSOR`/usr/bin/weston-*
+    - --> /data/home/qnxuser/bin/
+- `$INSTALL_DIR`/`$PROCESSOR`/usr/lib/libweston*.so*
+    - --> /data/home/qnxuser/lib/
+
+Wayland:
+- `$INSTALL_DIR`/usr/share/xkb
+    - -->  /usr/share/xkb
+- `$INSTALL_DIR`/`$PROCESSOR`/usr/lib/libwayland*.so*
+    - --> /data/home/qnxuser/lib/
+- `$INSTALL_DIR`/`$PROCESSOR`/usr/lib/libepoll*
+    - --> /data/home/qnxuser/lib/
+- `$INSTALL_DIR`/`$PROCESSOR`/usr/lib/libtimerfd*
+    - --> /data/home/qnxuser/lib/
+- `$INSTALL_DIR`/`$PROCESSOR`/usr/lib/libmemstream*
+    - --> /data/home/qnxuser/lib/
+- `$INSTALL_DIR`/`$PROCESSOR`/usr/lib/libeventfd*
+    - --> /data/home/qnxuser/lib/
+- `$INSTALL_DIR`/`$PROCESSOR`/usr/lib/libxkbcommon*
+    - --> /data/home/qnxuser/lib/
+
+Others:
+- `$INSTALL_DIR`/`$PROCESSOR`/usr/lib/libpixman*
+    - --> /data/home/qnxuser/lib/
+
 ```bash
 # Login as root
 # Password is root
@@ -225,17 +244,6 @@ position=X,Y
 ```
 
 # Run weston test on target
-```bash
-# Trasnfer weston test libraries to the target
-scp ~/qnx800/target/qnx/aarch64le/usr/lib/test-plugin.so qnxuser@$TARGET_HOST:/data/home/qnxuser/lib/weston
-scp ~/qnx800/target/qnx/aarch64le/usr/lib/test-ivi-layout.so qnxuser@$TARGET_HOST:/data/home/qnxuser/lib
-scp ~/qnx800/target/qnx/aarch64le/usr/lib/weston-test-desktop-shell.so qnxuser@$TARGET_HOST:/data/home/qnxuser/lib
-
-
-# Transfer test data and executables to the target
-scp -r ~/qnx_workspace/weston/tests/reference qnxuser@$TARGET_HOST:/data/home/qnxuser
-scp ~/qnx800/target/qnx/aarch64le/usr/lib/weston-test-* qnxuser@$TARGET_HOST:/data/home/qnxuser/lib
-
 ```bash
 # Login as root
 # Password is root
