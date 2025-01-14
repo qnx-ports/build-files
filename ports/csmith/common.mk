@@ -7,7 +7,7 @@ include $(MKFILES_ROOT)/qmacros.mk
 
 NAME=csmith
 
-FAST_CDR_VERSION = 2.2.3
+CSMITH_VERSION = 2.3.0
 
 QNX_PROJECT_ROOT ?= $(PRODUCT_ROOT)/../../
 
