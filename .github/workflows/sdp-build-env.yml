@@ -54,7 +54,7 @@ jobs:
         MYQNX_PASSWORD: ${{ secrets.MYQNX_PASSWORD }}
       run: |
         echo "Downloading QNX SDP ..."
-        ${{ github.workspace }}/qnx/qnxsoftwarecenter/qnxsoftwarecenter_clt -mirror -cleanInstall -destination ${{ github.workspace }}/qnx/800 -installBaseline com.qnx.qnx800 -myqnx.user="$MYQNX_USER" -myqnx.password="$MYQNX_PASSWORD"
+        ${{ github.workspace }}/qnx/qnxsoftwarecenter/qnxsoftwarecenter_clt -cleanInstall -destination ${{ github.workspace }}/qnx/800 -installBaseline com.qnx.qnx800 -myqnx.user="$MYQNX_USER" -myqnx.password="$MYQNX_PASSWORD"
 
     - name: Download SDP 7.1
       env:
@@ -63,7 +63,7 @@ jobs:
         MYQNX_PASSWORD: ${{ secrets.MYQNX_PASSWORD }}
       run: |
         echo "Downloading QNX SDP ..."
-        ${{ github.workspace }}/qnx/qnxsoftwarecenter/qnxsoftwarecenter_clt -mirror -cleanInstall -destination ${{ github.workspace }}/qnx/710 -installBaseline com.qnx.qnx710 -myqnx.user="$MYQNX_USER" -myqnx.password="$MYQNX_PASSWORD"
+        ${{ github.workspace }}/qnx/qnxsoftwarecenter/qnxsoftwarecenter_clt -cleanInstall -destination ${{ github.workspace }}/qnx/710 -installBaseline com.qnx.qnx710 -myqnx.user="$MYQNX_USER" -myqnx.password="$MYQNX_PASSWORD"
 
     - name: Login to GitHub Container Registry
       uses: docker/login-action@v3
