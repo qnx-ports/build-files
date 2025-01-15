@@ -91,7 +91,7 @@ jobs:
           cd protobuf
           git submodule update --init
           cd -
-          QNX_PROJECT_ROOT="$(pwd)/protobuf" make -C build-files/ports/protobuf install
+          GENERATOR_ARGS="--parallel --verbose" QNX_PROJECT_ROOT="$(pwd)/protobuf" make -C build-files/ports/protobuf install
           cd grpc
           git submodule update --init
           cd third_party/googletest
@@ -178,7 +178,7 @@ jobs:
           cd protobuf
           git submodule update --init
           cd -
-          QNX_PROJECT_ROOT="$(pwd)/protobuf" make -C build-files/ports/protobuf install
+          GENERATOR_ARGS="--parallel --verbose" QNX_PROJECT_ROOT="$(pwd)/protobuf" make -C build-files/ports/protobuf install
           cd grpc
           git submodule update --init
           cd third_party/googletest
