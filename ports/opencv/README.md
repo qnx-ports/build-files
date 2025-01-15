@@ -32,9 +32,11 @@ cd build-files/docker
 # source qnxsdp-env.sh in
 source ~/qnx800/qnxsdp-env.sh
 
-# Clone numpy
+# Clone opencv and numpy
 cd ~/qnx_workspace
-git clone https://github.com/qnx-ports/opencv.git
+git clone https://github.com/opencv/opencv.git && cd
+git checkout 4.11.0
+cd -
 git clone https://github.com/qnx-ports/numpy.git && cd numpy
 git submodule update --init --recursive
 cd ~/qnx_workspace
@@ -58,7 +60,9 @@ BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/opencv" make -C build-files/ports/op
 git clone https://github.com/qnx-ports/build-files.git
 # opencv depends on numpy
 git clone https://github.com/qnx-ports/numpy.git
-git clone https://github.com/qnx-ports/opencv.git
+git clone https://github.com/qnx-ports/opencv.git && cd opencv
+git checkout 4.11.0
+cd -
 
 # Build numpy
 cd numpy

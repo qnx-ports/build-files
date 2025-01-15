@@ -45,8 +45,9 @@ jobs:
     - name: Checkout opencv
       uses: actions/checkout@v4
       with:
-        repository: qnx-ports/opencv
+        repository: opencv/opencv
         path: opencv
+        ref: 4.11.0
 
     - name: Login to GitHub Container Registry
       uses: docker/login-action@v3
@@ -69,6 +70,6 @@ jobs:
           source ~/qnx/800/qnxsdp-env.sh
           cd ~/workspace
           source /usr/local/qnx/env/bin/activate
-          QNX_PROJECT_ROOT="$(pwd)/muslflt" make -C build-files/ports/muslflt/ 
-          QNX_PROJECT_ROOT="$(pwd)/numpy" make -C build-files/ports/numpy install 
-          BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/opencv" make -C build-files/ports/opencv USE_INSTALL_ROOT=true install 
+          QNX_PROJECT_ROOT="$(pwd)/muslflt" make -C build-files/ports/muslflt/
+          QNX_PROJECT_ROOT="$(pwd)/numpy" make -C build-files/ports/numpy install
+          BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/opencv" make -C build-files/ports/opencv USE_INSTALL_ROOT=true install
