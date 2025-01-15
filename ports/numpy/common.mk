@@ -55,7 +55,7 @@ NUMPY_VERSION = 1.25.0
 EXPORT_PY  = export CC=$(QNX_HOST)/usr/bin/qcc \
              export CXX=$(QNX_HOST)/usr/bin/q++ \
              export CFLAGS="-Vgcc_nto$(GCC_NAME)" \
-             export CPPFLAGS="-D_POSIX_THREADS -Wno-implicit-function-declaration -Wno-stringop-overflow -Wno-unused-but-set-variable " \
+             export CPPFLAGS="-D_QNX_SOURCE -D_POSIX_THREADS -Wno-implicit-function-declaration -Wno-stringop-overflow -Wno-unused-but-set-variable " \
              export CXXFLAGS=$(CFLAGS) \
              export LDSHARED=$(QNX_HOST)/usr/bin/qcc \
              export LDFLAGS="-shared -L$(QNX_TARGET)/$(CPUVARDIR)/lib:$(QNX_TARGET)/$(CPUVARDIR)/usr/lib" \
