@@ -1,3 +1,5 @@
+# libjson [![Build](https://github.com/qnx-ports/build-files/actions/workflows/libjson.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/libjson.yml)
+
 ### Tested for QNX 7.1 and 8.0 SDPs
 Cross-compiled on Ubuntu 24.04 for:
 - QNX 8.0 aarch64le on Raspberry Pi 4
@@ -25,7 +27,7 @@ git clone https://github.com/qnx-ports/build-files.git
 git clone https://github.com/vincenthz/libjson.git
 
 #Via SSH
-git clone git@github.com:qnx-ports/build-files.git 
+git clone git@github.com:qnx-ports/build-files.git
 git clone git@github.com:vincenthz/libjson.git
 ```
 

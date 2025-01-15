@@ -7,7 +7,7 @@ Use `$(nproc)` instead of `4` after `JLEVEL=` and `-j` if you want to use the ma
 
 # Compile the port for QNX in a Docker container
 
-Pre-requisite: Install Docker on Ubuntu https://docs.docker.com/engine/install/ubuntu/
+**Pre-requisite**: Install Docker on Ubuntu https://docs.docker.com/engine/install/ubuntu/
 ```bash
 # Create a workspace
 mkdir -p ~/qnx_workspace && cd ~/qnx_workspace
@@ -20,7 +20,7 @@ cd build-files/docker
 
 # Now you are in the Docker container
 
-# source qnxsdp-env.sh in
+# Source your SDP
 source ~/qnx800/qnxsdp-env.sh
 
 # Clone cJSON
@@ -38,7 +38,7 @@ mkdir -p ~/qnx_workspace && cd qnx_workspace
 git clone https://github.com/qnx-ports/build-files.git
 git clone https://github.com/qnx-ports/cJSON.git
 
-# source qnxsdp-env.sh
+# Source your SDP
 source ~/qnx800/qnxsdp-env.sh
 
 # Build cJSON
@@ -55,9 +55,12 @@ TARGET_HOST=<target-ip-address-or-hostname>
 # Move cJSON test binaries to your QNX target
 scp -r $QNX_TARGET/aarch64le/usr/local/bin/cJSON_tests qnxuser@$TARGET_HOST:/data/home/qnxuser/bin
 
-# Move the cJSON libraries to your QNX target
+# Move required libraries to your QNX target
 scp $QNX_TARGET/aarch64le/usr/local/lib/libcjson* qnxuser@$TARGET_HOST:/data/home/qnxuser/lib
+scp $QNX_TARGET/aarch64le/usr/local/lib/libunity.so qnxuser@$TARGET_HOST:/data/home/qnxuser/lib
 ```
+
+**Note**: `cJSON` uses the [unity test API](https://github.com/ThrowTheSwitch/Unity) to run its tests. You would need `libunity.so` on the target only if you plan on running the tests listed below.
 
 Run tests on the target.
 ```bash
@@ -86,7 +89,6 @@ chmod +x *
 ./print_string
 ./print_value
 ./readme_examples
-
-# WIP Tests which currently fail:
-N/A
 ```
+
+**Note**: Test `file_test7_should_be_parsed_and_printed` of `parse_examples` currently fails. This is because cJSON's print function checks for equality between two double type variables with `(==)`. Because this equality comparision catches the small difference in the least significant digits of the stored values at the binary level, cJSON prints the value at a higher precision than the parsed value. 

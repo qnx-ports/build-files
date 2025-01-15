@@ -11,13 +11,10 @@ Pre-requisite: Install Docker on Ubuntu https://docs.docker.com/engine/install/u
 ```bash
 # Create a workspace
 mkdir -p ~/qnx_workspace && cd ~/qnx_workspace
-WORKSPACE=${PWD}
 git clone https://github.com/qnx-ports/build-files.git
 git clone https://github.com/qnx-ports/vsomeip.git  -b qnx_3.4.10
 # Optional: get googletest if you want to run vsomeip tests
 git clone https://github.com/qnx-ports/googletest.git -b qnx_v1.13.0
-export GTEST_ROOT=$WORKSPACE/googletest
-
 
 # Build the Docker image and create a container
 cd build-files/docker
@@ -25,15 +22,17 @@ cd build-files/docker
 ./docker-create-container.sh
 
 # Now you are in the Docker container
-WORKSPACE=${PWD}
 
 # source qnxsdp-env.sh
 source ~/qnx800/qnxsdp-env.sh
 
 #source ~/qnx710/qnxsdp-env.sh
 
-# Clone boost
 cd ~/qnx_workspace
+WORKSPACE=${PWD}
+export GTEST_ROOT=$WORKSPACE/googletest
+
+# Clone boost
 git clone https://github.com/boostorg/boost.git && cd boost
 git checkout boost-1.78.0
 git submodule update --init --recursive
@@ -47,7 +46,7 @@ cd tools/build && git apply $WORKSPACE/build-files/ports/boost/tools_qnx.patch
 cd $WORKSPACE
 
 # Build and install boost
-QNX_PROJECT_ROOT="$(pwd)/boost" make -C build-files/ports/boost install -j4
+BOOST_CPP_VERSION_FLAG="-std=c++17" QNX_PROJECT_ROOT="$(pwd)/boost" make -C build-files/ports/boost install -j4
 
 # Build vsomeip
 # TEST_IP_MASTER should be your QNX target's ip address while TEST_IP_SLAVE should be your Ubuntu PC. It could be vice versa, but
@@ -84,7 +83,7 @@ cd tools/build && git apply $WORKSPACE/build-files/ports/boost/tools_qnx.patch
 cd $WORKSPACE
 
 # Build and install boost
-QNX_PROJECT_ROOT="$(pwd)/boost" make -C build-files/ports/boost install -j4
+BOOST_CPP_VERSION_FLAG="-std=c++17" QNX_PROJECT_ROOT="$(pwd)/boost" make -C build-files/ports/boost install -j4
 
 # Build vsomeip
 # TEST_IP_MASTER should be your QNX target's ip address while TEST_IP_SLAVE should be your Ubuntu PC. It could be vice versa, but

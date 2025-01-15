@@ -1,0 +1,9 @@
+--- memory_orig/test/CMakeLists.txt	2024-12-18 10:40:23.467727679 -0500
++++ memory/test/CMakeLists.txt	2024-12-18 10:42:23.447750033 -0500
+@@ -44,3 +44,6 @@
+ 
+ add_test(NAME test COMMAND foonathan_memory_test)
+ 
++if(QNX)
++    install(TARGETS foonathan_memory_test DESTINATION bin/) 
++endif()

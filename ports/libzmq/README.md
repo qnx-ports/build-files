@@ -1,3 +1,5 @@
+# libzmq [![Build](https://github.com/qnx-ports/build-files/actions/workflows/libzmq.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/libzmq.yml)
+
 **NOTE**: QNX ports are only supported from a Linux host operating system
 
 Use `$(nproc)` instead of `4` after `JLEVEL=` and `-j` if you want to use the maximum number of cores to build this project.
@@ -96,7 +98,7 @@ exit
 ```
 ### Failed tests
 ```bash
-# Fails because relative paths causes bind to fail. 
+# Fails because relative paths causes bind to fail.
 # A fix is being worked on righ now
 # Workaround for now is to convert all relative paths to absolute paths before calling bind().
 ./test_use_fd

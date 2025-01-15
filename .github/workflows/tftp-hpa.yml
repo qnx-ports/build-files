@@ -1,4 +1,4 @@
-name: gtk
+name: tftp-hpa
 
 on:
   workflow_dispatch:
@@ -6,14 +6,14 @@ on:
     branches:
       - main
     paths:
-      - '.github/workflows/gtk.yml'
-      - 'ports/gtk/**'
+      - '.github/workflows/tftp-hpa.yml'
+      - 'ports/tftp-hpa/**'
   pull_request:
     branches:
       - main
     paths:
-      - '.github/workflows/gtk.yml'
-      - 'ports/gtk/**'
+      - '.github/workflows/tftp-hpa.yml'
+      - 'ports/tftp-hpa/**'
 
 jobs:
   build:
@@ -21,25 +21,17 @@ jobs:
     if: |
       (github.event_name == 'workflow_dispatch') ||
       (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
-      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'gtk'))
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'tftp-hpa'))
     steps:
     - name: Checkout build-files
       uses: actions/checkout@v4
       with:
         path: build-files
 
-    - name: Checkout gtk
-      uses: actions/checkout@v4
-      with:
-        repository: qnx-ports/gtk
-        path: gtk
-
-    - name: Checkout meson
-      uses: actions/checkout@v4
-      with:
-        repository: mesonbuild/meson
-        path: meson
-        ref: 1.3.1
+    - name: Fetch tftp-hpa
+      run: |
+        curl -O https://www.kernel.org/pub/software/network/tftp/tftp-hpa/tftp-hpa-5.2.tar.gz
+        tar xf tftp-hpa-5.2.tar.gz
 
     - name: Login to GitHub Container Registry
       uses: docker/login-action@v3
@@ -52,7 +44,7 @@ jobs:
       run: |
         docker pull ghcr.io/qnx-ports/sdp800-build-env:latest
 
-    - name: Build gtk
+    - name: Build tftp-hpa
       uses: addnab/docker-run-action@v3
       with:
         image: ghcr.io/qnx-ports/sdp800-build-env:latest
@@ -61,4 +53,18 @@ jobs:
         run: |
           source ~/qnx/800/qnxsdp-env.sh
           cd workspace
-          QNX_PROJECT_ROOT="$(pwd)/gtk" make INSTALL_ROOT_nto=/tmp/staging USE_INSTALL_ROOT=true -C build-files/ports/gtk JLEVEL=$(nproc) install
+          mkdir -p output
+          cd tftp-hpa-5.2
+          # Apply patches
+          patch -p1 < ~/workspace/build-files/ports/tftp-hpa/fix-build-gcc-10.patch
+          patch -p1 < ~/workspace/build-files/ports/tftp-hpa/qnx-sa-restart.patch
+          # Configure
+          ./configure \
+              --build=x86_64-unknown-linux-gnu \
+              --host=aarch64-unknown-nto-qnx8.0.0 \
+              --prefix=/usr \
+              --mandir=/usr/share/man
+          # Make
+          make
+          # Install
+          make install INSTALLROOT=/home/runner/workspace/output

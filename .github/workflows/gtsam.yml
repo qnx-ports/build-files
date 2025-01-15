@@ -1,4 +1,4 @@
-name: gtk
+name: gtsam
 
 on:
   workflow_dispatch:
@@ -6,41 +6,41 @@ on:
     branches:
       - main
     paths:
-      - '.github/workflows/gtk.yml'
-      - 'ports/gtk/**'
+      - '.github/workflows/gtsam.yml'
+      - 'ports/gtsam/**'
   pull_request:
     branches:
       - main
     paths:
-      - '.github/workflows/gtk.yml'
-      - 'ports/gtk/**'
+      - '.github/workflows/gtsam.yml'
+      - 'ports/gtsam/**'
 
 jobs:
+
   build:
     runs-on: self-hosted
     if: |
-      (github.event_name == 'workflow_dispatch') ||
       (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
-      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'gtk'))
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'gtsam'))
     steps:
     - name: Checkout build-files
       uses: actions/checkout@v4
       with:
         path: build-files
 
-    - name: Checkout gtk
+    - name: Checkout boost
       uses: actions/checkout@v4
       with:
-        repository: qnx-ports/gtk
-        path: gtk
-
-    - name: Checkout meson
+        repository: boostorg/boost
+        path: boost
+        ref: boost-1.82.0
+        submodules: recursive
+    
+    - name: Checkout gtsam
       uses: actions/checkout@v4
       with:
-        repository: mesonbuild/meson
-        path: meson
-        ref: 1.3.1
-
+        repository: qnx-ports/gtsam
+        path: gtsam
     - name: Login to GitHub Container Registry
       uses: docker/login-action@v3
       with:
@@ -52,7 +52,7 @@ jobs:
       run: |
         docker pull ghcr.io/qnx-ports/sdp800-build-env:latest
 
-    - name: Build gtk
+    - name: Build gtsam
       uses: addnab/docker-run-action@v3
       with:
         image: ghcr.io/qnx-ports/sdp800-build-env:latest
@@ -60,5 +60,9 @@ jobs:
         shell: bash
         run: |
           source ~/qnx/800/qnxsdp-env.sh
-          cd workspace
-          QNX_PROJECT_ROOT="$(pwd)/gtk" make INSTALL_ROOT_nto=/tmp/staging USE_INSTALL_ROOT=true -C build-files/ports/gtk JLEVEL=$(nproc) install
+          cd ~/workspace
+          cd boost/tools/build
+          git apply ../../../build-files/ports/boost/tools_qnx.patch
+          cd ~/workspace
+          PREFIX="/usr/local" QNX_PROJECT_ROOT="$(pwd)/boost" make -C build-files/ports/boost install
+          PREFIX="/usr/local" QNX_PROJECT_ROOT="$(pwd)/gtsam" INSTALL_TESTS="false" make -C build-files/ports/gtsam install
