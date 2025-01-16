@@ -60,7 +60,7 @@ CMAKE_ARGS = -DCMAKE_NO_SYSTEM_FROM_IMPORTED=TRUE \
              -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON \
              -DCMAKE_AR=$(QNX_HOST)/usr/bin/nto$(CPU)-ar \
              -DCMAKE_RANLIB=${QNX_HOST}/usr/bin/nto${CPU}-ranlib \
-             -DQNX_TARGET_DATASET_DIR=$(QNX_TARGET_DATASET_DIR) 
+             -DQNX_TARGET_DATASET_DIR:STRING=$(QNX_TARGET_DATASET_DIR) 
 
 MAKE_ARGS ?= -j $(firstword $(JLEVEL) 1)
 
