@@ -116,12 +116,12 @@ grpc_all: grpc_host grpc_target
 grpc_host:
 	mkdir -p $(HOST_GRPC_PATH)
 	cd $(HOST_GRPC_PATH) && \
-	cmake $(HOST_CMAKE_ARGS) $(QNX_PROJECT_ROOT) && \
+	cmake $(CONFIG_CMAKE_ARGS) $(HOST_CMAKE_ARGS) $(QNX_PROJECT_ROOT) && \
 	cmake --build . --target grpc_cpp_plugin $(GENERATOR_ARGS)
 
 grpc_target: grpc_host
 	@mkdir -p build
-	@cd build && cmake $(CMAKE_ARGS) $(QNX_PROJECT_ROOT)
+	@cd build && cmake $(CONFIG_CMAKE_ARGS) $(CMAKE_ARGS) $(QNX_PROJECT_ROOT)
 	@cd build && cmake --build . $(GENERATOR_ARGS)
 
 install check: grpc_all
