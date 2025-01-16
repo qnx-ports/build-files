@@ -178,7 +178,7 @@ jobs:
           cd protobuf
           git submodule update --init
           cd -
-          GENERATOR_ARGS="--parallel --verbose" QNX_PROJECT_ROOT="$(pwd)/protobuf" make -C build-files/ports/protobuf install
+          GENERATOR_ARGS="-GNinja -j$(nproc) --verbose" QNX_PROJECT_ROOT="$(pwd)/protobuf" make -C build-files/ports/protobuf install
           cd grpc
           git submodule update --init
           cd third_party/googletest
@@ -188,4 +188,4 @@ jobs:
           git pull
           cd ~/workspace
           touch build-files/ports/grpc/nto-aarch64-le/Makefile.dnm
-          QNX_PROJECT_ROOT="$(pwd)/grpc" HOST_PROTOC_PATH="$(pwd)/build-files/ports/protobuf/host_protoc" make -C build-files/ports/grpc/ install
+          GENERATOR_ARGS="-GNinja -j$(nproc) --verbose" QNX_PROJECT_ROOT="$(pwd)/grpc" HOST_PROTOC_PATH="$(pwd)/build-files/ports/protobuf/host_protoc" make -C build-files/ports/grpc/ install
