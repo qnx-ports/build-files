@@ -17,7 +17,7 @@ cd build-files/docker
 
 # Clone dlt-daemon
 cd ~/qnx_workspace
-git clone https://github.com/qnx-ports/dlt-daemon.git
+git clone --recurse-submodules https://github.com/qnx-ports/dlt-daemon.git
 ```
 
 # Or setup Ubuntu host
@@ -25,16 +25,16 @@ git clone https://github.com/qnx-ports/dlt-daemon.git
 # Clone the repos
 mkdir -p ~/qnx_workspace && cd qnx_workspace
 git clone https://github.com/qnx-ports/build-files.git
-git clone https://github.com/qnx-ports/dlt-daemon.git
+git clone --recurse-submodules https://github.com/qnx-ports/dlt-daemon.git
 
 # source qnxsdp-env.sh
 source ~/qnx800/qnxsdp-env.sh
 ```
 
-# Compile the port for QNX
+# Compile dlt-daemon and its tests for QNX
 ```bash
-# Build dlt-daemon and install it in sysroot (QNX SDP)
-BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/dlt-daemon" make -C build-files/ports/dlt-daemon install JLEVEL=$(nproc)
-# Or build dlt-daemon and install it in a staging area
-BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/dlt-daemon" make -C build-files/ports/dlt-daemon install JLEVEL=$(nproc) [INSTALL_ROOT_nto=PATH_TO_YOUR_STAGING_AREA USE_INSTALL_ROOT=true]
+# installation in the sysroot (QNX SDP):
+BUILD_TESTING="ON" make -C build-files/ports/dlt-daemon install JLEVEL=$(nproc)
+# or installation in a staging area:
+BUILD_TESTING="ON" make -C build-files/ports/dlt-daemon install JLEVEL=$(nproc) [INSTALL_ROOT_nto=PATH_TO_YOUR_STAGING_AREA USE_INSTALL_ROOT=true]
 ```
