@@ -62,8 +62,6 @@ CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DQT_FEATURE_brotli=OFF \
              -DQT_FEATURE_backtrace=OFF \
              -DQT_FEATURE_qqnx_pps=OFF   \
-             -DQT_FEATURE_poll_ppoll=ON   \
-             -DQT_FEATURE_memmem=ON   \
              -DBUILD_qtactiveqt=OFF   \
              -DBUILD_qtconnectivity=OFF   \
              -DBUILD_qtgrpc=OFF   \
@@ -87,7 +85,7 @@ CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DBUILD_SHARED_LIBS=ON \
              -GNinja \
              -DQT_HOST_PATH=$(PROJECT_ROOT)/nto-aarch64-le/qthost \
-             -DCMAKE_EXE_LINKER_FLAGS="-lsocket -lc++ -lm -lc -lscreen -leventfd" \
+             -DCMAKE_EXE_LINKER_FLAGS="-lsocket -lc++ -lm -lscreen" \
              -DQT_QMAKE_TARGET_MKSPEC=qnx-aarch64le-qcc \
              -Wno-dev   
 
