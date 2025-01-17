@@ -22,7 +22,7 @@ cd build-files/docker
 cd ~/qnx_workspace
 git clone https://github.com/libffi/libffi.git
 
-# Checkout v3.4.2
+# Checkout v3.2.1
 cd libffi
 git checkout v3.2.1
 
@@ -34,12 +34,14 @@ git checkout v3.2.1
 # Build libffi on 7.1 for aarch64le and x86_64
 source ~/qnx710/qnxsdp-env.sh
 ./configure --host=aarch64-unknown-nto-qnx7.1.0 --target=aarch64-unknown-nto-qnx7.1.0 --prefix=$QNX_TARGET/usr --exec-prefix=$QNX_TARGET/aarch64le/usr
+make install -j4
 ./configure --host=x86_64-pc-nto-qnx7.1.0 --target=x86_64-pc-nto-qnx7.1.0 --prefix=$QNX_TARGET/usr --exec-prefix=$QNX_TARGET/x86_64/usr
 make install -j4
 
 # Build libffi on 8.0 for aarch64le and x86_64
 source ~/qnx800/qnxsdp-env.sh
 ./configure --host=aarch64-unknown-nto-qnx8.0.0 --target=aarch64-unknown-nto-qnx8.0.0 --prefix=$QNX_TARGET/usr --exec-prefix=$QNX_TARGET/aarch64le/usr
+make install -j4
 ./configure --host=x86_64-pc-nto-qnx8.0.0 --target=x86_64-pc-nto-qnx8.0.0 --prefix=$QNX_TARGET/usr --exec-prefix=$QNX_TARGET/x86_64/usr
 make install -j4
 
@@ -54,11 +56,12 @@ mkdir -p ~/qnx_workspace && cd qnx_workspace
 cd ~/qnx_workspace
 git clone https://github.com/libffi/libffi.git
 
-# Checkout v3.4.2
+# Checkout v3.2.1
 cd libffi
 git checkout v3.2.1
 
 sudo apt install autoconf
+sudo apt install texinfo
 
 # Run autogen script
 ./autogen.sh
@@ -68,12 +71,14 @@ sudo apt install autoconf
 # Build libffi on 7.1 for aarch64le and x86_64
 source ~/qnx710/qnxsdp-env.sh
 ./configure --host=aarch64-unknown-nto-qnx7.1.0 --target=aarch64-unknown-nto-qnx7.1.0 --prefix=$QNX_TARGET/usr --exec-prefix=$QNX_TARGET/aarch64le/usr
+make install -j4
 ./configure --host=x86_64-pc-nto-qnx7.1.0 --target=x86_64-pc-nto-qnx7.1.0 --prefix=$QNX_TARGET/usr --exec-prefix=$QNX_TARGET/x86_64/usr
 make install -j4
 
 # Build libffi on 8.0 for aarch64le and x86_64
 source ~/qnx800/qnxsdp-env.sh
 ./configure --host=aarch64-unknown-nto-qnx8.0.0 --target=aarch64-unknown-nto-qnx8.0.0 --prefix=$QNX_TARGET/usr --exec-prefix=$QNX_TARGET/aarch64le/usr
+make install -j4
 ./configure --host=x86_64-pc-nto-qnx8.0.0 --target=x86_64-pc-nto-qnx8.0.0 --prefix=$QNX_TARGET/usr --exec-prefix=$QNX_TARGET/x86_64/usr
 make install -j4
 ```

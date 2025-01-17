@@ -59,6 +59,7 @@ jobs:
           cd libffi
           ./autogen.sh
           ./configure --host=aarch64-unknown-nto-qnx8.0.0 --target=aarch64-unknown-nto-qnx8.0.0 --prefix=$QNX_TARGET/usr --exec-prefix=$QNX_TARGET/aarch64le/usr
+          make install
           ./configure --host=x86_64-pc-nto-qnx8.0.0 --target=x86_64-pc-nto-qnx8.0.0 --prefix=$QNX_TARGET/usr --exec-prefix=$QNX_TARGET/x86_64/usr
-          make install -j4
+          make install
           
