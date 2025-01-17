@@ -45,6 +45,7 @@ RUN apt update && apt install -y \
 	xsltproc \
 	libtool \
 	automake \
+	texinfo
 	pkg-config \
 	gfortran \
 	vim \
