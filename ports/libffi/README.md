@@ -22,9 +22,9 @@ cd build-files/docker
 cd ~/qnx_workspace
 git clone https://github.com/libffi/libffi.git
 
-# Checkout the latest tag
+# Checkout v3.4.2
 cd libffi
-git checkout v3.4.6
+git checkout v3.4.2
 
 # Run autogen script
 ./autogen.sh
@@ -54,9 +54,11 @@ mkdir -p ~/qnx_workspace && cd qnx_workspace
 cd ~/qnx_workspace
 git clone https://github.com/libffi/libffi.git
 
-# Checkout the latest tag
+# Checkout v3.4.2
 cd libffi
-git checkout v3.4.6
+git checkout v3.4.2
+
+sudo apt install autoconf
 
 # Run autogen script
 ./autogen.sh

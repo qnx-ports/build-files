@@ -34,7 +34,7 @@ jobs:
       with:
         repository: libffi/libffi
         path: libffi
-        ref: v3.4.6
+        ref: v3.4.2
 
     - name: Login to GitHub Container Registry
       uses: docker/login-action@v3
