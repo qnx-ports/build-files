@@ -24,7 +24,7 @@ git clone https://github.com/libffi/libffi.git
 
 # Checkout v3.4.2
 cd libffi
-git checkout v3.4.2
+git checkout v3.2.1
 
 # Run autogen script
 ./autogen.sh
@@ -56,7 +56,7 @@ git clone https://github.com/libffi/libffi.git
 
 # Checkout v3.4.2
 cd libffi
-git checkout v3.4.2
+git checkout v3.2.1
 
 sudo apt install autoconf
 
