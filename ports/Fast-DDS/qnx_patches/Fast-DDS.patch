@@ -1,0 +1,264 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b01b2c470..76a230984 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -295,6 +295,10 @@ if(SECURITY AND QNX)
+     set(OPENSSL_LIBRARIES ssl crypto)
+ endif()
+ 
++if(QNX)
++    link_libraries(fsnotify)
++endif()
++
+ option(SQLITE3_SUPPORT "Activate SQLITE3 support" ON)
+ 
+ ###############################################################################
+diff --git a/build_qnx/README.md b/build_qnx/README.md
+new file mode 100644
+index 000000000..1dece163b
+--- /dev/null
++++ b/build_qnx/README.md
+@@ -0,0 +1,60 @@
++# Compile the port for QNX
++
++**NOTE**: QNX ports are only supported from a Linux host operating system
++
++- Setup your QNX SDP environment
++
++- Building
++
++```bash
++# Install required build tools
++sudo apt install cmake python3-pip git dos2unix automake
++```
++
++```bash
++# Get Fast-DDS
++git clone git@gitlab.com:qnx/libs/Fast-DDS.git && cd Fast-DDS
++git checkout qnx_2.10.1
++
++WORKSPACE=$PWD
++
++# Get submodules and patch them
++cd $WORKSPACE
++
++# Initialize git submodules
++git submodule update --init $WORKSPACE/thirdparty/asio/ $WORKSPACE/thirdparty/fastcdr $WORKSPACE/thirdparty/tinyxml2/
++
++# Apply QNX patch to Asio.
++cd $WORKSPACE/thirdparty/asio
++git apply $WORKSPACE/build_qnx/qnx_patches/asio_qnx.patch
++
++# Apply QNX patch to Fast-CDR.
++cd $WORKSPACE/thirdparty/fastcdr
++git apply $WORKSPACE/build_qnx/qnx_patches/fastcdr_qnx.patch
++
++# Apply QNX patch to TinyXML2.
++# TinyXML2's CMakeLists.txt has CRLF, so use unix2dos to convert the patch to CRLF.
++cd $WORKSPACE/thirdparty/tinyxml2
++unix2dos $WORKSPACE/build_qnx/qnx_patches/tinyxml2_qnx.patch
++git apply $WORKSPACE/build_qnx/qnx_patches/tinyxml2_qnx.patch
++
++# Get foonathan_memory_vendor
++cd $WORKSPACE
++git clone https://github.com/eProsima/foonathan_memory_vendor.git
++
++# Get googletest
++cd $WORKSPACE
++git clone https://github.com/google/googletest.git && cd googletest
++git checkout v1.13.0
++git apply $WORKSPACE/build_qnx/qnx_patches/googletest_qnx.patch
++
++# Build
++cd $WORKSPACE/build_qnx
++JLEVEL=4 make install
++```
++
++- Testing
++
++Tests will be installed to QNX_TARGET/CPUVARDIR/usr/bin/Fast-DDS_test.
++
++scp the installed libraries under QNX_TARGET/CPUVARDIR/usr/lib and QNX_TARGET/CPUVARDIR/usr/bin/Fast-DDS_test to your target and run them.
+diff --git a/build_qnx/common.mk b/build_qnx/common.mk
+index 326bcc34f..cb9d6b965 100644
+--- a/build_qnx/common.mk
++++ b/build_qnx/common.mk
+@@ -11,7 +11,9 @@ NAME=Fast-DDS
+ #and USE_INSTALL_ROOT
+ FAST-DDS_INSTALL_ROOT ?= $(INSTALL_ROOT_$(OS))
+ 
+-FAST-DDS_VERSION = .2.10.0
++# These commands require GNU Make
++FAST-DDS_CMAKE_VERSION = $(shell bash -c "grep VERSION $(PROJECT_ROOT)/../CMakeLists.txt | grep fastrtps ")
++FAST-DDS_VERSION = .$(subst $\",,$(word 3,$(FAST-DDS_CMAKE_VERSION)))
+ 
+ #choose Release or Debug
+ CMAKE_BUILD_TYPE ?= Release
+@@ -55,8 +57,8 @@ CMAKE_ARGS += -DBUILD_SHARED_LIBS=ON \
+ FAST-DDS_CMAKE_ARGS = $(CMAKE_ARGS) \
+                      -DQNX_INSTALL_ROOT=$(FAST-DDS_INSTALL_ROOT) \
+                      -DSECURITY=ON \
+-                     -DCOMPILE_EXAMPLES=OFF \
+-                     -DEPROSIMA_BUILD_TESTS=OFF
++                     -DCOMPILE_EXAMPLES=ON \
++                     -DEPROSIMA_BUILD_TESTS=ON
+ 
+ CONFIGURE_ASIO = $(ASIO_ROOT)/configure --exec-prefix $(FAST-DDS_INSTALL_ROOT)/$(CPUVARDIR) --prefix $(FAST-DDS_INSTALL_ROOT)
+ 
+diff --git a/build_qnx/qnx_patches/fastcdr_qnx.patch b/build_qnx/qnx_patches/fastcdr_qnx.patch
+index e03552a11..b28680586 100644
+--- a/build_qnx/qnx_patches/fastcdr_qnx.patch
++++ b/build_qnx/qnx_patches/fastcdr_qnx.patch
+@@ -1,10 +1,10 @@
+ diff --git a/src/cpp/CMakeLists.txt b/src/cpp/CMakeLists.txt
+-index da35d03..19f3393 100644
++index dcbf7ab..9cad45f 100644
+ --- a/src/cpp/CMakeLists.txt
+ +++ b/src/cpp/CMakeLists.txt
+-@@ -54,6 +54,10 @@ elseif(NOT EPROSIMA_INSTALLER)
+- 
+-     target_compile_definitions(${PROJECT_NAME} PRIVATE ${PROJECT_NAME_UPPER}_SOURCE)
++@@ -63,6 +63,10 @@ elseif(NOT EPROSIMA_INSTALLER)
++ 	$<$<STREQUAL:$<TARGET_PROPERTY:${PROJECT_NAME},TYPE>,SHARED_LIBRARY>:${PROJECT_NAME_UPPER}_DYN_LINK>
++         )
+  
+ +    if(QNX)
+ +        target_compile_definitions(${PROJECT_NAME} PRIVATE _QNX_SOURCE)
+diff --git a/test/CMakeLists.txt b/test/CMakeLists.txt
+index e8e940a06..dfad49615 100644
+--- a/test/CMakeLists.txt
++++ b/test/CMakeLists.txt
+@@ -38,7 +38,8 @@ endif(WIN32)
+ # Testing
+ ###############################################################################
+ if(EPROSIMA_BUILD_TESTS)
+-    find_package(GTest CONFIG REQUIRED)
++    find_package(GTest CONFIG REQUIRED
++        HINTS "${CMAKE_INSTALL_LIBDIR}/cmake/")
+     include(${PROJECT_SOURCE_DIR}/cmake/common/gtest.cmake)
+ 
+     add_subdirectory(blackbox)
+diff --git a/test/unittest/transport/certs/README.md b/test/unittest/transport/certs/README.md
+index 70afda075..2c60a043b 100644
+--- a/test/unittest/transport/certs/README.md
++++ b/test/unittest/transport/certs/README.md
+@@ -17,8 +17,8 @@ openssl ecparam -name prime256v1 -genkey -noout -out ca.key
+ # openssl ecparam -name prime256v1 -genkey | openssl ec -aes256 -out ca.key -passout pass:cakey # with password
+ 
+ # Generate the Certificate Authority Certificate > ca.crt
+-openssl req -new -x509 -sha256 -key ca.key -out ca.crt -days 365 -config ca.cnf
+-# openssl req -new -x509 -sha256 -key ca.key -out ca.crt -days 365 -config ca.cnf -passin pass:cakey # with password
++openssl req -new -x509 -sha256 -key ca.key -out ca.crt -days 1825 -config ca.cnf
++# openssl req -new -x509 -sha256 -key ca.key -out ca.crt -days 1825 -config ca.cnf -passin pass:cakey # with password
+ ```
+ 
+ ### Fast DDS Certificate
+@@ -33,8 +33,8 @@ openssl req -new -sha256 -key fastdds.key -out fastdds.csr -config fastdds.cnf
+ # openssl req -new -sha256 -key fastdds.key -out fastdds.csr -config fastdds.cnf -passin pass:fastddspwd # with password
+ 
+ # Generate the Fast DDS Certificate (computed on the CA side) > fastdds.crt
+-openssl x509 -req -in fastdds.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out fastdds.crt -days 1000 -sha256
+-# openssl x509 -req -in fastdds.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out fastdds.crt -days 1000 -sha256 -passin pass:cakey # with password
++openssl x509 -req -in fastdds.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out fastdds.crt -days 1825 -sha256
++# openssl x509 -req -in fastdds.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out fastdds.crt -days 1825 -sha256 -passin pass:cakey # with password
+ ```
+ 
+ ### DH PARAMETERS
+diff --git a/test/unittest/transport/certs/ca.crt b/test/unittest/transport/certs/ca.crt
+index f8781814d..5a9874205 100644
+--- a/test/unittest/transport/certs/ca.crt
++++ b/test/unittest/transport/certs/ca.crt
+@@ -1,14 +1,14 @@
+ -----BEGIN CERTIFICATE-----
+-MIICFDCCAbsCFBfZ8BpGDGjJDGtV9r9smtAY4QeVMAoGCCqGSM49BAMCMIGMMQsw
++MIICFDCCAbsCFDIlAUpPsmDIvCdkZWk4YACbWvCIMAoGCCqGSM49BAMCMIGMMQsw
+ CQYDVQQGEwJFUzELMAkGA1UECAwCTUExDzANBgNVBAcMBk1hZHJpZDERMA8GA1UE
+ CgwIZVByb3NpbWExETAPBgNVBAsMCGVQcm9zaW1hMRQwEgYDVQQDDAtlUHJvc2lt
+-YSBDQTEjMCEGCSqGSIb3DQEJARYUc3VwcG9ydEBlcHJvc2ltYS5jb20wHhcNMjIx
+-MTE1MTIwMTIzWhcNMjMxMTE1MTIwMTIzWjCBjDELMAkGA1UEBhMCRVMxCzAJBgNV
++YSBDQTEjMCEGCSqGSIb3DQEJARYUc3VwcG9ydEBlcHJvc2ltYS5jb20wHhcNMjMx
++MTE3MDcwODIzWhcNMjgxMTE1MDcwODIzWjCBjDELMAkGA1UEBhMCRVMxCzAJBgNV
+ BAgMAk1BMQ8wDQYDVQQHDAZNYWRyaWQxETAPBgNVBAoMCGVQcm9zaW1hMREwDwYD
+ VQQLDAhlUHJvc2ltYTEUMBIGA1UEAwwLZVByb3NpbWEgQ0ExIzAhBgkqhkiG9w0B
+ CQEWFHN1cHBvcnRAZXByb3NpbWEuY29tMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcD
+-QgAEj+I8gK3UaelJrdYSIa6ck5afHJ9JAS/TuqnBQaL40UHaH3tXEOoisTFVf6Rm
+-5auDAOv3IsH4KpzxApgE8ynHQTAKBggqhkjOPQQDAgNHADBEAiBktjSbjJuc1H7h
+-swsCk889fD66HPnxQ2VRyTqSqMLVNQIgVGqDodgqQSjXDfOdzN7kr4uN6Y2vgJmc
+-etnWedjnhXo=
++QgAEs4pxHmiZi+/ze7NvNNSFbcKEB6bVZ21gl5ERxioMDUkDR0K9NANvCskAiOsS
++J2af5dmj/H35NGHm5A1DxbCsSzAKBggqhkjOPQQDAgNHADBEAiA3BeLmwYptJ1Mx
++6dEwKb972V8kPu784iJ75/hIWYMAAwIgB+W/TFXYffZu1IwedhkQZ349KSYKNhl4
++UFg1oI2OFHU=
+ -----END CERTIFICATE-----
+diff --git a/test/unittest/transport/certs/ca.key b/test/unittest/transport/certs/ca.key
+index e7b92e08b..d1fd2daa2 100644
+--- a/test/unittest/transport/certs/ca.key
++++ b/test/unittest/transport/certs/ca.key
+@@ -1,5 +1,5 @@
+ -----BEGIN EC PRIVATE KEY-----
+-MHcCAQEEIE+41uHwahHbiDGMEUeYJOy8UGi1DdX09eYz06TMTddkoAoGCCqGSM49
+-AwEHoUQDQgAEj+I8gK3UaelJrdYSIa6ck5afHJ9JAS/TuqnBQaL40UHaH3tXEOoi
+-sTFVf6Rm5auDAOv3IsH4KpzxApgE8ynHQQ==
++MHcCAQEEIOCJ0vBvNovjuZGUFBKcg9O8ikmRKyZTQxSuGE7iFWZFoAoGCCqGSM49
++AwEHoUQDQgAEs4pxHmiZi+/ze7NvNNSFbcKEB6bVZ21gl5ERxioMDUkDR0K9NANv
++CskAiOsSJ2af5dmj/H35NGHm5A1DxbCsSw==
+ -----END EC PRIVATE KEY-----
+diff --git a/test/unittest/transport/certs/fastdds.crt b/test/unittest/transport/certs/fastdds.crt
+index b7fc3b282..1e5b73def 100644
+--- a/test/unittest/transport/certs/fastdds.crt
++++ b/test/unittest/transport/certs/fastdds.crt
+@@ -1,14 +1,14 @@
+ -----BEGIN CERTIFICATE-----
+-MIICFjCCAbsCFDMd2oCBazGT91OP8hV2J1+gHNlQMAoGCCqGSM49BAMCMIGMMQsw
++MIICFTCCAbsCFBGqg+luTTvQ3zP0TMW1xPag9Iw4MAoGCCqGSM49BAMCMIGMMQsw
+ CQYDVQQGEwJFUzELMAkGA1UECAwCTUExDzANBgNVBAcMBk1hZHJpZDERMA8GA1UE
+ CgwIZVByb3NpbWExETAPBgNVBAsMCGVQcm9zaW1hMRQwEgYDVQQDDAtlUHJvc2lt
+-YSBDQTEjMCEGCSqGSIb3DQEJARYUc3VwcG9ydEBlcHJvc2ltYS5jb20wHhcNMjIx
+-MTE1MTMwNzA3WhcNMjUwODExMTMwNzA3WjCBjDELMAkGA1UEBhMCRVMxCzAJBgNV
++YSBDQTEjMCEGCSqGSIb3DQEJARYUc3VwcG9ydEBlcHJvc2ltYS5jb20wHhcNMjMx
++MTE3MDcwODU4WhcNMjgxMTE1MDcwODU4WjCBjDELMAkGA1UEBhMCRVMxCzAJBgNV
+ BAgMAk1BMQ8wDQYDVQQHDAZNYWRyaWQxETAPBgNVBAoMCGVQcm9zaW1hMREwDwYD
+ VQQLDAhlUHJvc2ltYTEUMBIGA1UEAwwLZVByb3NpbWEgREIxIzAhBgkqhkiG9w0B
+ CQEWFHN1cHBvcnRAZXByb3NpbWEuY29tMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcD
+-QgAEBZng27oxy9Pf4LC1HJ41OWsC3Tg3u/UW2P5fXgXOZ2rT54lggaPDT9T9nzgV
+-Xt/v+7HGgiFMN3aDDeqjVfJrzDAKBggqhkjOPQQDAgNJADBGAiEAyM10iWt8vdu0
+-w0tT4ZOfuI955l5+9RQhhYFCEhB4or0CIQCn0Narau7UfzPdwmKGDDeJCUAk3dQo
+-sjx9vpBe6Xh41Q==
++QgAERpOOxdxOyNKP5xazr5Yo/hxTkP0xbk0C1dLx8ohD515uzGPUE7fldGTCuMIh
++zoZKDhcvK98XfSpNr1PSAVXBjDAKBggqhkjOPQQDAgNIADBFAiAEP2q5dOdZWfco
++svCJpkydRpHgozKm1rxh03mH6TeVRwIhAKgYJZmaXaWxvXasrn7ToHQknXJfkkGO
++DtxzqPeDgot4
+ -----END CERTIFICATE-----
+diff --git a/test/unittest/transport/certs/fastdds.csr b/test/unittest/transport/certs/fastdds.csr
+index 7c909aae0..df0223bc9 100644
+--- a/test/unittest/transport/certs/fastdds.csr
++++ b/test/unittest/transport/certs/fastdds.csr
+@@ -2,8 +2,8 @@
+ MIIBSDCB7wIBADCBjDELMAkGA1UEBhMCRVMxCzAJBgNVBAgMAk1BMQ8wDQYDVQQH
+ DAZNYWRyaWQxETAPBgNVBAoMCGVQcm9zaW1hMREwDwYDVQQLDAhlUHJvc2ltYTEU
+ MBIGA1UEAwwLZVByb3NpbWEgREIxIzAhBgkqhkiG9w0BCQEWFHN1cHBvcnRAZXBy
+-b3NpbWEuY29tMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEBZng27oxy9Pf4LC1
+-HJ41OWsC3Tg3u/UW2P5fXgXOZ2rT54lggaPDT9T9nzgVXt/v+7HGgiFMN3aDDeqj
+-VfJrzKAAMAoGCCqGSM49BAMCA0gAMEUCIQCp9cA5uo6KKpoWJE8SelmoduMPzG6e
+-Tto3NJhPfV6JEwIgaB65CKyrMCpm9jkUqa3nA/sO8JdvOU/pp1lI52g9nbw=
++b3NpbWEuY29tMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAERpOOxdxOyNKP5xaz
++r5Yo/hxTkP0xbk0C1dLx8ohD515uzGPUE7fldGTCuMIhzoZKDhcvK98XfSpNr1PS
++AVXBjKAAMAoGCCqGSM49BAMCA0gAMEUCIBNHR6vyWtxu7jnMNPRiJRMq9RKp88OQ
++bj+66uL/QDn8AiEAwKVHN9FcM1E2bvTU5A4l/2l+/W+EcRa2b7bzVkfRs4o=
+ -----END CERTIFICATE REQUEST-----
+diff --git a/test/unittest/transport/certs/fastdds.key b/test/unittest/transport/certs/fastdds.key
+index 426223f13..37a97b980 100644
+--- a/test/unittest/transport/certs/fastdds.key
++++ b/test/unittest/transport/certs/fastdds.key
+@@ -1,8 +1,5 @@
+ -----BEGIN EC PRIVATE KEY-----
+-Proc-Type: 4,ENCRYPTED
+-DEK-Info: AES-256-CBC,DD07963B46651B0634E2BC3ED275B73E
+-
+-b31AqaIGrm1juePwJG3KiWWdQL+ekiVUqUURfhVHTLmc0mxMz0dHbTYWE57HfsQ7
+-eh8maPWRPn30ArK+Zp9VZ5gdnZKl93z86IfM1rnWMX8NqGKVL7HIeAhc8DOYhFwf
+-/8dGxH+XFU3TAk8zvlP29gzZBMjuQ0DewmC6VGKUAVI=
++MHcCAQEEIBRqOIY28pjNczTDrKr9DJJVHvn61Ir4BxWdnrw6R0eloAoGCCqGSM49
++AwEHoUQDQgAERpOOxdxOyNKP5xazr5Yo/hxTkP0xbk0C1dLx8ohD515uzGPUE7fl
++dGTCuMIhzoZKDhcvK98XfSpNr1PSAVXBjA==
+ -----END EC PRIVATE KEY-----

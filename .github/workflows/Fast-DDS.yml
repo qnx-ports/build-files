@@ -71,13 +71,12 @@ jobs:
           cd ~/workspace
           WORKSPACE=$PWD
           cd $WORKSPACE/Fast-DDS/thirdparty/asio
-          git apply $WORKSPACE/Fast-DDS/build_qnx/qnx_patches/asio_qnx.patch
+          git apply $WORKSPACE/build-files/ports/Fast-DDS/qnx_patches/asio_qnx.patch
           cd $WORKSPACE/Fast-DDS/thirdparty/fastcdr
-          git apply $WORKSPACE/Fast-DDS/build_qnx/qnx_patches/fastcdr_qnx.patch
+          git apply $WORKSPACE/build-files/ports/Fast-DDS/qnx_patches/fastcdr_qnx.patch
           cd $WORKSPACE/Fast-DDS/thirdparty/tinyxml2
-          unix2dos $WORKSPACE/Fast-DDS/build_qnx/qnx_patches/tinyxml2_qnx.patch
-          git apply $WORKSPACE/Fast-DDS/build_qnx/qnx_patches/tinyxml2_qnx.patch
+          unix2dos $WORKSPACE/build-files/ports/Fast-DDS/qnx_patches/tinyxml2_qnx.patch
+          git apply $WORKSPACE/build-files/ports/Fast-DDS/qnx_patches/tinyxml2_qnx.patch
           cd $WORKSPACE/Fast-DDS/googletest
-          git apply $WORKSPACE/Fast-DDS/build_qnx/qnx_patches/googletest_qnx.patch
-          cd $WORKSPACE/Fast-DDS/build_qnx
-          JLEVEL=$(nproc) make install 
+          git apply $WORKSPACE/build-files/ports/Fast-DDS/qnx_patches/googletest_qnx.patch
+          JLEVEL=$(nproc) make -C $WORKSPACE/build-files/ports/Fast-DDS/ install 
