@@ -46,7 +46,7 @@ MESON_FLAGS := \
   --buildtype=$(MESON_BUILD_TYPE) \
   --prefix=$(INSTALL_ROOT_WITH_PREFIX) \
   -Dgobject_types=false \
-
+  
 MESON := $(QNX_PROJECT_ROOT)/../meson/meson.py
 
 NINJA_ARGS := -j $(firstword $(JLEVEL) 1)
@@ -63,7 +63,7 @@ qnx_cross.txt: $(PROJECT_ROOT)/qnx_cross.txt.in
 
 graphene_all: qnx_cross.txt
 	@mkdir -p build
-	@cd build && meson setup --reconfigure --cross-file=../qnx_cross.txt $(MESON_FLAGS) . $(QNX_PROJECT_ROOT)
+	@cd build && $(MESON) setup --reconfigure --cross-file=../qnx_cross.txt $(MESON_FLAGS) . $(QNX_PROJECT_ROOT)
 	@cd build && ninja $(NINJA_ARGS)
 
 install check: graphene_all
