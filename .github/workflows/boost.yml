@@ -34,7 +34,7 @@ jobs:
       with:
         repository: boostorg/boost
         path: boost
-        ref: boost-1.82.0
+        ref: boost-1.87.0
         submodules: recursive
 
     - name: Login to GitHub Container Registry
