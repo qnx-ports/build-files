@@ -58,10 +58,10 @@ QNX_PROJECT_ROOT="$(pwd)/graphene" make -C build-files/ports/graphene/ JLEVEL=4 
 TARGET_IP_ADDRESS=<target-ip-address-or-hostname>
 TARGET_USER=<target-username>
 
-scp -r ~/qnx800/target/qnx/aarch64le/usr/local/lib/libgraphene.* $TARGET_USER@$TARGET_IP_ADDRESS:~/lib
+scp -r ~/qnx800/target/qnx/aarch64le/usr/local/lib/libgraphene* $TARGET_USER@$TARGET_IP_ADDRESS:~/lib
 ```
 
-If `~/lib` directory do not exist, create them with:
+If the `~/lib` directory do not exist, create them with:
 ```bash
 ssh $TARGET_USER@$TARGET_IP_ADDRESS "mkdir -p ~/lib"
 ````
@@ -76,7 +76,7 @@ TARGET_USER=<target-username>
 
 scp -r ~/qnx800/target/qnx/aarch64le/usr/local/libexec/installed-tests/graphene-1.0 $TARGET_USER@$TARGET_IP_ADDRESS:~
 ```
-Test should be avaliable in `~/graphene-1.0` on your target system. Execute commands below to run all tests, result will be stored in ./test.result and output to the terminal.
+Tests should be avaliable in `~/graphene-1.0` on your target system. Execute commands below to run all tests, result will be stored in ./test.result and output to the terminal as well.
 ```bash
 #ssh to your target system
 ssh $TARGET_USER@$TARGET_IP_ADDRESS
@@ -91,4 +91,3 @@ for test in $(find ./ -type f) ; do
     $test | tee -a ./test.result
 done
 ```
-
