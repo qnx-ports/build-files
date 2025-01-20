@@ -34,7 +34,6 @@ jobs:
       with:
         repository: mesonbuild/meson
         path: meson
-        ref: 1.3.1
  
     - name: Checkout graphene
       uses: actions/checkout@v4
