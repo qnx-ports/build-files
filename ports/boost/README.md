@@ -26,7 +26,7 @@ source ~/qnx800/qnxsdp-env.sh
 # Clone boost
 cd ~/qnx_workspace
 git clone https://github.com/boostorg/boost.git && cd boost
-git checkout boost-1.87.0
+git checkout boost-1.82.0
 git submodule update --init --recursive
 
 # Apply a tools patch
@@ -49,7 +49,7 @@ git clone https://github.com/qnx-ports/build-files.git
 git clone https://github.com/boostorg/boost.git
 
 cd boost
-git checkout boost-1.87.0
+git checkout boost-1.82.0
 git submodule update --init --recursive
 cd tools/build && git apply ../../../build-files/ports/boost/tools_qnx.patch && cd -
 cd ../
@@ -115,6 +115,6 @@ cd ../chrono
 ./chrono_unit_test_d
 
 # A test folder might contain a .so file which will be needed to run the tests.
-# For example, system folder has libthrow_test.so.1.87.0. Move it to /data/home/qnxuser/lib
-cp ./system/libthrow_test.so.1.87.0 /data/home/qnxuser/lib
+# For example, system folder has libthrow_test.so.1.82.0. Move it to /data/home/qnxuser/lib
+cp ./system/libthrow_test.so.1.82.0 /data/home/qnxuser/lib
 ```
