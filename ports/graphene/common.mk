@@ -47,6 +47,8 @@ MESON_FLAGS := \
   --prefix=$(INSTALL_ROOT_WITH_PREFIX) \
   -Dgobject_types=false \
 
+MESON := $(QNX_PROJECT_ROOT)/../meson/meson.py
+
 NINJA_ARGS := -j $(firstword $(JLEVEL) 1)
 
 qnx_cross.txt: $(PROJECT_ROOT)/qnx_cross.txt.in
