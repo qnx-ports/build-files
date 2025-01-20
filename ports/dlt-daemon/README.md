@@ -1,9 +1,5 @@
 # dlt-daemon [![Build](https://github.com/qnx-ports/build-files/actions/workflows/dlt-daemon.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/dlt-daemon.yml)
 
-
-
-| [dlt-daemon](https://github.com/qnx-ports/build-files/blob/main/ports/dlt-daemon/README.md) | [![Build](https://github.com/qnx-ports/build-files/actions/workflows/dlt-daemon.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/dlt-daemon.yml) |
-
 **NOTE**: QNX ports are only supported from a Linux host operating system
 
 # Setup a Docker container
