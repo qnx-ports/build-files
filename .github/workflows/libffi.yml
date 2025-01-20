@@ -1,0 +1,65 @@
+name: libffi
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/libffi.yml'
+      - 'ports/libffi/**'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/libffi.yml'
+      - 'ports/libffi/**'
+
+jobs:
+
+  build:
+    runs-on: self-hosted
+    if: |
+      (github.event_name == 'workflow_dispatch') ||
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'libffi'))
+    steps:
+    - name: Checkout build-files
+      uses: actions/checkout@v4
+      with:
+        path: build-files
+
+    - name: Checkout libffi
+      uses: actions/checkout@v4
+      with:
+        repository: libffi/libffi
+        path: libffi
+        ref: v3.2.1
+
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v3
+      with:
+        registry: ghcr.io
+        username: ${{github.actor}}
+        password: ${{secrets.GITHUB_TOKEN}}
+
+    - name: Pull build environment
+      run: |
+        docker pull ghcr.io/qnx-ports/sdp800-build-env:latest
+
+    - name: Build libffi
+      uses: addnab/docker-run-action@v3
+      with:
+        image: ghcr.io/qnx-ports/sdp800-build-env:latest
+        options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
+        shell: bash
+        run: |
+          cd workspace
+          source ~/qnx/800/qnxsdp-env.sh
+          cd libffi
+          ./autogen.sh
+          ./configure --host=aarch64-unknown-nto-qnx8.0.0 --target=aarch64-unknown-nto-qnx8.0.0 --prefix=$QNX_TARGET/usr --exec-prefix=$QNX_TARGET/aarch64le/usr
+          make install
+          ./configure --host=x86_64-pc-nto-qnx8.0.0 --target=x86_64-pc-nto-qnx8.0.0 --prefix=$QNX_TARGET/usr --exec-prefix=$QNX_TARGET/x86_64/usr
+          make install
+          
