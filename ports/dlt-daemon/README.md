@@ -36,7 +36,7 @@ source ~/qnx800/qnxsdp-env.sh
 # Compile dlt-daemon and its tests for QNX
 ```bash
 # installation in the sysroot (QNX SDP):
-BUILD_TESTING="ON" make -C build-files/ports/dlt-daemon install JLEVEL=$(nproc)
+BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/dlt-daemon" make -C build-files/ports/dlt-daemon install JLEVEL=$(nproc)
 # or installation in a staging area:
-BUILD_TESTING="ON" make -C build-files/ports/dlt-daemon install JLEVEL=$(nproc) [INSTALL_ROOT_nto=PATH_TO_YOUR_STAGING_AREA USE_INSTALL_ROOT=true]
+BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/dlt-daemon" make -C build-files/ports/dlt-daemon install JLEVEL=$(nproc) [INSTALL_ROOT_nto=PATH_TO_YOUR_STAGING_AREA USE_INSTALL_ROOT=true]
 ```
