@@ -56,7 +56,7 @@ CFLAGS += $(FLAGS) \
           -I$(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/include \
           -I$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/include
 
-LDFLAGS += -Wl,--build-id=md5 -Wl,--allow-shlib-undefined -lm
+LDFLAGS += -Wl,--build-id=md5 -Wl,--allow-shlib-undefined -lmuslflt
 
 
 CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
