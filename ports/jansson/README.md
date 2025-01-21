@@ -37,7 +37,7 @@ make -C build-files/ports/jansson/ install -j4
 # Compile the port for QNX on Ubuntu Host
 
 ```bash
-# Clone the repoitories
+# Clone the repositories
 mkdir -p ~/qnx_workspace && cd qnx_workspace
 git clone https://github.com/qnx-ports/build-files.git
 git clone https://github.com/qnx-ports/jansson.git
@@ -59,21 +59,21 @@ Move the libraries, test binaries and script to the target
 TARGET_HOST=<target-ip-address-or-hostname>
 
 # Move libraries to the target
-scp $QNX_TARGET/aarch64le/usr/local/lib/libjansson* root@$TARGET_HOST:~/lib
+scp $QNX_TARGET/aarch64le/usr/local/lib/libjansson* qnxuser@$TARGET_HOST:~/lib
 
 # Move the test binaries to the target
-scp -r $QNX_TARGET/aarch64le/usr/local/bin/jansson_tests root@$TARGET_HOST:~/
+scp -r $QNX_TARGET/aarch64le/usr/local/bin/jansson_tests qnxuser@$TARGET_HOST:~/
 
 cd ~/qnx_workspace
-scp build-files/ports/jansson/qnxtests.sh root@$TARGET_HOST:~/jansson_tests
+scp build-files/ports/jansson/qnxtests.sh qnxuser@$TARGET_HOST:~/jansson_tests
 ```
 
 Run the tests
 
 ```bash
-ssh root@$TARGET_HOST
+ssh qnxuser@$TARGET_HOST
 
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/data/home/root/lib
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/data/home/qnxuser/lib
 
 cd jansson_tests
 sh qnxtests.sh
