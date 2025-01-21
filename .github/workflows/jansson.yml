@@ -31,8 +31,8 @@ jobs:
       - name: Checkout muslflt
         uses: actions/checkout@v4
         with:
-        repository: qnx-ports/muslflt
-        path: muslflt
+          repository: qnx-ports/muslflt
+          path: muslflt
 
       - name: Checkout jansson
         uses: actions/checkout@v4
