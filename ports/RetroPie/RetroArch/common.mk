@@ -46,11 +46,12 @@ endif
 
 CONFIGURE_PREOPTS= CC=$(QNX_HOST)/usr/bin/qcc \
 				   CXX=$(QNX_HOST)/usr/bin/q++ \
-				   CFLAGS="-D_QNX_SOURCE -D_QNXSOURCE -std=c17 $(CFLAGS)"\
-				   CXXFLAGS="-D_QNX_SOURCE -D_QNXSOURCE -std=c++17 -Wno-deprecated-definitions $(CXXFLAGS)"\
+				   CFLAGS="-D_QNX_SOURCE -std=c17 $(CFLAGS)"\
+				   CXXFLAGS="-D_QNX_SOURCE -std=c++17 -Wno-deprecated-definitions $(CXXFLAGS)"\
 				   LDFLAGS=$(LDFLAGS) \
-				   CPPFLAGS="-D_QNX_SOURCE -D_QNXSOURCE $(CPPFLAGS)"\
-				   PKG_CONF_PATH="$(QNX_TARGET)/$(CPUVARDIR)$(PREFIX)/lib/pkgconfig"
+				   CPPFLAGS="-D_QNX_SOURCE $(CPPFLAGS)"\
+				   PKG_CONF_PATH="pkg-config"\
+				   PKG_CONFIG_LIBDIR="$(QNX_TARGET)/$(CPUVARDIR)$(PREFIX)/lib/pkgconfig"
 
 
 

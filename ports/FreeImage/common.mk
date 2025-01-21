@@ -4,12 +4,9 @@ endif
 include $(QCONFIG)
 
 
-NAME=EmulationStation
 
-DIST_BASE=$(PRODUCT_ROOT)/../../../EmulationStation
-ifdef QNX_PROJECT_ROOT
-DIST_BASE=$(QNX_PROJECT_ROOT)
-endif
+ALL_DEPENDENCIES = freeimage_all
+.PHONY: freeimage_all install check clean
 
 #$(INSTALL_ROOT_$(OS)) is pointing to $QNX_TARGET
 #by default, unless it was manually re-routed to
@@ -17,25 +14,14 @@ endif
 #and USE_INSTALL_ROOT
 INSTALL_ROOT ?= $(INSTALL_ROOT_$(OS))
 
-#A prefix path to use **on the target**. This is
-#different from INSTALL_ROOT, which refers to a
-#installation destination **on the host machine**.
-#This prefix path may be exposed to the source code,
-#the linker, or package discovery config files (.pc,
-#CMake config modules, etc.). Default is /usr/local
-PREFIX ?= /usr/local
-
-#choose Release or Debug
-CMAKE_BUILD_TYPE ?= Release
-
-#override 'all' target to bypass the default QNX build system
-ALL_DEPENDENCIES = EmulationStation_all
-.PHONY: EmulationStation_all install check clean
-
-FLAGS   += -g -D_QNX_SOURCE
-LDFLAGS += -Wl,--build-id=md5
+QNX_PROJECT_ROOT?=$(PRODUCT_ROOT)/../../FreeImage
+PREFIX?="/usr/local"
 
 include $(MKFILES_ROOT)/qtargets.mk
+# MAKE_ARGS ?= -j $(firstword $(JLEVEL) 1)
+# CC=${QNX_HOST}/usr/bin/qcc
+# AR=${QNX_HOST}/usr/bin/qcc
+# CXX=${QNX_HOST}/usr/bin/q++
 
 #Search paths for all of CMake's find_* functions --
 #headers, libraries, etc.
@@ -69,23 +55,37 @@ CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DEXTRA_CMAKE_CXX_FLAGS="$(FLAGS)" \
              -DEXTRA_CMAKE_LINKER_FLAGS="$(LDFLAGS)" \
              -DCMAKE_NO_SYSTEM_FROM_IMPORTED=ON \
-             -DCPU=$(CPU) \
-             -DGLES=ON \
-             -DGLSystem:STRING="$(QNX_TARGET)/$(CPUDIR)/usr/lib/graphics/rpi4-drm/libGLESv2-mesa.so"
 
 MAKE_ARGS ?= -j $(firstword $(JLEVEL) 1)
 
+
 ifndef NO_TARGET_OVERRIDE
-EmulationStation_all:
+freeimage_all:
 	@mkdir -p build
-	@cd build && cmake $(CMAKE_ARGS) $(DIST_BASE)
+	@cd build && cmake $(CMAKE_ARGS) $(QNX_PROJECT_ROOT)
 	@cd build && make VERBOSE=1 all $(MAKE_ARGS)
 
-install check: EmulationStation_all
-	@echo Installing...
-	@cd build && make VERBOSE=1 install $(MAKE_ARGS)
-	@echo Done.
+# @mkdir -p build
+# @echo $(QNX_PROJECT_ROOT)
+# @cd build && cp -r $(QNX_PROJECT_ROOT)/* .
+# @cd build && PC_EXECPREFIX="$(QNX_TARGET)/$(CPUDIR)/$(PREFIX)" PC_PREFIX="$(QNX_TARGET)/$(PREFIX)" CC=$(CC) AR=$(AR) CXX=$(CXX) make -fMakefile.qnx $(MAKE_ARGS)
 
-clean iclean spotless:
+#somehow this works even without the explicit dependance on freeimage_all.
+#assume its due to ALL_DEPENDENCIES
+install check:
+	@echo Installing...
+	@cd build && make install $(MAKE_ARGS)
+# @cd build/Dist && cp *.so $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib
+# @cd build/Dist && ls *.so 
+# @echo "-> $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib"
+# @cd build/Dist && cp *.h $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/include
+# @cd build/Dist && ls *.h 
+# @echo "-> $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/include"
+# @cd build/Dist && cp *.pc $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/pkgconfig
+# @cd build/Dist && ls *.pc
+# @echo "-> $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/pkgconfig"
+	@echo Done! Installed.
+
+clean:
 	rm -rf build
 endif
