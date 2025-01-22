@@ -55,10 +55,15 @@ cd -
 # Source qnxsdp-env.sh
 source ~/qnx800/qnxsdp-env.sh
 
+
+
+# --Building gtk--
 # Create a staging area for the GTK4 build, for example, `/tmp/staging`
 # This is required for the GTK4 port due to the sheer amount of files it installs,
 # and the fact that clearing all installed files is required for a fully clean build of GTK4.
 # Use INSTALL_ROOT_nto to specify a staging area
+
+export QCONF_OVERRIDE=$PWD/build-files/resources/qconf_override/qconf_override.mk
 QNX_PROJECT_ROOT="$(pwd)/gtk" make INSTALL_ROOT_nto=/tmp/staging USE_INSTALL_ROOT=true -C build-files/ports/gtk JLEVEL=$(nproc) install
 ```
 

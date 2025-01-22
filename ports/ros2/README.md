@@ -10,7 +10,12 @@ Currently the port is supported for QNX SDP 7.1 and 8.0.
 
 We recommend that you use Docker to build ros2 for QNX to ensure the build environment consistency.
 
-Pass the appropriate path to python3 on the target as QNX_PYTHON3_PATH to `build-ros2.sh`.
+If python3 on the target is located at `/usr/bin/python3` instead of `/system/xbin/python3`, uncomment the following line in `build-ros2.sh`.
+
+```code
+#grep -rinl "\#\!$PYTHON3_PATH" ./opt/ros/humble | xargs -d '\n' sed -i '1 i #!/usr/bin/python3'
+grep -rinl "\#\!$PYTHON3_PATH" ./opt/ros/humble | xargs -d '\n' sed -i '1 i #!/system/xbin/python3'
+```
 
 The build may fail on an unclean project. To get successive builds to succeed you may need to first remove untracked files (see `git clean`).
 
@@ -50,8 +55,7 @@ vcs import src < ros2.repos
 export CPU=aarch64
 
 # Build ros2
-# Default location is /system/xbin/python3 for 8.0.0 and /system/bin/python3 for 8.0.2
-QNX_PYTHON3_PATH=/system/xbin/python3 ./scripts/build-ros2.sh
+./scripts/build-ros2.sh
 ```
 
 After the build completes, ros2_humble.tar.gz will be created at QNX_TARGET/CPUVARDIR/ros2_humble.tar.gz
