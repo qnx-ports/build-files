@@ -27,8 +27,14 @@ cd build-files/docker
 cd ~/qnx_workspace
 source ~/qnx800/qnxsdp-env.sh
 
+# Clone muslflt
+git clone https://github.com/qnx-ports/muslflt.git
+
 # Clone jansson
 git clone https://github.com/qnx-ports/jansson.git
+
+# Build muslflt
+QNX_PROJECT_ROOT="$(pwd)/muslflt" make -C build-files/ports/muslflt/ install -j4
 
 # Build jansson
 make -C build-files/ports/jansson/ install -j4
@@ -40,10 +46,14 @@ make -C build-files/ports/jansson/ install -j4
 # Clone the repositories
 mkdir -p ~/qnx_workspace && cd qnx_workspace
 git clone https://github.com/qnx-ports/build-files.git
+git clone https://github.com/qnx-ports/muslflt.git
 git clone https://github.com/qnx-ports/jansson.git
 
 # Source SDP environment
 source ~/qnx800/qnxsdp-env.sh
+
+# Build muslflt
+QNX_PROJECT_ROOT="$(pwd)/muslflt" make -C build-files/ports/muslflt/ install -j4
 
 # Build jansson
 make -C build-files/ports/jansson/ install -j4
@@ -59,6 +69,7 @@ Move the libraries, test binaries and script to the target
 TARGET_HOST=<target-ip-address-or-hostname>
 
 # Move libraries to the target
+scp $QNX_TARGET/aarch64le/usr/local/lib/libmuslflt* qnxuser@$TARGET_HOST:~/lib
 scp $QNX_TARGET/aarch64le/usr/local/lib/libjansson* qnxuser@$TARGET_HOST:~/lib
 
 # Move the test binaries to the target
@@ -78,10 +89,3 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/data/home/qnxuser/lib
 cd jansson_tests
 sh qnxtests.sh
 ```
-
-Known test failures
-
-- Only four tests should fail:
-  - valid/real-exponent test by json_process, without and with --strip
-  - valid/real-subnormal-number by json_process, without and with --strip
-- Failures are related to floating point operations precision
