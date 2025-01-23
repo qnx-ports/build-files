@@ -86,7 +86,7 @@ cd ~/graphene-1.0
 
 # run all tests
 > ./test.result
-for test in $(find ./ -type f) ; do
+for test in $(find ./ -type f -not -name 'test.result') ; do
     chmod +x $test
     $test | tee -a ./test.result
 done
