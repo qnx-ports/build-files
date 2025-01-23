@@ -1,0 +1,7 @@
+# QNX Build Files
+nto-aarch64-le/*
+nto-x86_64-o/*
+linux-x86_64-o/*
+!nto-aarch64-le/Makefile
+!nto-x86_64-o/Makefile
+!linux-x86_64-o/Makefile.dnm
