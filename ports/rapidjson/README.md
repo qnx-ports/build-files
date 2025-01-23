@@ -14,7 +14,7 @@ mkdir ~/your-wksp && cd ~/your-wksp
 git clone https://github.com/Tencent/rapidjson.git
 git clone git@github.com:qnx-ports/build-files.git
 ```
-2. **Optional** Initialize the QNX Building Docker Container
+2. **\[Optional\]** Initialize the QNX Building Docker Container
 ```bash
 cd build-files/docker
 ./docker-build-qnx-image.sh
@@ -22,11 +22,36 @@ cd build-files/docker
 cd -
 ```
 
-3. Build the project. *Note:* *replace* *qnx800* *with* *your* *SDP* *installation*.
+3. **\[Optional | Needed for Tests\]** Clone googletest
+```bash
+git clone git@github.com:qnx-ports/rapidjson.git
+```
+
+4. Build the project. *Note:* *replace* *qnx800* *with* *your* *SDP* *installation*.
 ```bash
 source ~/qnx800/qnxsdp-env.sh
-make -C build-files/ports/rapidjson/
+
+# Without tests
+make -C build-files/ports/rapidjson/ install
+
+# With tests
+BUILD_TESTS=true make -C build-files/ports/rapidjson install
+# With tests & specify Googletest Installation
+BUILD_TESTS=true GTEST_SRC="your/gtest/install/path" make -C build-files/ports/rapidjson install
 ```
 
 ## Testing
-TODO
+Make sure you have built rapidjson with tests.
+1. Copy tests to target
+```bash
+cd $QNX_TARGET/aarch64le/usr/local/bin/rapidjson_tests
+scp -r * <username>@<target-ip>:/data/home/<username>/rapidjson
+```
+2. Run tests on target
+```bash
+ssh <username>@<target-ip>
+
+#ON TARGET:
+cd rapidjson
+./unittest
+```
