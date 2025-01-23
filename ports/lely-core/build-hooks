@@ -1,7 +1,7 @@
 #!/bin/sh
 
 #
-#	Color definition of terminal outputs
+#    Color definition of terminal outputs
 #
 red="\033[0;31m"
 grn="\033[0;32m"
@@ -14,7 +14,7 @@ cls="\033[0m"
 BASIC_PREFIX="/usr/local"
 
 #
-#	QNX specific build configuration nested level
+#    QNX specific build configuration nested level
 #
 NESTED_LEVEL="../../../../lely-core"
 
@@ -31,18 +31,17 @@ PREFIX="${INSTALL_ROOT_nto}/${BASIC_PREFIX}"
 EXEC_PREFIX="${INSTALL_ROOT_nto}/${cpudir}/${BASIC_PREFIX}"
 
 #
-#	Setup of essential configuration parameters
+#    Setup of essential configuration parameters
 #
 function hook_preconfigure {
 #
-#	QNX specific changes are covered by prediefined '__QNX__'
+#    QNX specific changes are covered by prediefined '__QNX__'
 #
-	#C/C++ flags
-	CPPFLAGS="$CPPFLAGS -D_POSIX_C_SOURCE=200809 -D_QNX_SOURCE"
+    #C/C++ flags
+    CPPFLAGS="$CPPFLAGS -D_POSIX_C_SOURCE=200809 -D_QNX_SOURCE"
 
-        #C++ flags
-        CXXFLAGS="$CXXFLAGS -Wno-error=uninitialized"
-
+    #C++ flags
+    CXXFLAGS="$CXXFLAGS -Wno-error=uninitialized -Wno-error=deprecated-declarations"
 #
 #	Add socket library
 #
