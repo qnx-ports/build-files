@@ -18,10 +18,8 @@ QNX_PROJECT_ROOT?=$(PRODUCT_ROOT)/../../FreeImage
 PREFIX?="/usr/local"
 
 include $(MKFILES_ROOT)/qtargets.mk
-# MAKE_ARGS ?= -j $(firstword $(JLEVEL) 1)
-# CC=${QNX_HOST}/usr/bin/qcc
-# AR=${QNX_HOST}/usr/bin/qcc
-# CXX=${QNX_HOST}/usr/bin/q++
+FLAGS   += -g -D_QNX_SOURCE
+LDFLAGS += -Wl
 
 #Search paths for all of CMake's find_* functions --
 #headers, libraries, etc.
@@ -55,6 +53,7 @@ CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DEXTRA_CMAKE_CXX_FLAGS="$(FLAGS)" \
              -DEXTRA_CMAKE_LINKER_FLAGS="$(LDFLAGS)" \
              -DCMAKE_NO_SYSTEM_FROM_IMPORTED=ON \
+             -DBUILD_TESTS=OFF \
 
 MAKE_ARGS ?= -j $(firstword $(JLEVEL) 1)
 
