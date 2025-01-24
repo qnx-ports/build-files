@@ -49,7 +49,9 @@ CXXFLAGS += $(CFLAGS) -std=gnu++17
 CROSS_CC = 
 CROSS_CXX = 
 CROSS_AR = 
+CROSS_AS = 
 CROSS_RANDLIB =
+
 CONFIGURE_CMD = $(QNX_PROJECT_ROOT)/icu4c/source/runConfigureICU Linux 
 CONFIGURE_ARGS =
 CONFIGURE_ENVS = CXXFLAGS=-std=gnu++17
@@ -57,17 +59,18 @@ CONFIGURE_ENVS = CXXFLAGS=-std=gnu++17
 # config tasks
 TEST_BUILD_CMD = echo "No test will be built"
 TEST_INSTALL_CMD = echo "No test will be installed"
-BIN_INSTALL_CMD = echo "No binary will be installed"
+BIN_INSTALL_CMD = echo "Skip installation"
 
 ifeq ($(OS), nto)
     #Config toolchain for qnx
-    CROSS_CC = ${QNX_HOST}/usr/bin/qcc -Vgcc_nto$(CPUVARDIR)
-    CROSS_CXX = ${QNX_HOST}/usr/bin/q++ -Vgcc_nto$(CPUVARDIR)
-    CROSS_AR = ${QNX_HOST}/usr/bin/nto$(CPU)-ar
-    CROSS_RANDLIB = ${QNX_HOST}/usr/bin/nto$(CPU)-ranlib
+    CROSS_CC = ${QNX_HOST}/usr/bin/qcc -Vgcc_$(OS)$(CPUVARDIR)
+    CROSS_CXX = ${QNX_HOST}/usr/bin/q++ -Vgcc_$(OS)$(CPUVARDIR)
+    CROSS_AR = ${QNX_HOST}/usr/bin/$(OS)$(CPU)-ar
+    CROSS_AS = $(CROSS_CC)
+    CROSS_RANDLIB = ${QNX_HOST}/usr/bin/$(OS)$(CPU)-ranlib
 
     CONFIGURE_CMD = $(QNX_PROJECT_ROOT)/icu4c/source/configure
-    CONFIGURE_ARGS = --host=$(CPU)-*-nto \
+    CONFIGURE_ARGS = --host=$(CPU)-*-$(OS) \
                      --prefix=$(ICU_INSTALL_DIR)/$(PREFIX) \
                      --exec-prefix=$(ICU_INSTALL_DIR)/$(CPUVARDIR)/$(PREFIX) \
                      --with-cross-build=$(PWD)/../linux-x86_64-o/build \
@@ -79,7 +82,7 @@ ifeq ($(OS), nto)
                      CC="$(CROSS_CC)" \
                      CXX="$(CROSS_CXX)" \
                      AR="$(CROSS_AR)" \
-                     RANDLIB="$(CROSS_RANDLIB)" \
+                     RANDLIB="$(CROSS_RANDLIB)"
 
     BIN_INSTALL_CMD = make VERBOSE=1 install $(MAKE_ARGS)
     ifeq ($(MAKE_BUILD_TEST), true)
