@@ -46,8 +46,8 @@ endif
 
 CONFIGURE_PREOPTS= CC=$(QNX_HOST)/usr/bin/qcc \
 				   CXX=$(QNX_HOST)/usr/bin/q++ \
-				   CFLAGS="-D_QNX_SOURCE -std=c17 $(CFLAGS)"\
-				   CXXFLAGS="-D_QNX_SOURCE -std=c++17 -Wno-deprecated-definitions $(CXXFLAGS)"\
+				   CFLAGS="-D_QNX_SOURCE -std=c17 -Vgcc_nto$(CPUDIR) $(CFLAGS)"\
+				   CXXFLAGS="-D_QNX_SOURCE -std=c++17 -Vgcc_nto$(CPUDIR) -Wno-deprecated-definitions $(CXXFLAGS)"\
 				   LDFLAGS=$(LDFLAGS) \
 				   CPPFLAGS="-D_QNX_SOURCE $(CPPFLAGS)"\
 				   PKG_CONF_PATH="pkg-config"\
@@ -67,7 +67,7 @@ include $(MKFILES_ROOT)/qtargets.mk
 .PHONY: RetroArch_all install check clean
 .DEFAULT_GOAL := RetroArch_all
 
-MAKE_ARGS ?= -j $(firstword $(JLEVEL) 1)
+MAKE_ARGS ?= -j $(firstword $(JLEVEL) 1) 
 
 ifndef NO_TARGET_OVERRIDE
 RetroArch_all:
