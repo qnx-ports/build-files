@@ -36,7 +36,7 @@ MAKE_BUILD_TEST ?= false
 ALL_DEPENDENCIES = $(NAME)_all
 .PHONY: $(NAME)_all install check clean
 
-CFLAGS += $(FLAGS) -D_QNX_SOURCE
+CFLAGS += $(FLAGS) -D_QNX_SOURCE -O3
 LDFLAGS += -Wl,--build-id=md5 -Wl,--allow-shlib-undefined
 
 include $(MKFILES_ROOT)/qtargets.mk
@@ -46,12 +46,6 @@ CFLAGS += -fPIC
 CXXFLAGS += $(CFLAGS) -std=gnu++17
 
 #Default toolchain for linux (required by icu)
-CROSS_CC = 
-CROSS_CXX = 
-CROSS_AR = 
-CROSS_AS = 
-CROSS_RANDLIB =
-
 CONFIGURE_CMD = $(QNX_PROJECT_ROOT)/icu4c/source/runConfigureICU Linux 
 CONFIGURE_ARGS =
 CONFIGURE_ENVS = CXXFLAGS=-std=gnu++17
@@ -63,12 +57,6 @@ BIN_INSTALL_CMD = echo "Skip installation"
 
 ifeq ($(OS), nto)
     #Config toolchain for qnx
-    CROSS_CC = ${QNX_HOST}/usr/bin/qcc -Vgcc_$(OS)$(CPUVARDIR)
-    CROSS_CXX = ${QNX_HOST}/usr/bin/q++ -Vgcc_$(OS)$(CPUVARDIR)
-    CROSS_AR = ${QNX_HOST}/usr/bin/$(OS)$(CPU)-ar
-    CROSS_AS = $(CROSS_CC)
-    CROSS_RANDLIB = ${QNX_HOST}/usr/bin/$(OS)$(CPU)-ranlib
-
     CONFIGURE_CMD = $(QNX_PROJECT_ROOT)/icu4c/source/configure
     CONFIGURE_ARGS = --host=$(CPU)-*-$(OS) \
                      --prefix=$(ICU_INSTALL_DIR)/$(PREFIX) \
@@ -79,10 +67,11 @@ ifeq ($(OS), nto)
     CONFIGURE_ENVS = CFLAGS="$(CFLAGS)" \
                      CXXFLAGS="$(CXXFLAGS)" \
                      LDFLAGS="$(LDFLAGS)" \
-                     CC="$(CROSS_CC)" \
-                     CXX="$(CROSS_CXX)" \
-                     AR="$(CROSS_AR)" \
-                     RANDLIB="$(CROSS_RANDLIB)"
+                     CC="${QNX_HOST}/usr/bin/qcc -Vgcc_$(OS)$(CPUVARDIR)" \
+                     CXX="${QNX_HOST}/usr/bin/q++ -Vgcc_$(OS)$(CPUVARDIR)" \
+                     AR="${QNX_HOST}/usr/bin/$(OS)$(CPU)-ar" \
+                     AS="${QNX_HOST}/usr/bin/qcc -Vgcc_$(OS)$(CPUVARDIR)" \
+                     RANDLIB="${QNX_HOST}/usr/bin/$(OS)$(CPU)-ranlib" \
 
     BIN_INSTALL_CMD = make VERBOSE=1 install $(MAKE_ARGS)
     ifeq ($(MAKE_BUILD_TEST), true)
