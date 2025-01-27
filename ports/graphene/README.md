@@ -68,6 +68,7 @@ ssh $TARGET_USER@$TARGET_IP_ADDRESS "mkdir -p ~/lib"
 
 # Tests
 Tests are avaliable, but you have to manually deploy them to your target system. Before running tests, make sure you have deployed all binaries mentioned above.
+Currently all tests are passed on both QNX8.0 and 7.1.
 
 ```bash
 #Set your target's IP here
