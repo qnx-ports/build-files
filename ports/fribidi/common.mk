@@ -26,7 +26,7 @@ INSTALL_ROOT ?= $(INSTALL_ROOT_$(OS))
 PREFIX ?= /usr/local
 
 #choose Release or Debug
-CMAKE_BUILD_TYPE ?= Release
+MESON_BUILD_TYPE ?= release
 
 #override 'all' target to bypass the default QNX build system
 ALL_DEPENDENCIES = $(NAME)_all
@@ -35,18 +35,45 @@ ALL_DEPENDENCIES = $(NAME)_all
 CFLAGS += $(FLAGS)
 LDFLAGS += -Wl,--build-id=md5 -Wl,--allow-shlib-undefined
 
+PREPEND_C_CXXFLAGS := -lgcc_s
+PREPEND_C_CXXFLAGS += $(CFLAGS)
+
 include $(MKFILES_ROOT)/qtargets.mk
+export INSTALL_ROOT_WITH_PREFIX=$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)
+export QNX_TARGET
+export CPUVARDIR
 
 # Add choice to build and install tests
-BUILD_TESTING ?= ON
-INSTALL_TESTS ?= ON
+BUILD_TESTING ?= true
+
+MESON_FLAGS := \
+  --buildtype=$(MESON_BUILD_TYPE) \
+  --prefix=$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX) \
+  -Dtests=$(BUILD_TESTING) \
+  -Ddocs=false
+  
+MESON := $(QNX_PROJECT_ROOT)/../meson/meson.py
+
+NINJA_ARGS := -j $(firstword $(JLEVEL) 1)
+
+qnx_cross.txt: $(PROJECT_ROOT)/qnx_cross.txt.in
+	cp $(PROJECT_ROOT)/qnx_cross.txt.in $@
+	sed -i "s|QNX_HOST|$(QNX_HOST)|" $@
+	sed -i "s|TARGET_ARCH|$(CPU)|" $@
+	sed -i "s|CPUDIR|$(CPUVARDIR)|" $@
+	sed -i "s|QNX_TARGET_BIN_DIR|$(QNX_TARGET)/$(CPUVARDIR)|" $@
+	# PREPEND_C_CXXFLAGS need to be converted to Meson list format
+	sed -i "s|PREPEND_C_CXXFLAGS|$(foreach flag,$(PREPEND_C_CXXFLAGS),'$(flag)',)|" $@
 
 ifndef NO_TARGET_OVERRIDE
-$(NAME)_all:
+$(NAME)_all: qnx_cross.txt
 	@mkdir -p build
+	@cd build && $(MESON) setup --reconfigure --cross-file=../qnx_cross.txt $(MESON_FLAGS) . $(QNX_PROJECT_ROOT)
+	@cd build && ninja $(NINJA_ARGS)
 
 install check: $(NAME)_all
 	@echo Installing...
+	@cd build && ninja install
 	@echo Done.
 
 clean iclean spotless:
