@@ -26,8 +26,6 @@ source ~/qnx800/qnxsdp-env.sh
 # Clone fribidi
 cd ~/qnx_workspace
 git clone https://github.com/qnx-ports/fribidi.git
-# or optionally take the upstream
-git clone https://github.com/fribidi/fribidi
 
 # Build fribidi
 QNX_PROJECT_ROOT="$(pwd)/fribidi" make -C build-files/ports/fribidi install -j4
