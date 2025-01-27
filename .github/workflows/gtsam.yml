@@ -170,7 +170,7 @@ jobs:
           source ~/qnx/800/qnxsdp-env.sh
           cd ~/workspace
           cd boost/tools/build
-          git apply ../../../build-files/ports/boost/tools_qnx.patch
+          git apply ~/workspace/build-files/ports/boost/tools_qnx.patch
           cd ~/workspace
           echo "HEY LEO - MAKEFLAGS:"
           echo $MAKEFLAGS
