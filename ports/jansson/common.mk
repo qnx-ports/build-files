@@ -56,10 +56,14 @@ CFLAGS += $(FLAGS) \
           -I$(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/include \
           -I$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/include
 
-LDFLAGS += -Wl,--build-id=md5 -Wl,--allow-shlib-undefined -lmuslflt
+LDFLAGS += -Wl,--build-id=md5 -Wl,--allow-shlib-undefined
 
+JANSSON_BUILD_DOCS ?= OFF
+JANSSON_BUILD_SHARED_LIBS ?= ON
+JANSSON_INSTALL_TESTS ?= ON
 
 CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
+             -DCMAKE_PROJECT_INCLUDE=$(PROJECT_ROOT)/project_hooks.cmake \
              -DCMAKE_SYSTEM_PROCESSOR=$(CPUVARDIR) \
              -DCMAKE_C_FLAGS="$(CFLAGS)" \
              -DCMAKE_EXE_LINKER_FLAGS="$(LDFLAGS)" \
@@ -70,9 +74,9 @@ CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DCMAKE_MODULE_PATH="$(CMAKE_MODULE_PATH)" \
              -DCMAKE_FIND_ROOT_PATH="$(CMAKE_FIND_ROOT_PATH)" \
              -DCMAKE_BUILD_TYPE=$(CMAKE_BUILD_TYPE) \
-             -DJANSSON_BUILD_DOCS=OFF \
-             -DJANSSON_BUILD_SHARED_LIBS=ON \
-             -DJANSSON_INSTALL_TESTS=ON
+             -DJANSSON_BUILD_DOCS=$(JANSSON_BUILD_DOCS) \
+             -DJANSSON_BUILD_SHARED_LIBS=$(JANSSON_BUILD_SHARED_LIBS) \
+             -DJANSSON_INSTALL_TESTS=$(JANSSON_INSTALL_TESTS)
 
 MAKE_ARGS ?= -j $(firstword $(JLEVEL) 1)
 

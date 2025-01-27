@@ -3,6 +3,8 @@
 pass_count=0
 fail_count=0
 
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/data/home/qnxuser/lib
+
 print_res() {
     if [ $? == 0 ]; then
         pass_count=$((pass_count + 1));
