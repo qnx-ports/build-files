@@ -78,6 +78,7 @@ install check: $(NAME)_all
 
 clean iclean spotless:
 	rm -rf build
+	rm -f qnx_cross.txt
 
 uninstall:
 endif

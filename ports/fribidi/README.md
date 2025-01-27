@@ -1,4 +1,4 @@
-# csmith [![Build](https://github.com/qnx-ports/build-files/actions/workflows/csmith.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/csmith.yml)
+# fribidi [![Build](https://github.com/qnx-ports/build-files/actions/workflows/fribidi.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/fribidi.yml)
 
 **NOTE**: QNX ports are only supported from a Linux host operating system
 
@@ -23,12 +23,12 @@ cd build-files/docker
 # source qnxsdp-env.sh in
 source ~/qnx800/qnxsdp-env.sh
 
-# Clone csmith
+# Clone fribidi
 cd ~/qnx_workspace
-git clone https://github.com/qnx-ports/csmith.git
+git clone https://github.com/qnx-ports/fribidi.git
 
-# Build csmith
-QNX_PROJECT_ROOT="$(pwd)/csmith" make -C build-files/ports/csmith install -j4
+# Build fribidi
+QNX_PROJECT_ROOT="$(pwd)/fribidi" make -C build-files/ports/fribidi install -j4
 ```
 
 # Compile the port for QNX on Ubuntu host
@@ -36,17 +36,15 @@ QNX_PROJECT_ROOT="$(pwd)/csmith" make -C build-files/ports/csmith install -j4
 # Clone the repos
 mkdir -p ~/qnx_workspace && cd qnx_workspace
 git clone https://github.com/qnx-ports/build-files.git
-git clone https://github.com/qnx-ports/csmith.git
+git clone https://github.com/qnx-ports/fribidi.git
+git clone https://github.com/mesonbuild/meson.git
 
 # source qnxsdp-env.sh
 source ~/qnx800/qnxsdp-env.sh
 
-# Build csmith
-QNX_PROJECT_ROOT="$(pwd)/csmith" make -C build-files/ports/csmith install -j4
+# Build fribidi
+QNX_PROJECT_ROOT="$(pwd)/fribidi" make -C build-files/ports/fribidi install -j4
 ```
-
-# Tests
-Not avaliable
 
 # Deploy binaries via SSH
 ```bash
@@ -54,8 +52,8 @@ Not avaliable
 TARGET_IP_ADDRESS=<target-ip-address-or-hostname>
 TARGET_USER=<target-username>
 
-scp -r ~\qnx800\target\qnx\aarch64le\usr\local\bin\csmith $TARGET_USER@$TARGET_IP_ADDRESS:~/bin
-scp -r ~\qnx800\target\qnx\aarch64le\usr\local\lib\libcsmith.* $TARGET_USER@$TARGET_IP_ADDRESS:~/lib
+scp -r ~\qnx800\target\qnx\aarch64le\usr\local\bin\fribidi $TARGET_USER@$TARGET_IP_ADDRESS:~/bin
+scp -r ~\qnx800\target\qnx\aarch64le\usr\local\lib\libfribidi.* $TARGET_USER@$TARGET_IP_ADDRESS:~/lib
 ```
 
 If `~/lib` or `~bin` directory do not exist, create them with:
@@ -64,3 +62,15 @@ ssh $TARGET_USER@$TARGET_IP_ADDRESS "mkdir -p ~/bin"
 ssh $TARGET_USER@$TARGET_IP_ADDRESS "mkdir -p ~/lib"
 ````
 
+# Tests
+Tests are avaliable; currently all tests are passed.
+
+To run tests, make sure you have already deployed required binaries metioned above and excute the following.
+```base
+scp -r ./build-files/ports/fribidi/nto-aarch64-le/build/test/* $TARGET_USER@$TARGET_IP_ADDRESS:~/test
+scp -r ./fribidi/test/* $TARGET_USER@$TARGET_IP_ADDRESS
+
+# On your target system, navigate to ~/test, excute the following command to run all tests
+sh ./run.tests
+
+```
