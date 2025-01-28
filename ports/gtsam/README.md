@@ -14,7 +14,7 @@ Instructions for compiling and running tests are listed below.
 
 ### *Prerequisites:*
 #### __`boost` must be installed in $QNX_TARGET__
-1. Go to https://github.com/qnx-ports/build-files/tree/c-ares_files/ports/boost and follow the instructions in the README. 
+1. Go to https://github.com/qnx-ports/build-files/tree/main/ports/boost and follow the instructions in the README. 
 
 2. __FOR SDP 8.0:__ When building `boost`, set PREFIX to '/usr' for SDP 8.0:
 ```bash
@@ -41,87 +41,7 @@ git clone git@github.com:qnx-ports/build-files.git
 git clone git@github.com:qnx-ports/gtsam.git 
 ```
 
-3. Source your SDP (Installed from QNX Software Center)
-```bash
-#QNX 8.0 will be in the directory ~/qnx800/
-#QNX 7.1 will be in the directory ~/qnx710/
-source ~/qnx800/qnxsdp-env.sh
-```
-
-4. __OPTIONAL/RECOMMENDED:__ If you know which platforms you are building for (aarch64le/x86_64), it is highly recommended that you only build for the platforms you are using.
-```bash
-#Blocking unused builds
-#4.1 Navigate to <your-workspace>/build-files/ports/gtsam
-cd build-files/ports/gtsam
-```
-```bash
-#4.2 List build targets
-ls nto-*
-# You should see an output like this:
-# nto-aarch64
-# nto-x86_64
-# ...
-```
-```bash
-#4.3 Identify which of the above you will not be using and navigate into its folder. 
-#i.e., Raspberry Pi is an aarch64 architecture, thus we would not need x86_64
-cd nto-x86_64
-```
-```bash
-#4.4 Mark this folder as "do not make" via an empty Makefile.dnm file
-touch Makefile.dnm
-cd ..
-```
-```bash
-#4.5 Repeat 4.3 & 4.4 for each unused architecture
-#from build-files/ports/gtsam
-touch nto-<unused-arhcitecture>/Makefile.dnm
-```
-
-5. Build the project in your workspace from Step 1
-```bash
-#Run this in gtsam_wksp or whatever you named your original directory
-#Changing the -j option can improve build time (see make documentation)
-QNX_PROJECT_ROOT="$PWD/gtsam" make -C build-files/ports/gtsam install -j4
-#To build tests, also define QNX_BUILD_TESTS and QNX_TARGET_DATASET_DIR
-QNX_BUILD_TESTS="yes" QNX_TARGET_DATASET_DIR="/data/home/qnxuser/gtsam/test" QNX_PROJECT_ROOT="$PWD/gtsam" make -C build-files/ports/gtsam install -j4
-```
-
-**NOTE**: Before rebuilding, you may need to delete the `/build` subdirectories and their contents in `build-files/ports/gtsam/nto-aarch64/le/build` and `build-files/ports/gtsam/nto-x86_64/o/build`. This MUST be done when changing from SDP 7.1 to 8 or vice versa, as it will link against the wrong shared objects and not show an error until testing.
-```bash
-#From your workspace:
-make -C build-files/ports/gtsam clean
-```
-
-# Compile gtsam for SDP 7.1/8.0 in a Docker Container
-
-### *Prerequisites:*
-#### __`boost` must be installed in $QNX_TARGET__
-Instructions for building boost are included in the steps below.
-
-### *Steps:* 
-
-
-1. Create a new workspace or navigate to a desired one
-```bash
-mkdir gtsam_wksp && cd gtsam_wksp
-```
-
-2. Clone the `gtsam`, `boost` and `build_files` repos
-```bash
-#Pick one:
-#Via HTTPS
-git clone https://github.com/qnx-ports/build-files.git
-git clone https://github.com/boostorg/boost.git
-git clone https://github.com/qnx-ports/gtsam.git
-
-#Via SSH
-git clone git@github.com:qnx-ports/build-files.git 
-git clone git@github.com:boostorg/boost.git
-git clone git@github.com:qnx-ports/gtsam.git 
-```
-
-3. Build the Docker image and create a container
+3. **[OPTIONAL]** Build the Docker image and create a container. *Requires Docker: https://docs.docker.com/engine/install/*
 ```bash
 cd build-files/docker
 ./docker-build-qnx-image.sh
@@ -135,7 +55,7 @@ cd build-files/docker
 source ~/qnx800/qnxsdp-env.sh
 ```
 
-5. __OPTIONAL/RECOMMENDED:__ If you know which platforms you are building for (aarch64le/x86_64), it is highly recommended that you only build for the platforms you are using.
+5. __[OPTIONAL/RECOMMENDED]__ If you know which platforms you are building for (aarch64le/x86_64), it is highly recommended that you only build for the platforms you are using.
 ```bash
 #Blocking unused builds
 #4.1 Navigate to <your-workspace>/build-files/ports/gtsam
@@ -164,30 +84,14 @@ cd ..
 #from build-files/ports/gtsam
 touch nto-<unused-arhcitecture>/Makefile.dnm
 ```
-```bash
-#4.6 Repeat 4.1-4.5 for the boost build files
-cd build-files/ports/boost
-```
-6. Build `boost`
-```bash
-# Checkout and patch your boost repo for QNX
-cd <your-workspace>/boost
-git checkout boost-1.82.0
-git submodule update --init --recursive
-cd tools/build && git apply ../../../build-files/ports/boost/tools_qnx.patch
 
-# Build boost (WARNING: This process can take upwards of 20 minutes)
-cd ../../..
-make -C build-files/ports/boost/ install QNX_PROJECT_ROOT="$(pwd)/boost" -j4
-```
-
-7. Build gtsam in your workspace from Step 1
+6. Build the project in your workspace from Step 1
 ```bash
 #Run this in gtsam_wksp or whatever you named your original directory
 #Changing the -j option can improve build time (see make documentation)
 QNX_PROJECT_ROOT="$PWD/gtsam" make -C build-files/ports/gtsam install -j4
 #To build tests, also define QNX_BUILD_TESTS and QNX_TARGET_DATASET_DIR
-QNX_BUILD_TESTS="yes" QNX_TARGET_DATASET_DIR="/data/home/qnxuser/gtsam/test" QNX_PROJECT_ROOT="$PWD/gtsam" make -C build-files/ports/gtsam install -j4
+BUILD_TESTS="yes" QNX_TARGET_DATASET_DIR="/data/home/qnxuser/gtsam/test" QNX_PROJECT_ROOT="$PWD/gtsam" make -C build-files/ports/gtsam install -j4
 ```
 
 **NOTE**: Before rebuilding, you may need to delete the `/build` subdirectories and their contents in `build-files/ports/gtsam/nto-aarch64/le/build` and `build-files/ports/gtsam/nto-x86_64/o/build`. This MUST be done when changing from SDP 7.1 to 8 or vice versa, as it will link against the wrong shared objects and not show an error until testing.

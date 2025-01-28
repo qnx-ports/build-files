@@ -62,17 +62,21 @@ CMAKE_ARGS = -DCMAKE_NO_SYSTEM_FROM_IMPORTED=TRUE \
              -DCMAKE_RANLIB=${QNX_HOST}/usr/bin/nto${CPU}-ranlib \
              -DQNX_TARGET_DATASET_DIR:STRING=$(QNX_TARGET_DATASET_DIR) 
 
+ifndef BUILD_TESTS 
+	CMAKE_ARGS +=" -DGTSAM_BUILD_TESTS"
+endif
+
 MAKE_ARGS ?= -j $(firstword $(JLEVEL) 1)
 
 ifndef NO_TARGET_OVERRIDE
 GTSAM_all:
 	@mkdir -p build
 	@cd build && cmake $(CMAKE_ARGS) $(GTSAM_ROOT)
-	@cd build && GTSAM_BUILD_TESTS=OFF make VERBOSE=1 all $(MAKE_ARGS)
+	@cd build && make VERBOSE=1 all $(MAKE_ARGS)
 
 install check: GTSAM_all
 	@echo "Installing..."
-	@cd build && GTSAM_BUILD_TESTS=OFF make VERBOSE=1 install $(MAKE_ARGS)
+	@cd build && make VERBOSE=1 install $(MAKE_ARGS)
 	@echo "Copying tests to staging area..."
 	@mkdir -p $(GTSAM_INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/bin/gtsam_tests/gtsam_examples/Data/Balbianello
 	@if [ $(INSTALL_TESTS) = "true" ] ; then cp build/gtsam/*/tests/test* $(GTSAM_INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/bin/gtsam_tests ; echo "-GTSAM Tests" ; fi
