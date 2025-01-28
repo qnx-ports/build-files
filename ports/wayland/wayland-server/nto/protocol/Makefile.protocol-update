@@ -1,5 +1,5 @@
 # To update this protocol source when the protocols are updated:
-#    DIST_ROOT=$(pwd)/Wayland make -C build-files/ports/wayland/tests/nto/protocol/ -f Makefile.protocol-update clean all
+#    DIST_ROOT=$(pwd)/Wayland make -C build-files/ports/wayland/wayland-server/nto/protocol -f Makefile.protocol-update clean all
 
 ifndef QCONFIG
 QCONFIG=qconfig.mk
