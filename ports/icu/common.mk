@@ -36,7 +36,7 @@ MAKE_BUILD_TEST ?= false
 ALL_DEPENDENCIES = $(NAME)_all
 .PHONY: $(NAME)_all install check clean
 
-CFLAGS += $(FLAGS) -D_QNX_SOURCE -O3
+CFLAGS += $(FLAGS) -D_QNX_SOURCE
 LDFLAGS += -Wl,--build-id=md5 -Wl,--allow-shlib-undefined
 
 include $(MKFILES_ROOT)/qtargets.mk
