@@ -16,8 +16,8 @@ QNX_PROJECT_ROOT ?= $(PRODUCT_ROOT)/../../
 #a staging area by setting both INSTALL_ROOT_nto
 #and USE_INSTALL_ROOT
 INSTALL_ROOT ?= $(INSTALL_ROOT_$(OS))
-ICU_INSTALL_DIR ?= $(INSTALL_ROOT)
-TEST_INSTALL_DIR=$(ICU_INSTALL_DIR)/$(CPUVARDIR)/$(PREFIX)/bin/icu_tests
+ICU_INSTALL_ROOT ?= $(INSTALL_ROOT)
+TEST_INSTALL_DIR=$(ICU_INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/bin/icu_tests
 
 #A prefix path to use **on the target**. This is
 #different from INSTALL_ROOT, which refers to a
@@ -42,7 +42,7 @@ LDFLAGS += -Wl,--build-id=md5 -Wl,--allow-shlib-undefined
 include $(MKFILES_ROOT)/qtargets.mk
 
 #Set config flags
-CFLAGS += -fPIC
+CFLAGS += -fPIC -g
 CXXFLAGS += $(CFLAGS) -std=gnu++17
 
 #Default toolchain for linux (required by icu)
@@ -59,8 +59,8 @@ ifeq ($(OS), nto)
     #Config toolchain for qnx
     CONFIGURE_CMD = $(QNX_PROJECT_ROOT)/icu4c/source/configure
     CONFIGURE_ARGS = --host=$(CPU)-*-$(OS) \
-                     --prefix=$(ICU_INSTALL_DIR)/$(PREFIX) \
-                     --exec-prefix=$(ICU_INSTALL_DIR)/$(CPUVARDIR)/$(PREFIX) \
+                     --prefix=$(ICU_INSTALL_ROOT)/$(PREFIX) \
+                     --exec-prefix=$(ICU_INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX) \
                      --with-cross-build=$(PWD)/../linux-x86_64-o/build \
                      --with-data-packaging=auto \
                      --srcdir=$(QNX_PROJECT_ROOT)/icu4c/source
