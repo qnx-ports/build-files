@@ -39,9 +39,9 @@ make install -j4
 make install -j4
 
 
-# Clone Wayland
+# Clone wayland
 cd ~/qnx_workspace
-git https://github.com/qnx-ports/Wayland.git && cd Wayland
+git https://github.com/qnx-ports/wayland.git && cd wayland
 
 # Build config.h and wayland-version.h
 # The command will fail but the files will be available in the dummy directory
@@ -61,7 +61,7 @@ mv dummy/config.h ../build-files/ports/wayland/nto/
 mv dummy/src/wayland-version.h src/
 rm -rf dummy/
 
-# Build Wayland
+# Build wayland
 cd ~/qnx_workspace
 DIST_ROOT=$(pwd)/wayland make -C build-files/ports/wayland/ install JLEVEL=4
 ```
@@ -96,9 +96,9 @@ make install -j4
 ./configure --host=x86_64-pc-nto-qnx8.0.0 --target=x86_64-pc-nto-qnx8.0.0 --prefix=$QNX_TARGET/usr --exec-prefix=$QNX_TARGET/x86_64/usr
 make install -j4
 
-# Clone Wayland
+# Clone wayland
 cd ~/qnx_workspace
-git https://github.com/qnx-ports/Wayland.git && cd Wayland
+git https://github.com/qnx-ports/wayland.git && cd wayland
 
 # Install meson
 sudo apt install python3 python3-pip
@@ -122,7 +122,7 @@ mv dummy/config.h ../build-files/ports/wayland/nto/
 mv dummy/src/wayland-version.h src/
 rm -rf dummy/
 
-# Build Wayland
+# Build wayland
 cd ~/qnx_workspace
 DIST_ROOT=$(pwd)/wayland make -C build-files/ports/wayland/ install JLEVEL=4
 
