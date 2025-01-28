@@ -36,13 +36,13 @@ MAKE_BUILD_TEST ?= false
 ALL_DEPENDENCIES = $(NAME)_all
 .PHONY: $(NAME)_all install check clean
 
-CFLAGS += $(FLAGS) -D_QNX_SOURCE
+CFLAGS += $(FLAGS) -D_QNX_SOURCE -O3
 LDFLAGS += -Wl,--build-id=md5 -Wl,--allow-shlib-undefined
 
 include $(MKFILES_ROOT)/qtargets.mk
 
 #Set config flags
-CFLAGS += -fPIC -g
+CFLAGS += -fPIC
 CXXFLAGS += $(CFLAGS) -std=gnu++17
 
 #Default toolchain for linux (required by icu)
