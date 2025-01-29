@@ -43,6 +43,9 @@ make install -j4
 cd ~/qnx_workspace
 git clone https://github.com/qnx-ports/wayland.git && cd wayland
 
+# Checkout qnx-1.23.1
+git checkout qnx-1.23.1 
+
 # Build config.h and wayland-version.h
 # The command will fail but the files will be available in the dummy directory
 CC=ntox86_64-gcc \
@@ -99,6 +102,9 @@ make install -j4
 # Clone wayland
 cd ~/qnx_workspace
 git clone https://github.com/qnx-ports/wayland.git && cd wayland
+
+# Checkout qnx-1.23.1
+git checkout qnx-1.23.1 
 
 # Install meson
 sudo apt install python3 python3-pip
