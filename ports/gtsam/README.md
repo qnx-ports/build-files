@@ -31,14 +31,14 @@ mkdir gtsam_wksp && cd gtsam_wksp
 
 2. Clone the `gtsam` and `build_files` repos
 ```bash
-#Pick one:
-#Via HTTPS
+#Build Files:
 git clone https://github.com/qnx-ports/build-files.git
-git clone https://github.com/qnx-ports/gtsam.git
 
-#Via SSH
-git clone git@github.com:qnx-ports/build-files.git 
-git clone git@github.com:qnx-ports/gtsam.git 
+#Borgslab
+##Stable
+git clone https://github.com/qnx-ports/gtsam.git
+##Develop
+git clone git@github.com:borglab/gtsam.git 
 ```
 
 3. **[OPTIONAL]** Build the Docker image and create a container. *Requires Docker: https://docs.docker.com/engine/install/*
@@ -55,7 +55,16 @@ cd build-files/docker
 source ~/qnx800/qnxsdp-env.sh
 ```
 
-5. __[OPTIONAL/RECOMMENDED]__ If you know which platforms you are building for (aarch64le/x86_64), it is highly recommended that you only build for the platforms you are using.
+5. __[OPTIONAL/RECOMMENDED]__ Build and Install muslflt, which improves floating point arithmetic. *More info at https://github.com/qnx-ports/build-files/tree/main/ports/muslflt*
+```bash
+#Clone from source
+git clone https://github.com/qnx-ports/muslflt.git
+
+#Build and Install
+QNX_PROJECT_ROOT=$PWD/muslflt make -C build-files/ports/muslflt install
+```
+
+6. __[OPTIONAL/RECOMMENDED]__ If you know which platforms you are building for (aarch64le/x86_64), it is highly recommended that you only build for the platforms you are using.
 ```bash
 #Blocking unused builds
 #4.1 Navigate to <your-workspace>/build-files/ports/gtsam
@@ -85,7 +94,7 @@ cd ..
 touch nto-<unused-arhcitecture>/Makefile.dnm
 ```
 
-6. Build the project in your workspace from Step 1
+7. Build the project in your workspace from Step 1
 ```bash
 #Run this in gtsam_wksp or whatever you named your original directory
 #Changing the -j option can improve build time (see make documentation)
@@ -126,6 +135,9 @@ scp $QNX_TARGET/aarch64le/$PREFIX/lib/libboost* $TARGET_USER_FOR_INSTALL@$TARGET
 scp $QNX_TARGET/aarch64le/$PREFIX/lib/libmetis* $TARGET_USER_FOR_INSTALL@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER_FOR_INSTALL/gtsam/lib
 scp $QNX_TARGET/aarch64le/$PREFIX/lib/lib*gtsam* $TARGET_USER_FOR_INSTALL@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER_FOR_INSTALL/gtsam/lib
 
+#If you used muslflt, copy it over as well
+scp $QNX_TARGET/aarch64le/$PREFIX/lib/libmuslflt* $TARGET_USER_FOR_INSTALL@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER_FOR_INSTALL/gtsam/lib
+
 #For 7.1, Copy the following as well:
 scp $QNX_TARGET/aarch64le/usr/lib/libicu* $TARGET_USER_FOR_INSTALL@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER_FOR_INSTALL/gtsam/lib
 
@@ -145,10 +157,11 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/data/home/qnxuser/gtsam/lib
 cd ~/gtsam/test         #NOTE: ~ will direct you to the current user's home directory, 
                         #which may be incorrect depending on your choices above. 
                         #Navigate to /data/home to see all user home directories
+chmod 764 run_tests.sh
 ./run_tests.sh
 ```
 
-**Note:** The following tests fail due to floating point error, and are not indicative of an error.
+**Note:** Some tests may fail due to floating point i/o error by a small percentage. This can be improved by linking against muslflt, as mentioned in Step 5 of the build process.
 v4.3a0, develop (fail expected:)
 - testSfmData lines 134, 144, 156
 - testSerializationDataset lines 36, 37, 50, 51
