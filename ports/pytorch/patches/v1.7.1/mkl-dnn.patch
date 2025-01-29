@@ -1,0 +1,18 @@
+diff --git a/src/cpu/x64/jit_utils/jitprofiling/jitprofiling.c b/src/cpu/x64/jit_utils/jitprofiling/jitprofiling.c
+index fd99cb5f3..3f4828353 100644
+--- a/src/cpu/x64/jit_utils/jitprofiling/jitprofiling.c
++++ b/src/cpu/x64/jit_utils/jitprofiling/jitprofiling.c
+@@ -47,7 +47,7 @@
+ 
+ #include "jitprofiling.h"
+ 
+-static const char rcsid[] = "\n@(#) $Revision: 471937 $\n";
++static const char rcsid[] = "\n@(#) $Revision: 2225 $\n";
+ 
+ #define DLL_ENVIRONMENT_VAR             "VS_PROFILER"
+ 
+@@ -291,3 +291,4 @@ ITT_EXTERN_C unsigned int JITAPI iJIT_GetNewMethodID()
+ 
+     return methodID++;
+ }
++

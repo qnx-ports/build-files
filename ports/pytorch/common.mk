@@ -21,7 +21,7 @@ INSTALL_ROOT ?= $(INSTALL_ROOT_$(OS))
 #CMake config modules, etc.). Default is /usr/local
 PREFIX ?= /usr/local
 
-PYTORCH_VERSION = 2.3.1
+#PYTORCH_VERSION = 2.3.1
 
 #choose Release or Debug
 CMAKE_BUILD_TYPE ?= Release
@@ -30,8 +30,8 @@ CMAKE_BUILD_TYPE ?= Release
 ALL_DEPENDENCIES = pytorch_mobile_all
 .PHONY: pytorch_mobile_all pytorch_mobile_all_clean sleef_host_tools_all sleef_host_tools_clean protobuf_host_install protobuf_host_tools_clean
 
-FLAGS   += -D_QNX_SOURCE -D__QNXNTO__
-LDFLAGS += -Wl,--build-id=md5
+FLAGS   += -g -D_QNX_SOURCE -D__QNXNTO__
+LDFLAGS += -Wl,--build-id=md5 -lang-c++
 
 include $(MKFILES_ROOT)/qtargets.mk
 
@@ -91,6 +91,12 @@ CMAKE_ARGS =    -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
                 -DXNNPACK_ENABLE_ASSEMBLY=OFF \
                 -DBUILD_CUSTOM_PROTOBUFF=OFF \
                 -DBUILD_SHARED_LIBS=ON
+
+#TODO: Only needed on v1.7.1
+#libregex is needed for SDP 7.1 and above; previously was part of libc
+ifneq ($(wildcard $(foreach dir,$(LIBVPATH),$(dir)/libregex.so)),)
+	LDFLAGS += -lregex
+endif
 
 ifeq ($(USE_LIGHTWEIGHT_DISPATCH),ON)
     CMAKE_ARGS +=   -DUSE_LIGHTWEIGHT_DISPATCH=ON \

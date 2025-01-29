@@ -1,0 +1,13 @@
+diff --git a/src/tbb/tools_api/ittnotify_static.c b/src/tbb/tools_api/ittnotify_static.c
+index 49947a7c..11147550 100644
+--- a/src/tbb/tools_api/ittnotify_static.c
++++ b/src/tbb/tools_api/ittnotify_static.c
+@@ -39,7 +39,7 @@
+ 
+ #include "disable_warnings.h"
+ 
+-static const char api_version[] = API_VERSION "\0\n@(#) $Revision: 413915 $\n";
++static const char api_version[] = API_VERSION "\0\n@(#) $Revision: 2225 $\n";
+ 
+ #define _N_(n) ITT_JOIN(INTEL_ITTNOTIFY_PREFIX,n)
+ 

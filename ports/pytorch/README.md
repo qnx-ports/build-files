@@ -34,7 +34,7 @@ git submodule update --init --recursive
 
 # Apply third_party patches
 cd ~/qnx_workspace/build-files/ports/pytorch
-./scripts/patch.sh ~/qnx_workspace/pytorch
+./scripts/v2.3.1/patch.sh $(pwd)/patches/v2.3.1 ~/qnx_workspace/pytorch
 
 # Build pytorch mobile w/ lite interpreter
 cd ~/qnx_workspace
@@ -67,7 +67,7 @@ source ~/qnx800/qnxsdp-env.sh
 
 # Apply third_party patches
 cd ~/qnx_workspace/build-files/ports/pytorch
-./scripts/patch.sh ~/qnx_workspace/pytorch
+./scripts/v2.3.1/patch.sh $(pwd)/patches/v2.3.1 ~/qnx_workspace/pytorch
 
 # Build pytorch mobile w/ lite interpreter
 cd ~/qnx_workspace

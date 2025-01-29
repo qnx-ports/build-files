@@ -1,0 +1,17 @@
+diff --git a/test/jni/CMakeLists.txt b/test/jni/CMakeLists.txt
+index 2d558bc..0880a89 100644
+--- a/test/jni/CMakeLists.txt
++++ b/test/jni/CMakeLists.txt
+@@ -14,8 +14,10 @@
+ 
+ enable_testing()
+ include(GoogleTest)
+-set(THREADS_PREFER_PTHREAD_FLAG ON)
+-find_package(Threads REQUIRED)
++if(!QNX)
++  set(THREADS_PREFER_PTHREAD_FLAG ON)
++  find_package(Threads REQUIRED)
++endif()
+ 
+ set(TEST_COMPILE_OPTIONS
+   "${FBJNI_COMPILE_OPTIONS}"
