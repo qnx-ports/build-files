@@ -57,7 +57,7 @@ meson setup dummy --cross-file=/dev/null\
 
 # Move the files to the appropriate location
 cp dummy/config.h .
-mv dummy/config.h ../build-files/ports/wayland/nto/
+mv dummy/config.h src/
 mv dummy/src/wayland-version.h src/
 rm -rf dummy/
 
@@ -118,7 +118,7 @@ meson setup dummy --cross-file=/dev/null\
 
 # Move the files to the appropriate location
 cp dummy/config.h .
-mv dummy/config.h ../build-files/ports/wayland/nto/
+mv dummy/config.h src/
 mv dummy/src/wayland-version.h src/
 rm -rf dummy/
 
