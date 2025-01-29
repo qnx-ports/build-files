@@ -1,0 +1,109 @@
+diff --git a/Configure.cmake b/Configure.cmake
+index 25fc675..33c53b1 100644
+--- a/Configure.cmake
++++ b/Configure.cmake
+@@ -284,7 +284,8 @@ set(CLANG_FLAGS_ENABLE_VSX "-mvsx")
+ set(CLANG_FLAGS_ENABLE_VSXNOFMA "-mvsx")
+ 
+ # All variables storing compiler flags should be prefixed with FLAGS_
+-if(CMAKE_C_COMPILER_ID MATCHES "(GNU|Clang)")
++if(CMAKE_C_COMPILER_ID MATCHES "(GNU|Clang|QCC)")
++
+   # Always compile sleef with -ffp-contract.
+   set(FLAGS_STRICTMATH "-ffp-contract=off")
+   set(FLAGS_FASTMATH "-ffast-math")
+@@ -296,16 +297,16 @@ if(CMAKE_C_COMPILER_ID MATCHES "(GNU|Clang)")
+   foreach(SIMD ${SLEEF_SUPPORTED_EXTENSIONS})
+     set(FLAGS_ENABLE_${SIMD} ${CLANG_FLAGS_ENABLE_${SIMD}})
+   endforeach()
+-
++  
+   # Warning flags.
+   set(FLAGS_WALL "-Wall -Wno-unused -Wno-attributes -Wno-unused-result")
+-  if(CMAKE_C_COMPILER_ID MATCHES "GNU")
++  if(CMAKE_C_COMPILER_ID MATCHES "(GNU|QCC)")
+     # The following compiler option is needed to suppress the warning
+     # "AVX vector return without AVX enabled changes the ABI" at
+     # src/arch/helpervecext.h:88
+     string(CONCAT FLAGS_WALL ${FLAGS_WALL} " -Wno-psabi")
+     set(FLAGS_ENABLE_NEON32 "-mfpu=neon")
+-  endif(CMAKE_C_COMPILER_ID MATCHES "GNU")
++  endif(CMAKE_C_COMPILER_ID MATCHES "(GNU|QCC)")
+ elseif(MSVC)
+   # Intel vector extensions.
+   set(FLAGS_ENABLE_SSE2 /D__SSE2__)
+@@ -335,15 +336,24 @@ elseif(CMAKE_C_COMPILER_ID MATCHES "Intel")
+ endif()
+ 
+ set(SLEEF_C_FLAGS "${FLAGS_WALL} ${FLAGS_STRICTMATH} ${FLAGS_NO_ERRNO}")
+-if(CMAKE_C_COMPILER_ID MATCHES "GNU" AND CMAKE_C_COMPILER_VERSION VERSION_GREATER 6.99)
++
++if(CMAKE_C_COMPILER_ID MATCHES "(GNU|QCC)" AND CMAKE_C_COMPILER_VERSION VERSION_GREATER 6.99)
+   set(DFT_C_FLAGS "${FLAGS_WALL}")
+ else()
+   set(DFT_C_FLAGS "${FLAGS_WALL} ${FLAGS_FASTMATH}")
+ endif()
+ 
++if(QNX AND CMAKE_SYSTEM_PROCESSOR STREQUAL "aarch64")
++  #set(SLEEF_C_FLAGS "${SLEEF_C_FLAGS} -march=armv8-a ")
++  #set(DFT_C_FLAGS "${DFT_C_FLAGS} -march=armv8-a ")
++endif()
++
+ if (CMAKE_SYSTEM_PROCESSOR MATCHES "^i.86$" AND CMAKE_C_COMPILER_ID MATCHES "GNU")
+   set(SLEEF_C_FLAGS "${SLEEF_C_FLAGS} -msse2 -mfpmath=sse")
+   set(DFT_C_FLAGS "${DFT_C_FLAGS} -msse2 -mfpmath=sse -m128bit-long-double")
++elseif (CMAKE_SYSTEM_PROCESSOR MATCHES "^i.86$" AND CMAKE_C_COMPILER_ID MATCHES "QCC")
++  set(SLEEF_C_FLAGS "${SLEEF_C_FLAGS} -msse2 -mfpmath=sse")
++  set(DFT_C_FLAGS "${DFT_C_FLAGS} -msse2 -mfpmath=sse -m128bit-long-double")
+ elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "^i.86$" AND CMAKE_C_COMPILER_ID MATCHES "Clang")
+   set(SLEEF_C_FLAGS "${SLEEF_C_FLAGS} -msse2 -mfpmath=sse")
+   set(DFT_C_FLAGS "${DFT_C_FLAGS} -msse2 -mfpmath=sse")
+@@ -545,7 +555,11 @@ endif()
+ 
+ # SVE
+ 
+-option(DISABLE_SVE "Disable SVE" OFF)
++if (QNX)
++    option(DISABLE_SVE "Disable SVE" ON)
++else()
++    option(DISABLE_SVE "Disable SVE" OFF)
++endif()
+ option(ENFORCE_SVE "Build fails if SVE is not supported by the compiler" OFF)
+ 
+ if(SLEEF_ARCH_AARCH64 AND NOT DISABLE_SVE)
+diff --git a/src/dft/CMakeLists.txt b/src/dft/CMakeLists.txt
+index df27eaa..a572e45 100644
+--- a/src/dft/CMakeLists.txt
++++ b/src/dft/CMakeLists.txt
+@@ -126,25 +126,25 @@ set(ISALIST_SP purecsp)
+ set(ISALIST_DP purecdp)
+ 
+ set(LIST_SUPPORTED_FPTYPE 0 1)
+-if(CMAKE_C_COMPILER_ID MATCHES "(GNU|Clang)")
++if(CMAKE_C_COMPILER_ID MATCHES "(GNU|Clang|QCC)")
+   set(ISALIST_SP vecextsp)
+   set(ISALIST_DP vecextdp)
+-endif(CMAKE_C_COMPILER_ID MATCHES "(GNU|Clang)")
++endif(CMAKE_C_COMPILER_ID MATCHES "(GNU|Clang|QCC)")
+ 
+ if (COMPILER_SUPPORTS_LONG_DOUBLE AND SLEEFDFT_ENABLE_LONGDOUBLE)
+   set(LIST_SUPPORTED_FPTYPE ${LIST_SUPPORTED_FPTYPE} 2)
+   set(ISALIST_QP purecld)
+-  if(CMAKE_C_COMPILER_ID MATCHES "(GNU|Clang)")
++  if(CMAKE_C_COMPILER_ID MATCHES "(GNU|Clang|QCC)")
+     set(ISALIST_LD vecextld)
+-  endif(CMAKE_C_COMPILER_ID MATCHES "(GNU|Clang)")
++  endif(CMAKE_C_COMPILER_ID MATCHES "(GNU|Clang|QCC)")
+ endif(COMPILER_SUPPORTS_LONG_DOUBLE AND SLEEFDFT_ENABLE_LONGDOUBLE)
+ 
+ if (COMPILER_SUPPORTS_FLOAT128 AND SLEEFDFT_ENABLE_QUAD)
+   set(LIST_SUPPORTED_FPTYPE ${LIST_SUPPORTED_FPTYPE} 3)
+   set(ISALIST_QP purecqp)
+-  if(CMAKE_C_COMPILER_ID MATCHES "(GNU|Clang)")
++  if(CMAKE_C_COMPILER_ID MATCHES "(GNU|Clang|QCC)")
+     set(ISALIST_QP vecextqp)
+-  endif(CMAKE_C_COMPILER_ID MATCHES "(GNU|Clang)")
++  endif(CMAKE_C_COMPILER_ID MATCHES "(GNU|Clang|QCC)")
+ endif(COMPILER_SUPPORTS_FLOAT128 AND SLEEFDFT_ENABLE_QUAD)
+ 
+ # List all available vector data types

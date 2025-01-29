@@ -1,0 +1,31 @@
+diff --git a/Eigen/src/Geometry/arch/Geometry_SSE.h b/Eigen/src/Geometry/arch/Geometry_SSE.h
+index d4346aa1c..91b4817d5 100644
+--- a/Eigen/src/Geometry/arch/Geometry_SSE.h
++++ b/Eigen/src/Geometry/arch/Geometry_SSE.h
+@@ -31,13 +31,20 @@ struct quat_product<Architecture::SSE, Derived, OtherDerived, float>
+     Packet4f b = _b.coeffs().template packet<BAlignment>(0);
+     Packet4f s1 = pmul(vec4f_swizzle1(a,1,2,0,2),vec4f_swizzle1(b,2,0,1,2));
+     Packet4f s2 = pmul(vec4f_swizzle1(a,3,3,3,1),vec4f_swizzle1(b,0,1,2,1));
++    #ifdef __QNXNTO__
++    pstoret<float,Packet4f,ResAlignment>(
++              &res.x(),
++              padd(psub(pmul(a,static_cast<Eigen::internal::Packet4f>(vec4f_swizzle1(b,3,3,3,3))),
++                                    static_cast<Eigen::internal::Packet4f>(pmul(vec4f_swizzle1(a,2,0,1,0),vec4f_swizzle1(b,1,2,0,0)))),
++                         pxor(mask,padd(s1,s2))));
++    #else
+     pstoret<float,Packet4f,ResAlignment>(
+               &res.x(),
+               padd(psub(pmul(a,vec4f_swizzle1(b,3,3,3,3)),
+                                     pmul(vec4f_swizzle1(a,2,0,1,0),
+                                                vec4f_swizzle1(b,1,2,0,0))),
+                          pxor(mask,padd(s1,s2))));
+-    
++    #endif
+     return res;
+   }
+ };
+@@ -159,3 +166,4 @@ struct quat_conj<Architecture::SSE, Derived, double>
+ } // end namespace Eigen
+ 
+ #endif // EIGEN_GEOMETRY_SSE_H
++

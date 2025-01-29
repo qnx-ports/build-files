@@ -1,0 +1,47 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index a5ddc49..3c9f79d 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -18,6 +18,10 @@ SET_PROPERTY(CACHE QNNPACK_LIBRARY_TYPE PROPERTY STRINGS default static shared)
+ OPTION(QNNPACK_BUILD_TESTS "Build QNNPACK unit tests" ON)
+ OPTION(QNNPACK_BUILD_BENCHMARKS "Build QNNPACK benchmarks" ON)
+ 
++if(QNX)
++  set(QNNPACK_BUILD_TESTS OFF)
++  set(QNNPACK_BUILD_BENCHMARKS OFF)
++endif()
+ # ---[ CMake options
+ IF(QNNPACK_BUILD_TESTS)
+   ENABLE_TESTING()
+@@ -43,7 +47,7 @@ ENDIF()
+ 
+ IF(NOT CMAKE_SYSTEM_NAME)
+   MESSAGE(FATAL_ERROR "CMAKE_SYSTEM_NAME not defined")
+-ELSEIF(NOT CMAKE_SYSTEM_NAME MATCHES "^(Darwin|Linux|Android)$")
++ELSEIF(NOT CMAKE_SYSTEM_NAME MATCHES "^(Darwin|Linux|Android|QNX)$")
+   MESSAGE(FATAL_ERROR "Unrecognized CMAKE_SYSTEM_NAME = ${CMAKE_SYSTEM_NAME}")
+ ENDIF()
+ 
+diff --git a/src/qnnpack/math.h b/src/qnnpack/math.h
+index 8242354..177b989 100644
+--- a/src/qnnpack/math.h
++++ b/src/qnnpack/math.h
+@@ -14,6 +14,13 @@
+ #undef max
+ #endif
+ 
++// stdlib.h in QNX defines min and max macros which are redifined in project's math.h
++// including stdlib.h causes a conflict and a compilation error so min and max have to be undefined before redefining them here
++#ifdef __QNXNTO__
++  #undef min
++  #undef max
++#endif
++
+ inline static size_t min(size_t a, size_t b) {
+   return a < b ? a : b;
+ }
+@@ -33,3 +40,4 @@ inline static size_t divide_round_up(size_t n, size_t q) {
+ inline static size_t round_up(size_t n, size_t q) {
+   return divide_round_up(n, q) * q;
+ }
++
