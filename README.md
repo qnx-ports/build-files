@@ -32,7 +32,7 @@ You have two options for building the ports:
 | [bash](https://github.com/qnx-ports/build-files/blob/main/ports/bash/README.md) | [![Build](https://github.com/qnx-ports/build-files/actions/workflows/bash.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/bash.yml) |
 | [benchmark](https://github.com/qnx-ports/build-files/blob/main/ports/benchmark/README.md) | [![Build](https://github.com/qnx-ports/build-files/actions/workflows/benchmark.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/benchmark.yml) |
 | [boost](https://github.com/qnx-ports/build-files/blob/main/ports/boost/README.md) | [![Build](https://github.com/qnx-ports/build-files/actions/workflows/boost.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/boost.yml) |
-| [brotli](https://github.com/qnx-ports/build-files/blob/main/ports/brotli/README.md) | [![Build](https://github.com/qnx-ports/build-files/actions/workflows/brotli.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/brolti.yml) |
+| [brotli](https://github.com/qnx-ports/build-files/blob/main/ports/brotli/README.md) | [![Build](https://github.com/qnx-ports/build-files/actions/workflows/brotli.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/brotli.yml) |
 | [cJSON](https://github.com/qnx-ports/build-files/blob/main/ports/cJSON/README.md) | [![Build](https://github.com/qnx-ports/build-files/actions/workflows/cJSON.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/cJSON.yml) |
 | [c-ares](https://github.com/qnx-ports/build-files/blob/main/ports/c-ares/README.md) | [![Build](https://github.com/qnx-ports/build-files/actions/workflows/c-ares.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/c-ares.yml) |
 | [cairo](https://github.com/qnx-ports/build-files/blob/main/ports/cairo/README.md) | [![Build](https://github.com/qnx-ports/build-files/actions/workflows/cairo.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/cairo.yml) |
@@ -82,3 +82,4 @@ You have two options for building the ports:
 
 
 ---
+	
