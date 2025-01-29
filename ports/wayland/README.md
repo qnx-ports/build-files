@@ -32,19 +32,14 @@ git checkout v3.2.1
 # Run autogen script
 ./autogen.sh
 
-source ~/qnx800/qnxsdp-env.sh
 ./configure --host=aarch64-unknown-nto-qnx8.0.0 --target=aarch64-unknown-nto-qnx8.0.0 --prefix=$QNX_TARGET/usr --exec-prefix=$QNX_TARGET/aarch64le/usr
 make install -j4
 ./configure --host=x86_64-pc-nto-qnx8.0.0 --target=x86_64-pc-nto-qnx8.0.0 --prefix=$QNX_TARGET/usr --exec-prefix=$QNX_TARGET/x86_64/usr
 make install -j4
 
-
 # Clone wayland
 cd ~/qnx_workspace
 git clone https://github.com/qnx-ports/wayland.git && cd wayland
-
-# Checkout qnx-1.23.1
-git checkout qnx-1.23.1 
 
 # Build config.h and wayland-version.h
 # The command will fail but the files will be available in the dummy directory
@@ -92,8 +87,6 @@ sudo apt install texinfo
 # Run autogen script
 ./autogen.sh
 
-# Build libffi on 8.0 for aarch64le and x86_64
-source ~/qnx800/qnxsdp-env.sh
 ./configure --host=aarch64-unknown-nto-qnx8.0.0 --target=aarch64-unknown-nto-qnx8.0.0 --prefix=$QNX_TARGET/usr --exec-prefix=$QNX_TARGET/aarch64le/usr
 make install -j4
 ./configure --host=x86_64-pc-nto-qnx8.0.0 --target=x86_64-pc-nto-qnx8.0.0 --prefix=$QNX_TARGET/usr --exec-prefix=$QNX_TARGET/x86_64/usr
@@ -102,9 +95,6 @@ make install -j4
 # Clone wayland
 cd ~/qnx_workspace
 git clone https://github.com/qnx-ports/wayland.git && cd wayland
-
-# Checkout qnx-1.23.1
-git checkout qnx-1.23.1 
 
 # Install meson
 sudo apt install python3 python3-pip
@@ -138,6 +128,16 @@ cd ~/qnx_workspace
 
 # Specify target ip address
 TARGET_HOST=<target-ip-address-or-hostname>
+
+# Copy libraries and tests from the desired architecture onto the target
+
+# Transfer dependacy libraries to the target
+scp ~/qnx800/target/qnx/aarch64le/usr/lib/libmemstream* qnxuser@$TARGET_HOST:/data/home/qnxuser/lib
+scp ~/qnx800/target/qnx/aarch64le/usr/lib/libffi* qnxuser@$TARGET_HOST:/data/home/qnxuser/lib
+scp ~/qnx800/target/qnx/aarch64le/usr/lib/libepoll* qnxuser@$TARGET_HOST:/data/home/qnxuser/lib
+scp ~/qnx800/target/qnx/aarch64le/usr/lib/libtimerfd* qnxuser@$TARGET_HOST:/data/home/qnxuser/lib
+scp ~/qnx800/target/qnx/aarch64le/usr/lib/libsignalfd* qnxuser@$TARGET_HOST:/data/home/qnxuser/lib
+scp ~/qnx800/target/qnx/aarch64le/usr/lib/libeventfd* qnxuser@$TARGET_HOST:/data/home/qnxuser/lib
 
 # Transfer wayland libraries to target
 scp $QNX_TARGET/aarch64le/usr/lib/libwayland-* qnxuser@$TARGET_HOST:/data/home/qnxuser/lib
