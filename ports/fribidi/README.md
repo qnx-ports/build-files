@@ -56,7 +56,7 @@ scp -r ~\qnx800\target\qnx\aarch64le\usr\local\bin\fribidi $TARGET_USER@$TARGET_
 scp -r ~\qnx800\target\qnx\aarch64le\usr\local\lib\libfribidi.* $TARGET_USER@$TARGET_IP_ADDRESS:~/lib
 ```
 
-If `~/lib` or `~bin` directory do not exist, create them with:
+If `~/lib` or `~/bin` directory do not exist, create them with:
 ```bash
 ssh $TARGET_USER@$TARGET_IP_ADDRESS "mkdir -p ~/bin"
 ssh $TARGET_USER@$TARGET_IP_ADDRESS "mkdir -p ~/lib"
@@ -68,7 +68,7 @@ Tests are avaliable; currently all tests are passed.
 To run tests, make sure you have already deployed required binaries metioned above and excute the following.
 ```base
 scp -r ./build-files/ports/fribidi/nto-aarch64-le/build/test/* $TARGET_USER@$TARGET_IP_ADDRESS:~/test
-scp -r ./fribidi/test/* $TARGET_USER@$TARGET_IP_ADDRESS
+scp -r ./fribidi/test/* $TARGET_USER@$TARGET_IP_ADDRESS:~/test
 
 # On your target system, navigate to ~/test, excute the following command to run all tests
 sh ./run.tests
