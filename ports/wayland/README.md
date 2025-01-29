@@ -41,7 +41,7 @@ make install -j4
 
 # Clone wayland
 cd ~/qnx_workspace
-git https://github.com/qnx-ports/wayland.git && cd wayland
+git clone https://github.com/qnx-ports/wayland.git && cd wayland
 
 # Build config.h and wayland-version.h
 # The command will fail but the files will be available in the dummy directory
@@ -98,7 +98,7 @@ make install -j4
 
 # Clone wayland
 cd ~/qnx_workspace
-git https://github.com/qnx-ports/wayland.git && cd wayland
+git clone https://github.com/qnx-ports/wayland.git && cd wayland
 
 # Install meson
 sudo apt install python3 python3-pip
@@ -152,6 +152,6 @@ su
 
 # Run test script
 export LD_LIBRARY_PATH=/data/home/qnxuser/lib:$LD_LIBRARY_PATH
-cd /home/data/qnxuser/bin
+cd /data/home/qnxuser/bin
 sh run_tests.sh 
 ```

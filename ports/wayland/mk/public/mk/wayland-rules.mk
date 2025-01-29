@@ -34,7 +34,7 @@ $(PROTOCOL_ROOT)/%-server-protocol.h : unstable/$$(call protocol_name_unstable,$
 $(PROTOCOL_ROOT)/%-client-protocol.h : unstable/$$(call protocol_name_unstable,$$*)/$$*.xml
 	$(WAYLAND_SCANNER_HOST) client-header < $< > $@
 
-# internal (custom)
+# custom
 $(PROTOCOL_ROOT)/%-protocol.c : %.xml
 	$(WAYLAND_SCANNER_HOST) $(call protocol_code_type,$*) < $< > $@
 
