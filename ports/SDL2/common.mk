@@ -51,19 +51,42 @@ CFLAGS +=   -I$(INSTALL_ROOT)/$(PREFIX)/include \
 
 MAKE_ARGS ?= -j $(firstword $(JLEVEL) 1) VERBOSE=1
 
+##################################################
+#### Determine host
+
+## QNX 8.0.x
+ifneq (,$(findstring qnx800,$(QNX_TARGET)))
+ifneq (,$(findstring aarch64,$(CPUDIR)))
+HOST_DETECT = aarch64-unknown-nto-qnx8.0.0
+endif
+ifneq (,$(findstring x86_64,$(CPUVDIR)))
+HOST_DETECT = x86_64-pc-nto-qnx8.0.0
+endif
+endif
+
+## QNX 7.1.x
+ifneq (,$(findstring qnx800,$(QNX_TARGET)))
+ifneq (,$(findstring aarch64,$(CPUDIR)))
+HOST_DETECT = aarch64-unknown-nto-qnx7.1.0
+endif
+ifneq (,$(findstring x86_64,$(CPUDIR)))
+HOST_DETECT = x86_64-pc-nto-qnx7.1.0
+endif
+endif
+
+##################################################
 #### Make Targets ####
 ifndef NO_TARGET_OVERRIDE
 SDL_all:
+	@echo "Building for $(HOST_DETECT)"
 	@mkdir -p build
-	@echo $(CPUDIR)
-	@cd build && cmake $(CMAKE_ARGS) $(QNX_PROJECT_ROOT)
-	@cd build && make
-
+	@cd $(QNX_PROJECT_ROOT) && sh autogen.sh
+	@cd build && $(QNX_PROJECT_ROOT)/configure --build=x86_64-pc-linux-gnu --host=$(HOST_DETECT) --prefix=$(QNX_PROJECT_ROOT)/dist --disable-pulseaudio
+	@cd build && make 
 install check: SDL_all
 	@echo Installing...
-	@cd build && cmake --install .
+	@cd build && make install
 	@echo Done!
-
 clean:
 	rm -rf build
 endif

@@ -38,25 +38,27 @@ endif
 
 ifeq ($(CPUDIR), aarch64le)
 PLATFORM=aarch64-unknown
+V_OPT=gcc_ntoaarch64le
 else ifeq ($(CPUDIR), x86_64)
 PLATFORM=x86_64-pc
+V_OPT=gcc_ntox86_64
 else
 $(error Not a supported CPU.)
 endif
 
 CONFIGURE_PREOPTS= CC=$(QNX_HOST)/usr/bin/qcc \
 				   CXX=$(QNX_HOST)/usr/bin/q++ \
-				   CFLAGS="-D_QNX_SOURCE -std=c17 -Vgcc_nto$(CPUDIR) $(CFLAGS)"\
-				   CXXFLAGS="-D_QNX_SOURCE -std=c++17 -Vgcc_nto$(CPUDIR) -Wno-deprecated-definitions $(CXXFLAGS)"\
+				   LD=$(PLATFORM)-nto-qnx8.0.0-ld \
+				   CFLAGS="-D_QNX_SOURCE -std=c17 -V$(V_OPT) $(CFLAGS)"\
+				   CXXFLAGS="-D_QNX_SOURCE -std=c++17 -V$(V_OPT)_cxx -Wno-deprecated-definitions $(CXXFLAGS)"\
 				   LDFLAGS=$(LDFLAGS) \
 				   CPPFLAGS="-D_QNX_SOURCE $(CPPFLAGS)"\
-				   PKG_CONF_PATH="pkg-config"\
-				   PKG_CONFIG_LIBDIR="$(QNX_TARGET)/$(CPUVARDIR)$(PREFIX)/lib/pkgconfig"
+				   PKG_CONFIG_LIBDIR="$(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/pkgconfig" \
+				   PKG_CONFIG_PATH="pkg-config"
 
-
-
-CONFIGURE_OPTS= --host="$(PLATFORM)-nto-qnx8.0.0"\
-				--build="$(PLATFORM)-nto-qnx8.0.0" \
+# Yes, these are correct. It is a very strange "configure" script - seems to be handmade.
+CONFIGURE_OPTS= --host="$(PLATFORM)-nto-qnx8.0.0-"\
+				--build="$(PLATFORM)-nto-qnx8.0.0-" \
 				--prefix=$(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib \
 				--bindir=$(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/bin \
               	--sysconfdir=$(QNX_TARGET)/etc
@@ -75,7 +77,7 @@ RetroArch_all:
 	@cd build && cp -r $(DIST_BASE)/* .
 	@echo $(CONFIGURE_OPTS)
 	@cd build && $(CONFIGURE_PREOPTS) ./configure $(CONFIGURE_OPTS)
-	@cd build && make VERBOSE=1 all $(MAKE_ARGS) 
+	@cd build && $(CONFIGURE_PREOPTS) make VERBOSE=1 all $(MAKE_ARGS) 
 
 install check: RetroArch_all
 	@echo Installing...
