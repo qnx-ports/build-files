@@ -54,4 +54,4 @@ jobs:
         run: |
           source ~/qnx/800/qnxsdp-env.sh
           cd ~/workspace
-          PREFIX="/usr/local" QNX_PROJECT_ROOT="$(pwd)/RetroArch" make -C build-files/ports/RetroArch install -j$(nproc)
+          PREFIX="/usr/local" QNX_PROJECT_ROOT="$(pwd)/RetroArch" make -C build-files/ports/RetroPie/RetroArch install -j$(nproc)

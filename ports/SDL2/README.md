@@ -64,3 +64,8 @@ QNX_PROJECT_ROOT="$(pwd)/SDL" make -C build-files/ports/SDL2 install -j4
 #From your workspace:
 make -C build-files/ports/SDl2 clean
 ```
+
+build/build/libSDL2*.a
+build/build/.libs/libSDL*
+
+build_test/test*
