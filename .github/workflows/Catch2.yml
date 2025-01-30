@@ -54,4 +54,5 @@ jobs:
         shell: bash
         run: |
           source ~/qnx/800/qnxsdp-env.sh
+          cd ~/workspace
           make -C build-files/ports/Catch2 install
