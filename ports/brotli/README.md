@@ -1,4 +1,4 @@
-# Compile the port for QNX
+# brotli [![Build](https://github.com/qnx-ports/build-files/actions/workflows/brotli.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/brotli.yml)
 
 **Note**: QNX ports are only supported from a **Linux host** operating system
 
@@ -28,7 +28,7 @@ source ~/qnx800/qnxsdp-env.sh
 cd ~/qnx_workspace
 
 # Clone brotli
-git clone https://github.com/qnx-ports/brotli.git
+git clone https://github.com/google/brotli.git
 
 # Build brotli
 QNX_PROJECT_ROOT="$(pwd)/brotli" make -C build-files/ports/brotli/ install -j4
@@ -40,7 +40,7 @@ QNX_PROJECT_ROOT="$(pwd)/brotli" make -C build-files/ports/brotli/ install -j4
 # Clone the repos
 mkdir -p ~/qnx_workspace && cd qnx_workspace
 git clone https://github.com/qnx-ports/build-files.git
-git clone https://github.com/qnx-ports/brotli.git
+git clone https://github.com/google/brotli.git
 
 # Source SDP environment
 source ~/qnx800/qnxsdp-env.sh
