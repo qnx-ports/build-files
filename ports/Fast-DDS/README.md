@@ -43,41 +43,42 @@ QNX_PROJECT_ROOT="$(pwd)/muslflt" make -C build-files/ports/muslflt/ INSTALL_ROO
 git clone https://github.com/qnx-ports/Fast-DDS.git && cd Fast-DDS
 git checkout qnx_2.10.1
 
-WORKSPACE=$PWD
-
-# Get submodules and patch them
-cd $WORKSPACE
-
 # Initialize git submodules
-git submodule update --init $WORKSPACE/thirdparty/asio/ $WORKSPACE/thirdparty/fastcdr $WORKSPACE/thirdparty/tinyxml2/
-
-# Apply QNX patch to Asio.
-cd $WORKSPACE/thirdparty/asio
-git apply $WORKSPACE/build_qnx/qnx_patches/asio_qnx.patch
-
-# Apply QNX patch to Fast-CDR.
-cd $WORKSPACE/thirdparty/fastcdr
-git apply $WORKSPACE/build_qnx/qnx_patches/fastcdr_qnx.patch
-
-# Apply QNX patch to TinyXML2.
-# TinyXML2's CMakeLists.txt has CRLF, so use unix2dos to convert the patch to CRLF.
-cd $WORKSPACE/thirdparty/tinyxml2
-unix2dos $WORKSPACE/build_qnx/qnx_patches/tinyxml2_qnx.patch
-git apply $WORKSPACE/build_qnx/qnx_patches/tinyxml2_qnx.patch
+git submodule update --init thirdparty/asio/ thirdparty/fastcdr thirdparty/tinyxml2/
 
 # Get foonathan_memory_vendor
-cd $WORKSPACE
 git clone https://github.com/eProsima/foonathan_memory_vendor.git
 
 # Get googletest
-cd $WORKSPACE
 git clone https://github.com/google/googletest.git && cd googletest
 git checkout v1.13.0
-git apply $WORKSPACE/build_qnx/qnx_patches/googletest_qnx.patch
+
+# Exit Fast-DDS repo
+cd ../..
+
+WORKSPACE=$PWD
+
+# Apply QNX patch to Asio.
+cd $WORKSPACE/Fast-DDS/thirdparty/asio
+git apply $WORKSPACE/build-files/ports/Fast-DDS/qnx_patches/asio_qnx.patch
+
+# Apply QNX patch to Fast-CDR.
+cd $WORKSPACE/Fast-DDS/thirdparty/fastcdr
+git apply $WORKSPACE/build-files/ports/Fast-DDS/qnx_patches/fastcdr_qnx.patch
+
+# Apply QNX patch to TinyXML2.
+# TinyXML2's CMakeLists.txt has CRLF, so use unix2dos to convert the patch to CRLF.
+cd $WORKSPACE/Fast-DDS/thirdparty/tinyxml2
+unix2dos $WORKSPACE/build-files/ports/Fast-DDS/qnx_patches/tinyxml2_qnx.patch
+git apply $WORKSPACE/build-files/ports/Fast-DDS/qnx_patches/tinyxml2_qnx.patch
+
+# Patch googletest
+cd $WORKSPACE/Fast-DDS/googletest
+git apply $WORKSPACE/build-files/ports/Fast-DDS/qnx_patches/googletest_qnx.patch
 
 # Build
-cd $WORKSPACE/build_qnx
-JLEVEL=4 make INSTALL_ROOT_nto=<staging-install-folder> USE_INSTALL_ROOT=true install
+cd $WORKSPACE
+JLEVEL=4 make -C $WORKSPACE/build-files/ports/Fast-DDS INSTALL_ROOT_nto=<staging-install-folder> USE_INSTALL_ROOT=true install
 ```
 
 - Testing

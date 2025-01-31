@@ -3,11 +3,9 @@ QCONFIG=qconfig.mk
 endif
 include $(QCONFIG)
 
-include $(MKFILES_ROOT)/qmacros.mk
-
 NAME=protobuf
 
-QNX_PROJECT_ROOT ?= $(PRODUCT_ROOT)/../../
+QNX_PROJECT_ROOT ?= $(PRODUCT_ROOT)/../../protobuf/
 
 #$(INSTALL_ROOT_$(OS)) is pointing to $QNX_TARGET
 #by default, unless it was manually re-routed to
@@ -50,25 +48,22 @@ CMAKE_MODULE_PATH := $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/cmake;$(INSTALL_RO
 #Headers from INSTALL_ROOT need to be made available by default
 #because CMake and pkg-config do not necessary add it automatically
 #if the include path is "default"
-CFLAGS += -I$(INSTALL_ROOT)/$(PREFIX)/include
+CFLAGS += -I$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/include
 
 CMAKE_COMMON_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
                     -DCMAKE_SYSTEM_PROCESSOR=$(CPUVARDIR) \
                     -DCMAKE_CXX_COMPILER_TARGET=gcc_nto$(CPUVARDIR) \
                     -DCMAKE_C_COMPILER_TARGET=gcc_nto$(CPUVARDIR) \
                     -DCMAKE_INSTALL_PREFIX="$(PREFIX)" \
-                    -DCMAKE_INSTALL_INCLUDEDIR="$(INSTALL_ROOT)/$(PREFIX)/include" \
                     -DCMAKE_STAGING_PREFIX="$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)" \
                     -DCMAKE_MODULE_PATH="$(CMAKE_MODULE_PATH)" \
                     -DCMAKE_FIND_ROOT_PATH="$(CMAKE_FIND_ROOT_PATH)" \
                     -DCMAKE_BUILD_TYPE=$(CMAKE_BUILD_TYPE) \
-                    -DCMAKE_NO_SYSTEM_FROM_IMPORTED=TRUE \
                     -DEXTRA_CMAKE_C_FLAGS="$(CFLAGS)" \
                     -DEXTRA_CMAKE_CXX_FLAGS="$(CFLAGS)" \
                     -DEXTRA_CMAKE_ASM_FLAGS="$(FLAGS)" \
                     -DEXTRA_CMAKE_LINKER_FLAGS="$(LDFLAGS)" \
                     -DBUILD_SHARED_LIBS=1 \
-                    -Dprotobuf_ABSL_PROVIDER=package \
                     -Dprotobuf_USE_EXTERNAL_GTEST=OFF \
                     -Dprotobuf_INSTALL=ON \
                     -Dprotobuf_ABSOLUTE_TEST_PLUGIN_PATH=OFF
@@ -92,8 +87,7 @@ protobuf: protoc_host
 	cd protobuf && cmake $(CMAKE_COMMON_ARGS) -DWITH_PROTOC=$(HOST_PROTOC_PATH)/protoc -Dprotobuf_BUILD_LIBUPB=OFF $(QNX_PROJECT_ROOT)
 	cd protobuf && cmake --build . $(GENERATOR_ARGS)
 
-# Force sequential build of targets because the final exported cmake config might be different
-protoc_target: protobuf
+protoc_target:
 	mkdir -p protoc
 	cd protoc && cmake $(CMAKE_COMMON_ARGS) -Dprotobuf_BUILD_TESTS=OFF -Dprotobuf_BUILD_LIBUPB=ON $(QNX_PROJECT_ROOT)
 	cd protoc && cmake --build . $(GENERATOR_ARGS)
@@ -102,7 +96,7 @@ protoc_host:
 	mkdir -p $(HOST_PROTOC_PATH)
 	cd $(HOST_PROTOC_PATH) && \
 	cmake $(HOST_CMAKE_ARGS) $(QNX_PROJECT_ROOT) && \
-    cmake --build . $(GENERATOR_ARGS)
+	cmake --build . $(GENERATOR_ARGS)
 
 install: protobuf_all
 	cd protobuf && cmake --build . --target install $(GENERATOR_ARGS)

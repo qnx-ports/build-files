@@ -1,0 +1,31 @@
+# To update this protocol source when the protocols are updated:
+#    DIST_ROOT=$(pwd)/Wayland make -C build-files/ports/wayland/tests/nto/protocol/ -f Makefile.protocol-update clean all
+
+ifndef QCONFIG
+QCONFIG=qconfig.mk
+endif
+include $(QCONFIG)
+WAYLAND_MKFILES_ROOT = ../../../mk/public/mk/
+include $(WAYLAND_MKFILES_ROOT)wayland-config.mk
+
+.PHONY : all clean
+all :
+_vpath_normalize=$(1)
+OS = nto
+
+PROTOCOL_ROOT = .
+
+PROTOCOL_CODE_TYPE = public-code
+PROTOCOL_HEADER_LIST = client server
+
+EXTRA_PROTOCOLVPATH += $(DIST_ROOT)/protocol
+
+PROTOCOLS += tests
+
+include $(WAYLAND_MKFILES_ROOT)wayland-pretargets.mk
+include $(WAYLAND_MKFILES_ROOT)wayland-targets.mk
+
+all : protocols
+
+clean :
+	$(RM_HOST) $(PROTOCOL_SERVER_HDRS) $(PROTOCOL_CLIENT_HDRS) $(PROTOCOL_SRCS)

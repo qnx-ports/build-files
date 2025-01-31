@@ -39,12 +39,32 @@ QNX_TARGET_DATASET_DIR ?= /data/home/root/gtsam/test
 PREFIX ?= /usr/local
 INSTALL_TESTS?=true
 
+#Search paths for all of CMake's find_* functions --
+#headers, libraries, etc.
+#
+#$(QNX_TARGET): for architecture-agnostic files shipped with SDP (e.g. headers)
+#$(QNX_TARGET)/$(CPUVARDIR): for architecture-specific files in SDP
+#$(INSTALL_ROOT)/$(CPUVARDIR): any packages that may have been installed in the staging area
+CMAKE_FIND_ROOT_PATH := $(QNX_TARGET);$(QNX_TARGET)/$(CPUVARDIR);$(INSTALL_ROOT)/$(CPUVARDIR)
+
+#Path to CMake modules; These are CMake files installed by other packages
+#for downstreams to discover them automatically. We support discovering
+#CMake-based packages from inside SDP or in the staging area.
+#Note that CMake modules can automatically detect the prefix they are
+#installed in.
+CMAKE_MODULE_PATH := $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/cmake;$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/lib/cmake
+
+USE_SYSTEM_METIS?=OFF
+
 ifdef QNX_PROJECT_ROOT
 GTSAM_ROOT=$(QNX_PROJECT_ROOT)
 endif
 
 # Add the line below
-CMAKE_ARGS = -DCMAKE_NO_SYSTEM_FROM_IMPORTED=TRUE \
+CMAKE_ARGS = -DEPROSIMA_BUILD_TESTS=ON \
+             -DCMAKE_FIND_ROOT_PATH="$(CMAKE_FIND_ROOT_PATH)" \
+             -DCMAKE_MODULE_PATH="$(CMAKE_MODULE_PATH)" \
+             -DCMAKE_NO_SYSTEM_FROM_IMPORTED=TRUE \
              -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DCMAKE_PROJECT_INCLUDE=$(PROJECT_ROOT)/project_hooks.cmake \
              -DCMAKE_SYSTEM_PROCESSOR=$(CPUVARDIR) \
@@ -62,10 +82,14 @@ CMAKE_ARGS = -DCMAKE_NO_SYSTEM_FROM_IMPORTED=TRUE \
              -DCMAKE_AR=$(QNX_HOST)/usr/bin/nto$(CPU)-ar \
              -DCMAKE_RANLIB=${QNX_HOST}/usr/bin/nto${CPU}-ranlib \
              -DQNX_TARGET_DATASET_DIR:STRING=$(QNX_TARGET_DATASET_DIR) 
-
+			       -DCPUVARDIR=$(CPUVARDIR) \
+             -DQNX_TARGET_DATASET_DIR=$(QNX_TARGET_DATASET_DIR) \
+             -DGTSAM_USE_SYSTEM_METIS=$(USE_SYSTEM_METIS) \
+             
 ifndef BUILD_TESTS 
 	CMAKE_ARGS +=" -DGTSAM_BUILD_TESTS"
 endif
+
 
 MAKE_ARGS ?= -j $(firstword $(JLEVEL) 1)
 

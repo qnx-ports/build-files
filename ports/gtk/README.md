@@ -33,9 +33,8 @@ cd -
 # Create a staging area for the GTK4 build, for example, `/tmp/staging`
 # This is required for the GTK4 port due to the sheer amount of files it installs,
 # and the fact that clearing all installed files is required for a fully clean build of GTK4.
-# Edit INSTALL_ROOT_nto in qconf_override.mk to change the stage path.
-export QCONF_OVERRIDE=$PWD/build-files/resources/qconf_override/qconf_override.mk
-make -C build-files/ports/gtk QNX_PROJECT_ROOT="$(pwd)/gtk" JLEVEL=4 install
+# Use INSTALL_ROOT_nto to specify a staging area
+QNX_PROJECT_ROOT="$(pwd)/gtk" make INSTALL_ROOT_nto=/tmp/staging USE_INSTALL_ROOT=true -C build-files/ports/gtk JLEVEL=$(nproc) install
 ```
 
 # Compile the port for QNX on Ubuntu host
@@ -46,19 +45,26 @@ sudo apt-get install sassc libglib2.0-bin ninja-build libglib2.0-dev pkg-config
 
 # Clone the repos
 mkdir -p ~/qnx_workspace && cd qnx_workspace
-git clone https://gitlab.com/qnx/ports/build-files.git
-git clone https://gitlab.com/qnx/ports/gtk.git
+git clone https://github.com/qnx-ports/build-files.git
+git clone https://github.com/qnx-ports/gtk.git
 # Clone meson for building gtk
 git clone https://github.com/mesonbuild/meson && cd meson
 git checkout 110642dd7
 cd -
 
-# source qnxsdp-env.sh
+# Source qnxsdp-env.sh
 source ~/qnx800/qnxsdp-env.sh
 
-# Build gtk
+
+
+# --Building gtk--
+# Create a staging area for the GTK4 build, for example, `/tmp/staging`
+# This is required for the GTK4 port due to the sheer amount of files it installs,
+# and the fact that clearing all installed files is required for a fully clean build of GTK4.
+# Use INSTALL_ROOT_nto to specify a staging area
+
 export QCONF_OVERRIDE=$PWD/build-files/resources/qconf_override/qconf_override.mk
-QNX_PROJECT_ROOT="$(pwd)/gtk" make -C build-files/ports/gtk JLEVEL=$(nproc) install
+QNX_PROJECT_ROOT="$(pwd)/gtk" make INSTALL_ROOT_nto=/tmp/staging USE_INSTALL_ROOT=true -C build-files/ports/gtk JLEVEL=$(nproc) install
 ```
 
 # How to run the gtk4 demo
