@@ -64,7 +64,7 @@ git clone https://github.com/qnx-ports/muslflt.git
 QNX_PROJECT_ROOT=$PWD/muslflt make -C build-files/ports/muslflt install
 ```
 
-6. __[OPTIONAL/RECOMMENDED]__ If you know which platforms you are building for (aarch64le/x86_64), it is highly recommended that you only build for the platforms you are using.
+6. __[OPTIONAL/RECOMMENDED]__ Permanently disable unused platforms. If you know you do not need to build for multiple, you can follow the process below to disable unneeded architectures.
 ```bash
 #Blocking unused builds
 #4.1 Navigate to <your-workspace>/build-files/ports/gtsam
@@ -101,6 +101,8 @@ touch nto-<unused-arhcitecture>/Makefile.dnm
 QNX_PROJECT_ROOT="$PWD/gtsam" make -C build-files/ports/gtsam install -j4
 #To build tests, also define QNX_BUILD_TESTS and QNX_TARGET_DATASET_DIR
 BUILD_TESTS="yes" QNX_TARGET_DATASET_DIR="/data/home/qnxuser/gtsam/test" QNX_PROJECT_ROOT="$PWD/gtsam" make -C build-files/ports/gtsam install -j4
+#You can specify architectures for this build only using OSLIST
+OSLIST=aarch64le QNX_PROJECT_ROOT="$PWD/gtsam" make -C build-files/ports/gtsam install -j4
 ```
 
 **NOTE**: Before rebuilding, you may need to delete the `/build` subdirectories and their contents in `build-files/ports/gtsam/nto-aarch64/le/build` and `build-files/ports/gtsam/nto-x86_64/o/build`. This MUST be done when changing from SDP 7.1 to 8 or vice versa, as it will link against the wrong shared objects and not show an error until testing.
