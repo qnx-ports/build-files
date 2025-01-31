@@ -67,7 +67,7 @@ jobs:
           export BUILD_PYTORCH_MOBILE_WITH_HOST_TOOLCHAIN=1
           BUILD_TESTING=ON BUILD_LITE_INTERPRETER=ON QNX_PROJECT_ROOT="$(pwd)/pytorch" make -C build-files/ports/pytorch install 
 
-  build-1.7.1:
+  build-1_7_1:
     runs-on: self-hosted
     if: |
       false && (
