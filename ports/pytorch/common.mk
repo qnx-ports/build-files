@@ -21,8 +21,6 @@ INSTALL_ROOT ?= $(INSTALL_ROOT_$(OS))
 #CMake config modules, etc.). Default is /usr/local
 PREFIX ?= /usr/local
 
-#PYTORCH_VERSION = 2.3.1
-
 #choose Release or Debug
 CMAKE_BUILD_TYPE ?= Release
 
@@ -47,6 +45,16 @@ BUILD_LITE_INTERPRETER ?= OFF
 SELECTED_OP_LIST ?=
 BUILD_TESTING ?= OFF
 TRACING_BASED ?= OFF
+
+ifeq ($(strip $(notdir $(QNX_TARGET))),qnx7)
+BUILD_TEST=OFF
+BUILD_MOBILE_TEST=$(BUILD_TESTING)
+BUILD_MOBILE_BENCHMARK=$(BUILD_TESTING)
+else
+BUILD_TEST=$(BUILD_TESTING)
+BUILD_MOBILE_TEST=$(BUILD_TESTING)
+BUILD_MOBILE_BENCHMARK=$(BUILD_TESTING)
+endif
 
 PREFIX_PATH := $(shell python -c 'import sysconfig, sys; sys.stdout.write(sysconfig.get_path("purelib"))')
 PYTHON_EXECUTABLE := $(shell python -c 'import sys; sys.stdout.write(sys.executable)')
@@ -84,19 +92,15 @@ CMAKE_ARGS =    -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
                 -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
                 -DBUILD_LITE_INTERPRETER=$(BUILD_LITE_INTERPRETER) \
                 -DSELECTED_OP_LIST=$(SELECTED_OP_LIST) \
-                -DBUILD_TEST=$(BUILD_TESTING) \
+                -DBUILD_TEST=$(BUILD_TEST) \
+                -DBUILD_MOBILE_TEST=$(BUILD_MOBILE_TEST) \
+                -DBUILD_MOBILE_BENCHMARK=$(BUILD_MOBILE_BENCHMARK) \
                 -DINSTALL_TEST=OFF \
                 -DBUILD_BINARY=OFF \
                 -DTRACING_BASED=$(TRACING_BASED) \
                 -DXNNPACK_ENABLE_ASSEMBLY=OFF \
                 -DBUILD_CUSTOM_PROTOBUFF=OFF \
-                -DBUILD_SHARED_LIBS=ON
-
-#TODO: Only needed on v1.7.1
-#libregex is needed for SDP 7.1 and above; previously was part of libc
-ifneq ($(wildcard $(foreach dir,$(LIBVPATH),$(dir)/libregex.so)),)
-	LDFLAGS += -lregex
-endif
+                -DBUILD_SHARED_LIBS=ON \
 
 ifeq ($(USE_LIGHTWEIGHT_DISPATCH),ON)
     CMAKE_ARGS +=   -DUSE_LIGHTWEIGHT_DISPATCH=ON \

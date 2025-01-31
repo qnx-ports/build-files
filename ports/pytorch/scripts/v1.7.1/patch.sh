@@ -14,19 +14,15 @@ qnx_patch () {
 }
 
 # Apply QNX patches
-qnx_patch ${torch_dir}/android/libs/fbjni fbjni.patch
 qnx_patch ${torch_dir}/third_party/cpuinfo cpuinfo.patch
 qnx_patch ${torch_dir}/third_party/eigen eigen.patch
 qnx_patch ${torch_dir}/third_party/fbgemm/third_party/asmjit asmjit.patch
-qnx_patch ${torch_dir}/third_party/fbgemm/third_party/googletest googletest.patch
 qnx_patch ${torch_dir}/third_party/foxi foxi.patch
-qnx_patch ${torch_dir}/third_party/googletest googletest.patch
 qnx_patch ${torch_dir}/third_party/ideep/mkl-dnn mkl-dnn.patch
 qnx_patch ${torch_dir}/third_party/NNPACK NNPACK.patch
 qnx_patch ${torch_dir}/third_party/QNNPACK QNNPACK.patch
 qnx_patch ${torch_dir}/third_party/sleef sleef.patch
 qnx_patch ${torch_dir}/third_party/tbb tbb.patch
-qnx_patch ${torch_dir}/third_party/tensorpipe/third_party/googletest googletest.patch
 qnx_patch ${torch_dir}/third_party/XNNPACK XNNPACK.patch
 
 echo "Some of these patches add untracked files to git! If experiencing issues consider using 'git clean -xdff' to clear the untracked files."
