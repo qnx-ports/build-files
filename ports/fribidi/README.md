@@ -53,7 +53,7 @@ TARGET_IP_ADDRESS=<target-ip-address-or-hostname>
 TARGET_USER=<target-username>
 
 scp -r ~/qnx800/target/qnx/aarch64le/usr/local/bin/* $TARGET_USER@$TARGET_IP_ADDRESS:~/bin
-scp -r ~/qnx800/target/qnx/aarch64le/usr/local/lib/libfribidi.* $TARGET_USER@$TARGET_IP_ADDRESS:~/lib
+scp -r ~/qnx800/target/qnx/aarch64le/usr/local/lib/libfribidi* $TARGET_USER@$TARGET_IP_ADDRESS:~/lib
 ```
 
 If `~/lib` or `~/bin` directory do not exist, create them with:
