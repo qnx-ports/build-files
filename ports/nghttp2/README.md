@@ -30,7 +30,7 @@ cd ~/qnx_workspace
 source ~/qnx800/qnxsdp-env.sh
 
 # Clone brotli, jansson and nghttp2
-git clone https://github.com/google/brotli.git
+git clone -b v1.1 https://github.com/google/brotli.git
 git clone https://github.com/qnx-ports/jansson.git
 git clone https://github.com/qnx-ports/nghttp2.git
 
@@ -42,7 +42,7 @@ make -C build-files/ports/jansson/ install -j4
 
 # Clone nghttp2 submodules
 cd nghttp2
-git submodule update --init -recursive
+git submodule update --init --recursive
 cd -
 
 # Build nghttp2
@@ -57,7 +57,7 @@ BUILD_STATIC_LIBS=ON BUILD_TESTING=ON make -C build-files/ports/nghttp2/ install
 # Clone the repositories
 mkdir -p ~/qnx_workspace && cd qnx_workspace
 git clone https://github.com/qnx-ports/build-files.git
-git clone https://github.com/google/brotli.git
+git clone -b v1.1 https://github.com/google/brotli.git
 git clone https://github.com/qnx-ports/jansson.git
 git clone https://github.com/qnx-ports/nghttp2.git
 
@@ -72,7 +72,7 @@ make -C build-files/ports/jansson/ install -j4
 
 # Clone nghttp2 submodules
 cd nghttp2
-git submodule update --init -recursive
+git submodule update --init --recursive
 cd -
 
 # Build nghttp2
