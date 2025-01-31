@@ -28,7 +28,7 @@ cd ~/qnx_workspace
 git clone https://github.com/qnx-ports/fribidi.git
 
 # Build fribidi
-QNX_PROJECT_ROOT="$(pwd)/fribidi" make -C build-files/ports/fribidi install -j4
+QNX_PROJECT_ROOT="$(pwd)/fribidi" JLEVEL=4 make -C build-files/ports/fribidi install
 ```
 
 # Compile the port for QNX on Ubuntu host
@@ -43,7 +43,7 @@ git clone https://github.com/mesonbuild/meson.git
 source ~/qnx800/qnxsdp-env.sh
 
 # Build fribidi
-QNX_PROJECT_ROOT="$(pwd)/fribidi" make -C build-files/ports/fribidi install -j4
+QNX_PROJECT_ROOT="$(pwd)/fribidi" JLEVEL=4 make -C build-files/ports/fribidi install
 ```
 
 # Deploy binaries via SSH
@@ -52,8 +52,8 @@ QNX_PROJECT_ROOT="$(pwd)/fribidi" make -C build-files/ports/fribidi install -j4
 TARGET_IP_ADDRESS=<target-ip-address-or-hostname>
 TARGET_USER=<target-username>
 
-scp -r ~\qnx800\target\qnx\aarch64le\usr\local\bin\fribidi $TARGET_USER@$TARGET_IP_ADDRESS:~/bin
-scp -r ~\qnx800\target\qnx\aarch64le\usr\local\lib\libfribidi.* $TARGET_USER@$TARGET_IP_ADDRESS:~/lib
+scp -r ~/qnx800/target/qnx/aarch64le/usr/local/bin/* $TARGET_USER@$TARGET_IP_ADDRESS:~/bin
+scp -r ~/qnx800/target/qnx/aarch64le/usr/local/lib/libfribidi.* $TARGET_USER@$TARGET_IP_ADDRESS:~/lib
 ```
 
 If `~/lib` or `~/bin` directory do not exist, create them with:
