@@ -61,7 +61,7 @@ cp -p $aprefix/include/curl/*.h $atargetincdir
 
 ## 7.1 documentation
 
-cp README-QNX.md "$build/target/qnx7/"
+cp README.md "$build/target/qnx7/"
 
 ## build the 8.0 package
 

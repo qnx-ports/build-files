@@ -56,8 +56,8 @@ else
     echo "7.1 aarch64"
     echo " - configure"
     sh ../conf/7.1-aarch64 >configure.log 2>&1
-    # make -sj >make.log 2>&11
-    make tests -sj >make_test.log 2>&1
+    echo " - build"
+    make -sj >make.log 2>&1
     echo " - install"
     make install >make-install.log 2>&1
     popd > /dev/null

@@ -38,7 +38,7 @@ cd ~/qnx_workspace
 git clone https://github.com/qnx-ports/curl.git
 
 # Build curl from build files
-cd build-files/ports
+cd build-files/ports/curl
 SOURCE_ROOT="../../../curl" ./mkrelease.sh
 ```
 
@@ -54,6 +54,6 @@ git clone https://github.com/qnx-ports/curl.git
 cd ~/qnx_workspace
 
 # Build curl from build files
-cd build-files/ports
+cd build-files/ports/curl
 SOURCE_ROOT="../../../curl" ./mkrelease.sh
 ```
