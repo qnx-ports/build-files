@@ -31,7 +31,6 @@ PREFIX ?= /usr/local
 MAKE_BUILD_TYPE ?= Release
 MAKE_BUILD_TEST ?= false
 
-
 #override 'all' target to bypass the default QNX build system
 ALL_DEPENDENCIES = $(NAME)_all
 .PHONY: $(NAME)_all install check clean
