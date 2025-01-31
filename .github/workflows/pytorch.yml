@@ -17,7 +17,7 @@ on:
 
 jobs:
 
-  build:
+  build-2_3_1:
     runs-on: self-hosted
     if: |
       (github.event_name == 'workflow_dispatch') ||
@@ -34,6 +34,7 @@ jobs:
       with:
         repository: qnx-ports/pytorch
         path: pytorch
+        ref: qnx_v2.3.1
         submodules: recursive
 
     - name: Login to GitHub Container Registry
@@ -61,7 +62,59 @@ jobs:
           cd pytorch
           pip install -r requirements.txt
           cd $WORKSPACE/build-files/ports/pytorch
-          ./scripts/patch.sh $WORKSPACE/pytorch
+          ./scripts/v2.3.1/patch.sh $(pwd)/patches/v2.3.1 $WORKSPACE/pytorch
           cd $WORKSPACE
           export BUILD_PYTORCH_MOBILE_WITH_HOST_TOOLCHAIN=1
           BUILD_TESTING=ON BUILD_LITE_INTERPRETER=ON QNX_PROJECT_ROOT="$(pwd)/pytorch" make -C build-files/ports/pytorch install 
+
+  build-1.7.1:
+    runs-on: self-hosted
+    if: |
+      false && (
+      (github.event_name == 'workflow_dispatch') ||
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'pytorch'))
+      )
+    steps:
+    - name: Checkout build-files
+      uses: actions/checkout@v4
+      with:
+        path: build-files
+
+    - name: Checkout pytorch
+      uses: actions/checkout@v4
+      with:
+        repository: qnx-ports/pytorch
+        path: pytorch
+        ref: qnx_v1.7.1
+        submodules: recursive
+
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v3
+      with:
+        registry: ghcr.io
+        username: ${{github.actor}}
+        password: ${{secrets.GITHUB_TOKEN}}
+
+    - name: Pull build environment
+      run: |
+        docker pull ghcr.io/qnx-ports/sdp710-build-env:latest
+
+    - name: Build pytorch
+      uses: addnab/docker-run-action@v3
+      with:
+        image: ghcr.io/qnx-ports/sdp710-build-env:latest
+        options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
+        shell: bash
+        run: |
+          cd ~/workspace
+          WORKSPACE=$PWD
+          source ~/qnx/710/qnxsdp-env.sh
+          source /usr/local/qnx/env/bin/activate
+          cd pytorch
+          pip install -r requirements.txt
+          cd $WORKSPACE/build-files/ports/pytorch
+          ./scripts/v1.7.1/patch.sh $(pwd)/patches/v1.7.1 $WORKSPACE/pytorch
+          cd $WORKSPACE
+          export BUILD_PYTORCH_MOBILE_WITH_HOST_TOOLCHAIN=1
+          BUILD_TESTING=ON QNX_PROJECT_ROOT="$(pwd)/pytorch" make -C build-files/ports/pytorch install 
