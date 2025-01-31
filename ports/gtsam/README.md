@@ -224,6 +224,9 @@ scp $QNX_TARGET/aarch64le/$PREFIX/lib/libboost* $TARGET_USER_FOR_INSTALL@$TARGET
 scp $QNX_TARGET/aarch64le/$PREFIX/lib/libmetis* $TARGET_USER_FOR_INSTALL@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER_FOR_INSTALL/gtsam/lib
 scp $QNX_TARGET/aarch64le/$PREFIX/lib/libgtsam* $TARGET_USER_FOR_INSTALL@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER_FOR_INSTALL/gtsam/lib
 
+#If building with USE_SYSTEM_METIS=ON, copy libGKlib as well
+#scp $QNX_TARGET/aarch64le/$PREFIX/lib/libGKlib.* $TARGET_USER_FOR_INSTALL@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER_FOR_INSTALL/gtsam/lib
+
 #For 7.1, Copy the following as well:
 scp $QNX_TARGET/aarch64le/usr/lib/libicu* $TARGET_USER_FOR_INSTALL@$TARGET_IP_ADDRESS:/data/home/$TARGET_USER_FOR_INSTALL/gtsam/lib
 
