@@ -27,8 +27,8 @@ cd build-files/docker
 source ~/qnx800/qnxsdp-env.sh
 cd ~/qnx_workspace
 
-# Clone brotli
-git clone https://github.com/google/brotli.git
+# Clone latest stable version brotli
+git clone -b v1.1 https://github.com/google/brotli.git
 
 # Build brotli
 QNX_PROJECT_ROOT="$(pwd)/brotli" make -C build-files/ports/brotli/ install -j4
@@ -40,7 +40,7 @@ QNX_PROJECT_ROOT="$(pwd)/brotli" make -C build-files/ports/brotli/ install -j4
 # Clone the repos
 mkdir -p ~/qnx_workspace && cd qnx_workspace
 git clone https://github.com/qnx-ports/build-files.git
-git clone https://github.com/google/brotli.git
+git clone -b v1.1 https://github.com/google/brotli.git
 
 # Source SDP environment
 source ~/qnx800/qnxsdp-env.sh
