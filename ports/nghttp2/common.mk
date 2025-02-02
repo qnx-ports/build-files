@@ -54,7 +54,8 @@ CMAKE_MODULE_PATH := $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/cmake;$(INSTALL_RO
 #if the include path is "default"
 CFLAGS += $(FLAGS) \
           -I$(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/include \
-          -I$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/include
+          -I$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/include \
+          -D_QNX_SOURCE
 LDFLAGS += -Wl,--build-id=md5 -lm -lsocket
 CXXFLAGS += -D_QNX_SOURCE
 
