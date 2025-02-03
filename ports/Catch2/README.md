@@ -9,6 +9,11 @@ git clone https://github.com/qnx-ports/build-files.git
 git clone https://github.com/qnx-ports/Catch2.git
 ```
 
+# Regenerate the amalgamated distribution (some tests are built against it)
+```bash
+./tools/scripts/generateAmalgamatedFiles.py
+```
+
 # Setup a Docker container
 
 Pre-requisite:
