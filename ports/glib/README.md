@@ -28,7 +28,7 @@ export QNX_ARCH=aarch64le
 cd ~/workspace
 # Using QNX's fork of glib
 git clone https://github.com/qnx-ports/glib.git
-# Or using gib/main and and obtain the patch build-files repo
+# Or using gib/main
 git clone https://gitlab.gnome.org/GNOME/glib.git
 
 # Navigate into ./glib
