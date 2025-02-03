@@ -60,4 +60,6 @@ jobs:
           cd boost/tools/build
           git apply ../../../build-files/ports/boost/tools_qnx.patch
           cd ~/workspace
+          cd boost/libs/asio && git apply ../../../build-files/ports/boost/asio_1.82.0_qnx.patch
+          cd ~/qnx_workspace
           QNX_PROJECT_ROOT="$(pwd)/boost" make -C build-files/ports/boost install
