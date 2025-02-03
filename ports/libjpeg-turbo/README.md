@@ -27,6 +27,11 @@ source ~/qnx800/qnxsdp-env.sh
 cd ~/qnx_workspace
 git clone https://github.com/libjpeg-turbo/libjpeg-turbo.git
 
+# checkout to the latest stable
+cd libjpeg-turbo
+git checkout 3.1.0
+cd ..
+
 # Build libjpeg-turbo
 QNX_PROJECT_ROOT="$(pwd)/libjpeg-turbo" JLEVEL=4 make -C build-files/ports/libjpeg-turbo install
 ```
@@ -37,6 +42,11 @@ QNX_PROJECT_ROOT="$(pwd)/libjpeg-turbo" JLEVEL=4 make -C build-files/ports/libjp
 mkdir -p ~/qnx_workspace && cd qnx_workspace
 git clone https://github.com/qnx-ports/build-files.git
 git clone https://github.com/libjpeg-turbo/libjpeg-turbo.git
+
+# checkout to the latest stable
+cd libjpeg-turbo
+git checkout 3.1.0
+cd ..
 
 # source qnxsdp-env.sh
 source ~/qnx800/qnxsdp-env.sh
