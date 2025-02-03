@@ -9,7 +9,7 @@ Current these versions are tested:
 See test reports in `tests/`.
 
 ## GTK compatibility
-If you decide to use GTK on QNX, you should consider installing glib from [GTK repo](https://github.com/qnx-ports/build-files/tree/main/ports/gtk) rather than saprately form here. This glib port is not throughly tested with GTK and unepxected behaviours might occur.
+If you decide to use GTK on QNX, you should consider installing glib from [GTK repo](https://github.com/qnx-ports/build-files/tree/main/ports/gtk) rather than saparately form here. This glib port is not throughly tested with GTK and unepxected behaviours might occur.
 
 ## Compile Glib for SDP 7.1/8.0 on a Linux host
 You'll need the patched version of glib for QNX, available at https://github.com/qnx-ports/glib . For QNX 7.0.0 use the `qnx700-$VER` branch. For QNX 7.1.0 and 8.0.0, simply use `qnx-$VER` branch.
