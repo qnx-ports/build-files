@@ -14,7 +14,7 @@ If you decide to use GTK on QNX, you should consider installing glib from [GTK r
 ## Compile Glib for SDP 7.1/8.0 on a Linux host
 You'll need the patched version of glib for QNX, available at https://github.com/qnx-ports/glib . For QNX 7.0.0 use the `qnx700-$VER` branch. For QNX 7.1.0 and 8.0.0, simply use `qnx-$VER` branch.
 
-If you decide to compile from the `glib/main`, you will also need to apply patch to `meson.build`. `glib/main` provides some additional file system mounting features offer by `gio` compared to `qnx-ports/qnx-2.82.0`
+If you decide to compile from the `glib/main`, you will also need to apply patch to `meson.build`. `glib/main` provides some additional file system mounting features offer by `gio` compared to `qnx-ports/qnx-2.82.0`. Additionally, meson 1.4 and above is required.
 
 To build, first enable your SDP, and then use the cross compile config file available inside this repo under `/resources/meson`, then use meson setup to generate build script, meson compile to do the actual compiling, and finally meson install to install it to your SDP (as dependency for other project or development), or an empty folder so you can transfer it to an actual QNX system.
 
