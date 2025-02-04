@@ -37,7 +37,7 @@ LDFLAGS += -Wl,--build-id=md5
 
 include $(MKFILES_ROOT)/qtargets.mk
 
-GDK_PIXBUF_INSTALL_DIR=$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)
+GLIB_INSTALL_DIR=$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)
 
 # testing not availiable for gdk-pixbuf when cross-compiling
 BUILD_TESTING = OFF
@@ -48,7 +48,7 @@ MESON_FLAGS :=  -Dxattr=false \
                 -Dtests=false\
                 --reconfigure \
 				--buildtype=$(MESON_BUILD_TYPE) \
-                --prefix=$(GDK_PIXBUF_INSTALL_DIR) \
+                --prefix=$(GLIB_INSTALL_DIR) \
 				--cross-file=../qnx_cross.cfg
 
 NINJA_ARGS := -j $(firstword $(JLEVEL) 1)
