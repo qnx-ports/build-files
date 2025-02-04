@@ -1,0 +1,28 @@
+[constants]
+pkg_config='PKG_CONFIG'
+target_arch = 'CPU'
+cpudir = 'TARGET'
+qnx_host = 'QNX_HOST'
+target = target_arch + '-unknown-nto-qnx8.0.0'
+
+[host_machine]
+system = 'qnx'
+cpu_family = target_arch
+cpu = target_arch
+endian = 'little'
+
+[built-in options]
+c_link_args = ['-lm', '-lsocket']
+
+[properties]
+growing_stack = false
+
+[binaries]
+c = [qnx_host + '/usr/bin/nto' + target_arch + '-gcc', PREPEND_C_CXXFLAGS]
+cpp = [qnx_host + '/usr/bin/nto' + target_arch + '-g++', PREPEND_C_CXXFLAGS]
+ar = qnx_host + '/usr/bin/nto' + target_arch + '-ar'
+ld = qnx_host + '/usr/bin/nto' + target_arch + '-ld'
+strip = qnx_host + '/usr/bin/nto' + target_arch +'-strip'
+windres = ''
+objcopy = 'None'
+pkg-config = pkg_config

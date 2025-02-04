@@ -1,0 +1,34 @@
+[constants]
+# Fill in the following
+target_arch = 'CPU'
+qnx_target_arch = 'TARGET'
+# DO NOT CHANGE, these should be automatically derived
+target = target_arch + '-unknown-nto-qnx8.0.0'
+qnx_host_dir = 'QSDP'
+qnx_target_dir = 'QSDP/../../../target/qnx/TARGET/local'
+
+[host_machine]
+system = 'qnx'
+cpu_family = target_arch
+cpu = target_arch
+endian = 'little'
+
+[built-in options]
+c_link_args = ['-lm', '-lsocket']
+
+[properties]
+growing_stack = false
+# pkg-config settings
+sys_root = qnx_target_dir
+pkg_config_libdir = qnx_target_dir + '/usr/lib/pkgconfig'
+
+[binaries]
+c = [qnx_host_dir + '/usr/bin/' + target + '-gcc']
+cpp = [qnx_host_dir + '/usr/bin/' + target + '-g++']
+ar = qnx_host_dir + '/usr/bin/' + target + '-ar'
+ld = qnx_host_dir + '/usr/bin/' + target + '-ld'
+strip = qnx_host_dir + '/usr/bin/' + target + '-strip'
+objcopy = qnx_host_dir + '/usr/bin/' + target + '-objcopy'
+# Using the host pkg-config
+pkg-config = 'pkg-config'
+windres = ''

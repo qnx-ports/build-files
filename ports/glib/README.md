@@ -3,17 +3,43 @@
 **NOTE**: currently only aarch64le is supported.
 
 Current these versions are tested:
-+ 2.82.0
++ `glib/main` (Recommanded)
++ `qnx-ports/qnx-2.82.0`
 
 See test reports in `tests/`.
 
+## GTK compatibility
+If you decide to use GTK on QNX, you should consider installing glib from [GTK repo](https://github.com/qnx-ports/build-files/tree/main/ports/gtk) rather than saprately form here. This glib port is not throughly tested with GTK and unepxected behaviours might occur.
+
 ## Compile Glib for SDP 7.1/8.0 on a Linux host
 You'll need the patched version of glib for QNX, available at https://github.com/qnx-ports/glib . For QNX 7.0.0 use the `qnx700-$VER` branch. For QNX 7.1.0 and 8.0.0, simply use `qnx-$VER` branch.
+
+If you decide to compile from the `glib/main`, you will also need to apply patch to `meson.build`. `glib/main` provides some additional file system mounting features offer by `gio` compared to `qnx-ports/qnx-2.82.0`. Additionally, meson 1.4 and above is required.
 
 To build, first enable your SDP, and then use the cross compile config file available inside this repo under `/resources/meson`, then use meson setup to generate build script, meson compile to do the actual compiling, and finally meson install to install it to your SDP (as dependency for other project or development), or an empty folder so you can transfer it to an actual QNX system.
 
 Here's a detailed instruction:
 
+# Building for QNX8.0 using upstream glib/main on Docker
+``` bash
+# Assuming your build-files repo is at ~/workspace/build-files
+cd ~/workspace
+git clone https://github.com/qnx-ports/build-files.git
+git clone https://gitlab.gnome.org/GNOME/glib.git
+
+# Build the Docker image and create a container
+cd build-files/docker
+./docker-build-qnx-image.sh
+./docker-create-container.sh
+
+# source qnxsdp-env.sh
+cd ~/workspace
+source ~/qnx800/qnxsdp-env.sh
+
+JLEVEL=$(nproc) QNX_PROJECT_ROOT="$(pwd)/glib" make -C build-files/ports/glib install
+```
+
+# Building for QNX8.0 using qnx-port/glib
 ``` bash
 # Define some variables we will use later
 export QNX_VERSION=800
@@ -22,9 +48,10 @@ export QNX_ARCH=aarch64le
 cd ~/workspace
 # Using QNX's fork of glib
 git clone https://github.com/qnx-ports/glib.git
+
+# Navigate into ./glib
 cd glib/
-# For QNX 7.1.0+, use the generic branch
-git checkout qnx-2.82.2
+
 # Generate build script
 meson setup build-qnx$QNX_VERSION --cross-file ~/workspace/build-files/resources/$QNX_ARCH/qnx$QNX_VERSION.ini -Dprefix=/usr -Dxattr=false
 meson compile -C build-qnx$QNX_VERSION
@@ -47,7 +74,10 @@ export QNX_ARCH=aarch64le
 cd ~/workspace
 # Using QNX's fork of glib
 git clone https://github.com/qnx-ports/glib.git
+
+# Navigate into ./glib
 cd glib/
+
 # For QNX 7.0.0, use a special branch for it
 git checkout qnx700-2.82.2
 # Generate build script. Notice the prefix here is /system
