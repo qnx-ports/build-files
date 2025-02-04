@@ -15,6 +15,12 @@ cd build-files/docker
 
 # Now you are in the Docker container
 
+# source qnxsdp-env.sh to build for QNX 7.1
+source ~/qnx710/qnxsdp-env.sh
+
+# source qnxsdp-env.sh to build for QNX 8.0
+source ~/qnx800/qnxsdp-env.sh
+
 # Clone libxkbcommon
 cd ~/qnx_workspace
 git clone https://github.com/xkbcommon/libxkbcommon.git
@@ -29,9 +35,9 @@ git checkout xkbcommon-1.7.0
 export QNX_ARCH=aarch64le
 
 meson setup build \
-    --prefix=/$(QNX_ARCH)/usr \
+    --prefix=/$QNX_ARCH/usr \
     --includedir=/usr/include \
-    --cross-file ~/qnx-ports/build-files/resources/meson/$(QNX_ARCH)/qnx800.ini \
+    --cross-file ~/qnx-ports/build-files/resources/meson/$QNX_ARCH/qnx800.ini \
     -Dc_args=-D_QNX_SOURCE \
     -Ddefault-layout=us \
     -Denable-tools=false \
@@ -55,6 +61,13 @@ meson install -C build --destdir=$QNX_TARGET/
 # Clone the repos
 mkdir -p ~/qnx_workspace && cd qnx_workspace
 
+# source qnxsdp-env.sh to build for QNX 7.1
+source ~/qnx710/qnxsdp-env.sh
+
+# source qnxsdp-env.sh to build for QNX 8.0
+source ~/qnx800/qnxsdp-env.sh
+
+
 # Clone libxkbcommon
 cd ~/qnx_workspace
 git clone https://github.com/libxkbcommon/libxkbcommon.git
@@ -68,9 +81,9 @@ git checkout xkbcommon-1.7.0
 export QNX_ARCH=aarch64le
 
 meson setup build \
-    --prefix=/$(QNX_ARCH)/usr \
+    --prefix=/$QNX_ARCH/usr \
     --includedir=/usr/include \
-    --cross-file ~/qnx-ports/build-files/resources/meson/$(QNX_ARCH)/qnx800.ini \
+    --cross-file ~/qnx-ports/build-files/resources/meson/$QNX_ARCH/qnx800.ini \
     -Dc_args=-D_QNX_SOURCE \
     -Ddefault-layout=us \
     -Denable-tools=false \
