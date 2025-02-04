@@ -40,7 +40,7 @@ include $(MKFILES_ROOT)/qtargets.mk
 GDK_PIXBUF_INSTALL_DIR=$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)
 
 #Set pkg-config env, local/usr only
-export GDK_PIXBUF_INSTALL_DIR
+export QNX_TARGET_SYS_DIR=$(GDK_PIXBUF_INSTALL_DIR)
 
 # testing not availiable for gdk-pixbuf when cross-compiling
 BUILD_TESTING = OFF

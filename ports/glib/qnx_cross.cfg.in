@@ -3,7 +3,7 @@
 target_arch = 'CPU'
 qnx_target_arch = 'TARGET'
 # DO NOT CHANGE, these should be automatically derived
-target = target_arch + '-unknown-nto-qnx8.0.0'
+target = 'nto' + target_arch
 qnx_host_dir = 'QSDP'
 qnx_target_dir = 'QSDP/../../../target/qnx/TARGET/local'
 

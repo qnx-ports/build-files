@@ -3,7 +3,7 @@ pkg_config='PKG_CONFIG'
 target_arch = 'CPU'
 cpudir = 'TARGET'
 qnx_host = 'QNX_HOST'
-target = target_arch + '-unknown-nto-qnx8.0.0'
+target = 'nto' + target_arch
 
 [host_machine]
 system = 'qnx'
