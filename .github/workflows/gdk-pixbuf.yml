@@ -56,4 +56,5 @@ jobs:
         run: |
           source ~/qnx/800/qnxsdp-env.sh
           cd ~/workspace
+          JLEVEL=$(nproc) sh build-files/ports/gdk-pixbuf/install-dependencies.sh
           JLEVEL=$(nproc) QNX_PROJECT_ROOT="$(pwd)/gdk-pixbuf" make -C build-files/ports/gdk-pixbuf install
