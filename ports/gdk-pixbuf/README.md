@@ -46,6 +46,7 @@ source ~/qnx800/qnxsdp-env.sh
 # Clone gdk-pixbuf
 cd ~/qnx_workspace
 git clone https://gitlab.gnome.org/GNOME/gdk-pixbuf.git
+git clone https://github.com/mesonbuild/meson.git
 
 # Optional: call the helper script, or you can build them by yourself
 JLEVEL=4 sh build-files/ports/gdk-pixbuf/install-dependencies.sh
@@ -65,6 +66,7 @@ QNX_PROJECT_ROOT="$(pwd)/gdk-pixbuf" JLEVEL=4 make -C build-files/ports/gdk-pixb
 mkdir -p ~/qnx_workspace && cd qnx_workspace
 git clone https://github.com/qnx-ports/build-files.git
 git clone https://gitlab.gnome.org/GNOME/gdk-pixbuf.git
+git clone https://github.com/mesonbuild/meson.git
 
 # checkout to the latest stable
 cd gdk-pixbuf

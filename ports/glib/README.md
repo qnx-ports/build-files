@@ -26,6 +26,7 @@ Here's a detailed instruction:
 cd ~/workspace
 git clone https://github.com/qnx-ports/build-files.git
 git clone https://gitlab.gnome.org/GNOME/glib.git
+git clone https://github.com/mesonbuild/meson.git
 
 # Build the Docker image and create a container
 cd build-files/docker
