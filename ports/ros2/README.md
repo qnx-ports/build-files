@@ -55,7 +55,7 @@ vcs import src < ros2.repos
 export CPU=aarch64
 
 # Build ros2
-./scripts/build-ros2.sh
+QNX_PYTHON3_PATH=/system/bin/python3 ./scripts/build-ros2.sh
 ```
 
 After the build completes, ros2_humble.tar.gz will be created at QNX_TARGET/CPUVARDIR/ros2_humble.tar.gz
@@ -129,7 +129,7 @@ export LD_PRELOAD=$LD_PRELOAD:/usr/lib/x86_64-linux-gnu/libzstd.so
 export CPU=aarch64
 
 # Build ros2
-./scripts/build-ros2.sh
+QNX_PYTHON3_PATH=/system/bin/python3 ./scripts/build-ros2.sh
 ```
 
 # How to run tests
@@ -164,8 +164,9 @@ python3 -m ensurepip
 # Add pip to PATH
 export PATH=$PATH:/data/home/qnxuser/.local/bin
 pip3 install packaging pyyaml lark -t /data/home/qnxuser/.local/lib/python3.11/site-packages/
-export PYTHONPATH=$PYTHONPATH:/data/home/qnxuser/opt/ros/humble/usr/lib/python3.11/site-packages/:/data/home/qnxuser/.local/lib/python3.11/site-packages/
-export COLCON_PYTHON_EXECUTABLE=/system/xbin/python3
+export PYTHONPATH=$PYTHONPATH:/data/home/qnxuser/opt/ros/humble/lib/python3.11/site-packages/:/data/home/qnxuser/opt/ros/humble/usr/lib/python3.11/site-packages/:/data/home/qnxuser/.local/lib/python3.11/site-packages/
+export COLCON_PYTHON_EXECUTABLE=/system/bin/python3
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/data/home/qnxuser/opt/ros/humble/lib
 
 # Start the python3 interpretor on Raspberry Pi
 python3

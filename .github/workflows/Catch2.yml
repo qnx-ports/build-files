@@ -55,4 +55,7 @@ jobs:
         run: |
           source ~/qnx/800/qnxsdp-env.sh
           cd ~/workspace
+          cd Catch2
+          ./tools/scripts/generateAmalgamatedFiles.py
+          cd -
           make -C build-files/ports/Catch2 install
