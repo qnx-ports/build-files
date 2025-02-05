@@ -26,7 +26,9 @@ source ~/qnx800/qnxsdp-env.sh
 cd ~/qnx_workspace
 
 # Clone zstd
-git clone https://github.com/qnx-ports/zstd.git
+git clone https://github.com/facebook/zstd.git
+cd zstd
+git checkout v1.5.6
 
 # Build zstd
 SOURCE_ROOT="$(pwd)/zstd" OSLIST=nto make -C build-files/ports/zstd install -j4
@@ -38,7 +40,9 @@ SOURCE_ROOT="$(pwd)/zstd" OSLIST=nto make -C build-files/ports/zstd install -j4
 # Clone the repos
 mkdir -p ~/qnx_workspace && cd qnx_workspace
 git clone https://github.com/qnx-ports/build-files.git
-git clone https://github.com/qnx-ports/zstd.git
+git clone https://github.com/facebook/zstd.git
+cd zstd
+git checkout v1.5.6
 
 # Source SDP environment
 source ~/qnx800/qnxsdp-env.sh
