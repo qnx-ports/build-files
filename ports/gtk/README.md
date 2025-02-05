@@ -45,8 +45,8 @@ sudo apt-get install sassc libglib2.0-bin ninja-build libglib2.0-dev pkg-config
 
 # Clone the repos
 mkdir -p ~/qnx_workspace && cd qnx_workspace
-git clone https://gitlab.com/qnx/ports/build-files.git
-git clone https://gitlab.com/qnx/ports/gtk.git
+git clone https://github.com/qnx-ports/build-files.git
+git clone https://github.com/qnx-ports/gtk.git
 # Clone meson for building gtk
 git clone https://github.com/mesonbuild/meson && cd meson
 git checkout 110642dd7
