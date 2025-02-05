@@ -33,6 +33,10 @@ git submodule update --init --recursive
 cd tools/build && git apply ../../../build-files/ports/boost/tools_qnx.patch
 cd ~/qnx_workspace
 
+# Apply SA_RESTART patch to asio
+cd libs/asio && git apply ../../../build-files/ports/boost/asio_1.82.0_qnx.patch
+cd ~/qnx_workspace
+
 # Build boost
 make -C build-files/ports/boost/ install QNX_PROJECT_ROOT="$(pwd)/boost" -j4
 # If building for SDP 8.0, also set PREFIX="/usr"
@@ -52,7 +56,10 @@ cd boost
 git checkout boost-1.82.0
 git submodule update --init --recursive
 cd tools/build && git apply ../../../build-files/ports/boost/tools_qnx.patch && cd -
-cd ../
+
+# Apply SA_RESTART patch to asio
+cd libs/asio && git apply ../../../build-files/ports/boost/asio_1.82.0_qnx.patch
+cd ~/qnx_workspace
 
 # source qnxsdp-env.sh
 source ~/qnx800/qnxsdp-env.sh

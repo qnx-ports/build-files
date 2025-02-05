@@ -17,7 +17,7 @@ on:
 
 jobs:
 
-  build:
+  build-4_1_1:
     runs-on: self-hosted
     if: |
       (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
@@ -64,5 +64,115 @@ jobs:
           cd boost/tools/build
           git apply ../../../build-files/ports/boost/tools_qnx.patch
           cd ~/workspace
-          PREFIX="/usr/local" QNX_PROJECT_ROOT="$(pwd)/boost" make -C build-files/ports/boost install
-          PREFIX="/usr/local" QNX_PROJECT_ROOT="$(pwd)/gtsam" INSTALL_TESTS="false" make -C build-files/ports/gtsam install
+          echo "HEY LEO - MAKEFLAGS:"
+          echo $MAKEFLAGS
+          PREFIX="/usr/local" QNX_PROJECT_ROOT="$(pwd)/boost" make -C build-files/ports/boost install -j$(nproc)
+          PREFIX="/usr/local" QNX_PROJECT_ROOT="$(pwd)/gtsam" INSTALL_TESTS="false" make -C build-files/ports/gtsam install -j$(nproc)
+
+  build-4_3a0develop:
+    runs-on: self-hosted
+    if: |
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'gtsam'))
+    steps:
+    - name: Checkout build-files
+      uses: actions/checkout@v4
+      with:
+        path: build-files
+
+    - name: Checkout boost
+      uses: actions/checkout@v4
+      with:
+        repository: boostorg/boost
+        path: boost
+        ref: boost-1.82.0
+        submodules: recursive
+    
+    - name: Checkout gtsam
+      uses: actions/checkout@v4
+      with:
+        repository: qnx-ports/gtsam
+        path: gtsam
+        ref: 'qnx_4.3a0'
+
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v3
+      with:
+        registry: ghcr.io
+        username: ${{github.actor}}
+        password: ${{secrets.GITHUB_TOKEN}}
+
+    - name: Pull build environment
+      run: |
+        docker pull ghcr.io/qnx-ports/sdp800-build-env:latest
+
+    - name: Build gtsam
+      uses: addnab/docker-run-action@v3
+      with:
+        image: ghcr.io/qnx-ports/sdp800-build-env:latest
+        options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
+        shell: bash
+        run: |
+          source ~/qnx/800/qnxsdp-env.sh
+          cd ~/workspace
+          cd boost/tools/build
+          git apply ../../../build-files/ports/boost/tools_qnx.patch
+          cd ~/workspace
+          echo "HEY LEO - MAKEFLAGS:"
+          echo $MAKEFLAGS
+          PREFIX="/usr/local" QNX_PROJECT_ROOT="$(pwd)/boost" make -C build-files/ports/boost install -j$(nproc)
+          PREFIX="/usr/local" QNX_PROJECT_ROOT="$(pwd)/gtsam" INSTALL_TESTS="false" make -C build-files/ports/gtsam install -j$(nproc)
+
+  build-upstream:
+    runs-on: self-hosted
+    if: |
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'gtsam'))
+    steps:
+    - name: Checkout build-files
+      uses: actions/checkout@v4
+      with:
+        path: build-files
+
+    - name: Checkout boost
+      uses: actions/checkout@v4
+      with:
+        repository: boostorg/boost
+        path: boost
+        ref: boost-1.82.0
+        submodules: recursive
+    
+    - name: Checkout gtsam
+      uses: actions/checkout@v4
+      with:
+        repository: borglab/gtsam
+        path: gtsam
+        ref: 'develop'
+
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v3
+      with:
+        registry: ghcr.io
+        username: ${{github.actor}}
+        password: ${{secrets.GITHUB_TOKEN}}
+
+    - name: Pull build environment
+      run: |
+        docker pull ghcr.io/qnx-ports/sdp800-build-env:latest
+
+    - name: Build gtsam
+      uses: addnab/docker-run-action@v3
+      with:
+        image: ghcr.io/qnx-ports/sdp800-build-env:latest
+        options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
+        shell: bash
+        run: |
+          source ~/qnx/800/qnxsdp-env.sh
+          cd ~/workspace
+          cd boost/tools/build
+          git apply ~/workspace/build-files/ports/boost/tools_qnx.patch
+          cd ~/workspace
+          echo "HEY LEO - MAKEFLAGS:"
+          echo $MAKEFLAGS
+          PREFIX="/usr/local" QNX_PROJECT_ROOT="$(pwd)/boost" make -C build-files/ports/boost install -j$(nproc)
+          PREFIX="/usr/local" QNX_PROJECT_ROOT="$(pwd)/gtsam" INSTALL_TESTS="false" make -C build-files/ports/gtsam install -j$(nproc)

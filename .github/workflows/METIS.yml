@@ -1,0 +1,66 @@
+name: METIS
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/METIS.yml'
+      - 'ports/METIS/**'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/METIS.yml'
+      - 'ports/METIS/**'
+
+jobs:
+
+  build:
+    runs-on: self-hosted
+    if: |
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'METIS'))
+    steps:
+    - name: Checkout build-files
+      uses: actions/checkout@v4
+      with:
+        path: build-files
+
+    - name: Checkout GKlib
+      uses: actions/checkout@v4
+      with:
+        repository: KarypisLab/GKlib
+        path: GKlib
+        ref: 8bd6bad750b2b0d90800c632cf18e8ee93ad72d7
+        submodules: recursive
+
+    - name: Checkout METIS
+      uses: actions/checkout@v4
+      with:
+        repository: qnx-ports/METIS
+        path: METIS
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v3
+      with:
+        registry: ghcr.io
+        username: ${{github.actor}}
+        password: ${{secrets.GITHUB_TOKEN}}
+
+    - name: Pull build environment
+      run: |
+        docker pull ghcr.io/qnx-ports/sdp800-build-env:latest
+
+    - name: Build metis
+      uses: addnab/docker-run-action@v3
+      with:
+        image: ghcr.io/qnx-ports/sdp800-build-env:latest
+        options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
+        shell: bash
+        run: |
+          source ~/qnx/800/qnxsdp-env.sh
+          cd ~/workspace/GKlib
+          git apply ../build-files/ports/METIS/patches/GKlib.patch
+          cd ~/workspace
+          GKLIB_SRC="$(pwd)/GKlib" QNX_PROJECT_ROOT="$(pwd)/METIS" make -C build-files/ports/METIS install
