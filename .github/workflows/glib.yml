@@ -76,6 +76,27 @@ jobs:
       with:
         path: build-files
 
+    - name: Checkout zlib
+      uses: actions/checkout@v4
+      with:
+        repository: madler/zlib
+        path: zlib
+        ref: v1.3.1
+
+    - name: Checkout pcre2
+      uses: actions/checkout@v4
+      with:
+        repository: PCRE2Project/pcre2
+        path: pcre2
+        ref: pcre2-10.45
+
+    - name: Checkout libffi
+      uses: actions/checkout@v4
+      with:
+        repository: libffi/libffi
+        path: libffi
+        ref: v3.2.1
+
     - name: Checkout glib
       uses: actions/checkout@v4
       with:
@@ -108,4 +129,7 @@ jobs:
         run: |
           source ~/qnx/800/qnxsdp-env.sh
           cd ~/workspace
+          JLEVEL=$(nproc) QNX_PROJECT_ROOT="$(pwd)/zlib" make -C build-files/ports/zlib install
+          JLEVEL=$(nproc) QNX_PROJECT_ROOT="$(pwd)/libffi" make -C build-files/ports/libffi install
+          JLEVEL=$(nproc) QNX_PROJECT_ROOT="$(pwd)/pcre2" make -C build-files/ports/pcre2 install
           JLEVEL=$(nproc) QNX_PROJECT_ROOT="$(pwd)/glib" make -C build-files/ports/glib install
