@@ -1,5 +1,7 @@
 # glib [![Build](https://github.com/qnx-ports/build-files/actions/workflows/glib.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/glib.yml)
 
+Supports QNX7.1 and QNX8.0
+
 ## Version notice
 
 glib currently has 2 different building profiles and only one of them should be installed on both the target and host system.
