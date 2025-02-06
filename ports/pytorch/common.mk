@@ -46,10 +46,12 @@ SELECTED_OP_LIST ?=
 BUILD_TESTING ?= OFF
 TRACING_BASED ?= OFF
 
-ifeq ($(strip $(notdir $(QNX_TARGET))),qnx7)
-PYTORCH_VERSION = 1.7.1
 
-BUILD_TEST=OFF
+ifeq ($(strip $(notdir $(QNX_TARGET))),qnx7)
+SDP = 7.1
+PYTORCH_VERSION = 1.13.0
+
+BUILD_TEST=$(BUILD_TESTING)
 BUILD_MOBILE_TEST=$(BUILD_TESTING)
 BUILD_MOBILE_BENCHMARK=$(BUILD_TESTING)
 
@@ -57,6 +59,7 @@ ifneq ($(wildcard $(foreach dir,$(LIBVPATH),$(dir)/libregex.so)),)
 LDFLAGS += -lregex
 endif
 else
+SDP = 8.0
 PYTORCH_VERSION = 2.3.1
 
 BUILD_TEST=$(BUILD_TESTING)
@@ -129,6 +132,7 @@ MAKE_ARGS ?= -j $(firstword $(JLEVEL) 1)
 
 pytorch_mobile_all: sleef_host_tools_all protobuf_host_install
 	echo "make pytorch_mobile_all  $(NTO_DIR_NAME)"
+	echo "Building for PyTorch v${PYTORCH_VERSION} ON SDP ${SDP}."
 	mkdir -p build && \
 	cd build && \
 	cmake 	"${QNX_PROJECT_ROOT}" \
