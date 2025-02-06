@@ -27,8 +27,10 @@ INSTALL_ROOT ?= $(INSTALL_ROOT_$(OS))
 #CMake config modules, etc.). Default is /usr/local
 PREFIX ?= /usr/local
 
-#choose Release or Debug
-CMAKE_BUILD_TYPE ?= Release
+#### Set up default target (QNX-specific) 
+#Overriding `all` bypasses built-in qnx stuff.
+ALL_DEPENDENCIES = RetroArch_all
+.PHONY: RetroArch_all install check clean test clean-staging
 
 ifndef CPUDIR
 $(error No CPU selection detected.)
@@ -63,11 +65,9 @@ CONFIGURE_OPTS= --host="$(PLATFORM)-nto-qnx8.0.0-"\
 				--bindir=$(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/bin \
               	--sysconfdir=$(QNX_TARGET)/etc
 
+#################################################################################
 include $(MKFILES_ROOT)/qtargets.mk
-
-#override 'all' target to bypass the default QNX build system
-.PHONY: RetroArch_all install check clean
-.DEFAULT_GOAL := RetroArch_all
+#################################################################################
 
 MAKE_ARGS ?= -j $(firstword $(JLEVEL) 1) 
 
@@ -82,8 +82,18 @@ RetroArch_all:
 install check: RetroArch_all
 	@echo Installing...
 	@cd build && make VERBOSE=1 install $(MAKE_ARGS)
+	@mkdir -p $(PRODUCT_ROOT)/staging/$(CPUDIR)/bin/
+	@mkdir -p $(PRODUCT_ROOT)/staging/$(CPUDIR)/etc/
+	@mkdir -p $(PRODUCT_ROOT)/staging/$(CPUDIR)/lib/
+	-cp $(QNX_TARGET)/$(CPUVARDIR)/usr/lib/libxkbcommon* $(PRODUCT_ROOT)/staging/$(CPUDIR)/lib/
+	@cp build/retroarch $(PRODUCT_ROOT)/staging/$(CPUDIR)/ 
+	@cp build/retroarch.cfg $(PRODUCT_ROOT)/staging/$(CPUDIR)/etc/ 
 	@echo Done.
 
 clean iclean spotless:
-	rm -rf build
+	@rm -rf build
+
+clean-staging: clean
+	@rm -rf $(PRODUCT_ROOT)/staging/$(CPUDIR)
+
 endif

@@ -19,7 +19,12 @@ make install
 
 ##########################################################################################
 ### Build Emulation Station
-# Dependancies
+# Dependencies:
+# SDL
+# FreeImage
+# RapidJson
+#
+#
 
 # Main Build
 cd ${TOP_LEVEL_BUILD_DIR}/EmulationStation

@@ -18,7 +18,7 @@ ALL_DEPENDENCIES = SDL_all
 
 #### LD Flags and global C/C++ Flags
 FLAGS   += -g -D_QNX_SOURCE
-LDFLAGS += -Wl
+LDFLAGS += -Wl 
 
 #^ Setup pre-target decision. 
 ##################################################
@@ -80,7 +80,7 @@ CFLAGS +=   -I$(INSTALL_ROOT)/$(PREFIX)/include \
 			$(FLAGS)
 
 #### configure options
-CONFIGURE_OPTS=	--prefix=$(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX) \
+CONFIGURE_OPTS=	--prefix=$(pwd)/dist \
 				--exec-prefix=$(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX) \
 				--libdir=$(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib \
 				--bindir=$(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/bin \
@@ -89,13 +89,21 @@ CONFIGURE_OPTS=	--prefix=$(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX) \
 
 CONFIGURE_PREOPTS= CC=$(QNX_HOST)/usr/bin/qcc \
 				   CXX=$(QNX_HOST)/usr/bin/q++ \
-
-
-#				   LD=$(HOST_DETECT)-ld \
+				   LD=$(HOST_DETECT)-ld \
 				   CFLAGS="-D_QNX_SOURCE -std=c17 -V$(V_OPT) $(FLAGS)"\
 				   CXXFLAGS="-D_QNX_SOURCE -std=c++17 -V$(V_OPT)_cxx -Wno-deprecated-definitions $(FLAGS)"\
 				   LDFLAGS=$(LDFLAGS) \
 				   CPPFLAGS="-D_QNX_SOURCE $(CPPFLAGS)"\
+
+TEST_CONFIGURE_PREOPS= 	CC=$(QNX_HOST)/usr/bin/qcc \
+				  	 	CXX=$(QNX_HOST)/usr/bin/q++ \
+				   		LD=$(HOST_DETECT)-ld \
+						CFLAGS="-D_QNX_SOURCE -std=c17 -V$(V_OPT) $(FLAGS) -I$(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/include"\
+						CXXFLAGS="-D_QNX_SOURCE -std=c++17 -V$(V_OPT)_cxx -Wno-deprecated-definitions $(FLAGS)"\
+						CPPFLAGS="-D_QNX_SOURCE $(CPPFLAGS)"\
+						LDFLAGS="-L$(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib" \
+						PKG_CONFIG_LIBDIR="$(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib"
+
 
 MAKE_ARGS ?= -j $(firstword $(JLEVEL) 1) VERBOSE=1
 
@@ -117,18 +125,43 @@ SDL_all:
 	@cd build && $(QNX_PROJECT_ROOT)/configure --host=$(HOST_DETECT) --disable-pulseaudio
 	@cd build && make $(MAKE_ARGS)
 
-#Unfortunately 2.0.5's 
+#Unfortunately 2.0.5's install script is not viable for QNX.
+#	@mkdir -p $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/pkgconfig/
+#	@mkdir -p $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/cmake/
+#	@mkdir -p $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/SDL/
+#	@cp build/build/libSDL*.a $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/
+#	@cp build/build/.libs/libSDL* $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/
+# 	@cp build/include/SDL_config.h  $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/SDL/
+#	@cp build/*.pc $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/pkgconfig/
+#	@cp build/*.cmake $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/cmake/
 install: SDL_all
 	@echo Installing...
-	@cd build && make $(MAKE_ARGS) install
+	@mkdir -p $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/pkgconfig/
+	@mkdir -p $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/cmake/
+	@mkdir -p $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/SDL/
+	@cp build/build/libSDL*.a $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/
+	@cp build/build/.libs/libSDL* $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/
+	@cp build/include/SDL_config.h  $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/SDL/
+	@sed -i s+prefix=.*+prefix=$(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)+ build/sdl2.pc
+	@cp build/*.pc $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/pkgconfig/
+	@cp build/*.cmake $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/cmake/
 	@echo Done!
 
 test check: install
 	@mkdir -p build_test 
-	@cd build_test && $(CONFIGURE_PREOPTS) $(QNX_PROJECT_ROOT)/test/configure --host=$(HOST_DETECT)
-	@cd build_test &&  make $(MAKE_ARGS)
+	@cd build_test && $(TEST_CONFIGURE_PREOPTS) $(QNX_PROJECT_ROOT)/test/configure --host=$(HOST_DETECT) $(CONFIGURE_OPTS)
+	@make -i $(MAKE_ARGS) -C build_test
+	@mkdir -p staging/tests
+	@mkdir -p staging/lib
+	-cp build_test/tests* staging/test
+	-cp $(PROJECT_ROOT)/run_tests.sh staging
+	-cp build/build/libSDL*.a staging/lib
+	-cp build/build/.libs/libSDL* staging/lib
+	@echo "Test Setup Staged in $(pwd)/staging !"
+	@echo "Copy to target with scp staging <user>@<ip-addr>:/testing/dir/path"
 
 clean:
-	rm -rf build
-	rm -rf build_test
+	-rm -rf build
+	-rm -rf build_test
+	-rm -rf staging
 endif
