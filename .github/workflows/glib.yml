@@ -17,7 +17,7 @@ on:
 
 jobs:
 
-  build:
+  build-qnx-ports:
     runs-on: self-hosted
     if: |
       (github.event_name == 'workflow_dispatch') ||
@@ -63,3 +63,49 @@ jobs:
           /usr/local/qnx/env/bin/meson setup build-qnx$QNX_VERSION --cross-file ../build-files/resources/meson/aarch64le/workflows/qnx800.ini -Dprefix=/usr -Dxattr=false
           /usr/local/qnx/env/bin/meson compile -C build-qnx$QNX_VERSION
           DESTDIR=/home/runner/workspace/output /usr/local/qnx/env/bin/meson install --no-rebuild -C build-qnx$QNX_VERSION
+
+  build-glib-main:
+    runs-on: self-hosted
+    if: |
+      (github.event_name == 'workflow_dispatch') ||
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'glib'))
+    steps:
+    - name: Checkout build-files
+      uses: actions/checkout@v4
+      with:
+        path: build-files
+
+    - name: Checkout glib
+      uses: actions/checkout@v4
+      with:
+        repository: GNOME/glib
+        path: glib
+
+    - name: Checkout glib
+      uses: actions/checkout@v4
+      with:
+        repository: mesonbuild/meson
+        path: meson
+
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v3
+      with:
+        registry: ghcr.io
+        username: ${{github.actor}}
+        password: ${{secrets.GITHUB_TOKEN}}
+
+    - name: Pull build environment
+      run: |
+        docker pull ghcr.io/qnx-ports/sdp800-build-env:latest
+
+    - name: Build glib
+      uses: addnab/docker-run-action@v3
+      with:
+        image: ghcr.io/qnx-ports/sdp800-build-env:latest
+        options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
+        shell: bash
+        run: |
+          source ~/qnx/800/qnxsdp-env.sh
+          cd ~/workspace
+          JLEVEL=$(nproc) QNX_PROJECT_ROOT="$(pwd)/glib" make -C build-files/ports/glib install

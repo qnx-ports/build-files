@@ -1,5 +1,56 @@
 # glib [![Build](https://github.com/qnx-ports/build-files/actions/workflows/glib.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/glib.yml)
 
+## Version notice
+
+glib currently has 2 different building profiles and only one of them should be installed on both the target and host system.
+
+# glib (main) for QNX (Recommanded)
+
+**NOTE**: currently both x86_64 and aarch64le are supported
+
+Current these versions are tested:
++ main
+
+See test reports in `tests/`. They remain the same as the other version
+
+## Dependencies notice
+
+
+To compile this library, you need the following packages installed:
++ [`zlib`](https://github.com/qnx-ports/build-files/edit/main/ports/zlib)
++ [`pcre2`](https://github.com/qnx-ports/build-files/edit/main/ports/pcre2)
++ [`libffi`](https://github.com/qnx-ports/build-files/edit/main/ports/libffi)
+
+**NOTE**: QNX ports are only supported from a Linux host operating system. Set `INSTALL_ROOT` enviroment variable to specify which directory glib will be installed to, make sure all dependencies and glib have the same `INSTALL_ROOT` variable.
+
+Use `$(nproc)` instead of `4` after `JLEVEL=` and `-j` if you want to use the maximum number of cores to build this project.
+32GB of RAM is recommended for using `JLEVEL=$(nproc)` or `-j$(nproc)`.
+
+## Compile the port for QNX
+
+
+Optional pre-requisite: Install Docker on Ubuntu https://docs.docker.com/engine/install/ubuntu/
+```bash
+# Create a workspace
+mkdir -p ~/qnx_workspace && cd ~/qnx_workspace
+git clone https://github.com/qnx-ports/build-files.git
+git clone https://gitlab.gnome.org/GNOME/glib.git
+
+# Optionally build the Docker image and create a container
+cd build-files/docker
+./docker-build-qnx-image.sh
+./docker-create-container.sh
+
+# set enviroment variables
+cd ~/qnx_workspace
+source ~/qnx800/qnxsdp-env.sh
+
+# Build glib
+QNX_PROJECT_ROOT="$(pwd)/glib" JLEVEL=4 make -C build-files/ports/glib install
+```
+
+# glib for QNX
+
 **NOTE**: currently only aarch64le is supported.
 
 Current these versions are tested:
