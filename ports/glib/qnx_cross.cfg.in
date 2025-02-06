@@ -16,7 +16,7 @@ c_link_args = ['-lm', '-lsocket', '-lgcc_s']
 [properties]
 growing_stack = false
 # pkg-config settings
-pkg_config_libdir = qnx_install_dir + '/lib/pkgconfig'
+pkg_config_libdir = [qnx_install_dir + '/lib/pkgconfig', qnx_install_dir + '/share/pkgconfig']
 
 [binaries]
 c = [qnx_host_dir + '/usr/bin/' + target + '-gcc']
