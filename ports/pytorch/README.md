@@ -18,6 +18,7 @@ cd build-files/docker
 
 # Note, v2.3.1 supports SDP 8.0, v1.13.0 supports SDP 7.1
 VERSION=v2.3.1
+BASELINE=~/qnx800
 
 # Now you are in the Docker container
 
@@ -32,8 +33,7 @@ pip install -r requirements.txt
 # Init submodules
 git submodule update --init --recursive
 
-# source qnxsdp-env.sh in
-source ~/qnx800/qnxsdp-env.sh
+source $BASELINE/qnxsdp-env.sh
 
 # Apply third_party patches
 cd ~/qnx_workspace/build-files/ports/pytorch
@@ -54,6 +54,7 @@ git clone https://github.com/qnx-ports/build-files.git
 
 # Note, v2.3.1 supports SDP 8.0, v1.13.0 supports SDP 7.1
 VERSION=v2.3.1
+BASELINE=~/qnx800
 
 # Clone pytorch
 cd ~/qnx_workspace
@@ -68,8 +69,7 @@ pip install -r requirements.txt
 # Init submodules
 git submodule update --init --recursive
 
-# source qnxsdp-env.sh in
-source ~/qnx800/qnxsdp-env.sh
+source $BASELINE/qnxsdp-env.sh
 
 # Apply third_party patches
 cd ~/qnx_workspace/build-files/ports/pytorch
