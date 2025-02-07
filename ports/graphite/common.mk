@@ -5,9 +5,7 @@ include $(QCONFIG)
 
 include $(MKFILES_ROOT)/qmacros.mk
 
-NAME = brotli
-
-BROTLI_VERSION = 1.1.0
+NAME=graphite
 
 QNX_PROJECT_ROOT ?= $(PRODUCT_ROOT)/../../
 
@@ -28,11 +26,18 @@ PREFIX ?= /usr/local
 #choose Release or Debug
 CMAKE_BUILD_TYPE ?= Release
 
-#override 'all' target to bypass the default QNX build system
-ALL_DEPENDENCIES = brotli_all
-.PHONY: brotli_all install check clean
+ALL_DEPENDENCIES = $(NAME)_all
+.PHONY: $(NAME)_all install check clean
+
+CFLAGS += $(FLAGS)
+
+#Define _QNX_SOURCE for LLVM libc++ on QNX 7
+CFLAGS += -D_QNX_SOURCE
+LDFLAGS += -Wl,--build-id=md5
 
 include $(MKFILES_ROOT)/qtargets.mk
+
+BUILD_TESTING ?= OFF
 
 #Search paths for all of CMake's find_* functions --
 #headers, libraries, etc.
@@ -52,11 +57,7 @@ CMAKE_MODULE_PATH := $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/cmake;$(INSTALL_RO
 #Headers from INSTALL_ROOT need to be made available by default
 #because CMake and pkg-config do not necessary add it automatically
 #if the include path is "default"
-CFLAGS += $(FLAGS) -I$(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/include \
-                   -I$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/include \
-                   -fPIC
-                    
-LDFLAGS += -Wl,--build-id=md5 -Wl,--allow-shlib-undefined -fPIC
+CFLAGS += -I$(INSTALL_ROOT)/$(PREFIX)/include -I$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/include
 
 CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DCMAKE_SYSTEM_PROCESSOR_ENDIAN=$(CPUVARDIR) \
@@ -75,13 +76,12 @@ CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
 
 MAKE_ARGS ?= -j $(firstword $(JLEVEL) 1)
 
-ifndef NO_TARGET_OVERRIDE
-brotli_all:
+$(NAME)_all:
 	@mkdir -p build
-	cd build && cmake $(CMAKE_ARGS) $(QNX_PROJECT_ROOT)
+	@cd build && cmake $(CMAKE_ARGS) $(QNX_PROJECT_ROOT)
 	@cd build && make VERBOSE=1 all $(MAKE_ARGS)
 
-install check: brotli_all
+install check: $(NAME)_all
 	@echo Installing...
 	@cd build && make VERBOSE=1 install $(MAKE_ARGS)
 	@echo Done.
@@ -90,4 +90,4 @@ clean iclean spotless:
 	rm -rf build
 
 uninstall:
-endif
+
