@@ -56,8 +56,8 @@ jobs:
         export BUILD_PYTORCH_MOBILE_WITH_HOST_TOOLCHAIN=1
         BUILD_TESTING=ON BUILD_LITE_INTERPRETER=ON QNX_PROJECT_ROOT="$(pwd)/pytorch" make -C build-files/ports/pytorch install 
 
-  build-1.7.1:
-    runs-on: ubuntu-22.04-common
+  build-1_13_0:
+    runs-on: self-hosted
     if: |
       false && (
       (github.event_name == 'workflow_dispatch') ||
@@ -75,7 +75,7 @@ jobs:
       with:
         repository: qnx-ports/pytorch
         path: pytorch
-        ref: qnx_v1.7.1
+        ref: qnx_v1.13.0
         submodules: recursive
 
     - name: Build pytorch
@@ -87,7 +87,7 @@ jobs:
         cd pytorch
         pip install -r requirements.txt
         cd $WORKSPACE/build-files/ports/pytorch
-        ./scripts/v1.7.1/patch.sh $(pwd)/patches/v1.7.1 $WORKSPACE/pytorch
+        ./scripts/v1.13.0/patch.sh $(pwd)/patches/v1.13.0 $WORKSPACE/pytorch
         cd $WORKSPACE
         export BUILD_PYTORCH_MOBILE_WITH_HOST_TOOLCHAIN=1
         BUILD_TESTING=ON BUILD_LITE_INTERPRETER=ON BUILD_CAFFE2=OFF BUILD_PYTHON=OFF QNX_PROJECT_ROOT="$(pwd)/pytorch" make -C build-files/ports/pytorch install 
