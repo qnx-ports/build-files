@@ -1,11 +1,12 @@
 # Build Files for QNX Ports
 
-This repository provides **QNX-specific build files** required to build various ports and projects.
+This repository provides QNX-specific build files required to build various ports and projects.
 
-## Structure
+**Each QNX port has its own sub-directory under the `ports/` directory.**
 
-- Each QNX port has its own sub-directory under the `ports/` directory.
-- For detailed build instructions, refer to the `README.md` file located in the sub-directory of the specific port.
+**For build instructions, refer to the `README.md` file located in the sub-directory of the specific port.**
+
+Some open-source projects build without requiring modifications, so they don’t have a dedicated fork at https://github.com/qnx-ports/.
 
 ## Building the Ports
 
@@ -19,6 +20,8 @@ You have two options for building the ports:
    You can build ports directly on your host system.
 
 ## Port Status
+
+Click on a port below to navigate to its `README.md` for build and test instructions.
 
 | Port | Status |
 |----------|--------|
@@ -87,4 +90,4 @@ You have two options for building the ports:
 
 
 ---
-	
+
