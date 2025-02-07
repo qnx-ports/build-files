@@ -1,0 +1,59 @@
+name: bzip2
+ 
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/bzip2.yml'
+      - 'ports/bzip2/**'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/bzip2.yml'
+      - 'ports/bzip2/**'
+
+jobs:
+ 
+  build:
+    runs-on: self-hosted
+    if: |
+      (github.event_name == 'workflow_dispatch') ||
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'bzip2'))
+    steps:
+    - name: Checkout build-files
+      uses: actions/checkout@v4
+      with:
+        path: build-files
+ 
+    - name: Checkout bzip2
+      uses: actions/checkout@v4
+      with:
+        repository: libarchive/bzip2
+        path: bzip2
+        ref: bzip2-1.0.8
+ 
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v3
+      with:
+        registry: ghcr.io
+        username: ${{github.actor}}
+        password: ${{secrets.GITHUB_TOKEN}}
+ 
+    - name: Pull build environment
+      run: |
+        docker pull ghcr.io/qnx-ports/sdp800-build-env:latest
+ 
+    - name: Build bzip2
+      uses: addnab/docker-run-action@v3
+      with:
+        image: ghcr.io/qnx-ports/sdp800-build-env:latest
+        options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
+        shell: bash
+        run: |
+          source ~/qnx/800/qnxsdp-env.sh
+          cd ~/workspace
+          QNX_PROJECT_ROOT="$(pwd)/bzip2" JLEVEL=$(nproc) make -C build-files/ports/bzip2 install
