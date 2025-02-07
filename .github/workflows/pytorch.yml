@@ -67,7 +67,7 @@ jobs:
           export BUILD_PYTORCH_MOBILE_WITH_HOST_TOOLCHAIN=1
           BUILD_TESTING=ON BUILD_LITE_INTERPRETER=ON QNX_PROJECT_ROOT="$(pwd)/pytorch" make -C build-files/ports/pytorch install 
 
-  build-1_7_1:
+  build-1_13_0:
     runs-on: self-hosted
     if: |
       false && (
@@ -86,7 +86,7 @@ jobs:
       with:
         repository: qnx-ports/pytorch
         path: pytorch
-        ref: qnx_v1.7.1
+        ref: qnx_v1.13.0
         submodules: recursive
 
     - name: Login to GitHub Container Registry
@@ -114,7 +114,7 @@ jobs:
           cd pytorch
           pip install -r requirements.txt
           cd $WORKSPACE/build-files/ports/pytorch
-          ./scripts/v1.7.1/patch.sh $(pwd)/patches/v1.7.1 $WORKSPACE/pytorch
+          ./scripts/v1.13.0/patch.sh $(pwd)/patches/v1.13.0 $WORKSPACE/pytorch
           cd $WORKSPACE
           export BUILD_PYTORCH_MOBILE_WITH_HOST_TOOLCHAIN=1
           BUILD_TESTING=ON QNX_PROJECT_ROOT="$(pwd)/pytorch" make -C build-files/ports/pytorch install 
