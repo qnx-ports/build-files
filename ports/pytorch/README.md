@@ -16,25 +16,28 @@ cd build-files/docker
 ./docker-build-qnx-image.sh
 ./docker-create-container.sh
 
-# Now you are in the Docker container
+# Note, v2.3.1 supports SDP 8.0, v1.13.0 supports SDP 7.1
+VERSION=v2.3.1
 
-# source qnxsdp-env.sh in
-source ~/qnx800/qnxsdp-env.sh
+# Now you are in the Docker container
 
 # Clone pytorch
 cd ~/qnx_workspace
-git clone https://github.com/qnx-ports/pytorch.git
+git clone https://github.com/qnx-ports/pytorch.git && cd pytorch
+git checkout qnx_$VERSION
 
 # Install pip dependencies
-cd ~/qnx_workspace/pytorch
 pip install -r requirements.txt
 
 # Init submodules
 git submodule update --init --recursive
 
+# source qnxsdp-env.sh in
+source ~/qnx800/qnxsdp-env.sh
+
 # Apply third_party patches
 cd ~/qnx_workspace/build-files/ports/pytorch
-./scripts/v2.3.1/patch.sh $(pwd)/patches/v2.3.1 ~/qnx_workspace/pytorch
+./scripts/$VERSION/patch.sh $(pwd)/patches/$VERSION ~/qnx_workspace/pytorch
 
 # Build pytorch mobile w/ lite interpreter
 cd ~/qnx_workspace
@@ -49,14 +52,17 @@ BUILD_TESTING=ON BUILD_LITE_INTERPRETER=ON QNX_PROJECT_ROOT="$(pwd)/pytorch" mak
 mkdir -p ~/qnx_workspace && cd ~/qnx_workspace
 git clone https://github.com/qnx-ports/build-files.git
 
+# Note, v2.3.1 supports SDP 8.0, v1.13.0 supports SDP 7.1
+VERSION=v2.3.1
+
 # Clone pytorch
 cd ~/qnx_workspace
-git clone https://github.com/qnx-ports/pytorch.git
+git clone https://github.com/qnx-ports/pytorch.git && cd pytorch
+git checkout qnx_$VERSION
 
 # Create a python virtual environment and install necessary packages
 python3.11 -m venv env
 source env/bin/activate
-cd ~/qnx_workspace/pytorch
 pip install -r requirements.txt
 
 # Init submodules
@@ -67,7 +73,7 @@ source ~/qnx800/qnxsdp-env.sh
 
 # Apply third_party patches
 cd ~/qnx_workspace/build-files/ports/pytorch
-./scripts/v2.3.1/patch.sh $(pwd)/patches/v2.3.1 ~/qnx_workspace/pytorch
+./scripts/$VERSION/patch.sh $(pwd)/patches/$VERSION ~/qnx_workspace/pytorch
 
 # Build pytorch mobile w/ lite interpreter
 cd ~/qnx_workspace
@@ -87,6 +93,7 @@ USE_LIGHTWEIGHT_DISPATCH=<ON|OFF> # Note, build will not succeed without setting
 ## Run tests
 
 **NOTE** There are other test binaries but they require you to do a custom build with the options specified above.
+**NOTE** The v1.13.0 build enables some benchmarks as well.
 
 Move files to the target (note, mDNS is configured from /boot/qnx_config.txt and
 uses qnxpi.local by default):
@@ -94,10 +101,7 @@ uses qnxpi.local by default):
 TARGET_HOST=<target-ip-address-or-hostname>
 
 scp ~/qnx_workspace/build-files/ports/pytorch/nto-aarch64-le/build/bin/*_test qnxuser@$TARGET_HOST:/data/home/qnxuser/bin
-scp ~/qnx_workspace/build-files/ports/pytorch/nto-aarch64-le/build/lib/libc10.so qnxuser@$TARGET_HOST:/data/home/qnxuser/lib
-scp ~/qnx_workspace/build-files/ports/pytorch/nto-aarch64-le/build/lib/libtorch_cpu.so qnxuser@$TARGET_HOST:/data/home/qnxuser/lib
-scp ~/qnx_workspace/build-files/ports/pytorch/nto-aarch64-le/build/lib/libtorch_global_deps.so qnxuser@$TARGET_HOST:/data/home/qnxuser/lib
-scp ~/qnx_workspace/build-files/ports/pytorch/nto-aarch64-le/build/lib/libtorch.so qnxuser@$TARGET_HOST:/data/home/qnxuser/lib
+scp ~/qnx_workspace/build-files/ports/pytorch/nto-aarch64-le/build/lib/*.so* qnxuser@$TARGET_HOST:/data/home/qnxuser/lib
 ```
 
 Run unit tests on the target.
@@ -106,6 +110,10 @@ Run unit tests on the target.
 # ssh into the target
 ssh qnxuser@$TARGET_HOST
 
+login root
+
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/data/home/qnxuser/lib
+
 # Run tests
 cd /data/home/qnxuser/bin
 for test in $(ls | grep _test) ; do
@@ -113,7 +121,20 @@ for test in $(ls | grep _test) ; do
 done
 ```
 
-Known lite interpreter test failures:
+Known lite interpreter test failures for PyTorch v2.3.1 on SDP 8.0:
 ```
 typeid_test - CtorDtorAndCopy (aborts)
+```
+
+Known lite interpreter test failures for PyTorch v1.13.0 on SDP 7.1:
+```
+./c10_typeid_test
+[ RUN      ] TypeMetaTest.Names
+/home/eleir/gh_workspace/pytorch/c10/test/util/typeid_test.cpp:32: Failure
+Expected equality of these values:
+  "nullptr (uninitialized)"
+    Which is: 3138b430d0
+  null_meta.name()
+    Which is: {}
+[  FAILED  ] TypeMetaTest.Names (21 ms)
 ```

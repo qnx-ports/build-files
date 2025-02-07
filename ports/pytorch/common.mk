@@ -54,10 +54,6 @@ PYTORCH_VERSION = 1.13.0
 BUILD_TEST=$(BUILD_TESTING)
 BUILD_MOBILE_TEST=$(BUILD_TESTING)
 BUILD_MOBILE_BENCHMARK=$(BUILD_TESTING)
-
-ifneq ($(wildcard $(foreach dir,$(LIBVPATH),$(dir)/libregex.so)),)
-LDFLAGS += -lregex
-endif
 else
 SDP = 8.0
 PYTORCH_VERSION = 2.3.1
