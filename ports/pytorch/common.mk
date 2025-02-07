@@ -28,7 +28,7 @@ CMAKE_BUILD_TYPE ?= Release
 ALL_DEPENDENCIES = pytorch_mobile_all
 .PHONY: pytorch_mobile_all pytorch_mobile_all_clean sleef_host_tools_all sleef_host_tools_clean protobuf_host_install protobuf_host_tools_clean
 
-FLAGS   += -g -D_QNX_SOURCE -D__QNXNTO__
+FLAGS   += -D_QNX_SOURCE -D__QNXNTO__
 LDFLAGS += -Wl,--build-id=md5 -lang-c++
 
 include $(MKFILES_ROOT)/qtargets.mk
