@@ -31,9 +31,8 @@ jobs:
       with:
         path: build-files
 
-    - name: Download SDP 8.0
+    - name: Prepare QNX Software Center
       env:
-        LICENSE_KEY: ${{ secrets.LICENSE_KEY }}
         MYQNX_USER: ${{ secrets.MYQNX_USER }}
         MYQNX_PASSWORD: ${{ secrets.MYQNX_PASSWORD }}
       run: |
@@ -43,11 +42,31 @@ jobs:
         curl -v -L --cookie ${{ github.workspace }}/.qnx/myqnxcookies.auth https://www.qnx.com/download/download/77351/qnx-setup-2.0.3-202408131717-linux.run > qnx-setup-lin.run
         chmod a+x qnx-setup-lin.run
         ./qnx-setup-lin.run force-override disable-auto-start agree-to-license-terms ${{ github.workspace }}/qnx
-        echo "Installing License ..."
-        ${{ github.workspace }}/qnx/qnxsoftwarecenter/qnxsoftwarecenter_clt -syncLicenseKeys -myqnx.user="$MYQNX_USER" -myqnx.password="$MYQNX_PASSWORD" -addLicenseKey $LICENSE_KEY
+
+    - name: Download SDP 7.1
+      env:
+        SDP710_LICENSE_KEY: ${{ secrets.SDP710_LICENSE_KEY }}
+        MYQNX_USER: ${{ secrets.MYQNX_USER }}
+        MYQNX_PASSWORD: ${{ secrets.MYQNX_PASSWORD }}
+      run: |
+        echo "Installing SDP 7.1 License ..."
+        ${{ github.workspace }}/qnx/qnxsoftwarecenter/qnxsoftwarecenter_clt -syncLicenseKeys -myqnx.user="$MYQNX_USER" -myqnx.password="$MYQNX_PASSWORD" -addLicenseKey $SDP710_LICENSE_KEY
         cp -r ~/.qnx/license ${{ github.workspace }}/.qnx
-        echo "Downloading QNX SDP ..."
+        echo "Downloading QNX SDP 7.1 ..."
+        ${{ github.workspace }}/qnx/qnxsoftwarecenter/qnxsoftwarecenter_clt -mirror -cleanInstall -destination ${{ github.workspace }}/qnx/710 -installBaseline com.qnx.qnx710 -myqnx.user="$MYQNX_USER" -myqnx.password="$MYQNX_PASSWORD"
+
+    - name: Download SDP 8.0
+      env:
+        SDP800_LICENSE_KEY: ${{ secrets.SDP800_LICENSE_KEY }}
+        MYQNX_USER: ${{ secrets.MYQNX_USER }}
+        MYQNX_PASSWORD: ${{ secrets.MYQNX_PASSWORD }}
+      run: |
+        echo "Installing SDP 8.0 License ..."
+        ${{ github.workspace }}/qnx/qnxsoftwarecenter/qnxsoftwarecenter_clt -syncLicenseKeys -myqnx.user="$MYQNX_USER" -myqnx.password="$MYQNX_PASSWORD" -addLicenseKey $SDP800_LICENSE_KEY
+        cp -r ~/.qnx/license ${{ github.workspace }}/.qnx
+        echo "Downloading QNX SDP 8.0 ..."
         ${{ github.workspace }}/qnx/qnxsoftwarecenter/qnxsoftwarecenter_clt -mirror -cleanInstall -destination ${{ github.workspace }}/qnx/800 -installBaseline com.qnx.qnx800 -myqnx.user="$MYQNX_USER" -myqnx.password="$MYQNX_PASSWORD"
+
 
     - name: Login to GitHub Container Registry
       uses: docker/login-action@v3
