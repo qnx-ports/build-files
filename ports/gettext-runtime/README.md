@@ -33,7 +33,7 @@ source ~/qnx800/qnxsdp-env.sh
 cd ~/qnx_workspace
 
 # Build gettext-runtime
-QNX_PROJECT_ROOT="$(pwd)/gettext-1.18/gettext-runtime" JLEVEL=4 make -C build-files/ports/gettext-runtime install
+QNX_PROJECT_ROOT="$(pwd)/gettext-0.23.1/gettext-runtime" JLEVEL=4 make -C build-files/ports/gettext-runtime install
 ```
 
 # Deploy binaries via SSH

@@ -47,7 +47,7 @@ jobs:
         options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
         shell: bash
         run: |
-          wget https://ftp.gnu.org/pub/gnu/libiconv/libiconv-1.18.tar.gz && tar -xf libiconv-1.18.tar.gz
           source ~/qnx/800/qnxsdp-env.sh
           cd ~/workspace
-          QNX_PROJECT_ROOT="$(pwd)/libiconv-1.18" JLEVEL=$(nproc) make -C build-files/ports/libiconv clean install
+          wget https://ftp.gnu.org/pub/gnu/libiconv/libiconv-1.18.tar.gz && tar -xf libiconv-1.18.tar.gz
+          QNX_PROJECT_ROOT="$(pwd)/libiconv-1.18" JLEVEL=$(nproc) make -C build-files/ports/libiconv/clean install
