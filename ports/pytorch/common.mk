@@ -132,7 +132,6 @@ pytorch_mobile_all: sleef_host_tools_all protobuf_host_install
 	mkdir -p build && \
 	cd build && \
 	cmake 	"${QNX_PROJECT_ROOT}" \
-		-DCMAKE_BUILD_TYPE=Release \
 		${CMAKE_ARGS} \
 		${PYTORCH_BUILD_FLAGS} \
 		-DCMAKE_PREFIX_PATH=$(PREFIX_PATH) \
