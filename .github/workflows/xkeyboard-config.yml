@@ -56,6 +56,7 @@ jobs:
         run: |
           cd workspace
           source ~/qnx/800/qnxsdp-env.sh
+          export PATH=$PATH:/usr/local/qnx/env/bin 
           cd xkeyboard-config
           meson setup build --prefix=/usr
           meson compile -C build/
