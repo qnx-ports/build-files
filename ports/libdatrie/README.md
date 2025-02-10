@@ -46,5 +46,5 @@ ssh $TARGET_USER@$TARGET_IP_ADDRESS "mkdir -p ~/lib"
 ````
 
 # Tests
-Tests are available, but currently there is no easy way to run them on a QNX target system. Therefore the results will be provided instead in `tests.result`
+Tests are available, but currently there is no easy way to run them on a QNX target system. Therefore the results will be provided in `tests.result`
 Currently all tests are passed.
