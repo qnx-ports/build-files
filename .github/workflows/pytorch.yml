@@ -59,11 +59,9 @@ jobs:
   build-1_13_0:
     runs-on: self-hosted
     if: |
-      false && (
       (github.event_name == 'workflow_dispatch') ||
       (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
       (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'pytorch'))
-      )
     steps:
     - name: Checkout build-files
       uses: actions/checkout@v4
