@@ -4,7 +4,7 @@ Supports QNX7.1 and QNX8.0
 
 ## QNX Software Center (QSC) compatibility warning
 
-It is very likely that another version of these binaries are shipped with the QNX image by QSC, hence installation of this library might introduce linking conflicts at runtime. Double check which version of it is linked when cross compiling your software and make sure the proper `LD_LIBRARY_PATH` is set for the dynamic linker to work properly.
+It is very likely that another version of these binaries are shipped with the QNX image by QSC, hence installation of this library might introduce linking conflicts at runtime. Double check which version of it was linked when cross compiling your software and make sure the proper `LD_LIBRARY_PATH` is set for the dynamic linker to work properly.
 
 **NOTE**: QNX ports are only supported from a Linux host operating system
 
