@@ -96,12 +96,12 @@ jobs:
 
     - name: Pull build environment
       run: |
-        docker pull ghcr.io/qnx-ports/sdp710-build-env:latest
+        docker pull ghcr.io/qnx-ports/sdp800-build-env:latest
 
     - name: Build pytorch
       uses: addnab/docker-run-action@v3
       with:
-        image: ghcr.io/qnx-ports/sdp710-build-env:latest
+        image: ghcr.io/qnx-ports/sdp800-build-env:latest
         options: -v ${{ github.workspace }}:/home/runner/workspace -v $HOME:/home/runner -e MAKEFLAGS=${{ env.MAKEFLAGS }}
         shell: bash
         run: |
