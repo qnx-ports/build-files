@@ -25,6 +25,9 @@ source ~/qnx800/qnxsdp-env.sh
 cd ~/qnx_workspace
 git clone https://github.com/qnx-ports/xkeyboard-config.git
 
+# cd to xkeyboard-config
+cd xkeyboard-config
+
 # Meson setup
 meson setup build --prefix=/usr
 
@@ -46,10 +49,15 @@ source ~/qnx710/qnxsdp-env.sh
 # source qnxsdp-env.sh to build for QNX 8.0
 source ~/qnx800/qnxsdp-env.sh
 
+# Install strenum
+pip3 install strenum
 
 # Clone xkeyboard-config
 cd ~/qnx_workspace
 git clone https://github.com/qnx-ports/xkeyboard-config.git
+
+# cd to xkeyboard-config
+cd xkeyboard-config
 
 # Meson setup
 meson setup build --prefix=/usr
