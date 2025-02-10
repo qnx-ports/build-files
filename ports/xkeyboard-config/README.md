@@ -21,6 +21,9 @@ source ~/qnx710/qnxsdp-env.sh
 # source qnxsdp-env.sh to build for QNX 8.0
 source ~/qnx800/qnxsdp-env.sh
 
+# Install dependancies
+pip3 install strenum
+
 # Clone xkeyboard-config
 cd ~/qnx_workspace
 git clone https://github.com/qnx-ports/xkeyboard-config.git
@@ -49,7 +52,9 @@ source ~/qnx710/qnxsdp-env.sh
 # source qnxsdp-env.sh to build for QNX 8.0
 source ~/qnx800/qnxsdp-env.sh
 
-# Install strenum
+# Install dependancies
+sudo apt install python3 python3-pip
+pip3 install meson
 pip3 install strenum
 
 # Clone xkeyboard-config
