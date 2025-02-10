@@ -29,7 +29,7 @@ ALL_DEPENDENCIES = $(NAME)_all
 CFLAGS += $(FLAGS)
 
 #Define _QNX_SOURCE 
-CFLAGS += -D_QNX_SOURCE -fPIC
+CFLAGS += -D_QNX_SOURCE -fPIC -O3
 LDFLAGS += -Wl,--build-id=md5 -fPIC
 
 include $(MKFILES_ROOT)/qtargets.mk
