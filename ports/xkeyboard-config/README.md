@@ -26,13 +26,13 @@ cd ~/qnx_workspace
 git clone https://github.com/qnx-ports/xkeyboard-config.git
 
 # Meson setup
-meson setup build --datadir=$QNX_TARGET/usr/share
+meson setup build --prefix=/usr
 
 # Meson compile
 meson compile -C build/
 
 # Meson install
-meson install -C build/
+DESTDIR=$QNX_TARGET meson install -C build/
 ```
 
 # Compile the port for QNX on Ubuntu host
@@ -52,11 +52,11 @@ cd ~/qnx_workspace
 git clone https://github.com/qnx-ports/xkeyboard-config.git
 
 # Meson setup
-meson setup build --datadir=$QNX_TARGET/usr/share
+meson setup build --prefix=/usr
 
 # Meson compile
 meson compile -C build/
 
 # Meson install
-meson install -C build/
+DESTDIR=$QNX_TARGET meson install -C build/
 ```
