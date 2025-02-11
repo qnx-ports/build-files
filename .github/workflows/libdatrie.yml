@@ -48,6 +48,6 @@ jobs:
         shell: bash
         run: |
           source ~/qnx/800/qnxsdp-env.sh
-          cd ~/workspacewget 
+          cd ~/workspace
           wget https://github.com/tlwg/libdatrie/releases/download/v0.2.13/libdatrie-0.2.13.tar.xz && tar -xf libdatrie-0.2.13.tar.xz
           QNX_PROJECT_ROOT="$(pwd)/libdatrie-0.2.13" JLEVEL=$(nproc) make -C build-files/ports/libdatrie clean install
