@@ -85,7 +85,7 @@ jobs:
       with:
         repository: qnx-ports/pytorch
         path: pytorch
-        ref: qnx_v1.13.0
+        ref: eleir/qnx_v1.13.0
         submodules: recursive
 
     - name: Login to GitHub Container Registry
