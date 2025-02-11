@@ -56,5 +56,5 @@ jobs:
         run: |
           cd workspace
           source ~/qnx/800/qnxsdp-env.sh
-          JLEVEL=12 INSTALL_ROOT=$(pwd)/tmp QNX_PROJECT_ROOT="$(pwd)/libffi" make -C build-files/ports/libffi clean install
+          JLEVEL=$(nproc) QNX_PROJECT_ROOT="$(pwd)/libffi" make -C build-files/ports/libffi clean install
           
