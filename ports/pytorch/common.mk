@@ -5,7 +5,7 @@ include $(QCONFIG)
 
 NAME=pytorch
 
-QNX_PROJECT_ROOT ?= $(PRODUCT_ROOT)/../
+QNX_PROJECT_ROOT ?= $(PRODUCT_ROOT)/../../pytorch
 
 #$(INSTALL_ROOT_$(OS)) is pointing to $QNX_TARGET
 #by default, unless it was manually re-routed to
@@ -56,11 +56,16 @@ BUILD_MOBILE_TEST=$(BUILD_TESTING)
 BUILD_MOBILE_BENCHMARK=$(BUILD_TESTING)
 else
 SDP = 8.0
-PYTORCH_VERSION = 2.3.1
+PYTORCH_VERSION = main
 
 BUILD_TEST=$(BUILD_TESTING)
 BUILD_MOBILE_TEST=$(BUILD_TESTING)
 BUILD_MOBILE_BENCHMARK=OFF
+
+# Building with upstream googletest.
+ifneq ($(wildcard $(foreach dir,$(LIBVPATH),$(dir)/libregex.so)),)
+                LDFLAGS += -lregex
+endif
 endif
 
 PREFIX_PATH := $(shell python -c 'import sysconfig, sys; sys.stdout.write(sysconfig.get_path("purelib"))')
