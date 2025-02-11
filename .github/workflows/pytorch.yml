@@ -65,6 +65,7 @@ jobs:
           ./scripts/v2.3.1/patch.sh $(pwd)/patches/v2.3.1 $WORKSPACE/pytorch
           cd $WORKSPACE
           export BUILD_PYTORCH_MOBILE_WITH_HOST_TOOLCHAIN=1
+          QNX_PROJECT_ROOT="$(pwd)/pytorch" make -C build-files/ports/pytorch clean
           BUILD_TESTING=ON BUILD_LITE_INTERPRETER=ON QNX_PROJECT_ROOT="$(pwd)/pytorch" make -C build-files/ports/pytorch install
 
   build-1_13_0:
@@ -115,4 +116,5 @@ jobs:
           ./scripts/v1.13.0/patch.sh $(pwd)/patches/v1.13.0 $WORKSPACE/pytorch
           cd $WORKSPACE
           export BUILD_PYTORCH_MOBILE_WITH_HOST_TOOLCHAIN=1
-          BUILD_TESTING=ON QNX_PROJECT_ROOT="$(pwd)/pytorch" make -C build-files/ports/pytorch install
+          QNX_PROJECT_ROOT="$(pwd)/pytorch" make -C build-files/ports/pytorch clean
+          BUILD_TESTING=ON BUILD_LITE_INTERPRETER=ON QNX_PROJECT_ROOT="$(pwd)/pytorch" make -C build-files/ports/pytorch install
