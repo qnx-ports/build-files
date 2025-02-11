@@ -50,4 +50,4 @@ jobs:
           source ~/qnx/800/qnxsdp-env.sh
           cd ~/workspace
           wget https://ftp.gnu.org/pub/gnu/libiconv/libiconv-1.18.tar.gz && tar -xf libiconv-1.18.tar.gz
-          QNX_PROJECT_ROOT="$(pwd)/libiconv-1.18" JLEVEL=$(nproc) make -C build-files/ports/libiconv/clean install
+          QNX_PROJECT_ROOT="$(pwd)/libiconv-1.18" JLEVEL=$(nproc) make -C build-files/ports/libiconv/ clean install
