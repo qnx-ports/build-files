@@ -36,6 +36,12 @@ include $(MKFILES_ROOT)/qtargets.mk
 
 $(NAME)_INSTALL_DIR=$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)
 
+#Setup pkg-config dir
+export PKG_CONFIG_PATH=
+PKG_CONFIG_LIBDIR_IN = $($(NAME)_INSTALL_DIR)/lib/pkgconfig:$($(NAME)_INSTALL_DIR)/share/pkgconfig
+PKG_CONFIG_TARGET_IN = $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/pkgconfig:$(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/share/pkgconfig
+export PKG_CONFIG_LIBDIR = $(PKG_CONFIG_LIBDIR_IN):$(PKG_CONFIG_TARGET_IN)
+
 MAKE_ARGS ?= -j $(firstword $(JLEVEL) 1) -C $(QNX_PROJECT_ROOT) \
                                          CC="${QNX_HOST}/usr/bin/qcc -Vgcc_$(OS)$(CPUVARDIR)" \
                                          AR="${QNX_HOST}/usr/bin/$(OS)$(CPU)-ar" \
