@@ -3,6 +3,7 @@ target_arch = 'CPU'
 target = 'nto' + target_arch
 qnx_host_dir = 'QSDP'
 qnx_install_dir = 'INSTALL_DIR'
+qnx_target_dir = 'QNX_TARGET_DIR'
 
 [host_machine]
 system = 'qnx'
@@ -16,7 +17,7 @@ c_link_args = ['-lm', '-lsocket', '-lgcc_s']
 [properties]
 growing_stack = false
 # pkg-config settings
-pkg_config_libdir = [qnx_install_dir + '/lib/pkgconfig', qnx_install_dir + '/share/pkgconfig']
+pkg_config_libdir = [qnx_install_dir + '/lib/pkgconfig', qnx_install_dir + '/share/pkgconfig', qnx_target_dir + '/lib/pkgconfig', qnx_target_dir + '/share/pkgconfig']
 
 [binaries]
 c = [qnx_host_dir + '/usr/bin/' + target + '-gcc']

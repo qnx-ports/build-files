@@ -59,6 +59,7 @@ qnx_cross.cfg: $(PROJECT_ROOT)/qnx_cross.cfg.in
 	sed -i "s|QSDP|$(QNX_HOST)|" $@
 	sed -i "s|CPU|$(CPU)|" $@
 	sed -i "s|INSTALL_DIR|$(GLIB_INSTALL_DIR)|" $@
+	sed -i "s|QNX_TARGET_DIR|$(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)|" $@
 
 $(NAME)_all: qnx_cross.cfg
 # patch glib

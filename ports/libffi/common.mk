@@ -36,6 +36,11 @@ include $(MKFILES_ROOT)/qtargets.mk
 
 $(NAME)_INSTALL_DIR=$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)
 
+#Setup pkg-config dir
+export PKG_CONFIG_PATH=
+PKG_CONFIG_LIBDIR_IN = $($(NAME)_INSTALL_DIR)/lib/pkgconfig:$($(NAME)_INSTALL_DIR)/share/pkgconfig
+PKG_CONFIG_TARGET_IN = $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/pkgconfig:$(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/share/pkgconfig
+export PKG_CONFIG_LIBDIR = $(PKG_CONFIG_LIBDIR_IN):$(PKG_CONFIG_TARGET_IN)
 
 #Config toolchain for qnx
 CONFIGURE_CMD = $(QNX_PROJECT_ROOT)/configure
