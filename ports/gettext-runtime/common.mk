@@ -30,6 +30,7 @@ CFLAGS += $(FLAGS)
 
 #Define _QNX_SOURCE 
 CFLAGS += -D_QNX_SOURCE -O3 -fPIE
+CXXFLAGS += $(CFLAGS)
 LDFLAGS += -Wl,--build-id=md5
 
 include $(MKFILES_ROOT)/qtargets.mk
