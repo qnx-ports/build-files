@@ -29,7 +29,7 @@ ALL_DEPENDENCIES = $(NAME)_all
 CFLAGS += $(FLAGS)
 
 #Define _QNX_SOURCE 
-CFLAGS += -D_QNX_SOURCE
+CFLAGS += -D_QNX_SOURCE -O3 -fPIC
 LDFLAGS += -Wl,--build-id=md5
 
 include $(MKFILES_ROOT)/qtargets.mk
@@ -45,8 +45,7 @@ export PKG_CONFIG_LIBDIR = $(PKG_CONFIG_LIBDIR_IN):$(PKG_CONFIG_TARGET_IN)
 #Config toolchain for qnx
 CONFIGURE_CMD = $(QNX_PROJECT_ROOT)/configure
 CONFIGURE_ARGS = --host=$(CPU)-*-$(OS) \
-                 --exec-prefix=$($(NAME)_INSTALL_DIR) \
-                 --prefix=$(INSTALL_ROOT)/$(PREFIX) \
+                 --prefix=$($(NAME)_INSTALL_DIR) \
                  --srcdir=$(QNX_PROJECT_ROOT)
 CONFIGURE_ENVS = CFLAGS="$(CFLAGS)" \
                  CXXFLAGS="$(CXXFLAGS)" \
