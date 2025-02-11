@@ -13,6 +13,9 @@ endian = 'little'
 
 [built-in options]
 c_link_args = ['-lm', '-lsocket', '-lgcc_s']
+c_args = ['-D_QNX_SOURCE']
+cpp_link_args = c_link_args
+cpp_args = c_args
 
 [properties]
 growing_stack = false
