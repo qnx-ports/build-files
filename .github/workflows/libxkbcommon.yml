@@ -32,7 +32,7 @@ jobs:
     - name: Checkout libxkbcommon
       uses: actions/checkout@v4
       with:
-        repository: libxkbcommon/libxkbcommon
+        repository: xkbcommon/libxkbcommon
         path: libxkbcommon
         ref: xkbcommon-1.8.0
 
