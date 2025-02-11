@@ -52,14 +52,18 @@ MAKE_ARGS ?= -j $(firstword $(JLEVEL) 1) -C $(QNX_PROJECT_ROOT) \
 $(NAME)_all:
 	@make clean $(MAKE_ARGS) PREFIX=$($(NAME)_INSTALL_DIR)
 	@make bzip2 bzip2recover libbz2.a $(MAKE_ARGS) PREFIX=$($(NAME)_INSTALL_DIR)
+	@make -f Makefile-libbz2_so $(MAKE_ARGS) PREFIX=$($(NAME)_INSTALL_DIR)
 
 install check: $(NAME)_all
 	@echo Installing...
 	@make install bzip2 bzip2recover libbz2.a $(MAKE_ARGS) PREFIX=$($(NAME)_INSTALL_DIR)
+	@cd $(QNX_PROJECT_ROOT) && cp libbz2.so.1.0 $($(NAME)_INSTALL_DIR)/lib
+	@cd $(QNX_PROJECT_ROOT) && cp libbz2.so.1.0.8 $($(NAME)_INSTALL_DIR)/lib
 	@echo Done.
 
 clean iclean spotless:
 	@make clean $(MAKE_ARGS) PREFIX=$($(NAME)_INSTALL_DIR)
+	@make clean -f Makefile-libbz2_so $(MAKE_ARGS) PREFIX=$($(NAME)_INSTALL_DIR)
 	
 uninstall:
 
