@@ -110,13 +110,18 @@ QNX_PROJECT_ROOT="$(pwd)/libxkbcommon" JLEVEL=4 make -C build-files/ports/libxkb
 ```
 # How to run tests
 ```bash
-# Specify target ip address
+# Specify target IP address
 TARGET_HOST=<target-ip-address-or-hostname>
 
 # Transfer data files to target
 cd ~/qnx_workspace/libxkbcommon/
 ./test/data/sync.sh
-scp -r test/data qnxuser@$TARGET_HOST:~/bin
+
+# Create 'test' directory inside '~/bin' on the target machine
+ssh qnxuser@$TARGET_HOST "mkdir -p ~/bin/test"
+
+# Copy 'data' directory into '~/bin/test'
+scp -r test/data qnxuser@$TARGET_HOST:~/bin/test
 
 # Transfer test executables to the target
 cd ~/qnx_workspace

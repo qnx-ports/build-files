@@ -7,7 +7,7 @@ index 2cbcc0a5..b719d3a2 100755
  set -euo pipefail
  
 -XKBCONFIGROOT='/usr/share/X11/xkb'
-+XKBCONFIGROOT='$QNX_TARGET/usr/share/X11/xkb'
++XKBCONFIGROOT="$QNX_TARGET/usr/share/X11/xkb"
  XLOCALEDIR='/usr/share/X11/locale'
  
  if [ ! -d test/data ]; then
