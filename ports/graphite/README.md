@@ -29,10 +29,7 @@ cd ~/qnx_workspace
 # checkout to the latest stable
 cd graphite
 git checkout 1.3.14
-# setup build scripts
-cd ./expat
-sh ./buildconf.sh
-cd ../../
+cd ..
 
 # Build graphite
 QNX_PROJECT_ROOT="$(pwd)/graphite" JLEVEL=4 make -C build-files/ports/graphite install
