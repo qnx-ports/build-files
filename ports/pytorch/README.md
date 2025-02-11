@@ -16,8 +16,8 @@ cd build-files/docker
 ./docker-build-qnx-image.sh
 ./docker-create-container.sh
 
-# Note, v2.3.1 supports SDP 8.0, v1.13.0 supports SDP 7.1
-VERSION=v2.3.1
+# Note, main and v2.3.1 support SDP 8.0, v1.13.0 supports SDP 7.1
+VERSION=main
 BASELINE=~/qnx800
 
 # Now you are in the Docker container
@@ -52,8 +52,8 @@ BUILD_TESTING=ON BUILD_LITE_INTERPRETER=ON QNX_PROJECT_ROOT="$(pwd)/pytorch" mak
 mkdir -p ~/qnx_workspace && cd ~/qnx_workspace
 git clone https://github.com/qnx-ports/build-files.git
 
-# Note, v2.3.1 supports SDP 8.0, v1.13.0 supports SDP 7.1
-VERSION=v2.3.1
+# Note main and v2.3.1 supports SDP 8.0, v1.13.0 supports SDP 7.1
+VERSION=main
 BASELINE=~/qnx800
 
 # Clone pytorch
@@ -121,7 +121,7 @@ for test in $(ls | grep _test) ; do
 done
 ```
 
-Known lite interpreter test failures for PyTorch v2.3.1 on SDP 8.0:
+Known lite interpreter test failures for PyTorch main and v2.3.1 on SDP 8.0:
 ```
 typeid_test - CtorDtorAndCopy (aborts)
 ```
