@@ -15,12 +15,6 @@ cd build-files/docker
 
 # Now you are in the Docker container
 
-# source qnxsdp-env.sh to build for QNX 7.1
-source ~/qnx710/qnxsdp-env.sh
-
-# source qnxsdp-env.sh to build for QNX 8.0
-source ~/qnx800/qnxsdp-env.sh
-
 # Install dependancies
 pip3 install strenum
 
@@ -37,20 +31,14 @@ meson setup build --prefix=/usr
 # Meson compile
 meson compile -C build/
 
-# Meson install
-DESTDIR=$QNX_TARGET meson install -C build/
+# Example DESTDIR=~/qnx800/target/qnx meson install -C build/
+DESTDIR=/path/to/install meson install -C build/
 ```
 
 # Compile the port for QNX on Ubuntu host
 ```bash
 # Create workspace
 mkdir -p ~/qnx_workspace && cd qnx_workspace
-
-# source qnxsdp-env.sh to build for QNX 7.1
-source ~/qnx710/qnxsdp-env.sh
-
-# source qnxsdp-env.sh to build for QNX 8.0
-source ~/qnx800/qnxsdp-env.sh
 
 # Install dependancies
 sudo apt install python3 python3-pip
@@ -71,5 +59,6 @@ meson setup build --prefix=/usr
 meson compile -C build/
 
 # Meson install
-DESTDIR=$QNX_TARGET meson install -C build/
+# Example DESTDIR=~/qnx800/target/qnx meson install -C build/
+DESTDIR=/path/to/install meson install -C build/
 ```
