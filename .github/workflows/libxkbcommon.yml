@@ -70,6 +70,7 @@ jobs:
             source ~/qnx/800/qnxsdp-env.sh
           else 
             source ~/qnx/710/qnxsdp-env.sh
+          fi
           export PATH=$PATH:/usr/local/qnx/env/bin
           pip3 install strenum
           cd xkeyboard-config
