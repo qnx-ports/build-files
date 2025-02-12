@@ -47,8 +47,6 @@ MESON_FLAGS :=  --prefix=$(PREFIX) \
                 -Dx-locale-root=/usr/share/locale \
 				--reconfigure
 
-NINJA_ARGS := -j $(firstword $(JLEVEL) 1)
-
 # Set cross file
 qnx_cross.cfg: $(PROJECT_ROOT)/qnx_cross.cfg.in
 	cp $(PROJECT_ROOT)/qnx_cross.cfg.in $@
