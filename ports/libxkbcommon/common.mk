@@ -29,6 +29,11 @@ MESON_BUILD_TYPE ?= release
 ALL_DEPENDENCIES = $(NAME)_all
 .PHONY: $(NAME)_all install check clean
 
+CFLAGS += $(FLAGS)
+
+#Define _QNX_SOURCE 
+CFLAGS += -D_QNX_SOURCE
+
 include $(MKFILES_ROOT)/qtargets.mk
 
 LIBXKBCOMMON_INSTALL_DIR=$(INSTALL_ROOT)/$(CPUVARDIR)
@@ -36,7 +41,7 @@ LIBXKBCOMMON_INSTALL_DIR=$(INSTALL_ROOT)/$(CPUVARDIR)
 MESON_FLAGS :=  --prefix=$(PREFIX) \
                 --includedir=$(PREFIX)/include \
                 --cross-file=../qnx_cross.cfg \
-                -Dc_args=-D_QNX_SOURCE \
+                -Dc_args=$(CFLAGS) \
                 -Ddefault-layout=us \
                 -Denable-tools=false \
                 -Denable-x11=false \
