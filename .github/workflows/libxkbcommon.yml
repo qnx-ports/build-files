@@ -19,6 +19,11 @@ jobs:
 
   build:
     runs-on: self-hosted
+      strategy:
+        matrix:
+          qnx_env:
+            - ghcr.io/qnx-ports/sdp800-build-env:latest
+            - ghcr.io/qnx-ports/sdp-build-env:latest
     if: |
       (github.event_name == 'workflow_dispatch') ||
       (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
@@ -35,6 +40,13 @@ jobs:
         repository: xkbcommon/libxkbcommon
         path: libxkbcommon
         ref: xkbcommon-1.8.0
+      
+    - name: Checkout xkeyboard-config
+      uses: actions/checkout@v4
+      with:
+        repository: qnx-ports/xkeyboard-config
+        path: xkeyboard-config
+        ref: qnx-xkeyboard-config-2.43.99
 
     - name: Login to GitHub Container Registry
       uses: docker/login-action@v3
@@ -45,15 +57,26 @@ jobs:
 
     - name: Pull build environment
       run: |
-        docker pull ghcr.io/qnx-ports/sdp800-build-env:latest
+        docker pull ${{ matrix.qnx_env }}
     - name: Build libxkbcommon
       uses: addnab/docker-run-action@v3
       with:
-        image: ghcr.io/qnx-ports/sdp800-build-env:latest
+        image: ${{ matrix.qnx_env }}
         options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
         shell: bash
         run: |
           cd workspace
-          source ~/qnx/800/qnxsdp-env.sh
+          if [[ "${{ matrix.qnx_env}}" == "ghcr.io/qnx-ports/sdp800-build-env:latest" ]]; then
+            source ~/qnx/800/qnxsdp-env.sh
+          else 
+            source ~/qnx/710/qnxsdp-env.sh
           export PATH=$PATH:/usr/local/qnx/env/bin
+          pip3 install strenum
+          cd xkeyboard-config
+          meson setup build --prefix=/usr
+          meson compile -C build/
+          DESTDIR=$QNX_TARGET meson install -C build/
+          cd /home/runner/workspace/build-files/ports/libxkbcommon
+          ./scripts/patch.sh /home/runner/workspace/libxkbcommon
+          cd /home/runner/workspace
           QNX_PROJECT_ROOT="$(pwd)/libxkbcommon" JLEVEL=4 make -C build-files/ports/libxkbcommon install
