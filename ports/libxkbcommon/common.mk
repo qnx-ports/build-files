@@ -34,9 +34,9 @@ CFLAGS += -D_QNX_SOURCE
 
 include $(MKFILES_ROOT)/qtargets.mk
 
-LIBXKBCOMMON_INSTALL_DIR=$(INSTALL_ROOT)/$(CPUVARDIR)
+LIBXKBCOMMON_INSTALL_DIR=$(INSTALL_ROOT)
 
-MESON_FLAGS :=  --prefix=$(PREFIX) \
+MESON_FLAGS :=  --prefix=/$(CPUVARDIR)/$(PREFIX) \
                 --includedir=$(PREFIX)/include \
                 --cross-file=../qnx_cross.cfg \
                 -Dc_args="$(CFLAGS)" \
