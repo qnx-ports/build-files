@@ -18,6 +18,11 @@ on:
 jobs:
 
   build-qnx-ports:
+    strategy:
+      matrix:
+        qnx_env:
+          - ghcr.io/qnx-ports/sdp800-build-env:latest
+          - ghcr.io/qnx-ports/sdp-build-env:latest
     runs-on: self-hosted
     if: |
       (github.event_name == 'workflow_dispatch') ||
@@ -72,6 +77,11 @@ jobs:
           DESTDIR=/home/runner/workspace/output /usr/local/qnx/env/bin/meson install --no-rebuild -C build-qnx$QNX_VERSION
 
   build-glib-main:
+    strategy:
+      matrix:
+        qnx_env:
+          - ghcr.io/qnx-ports/sdp800-build-env:latest
+          - ghcr.io/qnx-ports/sdp-build-env:latest
     runs-on: self-hosted
     if: |
       (github.event_name == 'workflow_dispatch') ||
