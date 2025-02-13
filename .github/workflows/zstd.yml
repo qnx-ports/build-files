@@ -56,6 +56,6 @@ jobs:
           source ~/qnx/800/qnxsdp-env.sh
           cd ~/workspace
           cd zstd
-          ./tools/scripts/generateAmalgamatedFiles.py
+          git checkout v1.5.6
           cd -
-          make -C build-files/ports/zstd install
+          SOURCE_ROOT="$(pwd)/zstd" OSLIST=nto make -C build-files/ports/zstd install
