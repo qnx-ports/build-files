@@ -34,6 +34,7 @@ jobs:
       with:
         repository: curl/curl
         path: curl
+        ref: 7eb8c048470ed2cc14dca75be9c1cdae7ac8498b
 
     - name: Login to GitHub Container Registry
       uses: docker/login-action@v3
@@ -55,8 +56,5 @@ jobs:
         run: |
           source ~/qnx/800/qnxsdp-env.sh
           cd ~/workspace
-          cd curl
-          git checkout curl-8_10_1
-          cd ~/qnx_workspace
           cd build-files/ports/curl
           SOURCE_ROOT="../../../curl" ./mkrelease.sh
