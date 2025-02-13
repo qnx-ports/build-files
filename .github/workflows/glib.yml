@@ -18,11 +18,6 @@ on:
 jobs:
 
   build-qnx-ports:
-    strategy:
-      matrix:
-        qnx_env:
-          - ghcr.io/qnx-ports/sdp800-build-env:latest
-          - ghcr.io/qnx-ports/sdp-build-env:latest
     runs-on: self-hosted
     if: |
       (github.event_name == 'workflow_dispatch') ||
@@ -50,24 +45,18 @@ jobs:
 
     - name: Pull build environment
       run: |
-        docker pull ${{ matrix.qnx_env }}
+        docker pull ghcr.io/qnx-ports/sdp800-build-env:latest
 
     - name: Build glib
       uses: addnab/docker-run-action@v3
       with:
-        image: ${{ matrix.qnx_env }}
+        image: ghcr.io/qnx-ports/sdp800-build-env:latest
         options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
         shell: bash
         run: |
-          if [[ "${{ matrix.qnx_env}}" == "ghcr.io/qnx-ports/sdp800-build-env:latest" ]]; then
-            source ~/qnx/800/qnxsdp-env.sh
-            export QNX_VERSION=800
-            export CROSS_FILE=../build-files/resources/meson/aarch64le/workflows/qnx800.ini
-          else 
-            source ~/qnx/710/qnxsdp-env.sh
-            export QNX_VERSION=710
-            export CROSS_FILE=../build-files/resources/meson/aarch64le/workflows/qnx710.ini
-          fi
+          source ~/qnx/800/qnxsdp-env.sh
+          export QNX_VERSION=800
+          export CROSS_FILE=../build-files/resources/meson/aarch64le/workflows/qnx800.ini
           cd ~/workspace
           export QNX_ARCH=aarch64le
           mkdir -p output
