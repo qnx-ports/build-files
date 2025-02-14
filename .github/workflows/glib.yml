@@ -139,7 +139,5 @@ jobs:
             source ~/qnx/710/qnxsdp-env.sh
           fi
           cd ~/workspace
-          JLEVEL=$(nproc) QNX_PROJECT_ROOT="$(pwd)/zlib" make -C build-files/ports/zlib install
-          JLEVEL=$(nproc) QNX_PROJECT_ROOT="$(pwd)/libffi" make -C build-files/ports/libffi install
-          JLEVEL=$(nproc) QNX_PROJECT_ROOT="$(pwd)/pcre2" make -C build-files/ports/pcre2 install
+          ./build-files/ports/glib/install_all.sh
           JLEVEL=$(nproc) QNX_PROJECT_ROOT="$(pwd)/glib" make -C build-files/ports/glib install
