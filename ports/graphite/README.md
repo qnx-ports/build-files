@@ -1,4 +1,4 @@
-# pixman [![Build](https://github.com/qnx-ports/build-files/actions/workflows/pixman.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/pixman.yml)
+# graphite [![Build](https://github.com/qnx-ports/build-files/actions/workflows/graphite.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/graphite.yml)
 
 Supports QNX7.1 and QNX8.0
 
@@ -13,16 +13,8 @@ Pre-requisite: Install Docker on Ubuntu https://docs.docker.com/engine/install/u
 ```bash
 # Create a workspace
 mkdir -p ~/qnx_workspace && cd ~/qnx_workspace
-
-# Obtain build tools and sources
 git clone https://github.com/qnx-ports/build-files.git
-git clone https://github.com/mesonbuild/meson.git
-git clone https://gitlab.freedesktop.org/pixman/pixman.git
-
-#checkout to the latest stable 
-cd pixman
-git checkout pixman-0.44.2
-cd ..
+git clone https://github.com/silnrsi/graphite.git
 
 # Optionally Build the Docker image and create a container
 cd build-files/docker
@@ -31,10 +23,16 @@ cd build-files/docker
 
 # source qnxsdp-env.sh in
 source ~/qnx800/qnxsdp-env.sh
-cd ~/qnx_workspace
 
-# Build pixman
-QNX_PROJECT_ROOT="$(pwd)/pixman" JLEVEL=4 make -C build-files/ports/pixman install
+# Clone graphite
+cd ~/qnx_workspace
+# checkout to the latest stable
+cd graphite
+git checkout 1.3.14
+cd ..
+
+# Build graphite
+QNX_PROJECT_ROOT="$(pwd)/graphite" JLEVEL=4 make -C build-files/ports/graphite install
 ```
 
 # Deploy binaries via SSH
@@ -43,14 +41,15 @@ QNX_PROJECT_ROOT="$(pwd)/pixman" JLEVEL=4 make -C build-files/ports/pixman insta
 TARGET_IP_ADDRESS=<target-ip-address-or-hostname>
 TARGET_USER=<target-username>
 
-scp -r ~/qnx800/target/qnx/aarch64le/usr/local/lib/libpixman* $TARGET_USER@$TARGET_IP_ADDRESS:~/lib
+scp -r ~/qnx800/target/qnx/aarch64le/usr/local/bin/gr2fonttest* $TARGET_USER@$TARGET_IP_ADDRESS:~/bin
+scp -r ~/qnx800/target/qnx/aarch64le/usr/local/lib/libgraphite2* $TARGET_USER@$TARGET_IP_ADDRESS:~/lib
 ```
 
-If the `~/lib` directory does not exist, create them with:
+If the `~/bin` or `~/lib` directory do not exist, create them with:
 ```bash
+ssh $TARGET_USER@$TARGET_IP_ADDRESS "mkdir -p ~/bin"
 ssh $TARGET_USER@$TARGET_IP_ADDRESS "mkdir -p ~/lib"
 ````
 
 # Tests
-Tests are available, but currently there are no easy ways to run them on a QNX target system. Therefore the results will be provided instead in `tests.result`
-Currently all tests are passed.
+Tests are not avaliable.

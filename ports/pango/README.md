@@ -1,0 +1,71 @@
+# pango [![Build](https://github.com/qnx-ports/build-files/actions/workflows/pango.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/pango.yml)
+
+Supports QNX7.1 and QNX8.0
+
+# Dependency warning
+
+You should compile and install its dependencies before proceeding (in order).
++ [`libthai`](https://github.com/qnx-ports/build-files/tree/main/ports/libthai)
++ [`gettext-runtime`](https://github.com/qnx-ports/build-files/tree/main/ports/gettext-runtime)
++ [`fribidi`](https://github.com/qnx-ports/build-files/tree/main/ports/fribidi)
++ [`glib`](https://github.com/qnx-ports/build-files/tree/main/ports/glib)
++ [`freetype2`](https://github.com/qnx-ports/build-files/tree/main/ports/freetype2)
++ [`fontconfig`](https://github.com/qnx-ports/build-files/tree/main/ports/fontconfig)
++ [`cairo`](https://github.com/qnx-ports/build-files/tree/main/ports/cairo)
++ [`harfbuzz`](https://github.com/qnx-ports/build-files/tree/main/ports/harfbuzz)
+
+# Compile the port for QNX in a Docker container or Ubuntu host
+
+**NOTE**: QNX ports are only supported from a Linux host operating system
+
+Use `$(nproc)` instead of `4` after `JLEVEL=` and `-j` if you want to use the maximum number of cores to build this project.
+32GB of RAM is recommended for using `JLEVEL=$(nproc)` or `-j$(nproc)`.
+
+Pre-requisite: Install Docker on Ubuntu https://docs.docker.com/engine/install/ubuntu/
+```bash
+# Create a workspace
+mkdir -p ~/qnx_workspace && cd ~/qnx_workspace
+
+# Obtain build tools and sources
+git clone https://github.com/qnx-ports/build-files.git
+git clone https://github.com/mesonbuild/meson.git
+git clone https://gitlab.gnome.org/GNOME/pango.git
+
+#checkout to the latest stable 
+cd pango
+git checkout 1.56.1 
+# or version 1.54.0 for gtk support
+cd ..
+
+# Optionally Build the Docker image and create a container
+cd build-files/docker
+./docker-build-qnx-image.sh
+./docker-create-container.sh
+
+# source qnxsdp-env.sh in
+source ~/qnx800/qnxsdp-env.sh
+cd ~/qnx_workspace
+
+# Build pango
+QNX_PROJECT_ROOT="$(pwd)/pango" JLEVEL=4 make -C build-files/ports/pango install
+```
+
+# Deploy binaries via SSH
+Ensure all dependencies are deployed to the target system as well.
+```bash
+#Set your target's IP here
+TARGET_IP_ADDRESS=<target-ip-address-or-hostname>
+TARGET_USER=<target-username>
+
+scp -r ~/qnx800/target/qnx/aarch64le/usr/local/bin/pango-* $TARGET_USER@$TARGET_IP_ADDRESS:~/bin
+scp -r ~/qnx800/target/qnx/aarch64le/usr/local/lib/libpango* $TARGET_USER@$TARGET_IP_ADDRESS:~/lib
+```
+
+If the `~/bin`, `~/lib` directories do not exist, create them with:
+```bash
+ssh $TARGET_USER@$TARGET_IP_ADDRESS "mkdir -p ~/bin"
+ssh $TARGET_USER@$TARGET_IP_ADDRESS "mkdir -p ~/lib"
+```
+
+# Tests
+Tests are available, but currently there are no easy ways to run them on a QNX target system. Therefore the results will be provided instead as result.txt

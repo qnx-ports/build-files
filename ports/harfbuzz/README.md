@@ -1,18 +1,26 @@
-# cairo [![Build](https://github.com/qnx-ports/build-files/actions/workflows/cairo.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/cairo.yml)
+# harfbuzz [![Build](https://github.com/qnx-ports/build-files/actions/workflows/harfbuzz.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/harfbuzz.yml)
 
 Supports QNX7.1 and QNX8.0
 
-## QNX Software Center (QSC) compatibility warning
+## naming clarification
 
-It is very likely that another version of these binaries are shipped with the QNX image by QSC, hence installation of this library might introduce linking conflicts at runtime. Double check which version of it was linked when cross compiling your software and make sure the proper `LD_LIBRARY_PATH` is set for the dynamic linker to work properly.
+In some other package managers, there might be some extra package as "harfbuzz-icu". This is not an extra package of harfbuzz, they are optional features of it. Here is a list of available features built by the script:
+
++ `harfbuzz-icu`
++ `harfbuzz-cairo`
++ `harfbuzz-gobject`
++ `harfbuzz-subset`
 
 # Dependency warning
 
 You should compile and install its dependencies before proceeding (in order).
-+ [`freetype2`](https://github.com/qnx-ports/build-files/tree/main/ports/freetype2)
-+ [`fontconfig`](https://github.com/qnx-ports/build-files/tree/main/ports/fontconfig)
++ [`graphite`](https://github.com/qnx-ports/build-files/tree/main/ports/graphite)
++ [`iconv`](https://github.com/qnx-ports/build-files/tree/main/ports/iconv)
++ [`gettext-runtime`](https://github.com/qnx-ports/build-files/tree/main/ports/gettext-runtime)
++ [`icu`](https://github.com/qnx-ports/build-files/tree/main/ports/icu)
 + [`glib`](https://github.com/qnx-ports/build-files/tree/main/ports/glib)
-+ [`pixman`](https://github.com/qnx-ports/build-files/tree/main/ports/pixman)
++ [`freetype2`](https://github.com/qnx-ports/build-files/tree/main/ports/freetype2)
++ [`cairo`](https://github.com/qnx-ports/build-files/tree/main/ports/cairo)
 
 A convinience script `install_all.sh` is provided for easy installation of all required dependencies, execute it just like a regular installation and set INSTALL_ROOT and JLEVEL.
 To use the convinence script, please clone the entire `build-files` repository first. 
@@ -34,11 +42,11 @@ mkdir -p ~/qnx_workspace && cd ~/qnx_workspace
 # Obtain build tools and sources
 git clone https://github.com/qnx-ports/build-files.git
 git clone https://github.com/mesonbuild/meson.git
-git clone https://gitlab.freedesktop.org/cairo/cairo.git
+git clone https://github.com/harfbuzz/harfbuzz.git
 
 #checkout to the latest stable 
-cd cairo
-git checkout 1.18.2
+cd harfbuzz
+git checkout 10.2.0
 cd ..
 
 # Optionally Build the Docker image and create a container
@@ -53,8 +61,8 @@ cd ~/qnx_workspace
 # Optionally use the convenience script to install all dependencies
 ./build-files/ports/freetype/install_all.sh
 
-# Build cairo
-QNX_PROJECT_ROOT="$(pwd)/cairo" JLEVEL=4 make -C build-files/ports/cairo install
+# Build harfbuzz
+QNX_PROJECT_ROOT="$(pwd)/harfbuzz" JLEVEL=4 make -C build-files/ports/harfbuzz install
 ```
 
 # Deploy binaries via SSH
@@ -64,13 +72,21 @@ Ensure all dependencies are deployed to the target system as well.
 TARGET_IP_ADDRESS=<target-ip-address-or-hostname>
 TARGET_USER=<target-username>
 
-scp -r ~/qnx800/target/qnx/aarch64le/usr/local/lib/libcairo* $TARGET_USER@$TARGET_IP_ADDRESS:~/lib
+scp -r ~/qnx800/target/qnx/aarch64le/usr/local/bin/hb-* $TARGET_USER@$TARGET_IP_ADDRESS:~/bin
+scp -r ~/qnx800/target/qnx/aarch64le/usr/local/lib/libharfbuzz* $TARGET_USER@$TARGET_IP_ADDRESS:~/lib
 ```
 
-If the `~/lib` directory does not exist, create them with:
+If the `~/bin`, `~/lib` directories do not exist, create them with:
 ```bash
+ssh $TARGET_USER@$TARGET_IP_ADDRESS "mkdir -p ~/bin"
 ssh $TARGET_USER@$TARGET_IP_ADDRESS "mkdir -p ~/lib"
 ```
 
 # Tests
-Tests are not available.
+Tests are available, but currently there are no easy ways to run them on a QNX target system. Therefore the results will be provided instead in `test_result` directory
+harfbuzz provides mutliple testsuites, but not all of them are available on QNX.
++ `hb-api`: some of the unicode tests fail.
++ `hb-fuzzing`: all passed  
++ `hb-threads`: all passed  
++ `hb-shape`: not available
++ `hb-subsets`: not available

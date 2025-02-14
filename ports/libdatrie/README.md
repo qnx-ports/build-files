@@ -1,4 +1,4 @@
-# pixman [![Build](https://github.com/qnx-ports/build-files/actions/workflows/pixman.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/pixman.yml)
+# libdatrie [![Build](https://github.com/qnx-ports/build-files/actions/workflows/libdatrie.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/libdatrie.yml)
 
 Supports QNX7.1 and QNX8.0
 
@@ -13,16 +13,8 @@ Pre-requisite: Install Docker on Ubuntu https://docs.docker.com/engine/install/u
 ```bash
 # Create a workspace
 mkdir -p ~/qnx_workspace && cd ~/qnx_workspace
-
-# Obtain build tools and sources
 git clone https://github.com/qnx-ports/build-files.git
-git clone https://github.com/mesonbuild/meson.git
-git clone https://gitlab.freedesktop.org/pixman/pixman.git
-
-#checkout to the latest stable 
-cd pixman
-git checkout pixman-0.44.2
-cd ..
+wget https://github.com/tlwg/libdatrie/releases/download/v0.2.13/libdatrie-0.2.13.tar.xz && tar -xf libdatrie-0.2.13.tar.xz
 
 # Optionally Build the Docker image and create a container
 cd build-files/docker
@@ -33,8 +25,8 @@ cd build-files/docker
 source ~/qnx800/qnxsdp-env.sh
 cd ~/qnx_workspace
 
-# Build pixman
-QNX_PROJECT_ROOT="$(pwd)/pixman" JLEVEL=4 make -C build-files/ports/pixman install
+# Build libdatrie
+QNX_PROJECT_ROOT="$(pwd)/libdatrie-0.2.13" JLEVEL=4 make -C build-files/ports/libdatrie install
 ```
 
 # Deploy binaries via SSH
@@ -43,14 +35,16 @@ QNX_PROJECT_ROOT="$(pwd)/pixman" JLEVEL=4 make -C build-files/ports/pixman insta
 TARGET_IP_ADDRESS=<target-ip-address-or-hostname>
 TARGET_USER=<target-username>
 
-scp -r ~/qnx800/target/qnx/aarch64le/usr/local/lib/libpixman* $TARGET_USER@$TARGET_IP_ADDRESS:~/lib
+scp -r ~/qnx800/target/qnx/aarch64le/usr/local/bin/trie* $TARGET_USER@$TARGET_IP_ADDRESS:~/bin
+scp -r ~/qnx800/target/qnx/aarch64le/usr/local/lib/libdatrie* $TARGET_USER@$TARGET_IP_ADDRESS:~/lib
 ```
 
-If the `~/lib` directory does not exist, create them with:
+If the `~/bin` or `~/lib` directory does not exist, create them with:
 ```bash
+ssh $TARGET_USER@$TARGET_IP_ADDRESS "mkdir -p ~/bin"
 ssh $TARGET_USER@$TARGET_IP_ADDRESS "mkdir -p ~/lib"
 ````
 
 # Tests
-Tests are available, but currently there are no easy ways to run them on a QNX target system. Therefore the results will be provided instead in `tests.result`
+Tests are available, but currently there is no easy way to run them on a QNX target system. Therefore the results will be provided instead in `tests.result`
 Currently all tests are passed.

@@ -1,4 +1,4 @@
-# libffi [![Build](https://github.com/qnx-ports/build-files/actions/workflows/libffi.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/libffi.yml)
+# pcre2 [![Build](https://github.com/qnx-ports/build-files/actions/workflows/pcre2.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/pcre2.yml)
 
 Supports QNX7.1 and QNX8.0
 
@@ -29,17 +29,17 @@ cd build-files/docker
 # source qnxsdp-env.sh in
 source ~/qnx800/qnxsdp-env.sh
 
-# Clone libffi
+# Clone pcre2
 cd ~/qnx_workspace
-git clone https://github.com/libffi/libffi.git
+git clone https://github.com/PCRE2Project/pcre2.git
 
-# check out to v3.2.1
-cd libffi
-git checkout v3.2.1
+# check out to pcre2-10.45
+cd pcre2
+git checkout pcre2-10.45
 cd ..
 
-# Build libffi
-QNX_PROJECT_ROOT="$(pwd)/libffi" JLEVEL=4 make -C build-files/ports/libffi install
+# Build pcre2
+QNX_PROJECT_ROOT="$(pwd)/pcre2" JLEVEL=4 make -C build-files/ports/pcre2 install
 ```
 
 # Compile the port for QNX on Ubuntu host
@@ -47,18 +47,18 @@ QNX_PROJECT_ROOT="$(pwd)/libffi" JLEVEL=4 make -C build-files/ports/libffi insta
 # Clone the repos
 mkdir -p ~/qnx_workspace && cd qnx_workspace
 git clone https://github.com/qnx-ports/build-files.git
-git clone https://github.com/libffi/libffi.git
+git clone https://github.com/PCRE2Project/pcre2.git
 
-# check libffi out to v3.2.1
-cd libffi
-git checkout v3.2.1
+# check out to pcre2-10.45
+cd pcre2
+git checkout pcre2-10.45
 cd ..
 
 # source qnxsdp-env.sh
 source ~/qnx800/qnxsdp-env.sh
 
-# Build libffi
-QNX_PROJECT_ROOT="$(pwd)/libffi" JLEVEL=4 make -C build-files/ports/libffi install
+# Build pcre2
+QNX_PROJECT_ROOT="$(pwd)/pcre2" JLEVEL=4 make -C build-files/ports/pcre2 install
 ```
 
 # Deploy binaries via SSH
@@ -67,13 +67,29 @@ QNX_PROJECT_ROOT="$(pwd)/libffi" JLEVEL=4 make -C build-files/ports/libffi insta
 TARGET_IP_ADDRESS=<target-ip-address-or-hostname>
 TARGET_USER=<target-username>
 
-scp -r ~/qnx800/target/qnx/aarch64le/usr/local/lib/libffi* $TARGET_USER@$TARGET_IP_ADDRESS:~/lib
+scp -r ~/qnx800/target/qnx/aarch64le/usr/local/bin/pcre2* $TARGET_USER@$TARGET_IP_ADDRESS:~/bin
+scp -r ~/qnx800/target/qnx/aarch64le/usr/local/lib/libpcre2* $TARGET_USER@$TARGET_IP_ADDRESS:~/lib
 ```
 
-If `~/lib` directory do not exist, create them with:
+If `~/bin` or `~/lib` directory does not exist, create them with:
 ```bash
+ssh $TARGET_USER@$TARGET_IP_ADDRESS "mkdir -p ~/bin"
 ssh $TARGET_USER@$TARGET_IP_ADDRESS "mkdir -p ~/lib"
 ````
 
 # Tests
-Tests are not avaliable.
+Tests are avaliable; Test related to `locale` are failing due to the lack of support in QNX image
+Make sure you have all required binaries deployed metioned above
+```bash
+# copy the test data
+scp -r pcre2/testdata $TARGET_USER@$TARGET_IP_ADDRESS:~/bin
+# copy the test scripts
+scp -r build-files/ports/pcre2/nto-aarch64-le/build/pcre2_test.sh $TARGET_USER@$TARGET_IP_ADDRESS:~/bin
+scp -r pcre2/RunTest $TARGET_USER@$TARGET_IP_ADDRESS:~/bin
+
+# ssh to your target system 
+ssh $TARGET_USER@$TARGET_IP_ADDRESS
+
+# enter the bin directory and run the tests
+sh ./RunTest
+````

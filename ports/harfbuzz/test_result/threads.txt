@@ -1,0 +1,36 @@
+
+hb-shape-threads
+Num threads 3; num repetitions 1
+Testing shape/NotoNastaliqUrdu-Regular.ttf/fa-thelittleprince.txt/hb
+Testing shape/NotoNastaliqUrdu-Regular.ttf/fa-thelittleprince.txt/ft
+Testing shape/Amiri-Regular.ttf/fa-thelittleprince.txt/hb
+Testing shape/Amiri-Regular.ttf/fa-thelittleprince.txt/ft
+Testing shape/Roboto-Regular.ttf/en-thelittleprince.txt/hb
+Testing shape/Roboto-Regular.ttf/en-thelittleprince.txt/ft
+Testing shape/Roboto-Regular.ttf/en-words.txt/hb
+Testing shape/Roboto-Regular.ttf/en-words.txt/ft
+Testing shape/SourceSerifVariable-Roman.ttf/en-thelittleprince.txt/hb
+Testing shape/SourceSerifVariable-Roman.ttf/en-thelittleprince.txt/ft
+Testing shape/SourceSerifVariable-Roman.ttf/en-thelittleprince.txt/var/hb
+Testing shape/SourceSerifVariable-Roman.ttf/en-thelittleprince.txt/var/ft
+0
+----------------------------
+
+hb-subset-threads
+Num threads 3; num repetitions 1
+Testing subset/Roboto-Regular.ttf/codepoints
+Testing subset/Roboto-Regular.ttf/glyphs
+Testing subset/Amiri-Regular.ttf/codepoints
+Testing subset/Amiri-Regular.ttf/glyphs
+Testing subset/NotoNastaliqUrdu-Regular.ttf/codepoints
+Testing subset/NotoNastaliqUrdu-Regular.ttf/glyphs
+Testing subset/NotoSansDevanagari-Regular.ttf/codepoints
+Testing subset/NotoSansDevanagari-Regular.ttf/glyphs
+Testing subset/Mplus1p-Regular.ttf/codepoints
+Testing subset/Mplus1p-Regular.ttf/glyphs
+Testing subset/SourceHanSans-Regular_subset.otf/codepoints
+Testing subset/SourceHanSans-Regular_subset.otf/glyphs
+Testing subset/SourceSansPro-Regular.otf/codepoints
+Testing subset/SourceSansPro-Regular.otf/glyphs
+0
+----------------------------

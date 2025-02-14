@@ -1,0 +1,5132 @@
+
+test-aat-layout
+TAP version 14
+# random seed: R02S50d9467ab040985321c43aa6769a1350
+1..3
+# Start of aat tests
+ok 1 /aat/has
+# Start of get tests
+# Start of feature tests
+ok 2 /aat/get/feature/types
+ok 3 /aat/get/feature/selectors
+# End of feature tests
+# End of get tests
+# End of aat tests
+0
+----------------------------
+
+test-base-minmax
+TAP version 14
+# random seed: R02S3a750756491949b3813f6b9ce2e0efa5
+1..1
+# Start of ot tests
+# Start of layout tests
+# Start of font tests
+ok 1 /ot/layout/font/extents
+# End of font tests
+# End of layout tests
+# End of ot tests
+0
+----------------------------
+
+test-baseline
+TAP version 14
+# random seed: R02S62189aaf0369018791618ddb12bac1ec
+1..2
+# Start of ot tests
+# Start of layout tests
+ok 1 /ot/layout/base
+# Start of base tests
+# Start of with tests
+ok 2 /ot/layout/base/with/fallback
+# End of with tests
+# End of base tests
+# End of layout tests
+# End of ot tests
+0
+----------------------------
+
+test-be-glyph-advance
+TAP version 14
+# random seed: R02S5773a050bd16cd8ee120361f50cb46d9
+1..1
+# Start of maxp tests
+# Start of and tests
+ok 1 /maxp/and/hmtx
+# End of and tests
+# End of maxp tests
+0
+----------------------------
+
+test-be-num-glyphs
+TAP version 14
+# random seed: R02Sb3f254da04848ed8473ee749a4763239
+1..1
+# Start of maxp tests
+# Start of and tests
+ok 1 /maxp/and/loca
+# End of and tests
+# End of maxp tests
+0
+----------------------------
+
+test-blob
+TAP version 14
+# random seed: R02S60d79fcac7fb567261897fe858b2572c
+1..9
+# Start of blob tests
+ok 1 /blob/empty
+ok 2 /blob/duplicate
+ok 3 /blob/readonly
+ok 4 /blob/writable
+ok 5 /blob/readonly-may-make-writable
+# Start of subblob tests
+ok 6 /blob/subblob/duplicate
+ok 7 /blob/subblob/readonly
+ok 8 /blob/subblob/writable
+ok 9 /blob/subblob/readonly-may-make-writable
+# End of subblob tests
+# End of blob tests
+0
+----------------------------
+
+test-buffer
+TAP version 14
+# random seed: R02Sa9b986b39bf96010154afc6fb0fddd68
+1..22
+# Start of buffer tests
+ok 1 /buffer/allocation
+ok 2 /buffer/empty
+# Start of properties tests
+ok 3 /buffer/properties/empty
+ok 4 /buffer/properties/one-by-one
+ok 5 /buffer/properties/utf32
+ok 6 /buffer/properties/utf16
+ok 7 /buffer/properties/utf8
+# End of properties tests
+# Start of contents tests
+ok 8 /buffer/contents/empty
+ok 9 /buffer/contents/one-by-one
+ok 10 /buffer/contents/utf32
+ok 11 /buffer/contents/utf16
+ok 12 /buffer/contents/utf8
+# End of contents tests
+# Start of positions tests
+ok 13 /buffer/positions/empty
+ok 14 /buffer/positions/one-by-one
+ok 15 /buffer/positions/utf32
+ok 16 /buffer/positions/utf16
+ok 17 /buffer/positions/utf8
+# End of positions tests
+# Start of utf8 tests
+# UTF-8 test #0: a\303\207
+# UTF-8 test #1: a\303\207b
+# UTF-8 test #2: ab\303cd
+# UTF-8 test #3: ab\303\302\301cd
+ok 18 /buffer/utf8/conversion
+# UTF-8 test #0: abcde
+# UTF-8 test #1: abcde
+# UTF-8 test #2: abcde
+# UTF-8 test #3: \302\251\302\251\302\251
+# UTF-8 test #4: \302\251\302\251\302\251
+# UTF-8 test #5: \302\251\302\251\302\251
+# UTF-8 test #6: \302\251\302\251\302\251
+# UTF-8 test #7: \302\251\302\251\302\251
+# UTF-8 test #8: \302\251\302\251\302\251
+# UTF-8 test #9: \302\251\302\251\302\251
+# UTF-8 test #10: \342\211\240\342\211\240
+# UTF-8 test #11: \342\211\240\342\211\240
+# UTF-8 test #12: \342\211\240\342\211\240
+# UTF-8 test #13: \342\211\240\342\211\240
+# UTF-8 test #14: \342\211\240\342\211\240
+# UTF-8 test #15: \342\211\240\342\211\240
+# UTF-8 test #16: \342\211\240\342\211\240
+# UTF-8 test #17: \316\272\341\275\271\317\203\316\274\316\265
+# UTF-8 test #18: 
+# UTF-8 test #19: \302\200
+# UTF-8 test #20: \340\240\200
+# UTF-8 test #21: \360\220\200\200
+# UTF-8 test #22: \370\210\200\200\200
+# UTF-8 test #23: \374\204\200\200\200\200
+# UTF-8 test #24: \177
+# UTF-8 test #25: \337\277
+# UTF-8 test #26: \357\277\277
+# UTF-8 test #27: \364\217\277\277
+# UTF-8 test #28: \364\220\277\277
+# UTF-8 test #29: \367\277\277\277
+# UTF-8 test #30: \373\277\277\277\277
+# UTF-8 test #31: \375\277\277\277\277\277
+# UTF-8 test #32: \355\237\277
+# UTF-8 test #33: \355\240\200
+# UTF-8 test #34: \355\277\277
+# UTF-8 test #35: \356\200\200
+# UTF-8 test #36: \357\277\275
+# UTF-8 test #37: \364\217\277\277
+# UTF-8 test #38: \200
+# UTF-8 test #39: \277
+# UTF-8 test #40: \200\277
+# UTF-8 test #41: \200\277\200
+# UTF-8 test #42: \200\277\200\277
+# UTF-8 test #43: \200\277\200\277\200
+# UTF-8 test #44: \200\277\200\277\200\277
+# UTF-8 test #45: \200\277\200\277\200\277\200
+# UTF-8 test #46: \200
+# UTF-8 test #47: \201
+# UTF-8 test #48: \202
+# UTF-8 test #49: \203
+# UTF-8 test #50: \204
+# UTF-8 test #51: \205
+# UTF-8 test #52: \206
+# UTF-8 test #53: \207
+# UTF-8 test #54: \210
+# UTF-8 test #55: \211
+# UTF-8 test #56: \212
+# UTF-8 test #57: \213
+# UTF-8 test #58: \214
+# UTF-8 test #59: \215
+# UTF-8 test #60: \216
+# UTF-8 test #61: \217
+# UTF-8 test #62: \220
+# UTF-8 test #63: \221
+# UTF-8 test #64: \222
+# UTF-8 test #65: \223
+# UTF-8 test #66: \224
+# UTF-8 test #67: \225
+# UTF-8 test #68: \226
+# UTF-8 test #69: \227
+# UTF-8 test #70: \230
+# UTF-8 test #71: \231
+# UTF-8 test #72: \232
+# UTF-8 test #73: \233
+# UTF-8 test #74: \234
+# UTF-8 test #75: \235
+# UTF-8 test #76: \236
+# UTF-8 test #77: \237
+# UTF-8 test #78: \240
+# UTF-8 test #79: \241
+# UTF-8 test #80: \242
+# UTF-8 test #81: \243
+# UTF-8 test #82: \244
+# UTF-8 test #83: \245
+# UTF-8 test #84: \246
+# UTF-8 test #85: \247
+# UTF-8 test #86: \250
+# UTF-8 test #87: \251
+# UTF-8 test #88: \252
+# UTF-8 test #89: \253
+# UTF-8 test #90: \254
+# UTF-8 test #91: \255
+# UTF-8 test #92: \256
+# UTF-8 test #93: \257
+# UTF-8 test #94: \260
+# UTF-8 test #95: \261
+# UTF-8 test #96: \262
+# UTF-8 test #97: \263
+# UTF-8 test #98: \264
+# UTF-8 test #99: \265
+# UTF-8 test #100: \266
+# UTF-8 test #101: \267
+# UTF-8 test #102: \270
+# UTF-8 test #103: \271
+# UTF-8 test #104: \272
+# UTF-8 test #105: \273
+# UTF-8 test #106: \274
+# UTF-8 test #107: \275
+# UTF-8 test #108: \276
+# UTF-8 test #109: \277
+# UTF-8 test #110: \300 
+# UTF-8 test #111: \301 
+# UTF-8 test #112: \302 
+# UTF-8 test #113: \303 
+# UTF-8 test #114: \304 
+# UTF-8 test #115: \305 
+# UTF-8 test #116: \306 
+# UTF-8 test #117: \307 
+# UTF-8 test #118: \310 
+# UTF-8 test #119: \311 
+# UTF-8 test #120: \312 
+# UTF-8 test #121: \313 
+# UTF-8 test #122: \314 
+# UTF-8 test #123: \315 
+# UTF-8 test #124: \316 
+# UTF-8 test #125: \317 
+# UTF-8 test #126: \320 
+# UTF-8 test #127: \321 
+# UTF-8 test #128: \322 
+# UTF-8 test #129: \323 
+# UTF-8 test #130: \324 
+# UTF-8 test #131: \325 
+# UTF-8 test #132: \326 
+# UTF-8 test #133: \327 
+# UTF-8 test #134: \330 
+# UTF-8 test #135: \331 
+# UTF-8 test #136: \332 
+# UTF-8 test #137: \333 
+# UTF-8 test #138: \334 
+# UTF-8 test #139: \335 
+# UTF-8 test #140: \336 
+# UTF-8 test #141: \337 
+# UTF-8 test #142: \340 
+# UTF-8 test #143: \341 
+# UTF-8 test #144: \342 
+# UTF-8 test #145: \343 
+# UTF-8 test #146: \344 
+# UTF-8 test #147: \345 
+# UTF-8 test #148: \346 
+# UTF-8 test #149: \347 
+# UTF-8 test #150: \350 
+# UTF-8 test #151: \351 
+# UTF-8 test #152: \352 
+# UTF-8 test #153: \353 
+# UTF-8 test #154: \354 
+# UTF-8 test #155: \355 
+# UTF-8 test #156: \356 
+# UTF-8 test #157: \357 
+# UTF-8 test #158: \360 
+# UTF-8 test #159: \361 
+# UTF-8 test #160: \362 
+# UTF-8 test #161: \363 
+# UTF-8 test #162: \364 
+# UTF-8 test #163: \365 
+# UTF-8 test #164: \366 
+# UTF-8 test #165: \367 
+# UTF-8 test #166: \370 
+# UTF-8 test #167: \371 
+# UTF-8 test #168: \372 
+# UTF-8 test #169: \373 
+# UTF-8 test #170: \374 
+# UTF-8 test #171: \375 
+# UTF-8 test #172:  \300
+# UTF-8 test #173:  \340\200
+# UTF-8 test #174:  \360\200\200
+# UTF-8 test #175:  \370\200\200\200
+# UTF-8 test #176:  \374\200\200\200\200
+# UTF-8 test #177:  \337
+# UTF-8 test #178:  \357\277
+# UTF-8 test #179:  \367\277\277
+# UTF-8 test #180:  \373\277\277\277
+# UTF-8 test #181:  \375\277\277\277\277
+# UTF-8 test #182:  \376 
+# UTF-8 test #183:  \377 
+# UTF-8 test #184:  \300\257 
+# UTF-8 test #185:  \340\200\257 
+# UTF-8 test #186:  \360\200\200\257 
+# UTF-8 test #187:  \370\200\200\200\257 
+# UTF-8 test #188:  \374\200\200\200\200\257 
+# UTF-8 test #189:  \301\277 
+# UTF-8 test #190:  \340\237\277 
+# UTF-8 test #191:  \360\217\277\277 
+# UTF-8 test #192:  \370\207\277\277\277 
+# UTF-8 test #193:  \374\203\277\277\277\277 
+# UTF-8 test #194:  \300\200 
+# UTF-8 test #195:  \340\200\200 
+# UTF-8 test #196:  \360\200\200\200 
+# UTF-8 test #197:  \370\200\200\200\200 
+# UTF-8 test #198:  \374\200\200\200\200\200 
+# UTF-8 test #199:  \355\240\200 
+# UTF-8 test #200:  \355\255\277 
+# UTF-8 test #201:  \355\256\200 
+# UTF-8 test #202:  \355\257\277 
+# UTF-8 test #203:  \355\260\200 
+# UTF-8 test #204:  \355\276\200 
+# UTF-8 test #205:  \355\277\277 
+# UTF-8 test #206:  \355\240\200\355\260\200 
+# UTF-8 test #207:  \355\240\200\355\277\277 
+# UTF-8 test #208:  \355\255\277\355\260\200 
+# UTF-8 test #209:  \355\255\277\355\277\277 
+# UTF-8 test #210:  \355\256\200\355\260\200 
+# UTF-8 test #211:  \355\256\200\355\277\277 
+# UTF-8 test #212:  \355\257\277\355\260\200 
+# UTF-8 test #213:  \355\257\277\355\277\277 
+# UTF-8 test #214: 
+ok 19 /buffer/utf8/validity
+# End of utf8 tests
+# Start of utf16 tests
+# UTF-16 test #0
+# UTF-16 test #1
+# UTF-16 test #2
+# UTF-16 test #3
+# UTF-16 test #4
+# UTF-16 test #5
+# UTF-16 test #6
+ok 20 /buffer/utf16/conversion
+# End of utf16 tests
+# Start of utf32 tests
+# UTF-32 test #0
+# UTF-32 test #1
+# UTF-32 test #2
+# UTF-32 test #3
+# UTF-32 test #4
+# UTF-32 test #5
+# UTF-32 test #6
+# UTF-32 test #7
+# UTF-32 test #8
+# UTF-32 test #9
+ok 21 /buffer/utf32/conversion
+# End of utf32 tests
+# Start of serialize tests
+# serialize test #0
+# serialize test #1
+# serialize test #2
+# serialize test #3
+ok 22 /buffer/serialize/deserialize
+# End of serialize tests
+# End of buffer tests
+0
+----------------------------
+
+test-c
+0
+----------------------------
+
+test-collect-unicodes
+TAP version 14
+# random seed: R02Sba4cfb00f1a9a098044d149e573d9ce7
+1..4
+# Start of collect tests
+ok 1 /collect/unicodes
+# Start of unicodes tests
+ok 2 /collect/unicodes/format4
+ok 3 /collect/unicodes/format12
+# Start of format12 tests
+ok 4 /collect/unicodes/format12/notdef
+# End of format12 tests
+# End of unicodes tests
+# End of collect tests
+0
+----------------------------
+
+test-common
+TAP version 14
+# random seed: R02S8dbfd3876798848f9e36306179cceff3
+1..6
+# Start of types tests
+ok 1 /types/int
+ok 2 /types/direction
+ok 3 /types/tag
+ok 4 /types/script
+ok 5 /types/language
+ok 6 /types/feature
+# End of types tests
+0
+----------------------------
+
+test-cplusplus
+0
+----------------------------
+
+test-draw
+TAP version 14
+# random seed: R02Sb6bff290f6441167d511f1960b4ab1f6
+1..16
+ok 1 /itoa
+# Start of hb tests
+# Start of draw tests
+ok 2 /hb/draw/empty
+ok 3 /hb/draw/glyf
+ok 4 /hb/draw/cff1
+ok 5 /hb/draw/cff2
+ok 6 /hb/draw/immutable
+ok 7 /hb/draw/ft
+# Start of cff1 tests
+ok 8 /hb/draw/cff1/rline
+# End of cff1 tests
+# Start of ttf tests
+# Start of parser tests
+ok 9 /hb/draw/ttf/parser/tests
+# End of parser tests
+# End of ttf tests
+# Start of font tests
+# Start of kit tests
+# Start of glyphs tests
+ok 10 /hb/draw/font/kit/glyphs/tests
+# End of glyphs tests
+# Start of variations tests
+ok 11 /hb/draw/font/kit/variations/tests
+# End of variations tests
+# End of kit tests
+# End of font tests
+# Start of estedad tests
+ok 12 /hb/draw/estedad/vf
+# End of estedad tests
+# Start of drawing tests
+ok 13 /hb/draw/drawing/funcs
+# End of drawing tests
+# Start of synthetic tests
+ok 14 /hb/draw/synthetic/slant
+# End of synthetic tests
+# Start of subfont tests
+ok 15 /hb/draw/subfont/scale
+# End of subfont tests
+# Start of compare tests
+# Start of ot tests
+ok 16 /hb/draw/compare/ot/ft
+# End of ot tests
+# End of compare tests
+# End of draw tests
+# End of hb tests
+0
+----------------------------
+
+test-draw-varc
+TAP version 14
+# random seed: R02S7ba66ec1a4d4b8e6554e44946fd93a6b
+1..1
+ok 1 /itoa
+0
+----------------------------
+
+test-extents
+TAP version 14
+# random seed: R02S1158223410306735966dbb2f187c6888
+1..2
+# Start of glyph tests
+# Start of extents tests
+# Start of color tests
+ok 1 /glyph/extents/color/v1
+ok 2 /glyph/extents/color/v0
+# End of color tests
+# End of extents tests
+# End of glyph tests
+0
+----------------------------
+
+test-font
+TAP version 14
+# random seed: R02S498f70c5222dabf7bdac2bd8e222dec5
+1..9
+# Start of face tests
+ok 1 /face/empty
+ok 2 /face/create
+ok 3 /face/createfortables
+# End of face tests
+# Start of fontfuncs tests
+ok 4 /fontfuncs/empty
+ok 5 /fontfuncs/nil
+ok 6 /fontfuncs/subclassing
+ok 7 /fontfuncs/parallels
+# End of fontfuncs tests
+# Start of font tests
+ok 8 /font/empty
+ok 9 /font/properties
+# End of font tests
+0
+----------------------------
+
+test-font-scale
+TAP version 14
+# random seed: R02S87623742b2dabb9de97f155971f02d15
+1..1
+# Start of hb tests
+ok 1 /hb/scale
+# End of hb tests
+0
+----------------------------
+
+test-ft
+TAP version 14
+# random seed: R02Sb7c6cb7e867e6ee894723efa3bb3154c
+1..1
+# Start of native tests
+# Start of ft tests
+ok 1 /native/ft/basic
+# End of ft tests
+# End of native tests
+0
+----------------------------
+
+test-get-table-tags
+TAP version 14
+# random seed: R02Saabebe079a30b352f65f46a4426bc5b7
+1..3
+# Start of get tests
+# Start of table tests
+# Start of tags tests
+ok 1 /get/table/tags/default
+ok 2 /get/table/tags/builder
+ok 3 /get/table/tags/ft
+# End of tags tests
+# End of table tests
+# End of get tests
+0
+----------------------------
+
+test-glyph-names
+TAP version 14
+# random seed: R02Sfeca2af3dda0232b65ca6cfdaa189186
+1..2
+# Start of glyph tests
+# Start of names tests
+ok 1 /glyph/names/post
+ok 2 /glyph/names/cff
+# End of names tests
+# End of glyph tests
+0
+----------------------------
+
+test-instance-cff2
+TAP version 14
+# random seed: R02S587458fb8ff82f71c465ecd2994d3d0a
+1..1
+# Start of instance tests
+ok 1 /instance/cff2
+# End of instance tests
+0
+----------------------------
+
+test-map
+TAP version 14
+# random seed: R02Seca88fb57629a6100fcabacc4977510a
+1..4
+# Start of map tests
+ok 1 /map/basic
+ok 2 /map/userdata
+ok 3 /map/refcount
+# Start of get tests
+ok 4 /map/get/population
+# End of get tests
+# End of map tests
+0
+----------------------------
+
+test-multithread
+TAP version 14
+# random seed: R02Sf7303338c11e25edd8402814be12d9c8
+0
+----------------------------
+
+test-object
+TAP version 14
+# random seed: R02S1484119f561b58741c5bee7ceec09bd2
+1..1
+# Testing object buffer
+# ->create()
+# ->get_empty()
+# ->create_from_inert()
+# Testing object set
+# ->create()
+# ->get_empty()
+# ->create_from_inert()
+# Testing object blob
+# ->create()
+# ->get_empty()
+# ->create_from_inert()
+# Testing object face
+# ->create()
+# ->get_empty()
+# ->create_from_inert()
+# Testing object font
+# ->create()
+# ->get_empty()
+# ->create_from_inert()
+# Testing object font_funcs
+# ->create()
+# ->get_empty()
+# ->create_from_inert()
+# Testing object unicode_funcs
+# ->create()
+# ->get_empty()
+# ->create_from_inert()
+ok 1 /object
+0
+----------------------------
+
+test-ot-alternates
+TAP version 14
+# random seed: R02S475d1b5945b1986dd7de1b2dc1b21a31
+1..1
+# Start of ot tests
+# Start of layout tests
+# Start of lookup tests
+# Start of get tests
+# Start of glyph tests
+ok 1 /ot/layout/lookup/get/glyph/alternates
+# End of glyph tests
+# End of get tests
+# End of lookup tests
+# End of layout tests
+# End of ot tests
+0
+----------------------------
+
+test-ot-collect-glyphs
+TAP version 14
+# random seed: R02Sbc543b2a4d3beb17a4e7c23382b35ccf
+1..3
+# Start of ot tests
+# Start of layout tests
+# Start of lookup tests
+# Start of collect tests
+# Start of glyphs tests
+ok 1 /ot/layout/lookup/collect/glyphs/qahiri
+# Start of source tests
+ok 2 /ot/layout/lookup/collect/glyphs/source/sans
+# End of source tests
+# Start of noto tests
+ok 3 /ot/layout/lookup/collect/glyphs/noto/nastaliq
+# End of noto tests
+# End of glyphs tests
+# End of collect tests
+# End of lookup tests
+# End of layout tests
+# End of ot tests
+0
+----------------------------
+
+test-ot-color
+TAP version 14
+# random seed: R02Sb75a4b96b77890a051d6c00b9d8caa34
+1..16
+# Start of hb tests
+# Start of ot tests
+# Start of color tests
+ok 1 /hb/ot/color/png
+ok 2 /hb/ot/color/svg
+# Start of palette tests
+# Start of get tests
+ok 3 /hb/ot/color/palette/get/count
+# Start of name tests
+# Start of id tests
+ok 4 /hb/ot/color/palette/get/name/id/empty
+ok 5 /hb/ot/color/palette/get/name/id/v0
+ok 6 /hb/ot/color/palette/get/name/id/v1
+# End of id tests
+# End of name tests
+# Start of flags tests
+ok 7 /hb/ot/color/palette/get/flags/empty
+ok 8 /hb/ot/color/palette/get/flags/v0
+ok 9 /hb/ot/color/palette/get/flags/v1
+# End of flags tests
+# Start of colors tests
+ok 10 /hb/ot/color/palette/get/colors/empty
+ok 11 /hb/ot/color/palette/get/colors/v0
+ok 12 /hb/ot/color/palette/get/colors/v1
+# End of colors tests
+# End of get tests
+# Start of color tests
+# Start of get tests
+# Start of name tests
+ok 13 /hb/ot/color/palette/color/get/name/id
+# End of name tests
+# End of get tests
+# End of color tests
+# End of palette tests
+# Start of glyph tests
+# Start of get tests
+ok 14 /hb/ot/color/glyph/get/layers
+# End of get tests
+# Start of has tests
+ok 15 /hb/ot/color/glyph/has/paint
+# End of has tests
+# End of glyph tests
+# Start of has tests
+ok 16 /hb/ot/color/has/data
+# End of has tests
+# End of color tests
+# End of ot tests
+# End of hb tests
+0
+----------------------------
+
+test-ot-extents-cff
+TAP version 14
+# random seed: R02Sf1dc86314c764f39d1fbe88c6490f162
+1..6
+# Start of extents tests
+ok 1 /extents/cff1
+ok 2 /extents/cff2
+# Start of cff1 tests
+ok 3 /extents/cff1/flex
+ok 4 /extents/cff1/seac
+# End of cff1 tests
+# Start of cff2 tests
+ok 5 /extents/cff2/vsindex
+# Start of vsindex tests
+# Start of named tests
+ok 6 /extents/cff2/vsindex/named/instance
+# End of named tests
+# End of vsindex tests
+# End of cff2 tests
+# End of extents tests
+0
+----------------------------
+
+test-ot-face
+TAP version 14
+# random seed: R02Se4e2c6f7385c60c6474a54f19615f425
+1..2
+# Start of ot tests
+# Start of face tests
+ok 1 /ot/face/empty
+# End of face tests
+# Start of var tests
+# Start of axis tests
+# Start of on tests
+# Start of zero tests
+# Start of named tests
+ok 2 /ot/var/axis/on/zero/named/instance
+# End of named tests
+# End of zero tests
+# End of on tests
+# End of axis tests
+# End of var tests
+# End of ot tests
+0
+----------------------------
+
+test-ot-glyphname
+TAP version 14
+# random seed: R02Sb8e62ac29cb6af650a929553482df2e0
+1..3
+# Start of standard tests
+ok 1 /standard/names
+# End of standard tests
+# Start of non tests
+# Start of standard tests
+ok 2 /non/standard/names
+# End of standard tests
+# End of non tests
+# Start of predef tests
+# Start of charset tests
+ok 3 /predef/charset/names
+# End of charset tests
+# End of predef tests
+0
+----------------------------
+
+test-ot-layout
+TAP version 14
+# random seed: R02S1e4cc58120783b4cae844f6b7332ca4d
+1..5
+# Start of ot tests
+# Start of layout tests
+# Start of table tests
+# Start of get tests
+# Start of script tests
+ok 1 /ot/layout/table/get/script/tags
+# End of script tests
+# Start of feature tests
+ok 2 /ot/layout/table/get/feature/tags
+# End of feature tests
+# End of get tests
+# Start of find tests
+ok 3 /ot/layout/table/find/script
+# End of find tests
+# End of table tests
+# Start of script tests
+# Start of get tests
+# Start of language tests
+ok 4 /ot/layout/script/get/language/tags
+# End of language tests
+# End of get tests
+# End of script tests
+# Start of language tests
+# Start of get tests
+# Start of feature tests
+ok 5 /ot/layout/language/get/feature/tags
+# End of feature tests
+# End of get tests
+# End of language tests
+# End of layout tests
+# End of ot tests
+0
+----------------------------
+
+test-ot-ligature-carets
+TAP version 14
+# random seed: R02Sedc2ec8f2a90c945f5d2f5228400d52d
+1..2
+# Start of ot tests
+# Start of layout tests
+# Start of get tests
+# Start of ligature tests
+# Start of carets tests
+ok 1 /ot/layout/get/ligature/carets/empty
+# Start of ot tests
+ok 2 /ot/layout/get/ligature/carets/ot/gdef
+# End of ot tests
+# End of carets tests
+# End of ligature tests
+# End of get tests
+# End of layout tests
+# End of ot tests
+0
+----------------------------
+
+test-ot-math
+TAP version 14
+# random seed: R02S6c57926f3ad8981d976c18b6ff89a4ef
+1..11
+# Start of has tests
+ok 1 /has/data
+# End of has tests
+# Start of get tests
+ok 2 /get/constant
+# Start of glyph tests
+ok 3 /get/glyph/kerning
+ok 4 /get/glyph/kernings
+ok 5 /get/glyph/variants
+ok 6 /get/glyph/assembly
+# Start of italics tests
+ok 7 /get/glyph/italics/correction
+# End of italics tests
+# Start of top tests
+# Start of accent tests
+ok 8 /get/glyph/top/accent/attachment
+# End of accent tests
+# End of top tests
+# Start of assembly tests
+# Start of italics tests
+ok 9 /get/glyph/assembly/italics/correction
+# End of italics tests
+# End of assembly tests
+# End of glyph tests
+# Start of min tests
+# Start of connector tests
+ok 10 /get/min/connector/overlap
+# End of connector tests
+# End of min tests
+# End of get tests
+# Start of is tests
+# Start of glyph tests
+# Start of extended tests
+ok 11 /is/glyph/extended/shape
+# End of extended tests
+# End of glyph tests
+# End of is tests
+0
+----------------------------
+
+test-ot-meta
+TAP version 14
+# random seed: R02S7e6036063504cf2699764e8fbc16eb15
+1..2
+# Start of ot tests
+# Start of meta tests
+# Start of get tests
+ok 1 /ot/meta/get/entries
+# End of get tests
+# Start of reference tests
+ok 2 /ot/meta/reference/entry
+# End of reference tests
+# End of meta tests
+# End of ot tests
+0
+----------------------------
+
+test-ot-metrics
+TAP version 14
+# random seed: R02Sa80f422ef14d3587181ed5789eabb348
+1..2
+# Start of ot tests
+# Start of metrics tests
+# Start of get tests
+ok 1 /ot/metrics/get/var
+# Start of no tests
+ok 2 /ot/metrics/get/no/var
+# End of no tests
+# End of get tests
+# End of metrics tests
+# End of ot tests
+0
+----------------------------
+
+test-ot-metrics-tt-var
+TAP version 14
+# random seed: R02S6cbda5918e638741393906fea819949f
+1..7
+# Start of extents tests
+# Start of tt tests
+ok 1 /extents/tt/var
+# Start of var tests
+ok 2 /extents/tt/var/comp
+# End of var tests
+# End of tt tests
+# End of extents tests
+# Start of advance tests
+# Start of tt tests
+# Start of var tests
+ok 3 /advance/tt/var/nohvar
+ok 4 /advance/tt/var/hvarvvar
+ok 5 /advance/tt/var/anchor
+# Start of comp tests
+ok 6 /advance/tt/var/comp/v
+# End of comp tests
+# Start of gvar tests
+ok 7 /advance/tt/var/gvar/infer
+# End of gvar tests
+# End of var tests
+# End of tt tests
+# End of advance tests
+0
+----------------------------
+
+test-ot-name
+TAP version 14
+# random seed: R02S74757b806646cf3805fc9714ab173225
+1..2
+# Start of ot tests
+ok 1 /ot/name
+# Start of layout tests
+# Start of feature tests
+# Start of get tests
+# Start of name tests
+# Start of ids tests
+# Start of and tests
+ok 2 /ot/layout/feature/get/name/ids/and/characters
+# End of and tests
+# End of ids tests
+# End of name tests
+# End of get tests
+# End of feature tests
+# End of layout tests
+# End of ot tests
+0
+----------------------------
+
+test-ot-tag
+TAP version 14
+# random seed: R02S9a2dbc69815448c2cc3fdb0b4633f09e
+1..7
+# Start of ot tests
+# Start of tag tests
+# Testing language (NULL) <-> tag dflt
+# Testing language alt <-> tag ALT
+# Testing language ar <-> tag ARA
+# Testing language az <-> tag AZE
+# Testing language az-ir -> tag AZE
+# Testing language az-az -> tag AZE
+# Testing language en <-> tag ENG
+# Testing language en_US -> tag ENG
+# Testing language cja-x-hbot-434a4120 <-> tag CJA
+# Testing language cjm-x-hbot-434a4d20 <-> tag CJM
+# Testing language cjm -> tag CJM
+# Testing language eve <-> tag EVN
+# Testing language cfm <-> tag HAL
+# Testing language flm -> tag HAL
+# Testing language hy <-> tag HYE0
+# Testing language hyw <-> tag HYE
+# Testing language bgr -> tag QIN
+# Testing language cbl -> tag QIN
+# Testing language cka -> tag QIN
+# Testing language cmr -> tag QIN
+# Testing language cnb -> tag QIN
+# Testing language cnh -> tag QIN
+# Testing language cnk -> tag QIN
+# Testing language cnw -> tag QIN
+# Testing language csh -> tag QIN
+# Testing language csy -> tag QIN
+# Testing language ctd -> tag QIN
+# Testing language czt -> tag QIN
+# Testing language dao -> tag QIN
+# Testing language hlt -> tag QIN
+# Testing language mrh -> tag QIN
+# Testing language pck -> tag QIN
+# Testing language sez -> tag QIN
+# Testing language tcp -> tag QIN
+# Testing language tcz -> tag QIN
+# Testing language yos -> tag QIN
+# Testing language zom -> tag QIN
+# Testing tag QIN -> language bgr
+# Testing language fa <-> tag FAR
+# Testing language fa_IR -> tag FAR
+# Testing language man <-> tag MNK
+# Testing language aii <-> tag SWA
+# Testing language syr <-> tag SYR
+# Testing language amw -> tag SYR
+# Testing language cld -> tag SYR
+# Testing language syc -> tag SYR
+# Testing language tru <-> tag TUA
+# Testing language zh -> tag ZHS
+# Testing language zh-cn -> tag ZHS
+# Testing language zh-sg -> tag ZHS
+# Testing language zh-mo -> tag ZHTM
+# Testing language zh-hant-mo -> tag ZHTM
+# Testing language zh-hans-mo -> tag ZHS
+# Testing language zh-HK <-> tag ZHH
+# Testing language zH-HanT-hK -> tag ZHH
+# Testing language zH-HanS-hK -> tag ZHS
+# Testing language zh-tw -> tag ZHT
+# Testing language zh-Hans <-> tag ZHS
+# Testing language zh-Hant <-> tag ZHT
+# Testing language zh-xx -> tag ZHS
+# Testing language zh-Hans-TW -> tag ZHS
+# Testing language yue -> tag ZHH
+# Testing language yue-Hant -> tag ZHH
+# Testing language yue-Hans -> tag ZHS
+# Testing language abc-x-hbot-41424320 <-> tag ABC
+# Testing language x-hbot-41424344 <-> tag ABCD
+# Testing language asdf-asdf-wer-x-hbotabc-zxc -> tag ABC
+# Testing language asdf-asdf-wer-x-hbotabc -> tag ABC
+# Testing language asdf-asdf-wer-x-hbotabcd -> tag ABCD
+# Testing language asdf-asdf-wer-x-hbot-41424320-zxc -> tag ABC
+# Testing language asdf-asdf-wer-x-hbot-41424320 -> tag ABC
+# Testing language asdf-asdf-wer-x-hbot-41424344 -> tag ABCD
+# Testing language asdf-asdf-wer-x-hbot -> tag dflt
+# Testing language asdf-asdf-wer-x-hbot-zxc -> tag dflt
+# Testing language asdf-asdf-wer-x-hbot-zxc-414243 -> tag dflt
+# Testing language asdf-asdf-wer-x-hbot-414243 -> tag dflt
+# Testing language asdf-asdf-wer-x-hbot-4142432 -> tag dflt
+# Testing language xy -> tag dflt
+# Testing language xyz -> tag XYZ
+# Testing language xyz-qw -> tag XYZ
+# Testing language -fonipa -> tag IPPH
+# Testing language en-fonipax -> tag ENG
+# Testing language en-x-fonipa -> tag ENG
+# Testing language en-a-fonipa -> tag ENG
+# Testing language en-a-qwe-b-fonipa -> tag ENG
+# Testing language en-fonipa -> tag IPPH
+# Testing language en-fonipax-fonipa -> tag IPPH
+# Testing language rm-CH-fonipa-sursilv-x-foobar -> tag IPPH
+# Testing language und-fonipa <-> tag IPPH
+# Testing language zh-fonipa -> tag IPPH
+# Testing language en-fonnapa -> tag APPH
+# Testing language chr-fonnapa -> tag APPH
+# Testing language und-fonnapa <-> tag APPH
+# Testing language ka-Geok -> tag KGE
+# Testing language und-Geok <-> tag KGE
+# Testing language ga-Latg -> tag IRT
+# Testing language ghc <-> tag IRT
+# Testing language ro-MD <-> tag MOL
+# Testing language el-polyton <-> tag PGR
+# Testing language el-CY-polyton -> tag PGR
+# Testing language aii-Syre -> tag SYRE
+# Testing language de-Syre -> tag SYRE
+# Testing language syr-Syre -> tag SYRE
+# Testing language und-Syre <-> tag SYRE
+# Testing language aii-Syrj -> tag SYRJ
+# Testing language de-Syrj -> tag SYRJ
+# Testing language syr-Syrj -> tag SYRJ
+# Testing language und-Syrj <-> tag SYRJ
+# Testing language aii-Syrn -> tag SYRN
+# Testing language de-Syrn -> tag SYRN
+# Testing language syr-Syrn -> tag SYRN
+# Testing language und-Syrn <-> tag SYRN
+# Testing language fa-x-hbotabc-hbot-41686121-zxc -> tag ABC
+# Testing language fa-ir-x-hbotabc-hbot-41686121-zxc -> tag ABC
+# Testing language zh-x-hbotabc-hbot-41686121-zxc -> tag ABC
+# Testing language zh-cn-x-hbotabc-hbot-41686121-zxc -> tag ABC
+# Testing language zh-xy-x-hbotabc-hbot-41686121-zxc -> tag ABC
+# Testing language xyz-xy-x-hbotabc-hbot-41686121-zxc -> tag ABC
+# Testing language fa-x-hbot-41686121-hbotabc-zxc -> tag Aha!
+# Testing language fa-ir-x-hbot-41686121-hbotabc-zxc -> tag Aha!
+# Testing language zh-x-hbot-41686121-hbotabc-zxc -> tag Aha!
+# Testing language zh-cn-x-hbot-41686121-hbotabc-zxc -> tag Aha!
+# Testing language zh-xy-x-hbot-41686121-hbotabc-zxc -> tag Aha!
+# Testing language xyz-xy-x-hbot-41686121-hbotabc-zxc -> tag Aha!
+# Testing language x-hbot -> tag dflt
+# Testing language x-hbot- -> tag dflt
+# Testing language x-hbot-1 -> tag dflt
+# Testing language x-hbot-1a -> tag dflt
+# Testing language x-hbot-1a2b3c4x -> tag dflt
+# Testing language x-hbot-326c6f6e67 -> tag 2lon
+# Testing language ar-aao -> tag ARA
+# Testing language art-lojban -> tag JBO
+# Testing language kok-gom -> tag KOK
+# Testing language i-lux -> tag LTZ
+# Testing language drh -> tag MNG
+# Testing language ar-ary -> tag MOR
+# Testing language ar-ary-DZ -> tag MOR
+# Testing language no-bok -> tag NOR
+# Testing language no-nyn -> tag NYN
+# Testing language i-hak -> tag ZHS
+# Testing language zh-guoyu -> tag ZHS
+# Testing language zh-min -> tag ZHS
+# Testing language zh-min-nan -> tag ZHS
+# Testing language zh-xiang -> tag ZHS
+# Testing language als -> tag SQI
+# Testing language far -> tag dflt
+# Testing language ar-001 -> tag ARA
+# Testing language tr@foo=bar -> tag TRK
+ok 1 /ot/tag/language
+ok 2 /ot/tag/full
+# Start of script tests
+# Testing script Kana: tag kana
+# Testing script 
+ok 3 /ot/tag/script/degenerate
+# Testing script Wwyz: tag wwyz
+# Testing script Zyyy: tag zyyy
+# Testing script Zinh: tag zinh
+# Testing script Zzzz: tag zzzz
+# Testing script Arab: tag arab
+# Testing script Copt: tag copt
+# Testing script Kana: tag kana
+# Testing script Latn: tag latn
+# Testing script Zmth: tag math
+# Testing script Laoo: tag lao 
+# Testing script Yiii: tag yi  
+# Testing script Nkoo: tag nko 
+# Testing script Vaii: tag vai 
+# Testing script Mtei: tag mtei
+# Testing script Mand: tag mand
+ok 4 /ot/tag/script/simple
+# Testing script Beng: USE tag bng3, new tag bng2, old tag beng
+# Testing script Deva: USE tag dev3, new tag dev2, old tag deva
+# Testing script Gujr: USE tag gjr3, new tag gjr2, old tag gujr
+# Testing script Guru: USE tag gur3, new tag gur2, old tag guru
+# Testing script Knda: USE tag knd3, new tag knd2, old tag knda
+# Testing script Mlym: USE tag mlm3, new tag mlm2, old tag mlym
+# Testing script Orya: USE tag ory3, new tag ory2, old tag orya
+# Testing script Taml: USE tag tml3, new tag tml2, old tag taml
+# Testing script Telu: USE tag tel3, new tag tel2, old tag telu
+ok 5 /ot/tag/script/indic
+# Start of from tests
+# Testing script 
+# Testing script 
+# Testing script Copt: script tag copt, language tag en
+# Testing script 
+# Testing script Copt: script tag copt, language tag x-hbsc
+# Testing script 
+# Testing script 
+# Testing script 
+# Testing script 
+# Testing script 
+# Testing script 
+# Testing script 
+# Testing script 
+# Testing script 
+# Testing script 
+# Testing script 
+# Testing script 
+# Testing script Copt: script tag copt, language tag en-x-hbsc
+# Testing script 
+# Testing script 
+# Testing script 
+# Testing script 
+# Testing script 
+# Testing script 
+ok 6 /ot/tag/script/from/language
+# End of from tests
+# End of script tests
+# End of tag tests
+# Start of tags tests
+# Start of to tests
+# Start of script tests
+# Start of and tests
+ok 7 /ot/tags/to/script/and/language
+# End of and tests
+# End of script tests
+# End of to tests
+# End of tags tests
+# End of ot tests
+0
+----------------------------
+
+test-paint
+TAP version 14
+# random seed: R02S043c0f16e2208b839d7f2157a54caf4c
+1..400
+# Start of hb tests
+# Start of paint tests
+# Start of ot tests
+ok 1 /hb/paint/ot/hand-10
+ok 2 /hb/paint/ot/hand-10.2
+ok 3 /hb/paint/ot/test-6
+ok 4 /hb/paint/ot/test-10
+ok 5 /hb/paint/ot/test-92
+ok 6 /hb/paint/ot/test-106
+ok 7 /hb/paint/ot/test-116
+ok 8 /hb/paint/ot/test-123
+ok 9 /hb/paint/ot/test-154
+ok 10 /hb/paint/ot/test-165
+ok 11 /hb/paint/ot/test-175
+ok 12 /hb/paint/ot/testvf-6
+ok 13 /hb/paint/ot/testvf-10
+ok 14 /hb/paint/ot/testvf-92
+ok 15 /hb/paint/ot/testvf-106
+ok 16 /hb/paint/ot/testvf-116
+ok 17 /hb/paint/ot/testvf-123
+ok 18 /hb/paint/ot/testvf-154
+ok 19 /hb/paint/ot/testvf-165
+ok 20 /hb/paint/ot/testvf-175
+ok 21 /hb/paint/ot/bad-154
+ok 22 /hb/paint/ot/rocher-1
+ok 23 /hb/paint/ot/rocher-2
+ok 24 /hb/paint/ot/rocher-3
+# End of ot tests
+# Start of ft tests
+ok 25 /hb/paint/ft/hand-10
+ok 26 /hb/paint/ft/hand-10.2
+ok 27 /hb/paint/ft/test-6
+ok 28 /hb/paint/ft/test-10
+ok 29 /hb/paint/ft/test-92
+ok 30 /hb/paint/ft/test-106
+ok 31 /hb/paint/ft/test-116
+ok 32 /hb/paint/ft/test-123
+ok 33 /hb/paint/ft/test-154
+ok 34 /hb/paint/ft/test-165
+ok 35 /hb/paint/ft/test-175
+ok 36 /hb/paint/ft/testvf-6
+ok 37 /hb/paint/ft/testvf-10
+ok 38 /hb/paint/ft/testvf-92
+ok 39 /hb/paint/ft/testvf-106
+ok 40 /hb/paint/ft/testvf-116
+ok 41 /hb/paint/ft/testvf-123
+ok 42 /hb/paint/ft/testvf-154
+ok 43 /hb/paint/ft/testvf-165
+ok 44 /hb/paint/ft/testvf-175
+ok 45 /hb/paint/ft/bad-154
+ok 46 /hb/paint/ft/rocher-1
+ok 47 /hb/paint/ft/rocher-2
+ok 48 /hb/paint/ft/rocher-3
+# End of ft tests
+# End of paint tests
+# End of hb tests
+# Start of compare tests
+# Start of ot tests
+# Start of ft tests
+# Start of novf tests
+ok 49 /compare/ot/ft/novf/test-1
+ok 50 /compare/ot/ft/novf/test-2
+ok 51 /compare/ot/ft/novf/test-3
+ok 52 /compare/ot/ft/novf/test-4
+ok 53 /compare/ot/ft/novf/test-5
+ok 54 /compare/ot/ft/novf/test-6
+ok 55 /compare/ot/ft/novf/test-7
+ok 56 /compare/ot/ft/novf/test-8
+ok 57 /compare/ot/ft/novf/test-9
+ok 58 /compare/ot/ft/novf/test-10
+ok 59 /compare/ot/ft/novf/test-11
+ok 60 /compare/ot/ft/novf/test-12
+ok 61 /compare/ot/ft/novf/test-13
+ok 62 /compare/ot/ft/novf/test-14
+ok 63 /compare/ot/ft/novf/test-15
+ok 64 /compare/ot/ft/novf/test-16
+ok 65 /compare/ot/ft/novf/test-17
+ok 66 /compare/ot/ft/novf/test-18
+ok 67 /compare/ot/ft/novf/test-19
+ok 68 /compare/ot/ft/novf/test-20
+ok 69 /compare/ot/ft/novf/test-21
+ok 70 /compare/ot/ft/novf/test-22
+ok 71 /compare/ot/ft/novf/test-23
+ok 72 /compare/ot/ft/novf/test-24
+ok 73 /compare/ot/ft/novf/test-25
+ok 74 /compare/ot/ft/novf/test-26
+ok 75 /compare/ot/ft/novf/test-27
+ok 76 /compare/ot/ft/novf/test-28
+ok 77 /compare/ot/ft/novf/test-29
+ok 78 /compare/ot/ft/novf/test-30
+ok 79 /compare/ot/ft/novf/test-31
+ok 80 /compare/ot/ft/novf/test-32
+ok 81 /compare/ot/ft/novf/test-33
+ok 82 /compare/ot/ft/novf/test-34
+ok 83 /compare/ot/ft/novf/test-35
+ok 84 /compare/ot/ft/novf/test-36
+ok 85 /compare/ot/ft/novf/test-37
+ok 86 /compare/ot/ft/novf/test-38
+ok 87 /compare/ot/ft/novf/test-39
+ok 88 /compare/ot/ft/novf/test-40
+ok 89 /compare/ot/ft/novf/test-41
+ok 90 /compare/ot/ft/novf/test-42
+ok 91 /compare/ot/ft/novf/test-43
+ok 92 /compare/ot/ft/novf/test-44
+ok 93 /compare/ot/ft/novf/test-45
+ok 94 /compare/ot/ft/novf/test-46
+ok 95 /compare/ot/ft/novf/test-47
+ok 96 /compare/ot/ft/novf/test-48
+ok 97 /compare/ot/ft/novf/test-49
+ok 98 /compare/ot/ft/novf/test-50
+ok 99 /compare/ot/ft/novf/test-51
+ok 100 /compare/ot/ft/novf/test-52
+ok 101 /compare/ot/ft/novf/test-53
+ok 102 /compare/ot/ft/novf/test-54
+ok 103 /compare/ot/ft/novf/test-55
+ok 104 /compare/ot/ft/novf/test-56
+ok 105 /compare/ot/ft/novf/test-57
+ok 106 /compare/ot/ft/novf/test-58
+ok 107 /compare/ot/ft/novf/test-59
+ok 108 /compare/ot/ft/novf/test-60
+ok 109 /compare/ot/ft/novf/test-61
+ok 110 /compare/ot/ft/novf/test-62
+ok 111 /compare/ot/ft/novf/test-63
+ok 112 /compare/ot/ft/novf/test-64
+ok 113 /compare/ot/ft/novf/test-65
+ok 114 /compare/ot/ft/novf/test-66
+ok 115 /compare/ot/ft/novf/test-67
+ok 116 /compare/ot/ft/novf/test-68
+ok 117 /compare/ot/ft/novf/test-69
+ok 118 /compare/ot/ft/novf/test-70
+ok 119 /compare/ot/ft/novf/test-71
+ok 120 /compare/ot/ft/novf/test-72
+ok 121 /compare/ot/ft/novf/test-73
+ok 122 /compare/ot/ft/novf/test-74
+ok 123 /compare/ot/ft/novf/test-75
+ok 124 /compare/ot/ft/novf/test-76
+ok 125 /compare/ot/ft/novf/test-77
+ok 126 /compare/ot/ft/novf/test-78
+ok 127 /compare/ot/ft/novf/test-79
+ok 128 /compare/ot/ft/novf/test-80
+ok 129 /compare/ot/ft/novf/test-81
+ok 130 /compare/ot/ft/novf/test-82
+ok 131 /compare/ot/ft/novf/test-83
+ok 132 /compare/ot/ft/novf/test-84
+ok 133 /compare/ot/ft/novf/test-85
+ok 134 /compare/ot/ft/novf/test-86
+ok 135 /compare/ot/ft/novf/test-87
+ok 136 /compare/ot/ft/novf/test-88
+ok 137 /compare/ot/ft/novf/test-89
+ok 138 /compare/ot/ft/novf/test-90
+ok 139 /compare/ot/ft/novf/test-91
+ok 140 /compare/ot/ft/novf/test-92
+ok 141 /compare/ot/ft/novf/test-93
+ok 142 /compare/ot/ft/novf/test-94
+ok 143 /compare/ot/ft/novf/test-95
+ok 144 /compare/ot/ft/novf/test-96
+ok 145 /compare/ot/ft/novf/test-97
+ok 146 /compare/ot/ft/novf/test-98
+ok 147 /compare/ot/ft/novf/test-99
+ok 148 /compare/ot/ft/novf/test-100
+ok 149 /compare/ot/ft/novf/test-101
+ok 150 /compare/ot/ft/novf/test-102
+ok 151 /compare/ot/ft/novf/test-103
+ok 152 /compare/ot/ft/novf/test-104
+ok 153 /compare/ot/ft/novf/test-105
+ok 154 /compare/ot/ft/novf/test-106
+ok 155 /compare/ot/ft/novf/test-107
+ok 156 /compare/ot/ft/novf/test-108
+ok 157 /compare/ot/ft/novf/test-109
+ok 158 /compare/ot/ft/novf/test-110
+ok 159 /compare/ot/ft/novf/test-111
+ok 160 /compare/ot/ft/novf/test-112
+ok 161 /compare/ot/ft/novf/test-113
+ok 162 /compare/ot/ft/novf/test-114
+ok 163 /compare/ot/ft/novf/test-115
+ok 164 /compare/ot/ft/novf/test-116
+ok 165 /compare/ot/ft/novf/test-117
+ok 166 /compare/ot/ft/novf/test-118
+ok 167 /compare/ot/ft/novf/test-119
+ok 168 /compare/ot/ft/novf/test-120
+ok 169 /compare/ot/ft/novf/test-121
+ok 170 /compare/ot/ft/novf/test-122
+ok 171 /compare/ot/ft/novf/test-123
+ok 172 /compare/ot/ft/novf/test-124
+ok 173 /compare/ot/ft/novf/test-125
+ok 174 /compare/ot/ft/novf/test-126
+ok 175 /compare/ot/ft/novf/test-127
+ok 176 /compare/ot/ft/novf/test-128
+ok 177 /compare/ot/ft/novf/test-129
+ok 178 /compare/ot/ft/novf/test-130
+ok 179 /compare/ot/ft/novf/test-131
+ok 180 /compare/ot/ft/novf/test-132
+ok 181 /compare/ot/ft/novf/test-133
+ok 182 /compare/ot/ft/novf/test-134
+ok 183 /compare/ot/ft/novf/test-135
+ok 184 /compare/ot/ft/novf/test-136
+ok 185 /compare/ot/ft/novf/test-137
+ok 186 /compare/ot/ft/novf/test-138
+ok 187 /compare/ot/ft/novf/test-139
+ok 188 /compare/ot/ft/novf/test-140
+ok 189 /compare/ot/ft/novf/test-141
+ok 190 /compare/ot/ft/novf/test-142
+ok 191 /compare/ot/ft/novf/test-143
+ok 192 /compare/ot/ft/novf/test-144
+ok 193 /compare/ot/ft/novf/test-145
+ok 194 /compare/ot/ft/novf/test-146
+ok 195 /compare/ot/ft/novf/test-147
+ok 196 /compare/ot/ft/novf/test-148
+ok 197 /compare/ot/ft/novf/test-149
+ok 198 /compare/ot/ft/novf/test-150
+ok 199 /compare/ot/ft/novf/test-151
+ok 200 /compare/ot/ft/novf/test-152
+ok 201 /compare/ot/ft/novf/test-153
+ok 202 /compare/ot/ft/novf/test-154
+ok 203 /compare/ot/ft/novf/test-155
+ok 204 /compare/ot/ft/novf/test-156
+ok 205 /compare/ot/ft/novf/test-157
+ok 206 /compare/ot/ft/novf/test-158
+ok 207 /compare/ot/ft/novf/test-159
+ok 208 /compare/ot/ft/novf/test-160
+ok 209 /compare/ot/ft/novf/test-161
+ok 210 /compare/ot/ft/novf/test-162
+ok 211 /compare/ot/ft/novf/test-163
+ok 212 /compare/ot/ft/novf/test-164
+ok 213 /compare/ot/ft/novf/test-165
+ok 214 /compare/ot/ft/novf/test-166
+ok 215 /compare/ot/ft/novf/test-167
+ok 216 /compare/ot/ft/novf/test-168
+ok 217 /compare/ot/ft/novf/test-169
+ok 218 /compare/ot/ft/novf/test-170
+ok 219 /compare/ot/ft/novf/test-171
+ok 220 /compare/ot/ft/novf/test-172
+ok 221 /compare/ot/ft/novf/test-173
+ok 222 /compare/ot/ft/novf/test-174
+ok 223 /compare/ot/ft/novf/test-175
+# End of novf tests
+# Start of vf tests
+ok 224 /compare/ot/ft/vf/test-1
+ok 225 /compare/ot/ft/vf/test-2
+ok 226 /compare/ot/ft/vf/test-3
+ok 227 /compare/ot/ft/vf/test-4
+ok 228 /compare/ot/ft/vf/test-5
+ok 229 /compare/ot/ft/vf/test-6
+ok 230 /compare/ot/ft/vf/test-7
+ok 231 /compare/ot/ft/vf/test-8
+ok 232 /compare/ot/ft/vf/test-9
+ok 233 /compare/ot/ft/vf/test-10
+ok 234 /compare/ot/ft/vf/test-11
+ok 235 /compare/ot/ft/vf/test-12
+ok 236 /compare/ot/ft/vf/test-13
+ok 237 /compare/ot/ft/vf/test-14
+ok 238 /compare/ot/ft/vf/test-15
+ok 239 /compare/ot/ft/vf/test-16
+ok 240 /compare/ot/ft/vf/test-17
+ok 241 /compare/ot/ft/vf/test-18
+ok 242 /compare/ot/ft/vf/test-19
+ok 243 /compare/ot/ft/vf/test-20
+ok 244 /compare/ot/ft/vf/test-21
+ok 245 /compare/ot/ft/vf/test-22
+ok 246 /compare/ot/ft/vf/test-23
+ok 247 /compare/ot/ft/vf/test-24
+ok 248 /compare/ot/ft/vf/test-25
+ok 249 /compare/ot/ft/vf/test-26
+ok 250 /compare/ot/ft/vf/test-27
+ok 251 /compare/ot/ft/vf/test-28
+ok 252 /compare/ot/ft/vf/test-29
+ok 253 /compare/ot/ft/vf/test-30
+ok 254 /compare/ot/ft/vf/test-31
+ok 255 /compare/ot/ft/vf/test-32
+ok 256 /compare/ot/ft/vf/test-33
+ok 257 /compare/ot/ft/vf/test-34
+ok 258 /compare/ot/ft/vf/test-35
+ok 259 /compare/ot/ft/vf/test-36
+ok 260 /compare/ot/ft/vf/test-37
+ok 261 /compare/ot/ft/vf/test-38
+ok 262 /compare/ot/ft/vf/test-39
+ok 263 /compare/ot/ft/vf/test-40
+ok 264 /compare/ot/ft/vf/test-41
+ok 265 /compare/ot/ft/vf/test-42
+ok 266 /compare/ot/ft/vf/test-43
+ok 267 /compare/ot/ft/vf/test-44
+ok 268 /compare/ot/ft/vf/test-45
+ok 269 /compare/ot/ft/vf/test-46
+ok 270 /compare/ot/ft/vf/test-47
+ok 271 /compare/ot/ft/vf/test-48
+ok 272 /compare/ot/ft/vf/test-49
+ok 273 /compare/ot/ft/vf/test-50
+ok 274 /compare/ot/ft/vf/test-51
+ok 275 /compare/ot/ft/vf/test-52
+ok 276 /compare/ot/ft/vf/test-53
+ok 277 /compare/ot/ft/vf/test-54
+ok 278 /compare/ot/ft/vf/test-55
+ok 279 /compare/ot/ft/vf/test-56
+ok 280 /compare/ot/ft/vf/test-57
+ok 281 /compare/ot/ft/vf/test-58
+ok 282 /compare/ot/ft/vf/test-59
+ok 283 /compare/ot/ft/vf/test-60
+ok 284 /compare/ot/ft/vf/test-61
+ok 285 /compare/ot/ft/vf/test-62
+ok 286 /compare/ot/ft/vf/test-63
+ok 287 /compare/ot/ft/vf/test-64
+ok 288 /compare/ot/ft/vf/test-65
+ok 289 /compare/ot/ft/vf/test-66
+ok 290 /compare/ot/ft/vf/test-67
+ok 291 /compare/ot/ft/vf/test-68
+ok 292 /compare/ot/ft/vf/test-69
+ok 293 /compare/ot/ft/vf/test-70
+ok 294 /compare/ot/ft/vf/test-71
+ok 295 /compare/ot/ft/vf/test-72
+ok 296 /compare/ot/ft/vf/test-73
+ok 297 /compare/ot/ft/vf/test-74
+ok 298 /compare/ot/ft/vf/test-75
+ok 299 /compare/ot/ft/vf/test-76
+ok 300 /compare/ot/ft/vf/test-77
+ok 301 /compare/ot/ft/vf/test-78
+ok 302 /compare/ot/ft/vf/test-79
+ok 303 /compare/ot/ft/vf/test-80
+ok 304 /compare/ot/ft/vf/test-81
+ok 305 /compare/ot/ft/vf/test-82
+ok 306 /compare/ot/ft/vf/test-83
+ok 307 /compare/ot/ft/vf/test-84
+ok 308 /compare/ot/ft/vf/test-85
+ok 309 /compare/ot/ft/vf/test-86
+ok 310 /compare/ot/ft/vf/test-87
+ok 311 /compare/ot/ft/vf/test-88
+ok 312 /compare/ot/ft/vf/test-89
+ok 313 /compare/ot/ft/vf/test-90
+ok 314 /compare/ot/ft/vf/test-91
+ok 315 /compare/ot/ft/vf/test-92
+ok 316 /compare/ot/ft/vf/test-93
+ok 317 /compare/ot/ft/vf/test-94
+ok 318 /compare/ot/ft/vf/test-95
+ok 319 /compare/ot/ft/vf/test-96
+ok 320 /compare/ot/ft/vf/test-97
+ok 321 /compare/ot/ft/vf/test-98
+ok 322 /compare/ot/ft/vf/test-99
+ok 323 /compare/ot/ft/vf/test-100
+ok 324 /compare/ot/ft/vf/test-101
+ok 325 /compare/ot/ft/vf/test-102
+ok 326 /compare/ot/ft/vf/test-103
+ok 327 /compare/ot/ft/vf/test-104
+ok 328 /compare/ot/ft/vf/test-105
+ok 329 /compare/ot/ft/vf/test-106
+ok 330 /compare/ot/ft/vf/test-107
+ok 331 /compare/ot/ft/vf/test-108
+ok 332 /compare/ot/ft/vf/test-109
+ok 333 /compare/ot/ft/vf/test-110
+ok 334 /compare/ot/ft/vf/test-111
+ok 335 /compare/ot/ft/vf/test-112
+ok 336 /compare/ot/ft/vf/test-113
+ok 337 /compare/ot/ft/vf/test-114
+ok 338 /compare/ot/ft/vf/test-115
+ok 339 /compare/ot/ft/vf/test-116
+ok 340 /compare/ot/ft/vf/test-117
+ok 341 /compare/ot/ft/vf/test-118
+ok 342 /compare/ot/ft/vf/test-119
+ok 343 /compare/ot/ft/vf/test-120
+ok 344 /compare/ot/ft/vf/test-121
+ok 345 /compare/ot/ft/vf/test-122
+ok 346 /compare/ot/ft/vf/test-123
+ok 347 /compare/ot/ft/vf/test-124
+ok 348 /compare/ot/ft/vf/test-125
+ok 349 /compare/ot/ft/vf/test-126
+ok 350 /compare/ot/ft/vf/test-127
+ok 351 /compare/ot/ft/vf/test-128
+ok 352 /compare/ot/ft/vf/test-129
+ok 353 /compare/ot/ft/vf/test-130
+ok 354 /compare/ot/ft/vf/test-131
+ok 355 /compare/ot/ft/vf/test-132
+ok 356 /compare/ot/ft/vf/test-133
+ok 357 /compare/ot/ft/vf/test-134
+ok 358 /compare/ot/ft/vf/test-135
+ok 359 /compare/ot/ft/vf/test-136
+ok 360 /compare/ot/ft/vf/test-137
+ok 361 /compare/ot/ft/vf/test-138
+ok 362 /compare/ot/ft/vf/test-139
+ok 363 /compare/ot/ft/vf/test-140
+ok 364 /compare/ot/ft/vf/test-141
+ok 365 /compare/ot/ft/vf/test-142
+ok 366 /compare/ot/ft/vf/test-143
+ok 367 /compare/ot/ft/vf/test-144
+ok 368 /compare/ot/ft/vf/test-145
+ok 369 /compare/ot/ft/vf/test-146
+ok 370 /compare/ot/ft/vf/test-147
+ok 371 /compare/ot/ft/vf/test-148
+ok 372 /compare/ot/ft/vf/test-149
+ok 373 /compare/ot/ft/vf/test-150
+ok 374 /compare/ot/ft/vf/test-151
+ok 375 /compare/ot/ft/vf/test-152
+ok 376 /compare/ot/ft/vf/test-153
+ok 377 /compare/ot/ft/vf/test-154
+ok 378 /compare/ot/ft/vf/test-155
+ok 379 /compare/ot/ft/vf/test-156
+ok 380 /compare/ot/ft/vf/test-157
+ok 381 /compare/ot/ft/vf/test-158
+ok 382 /compare/ot/ft/vf/test-159
+ok 383 /compare/ot/ft/vf/test-160
+ok 384 /compare/ot/ft/vf/test-161
+ok 385 /compare/ot/ft/vf/test-162
+ok 386 /compare/ot/ft/vf/test-163
+ok 387 /compare/ot/ft/vf/test-164
+ok 388 /compare/ot/ft/vf/test-165
+ok 389 /compare/ot/ft/vf/test-166
+ok 390 /compare/ot/ft/vf/test-167
+ok 391 /compare/ot/ft/vf/test-168
+ok 392 /compare/ot/ft/vf/test-169
+ok 393 /compare/ot/ft/vf/test-170
+ok 394 /compare/ot/ft/vf/test-171
+ok 395 /compare/ot/ft/vf/test-172
+ok 396 /compare/ot/ft/vf/test-173
+ok 397 /compare/ot/ft/vf/test-174
+ok 398 /compare/ot/ft/vf/test-175
+# End of vf tests
+# End of ft tests
+# End of ot tests
+# End of compare tests
+# Start of color tests
+# Start of stops tests
+ok 399 /color/stops/ot
+ok 400 /color/stops/ft
+# End of stops tests
+# End of color tests
+0
+----------------------------
+
+test-set
+TAP version 14
+# random seed: R02S061114ccab0d05d18e0087c92973c81a
+1..20
+# Start of set tests
+ok 1 /set/basic
+ok 2 /set/subsets
+ok 3 /set/algebra
+ok 4 /set/iter
+ok 5 /set/empty
+ok 6 /set/delrange
+ok 7 /set/union
+# Start of intersect tests
+ok 8 /set/intersect/empty
+# Start of page tests
+ok 9 /set/intersect/page/reduction
+# End of page tests
+# End of intersect tests
+# Start of inverted tests
+ok 10 /set/inverted/basics
+ok 11 /set/inverted/ranges
+ok 12 /set/inverted/equality
+   {}   union        {}   == {}    [succeeded]
+   {}   intersect    {}   == {}    [succeeded]
+   {}   subtract     {}   == {}    [succeeded]
+   {}   sym_diff     {}   == {}    [succeeded]
+   {}   union       n{}   == {}    [succeeded]
+   {}   intersect   n{}   == {}    [succeeded]
+   {}   subtract    n{}   == {}    [succeeded]
+   {}   sym_diff    n{}   == {}    [succeeded]
+  n{}   union        {}   == {}    [succeeded]
+  n{}   intersect    {}   == {}    [succeeded]
+  n{}   subtract     {}   == {}    [succeeded]
+  n{}   sym_diff     {}   == {}    [succeeded]
+  n{}   union       n{}   == {}    [succeeded]
+  n{}   intersect   n{}   == {}    [succeeded]
+  n{}   subtract    n{}   == {}    [succeeded]
+  n{}   sym_diff    n{}   == {}    [succeeded]
+   {}   union      p {}   == {}    [succeeded]
+   {}   intersect  p {}   == {}    [succeeded]
+   {}   subtract   p {}   == {}    [succeeded]
+   {}   sym_diff   p {}   == {}    [succeeded]
+  n{}   union      p {}   == {}    [succeeded]
+  n{}   intersect  p {}   == {}    [succeeded]
+  n{}   subtract   p {}   == {}    [succeeded]
+  n{}   sym_diff   p {}   == {}    [succeeded]
+ p {}   union        {}   == {}    [succeeded]
+ p {}   intersect    {}   == {}    [succeeded]
+ p {}   subtract     {}   == {}    [succeeded]
+ p {}   sym_diff     {}   == {}    [succeeded]
+ p {}   union       n{}   == {}    [succeeded]
+ p {}   intersect   n{}   == {}    [succeeded]
+ p {}   subtract    n{}   == {}    [succeeded]
+ p {}   sym_diff    n{}   == {}    [succeeded]
+ p {}   union      p {}   == {}    [succeeded]
+ p {}   intersect  p {}   == {}    [succeeded]
+ p {}   subtract   p {}   == {}    [succeeded]
+ p {}   sym_diff   p {}   == {}    [succeeded]
+   {}   union     i  {}   == {}    [succeeded]
+   {}   intersect i  {}   == {}    [succeeded]
+   {}   subtract  i  {}   == {}    [succeeded]
+   {}   sym_diff  i  {}   == {}    [succeeded]
+  n{}   union     i  {}   == {}    [succeeded]
+  n{}   intersect i  {}   == {}    [succeeded]
+  n{}   subtract  i  {}   == {}    [succeeded]
+  n{}   sym_diff  i  {}   == {}    [succeeded]
+ p {}   union     i  {}   == {}    [succeeded]
+ p {}   intersect i  {}   == {}    [succeeded]
+ p {}   subtract  i  {}   == {}    [succeeded]
+ p {}   sym_diff  i  {}   == {}    [succeeded]
+   {}   union        {13} == {13}  [succeeded]
+   {}   intersect    {13} == {}    [succeeded]
+   {}   subtract     {13} == {}    [succeeded]
+   {}   sym_diff     {13} == {13}  [succeeded]
+  n{}   union        {13} == {}    [succeeded]
+  n{}   intersect    {13} == {}    [succeeded]
+  n{}   subtract     {13} == {}    [succeeded]
+  n{}   sym_diff     {13} == {}    [succeeded]
+ p {}   union        {13} == {13}  [succeeded]
+ p {}   intersect    {13} == {}    [succeeded]
+ p {}   subtract     {13} == {}    [succeeded]
+ p {}   sym_diff     {13} == {13}  [succeeded]
+   {}   union     i  {13} == {13}  [succeeded]
+   {}   intersect i  {13} == {}    [succeeded]
+   {}   subtract  i  {13} == {}    [succeeded]
+   {}   sym_diff  i  {13} == {13}  [succeeded]
+  n{}   union     i  {13} == {}    [succeeded]
+  n{}   intersect i  {13} == {}    [succeeded]
+  n{}   subtract  i  {13} == {}    [succeeded]
+  n{}   sym_diff  i  {13} == {}    [succeeded]
+   {}   union     ip {13} == {13}  [succeeded]
+   {}   intersect ip {13} == {}    [succeeded]
+   {}   subtract  ip {13} == {}    [succeeded]
+   {}   sym_diff  ip {13} == {13}  [succeeded]
+  n{}   union     ip {13} == {}    [succeeded]
+  n{}   intersect ip {13} == {}    [succeeded]
+  n{}   subtract  ip {13} == {}    [succeeded]
+  n{}   sym_diff  ip {13} == {}    [succeeded]
+ p {}   union     i  {13} == {13}  [succeeded]
+ p {}   intersect i  {13} == {}    [succeeded]
+ p {}   subtract  i  {13} == {}    [succeeded]
+ p {}   sym_diff  i  {13} == {13}  [succeeded]
+ p {}   union     ip {13} == {13}  [succeeded]
+ p {}   intersect ip {13} == {}    [succeeded]
+ p {}   subtract  ip {13} == {}    [succeeded]
+ p {}   sym_diff  ip {13} == {13}  [succeeded]
+i  {}   union        {}   == {}    [succeeded]
+i  {}   intersect    {}   == {}    [succeeded]
+i  {}   subtract     {}   == {}    [succeeded]
+i  {}   sym_diff     {}   == {}    [succeeded]
+i  {}   union       n{}   == {}    [succeeded]
+i  {}   intersect   n{}   == {}    [succeeded]
+i  {}   subtract    n{}   == {}    [succeeded]
+i  {}   sym_diff    n{}   == {}    [succeeded]
+i  {}   union      p {}   == {}    [succeeded]
+i  {}   intersect  p {}   == {}    [succeeded]
+i  {}   subtract   p {}   == {}    [succeeded]
+i  {}   sym_diff   p {}   == {}    [succeeded]
+i  {}   union     i  {}   == {}    [succeeded]
+i  {}   intersect i  {}   == {}    [succeeded]
+i  {}   subtract  i  {}   == {}    [succeeded]
+i  {}   sym_diff  i  {}   == {}    [succeeded]
+i  {}   union        {13} == {13}  [succeeded]
+i  {}   intersect    {13} == {}    [succeeded]
+i  {}   subtract     {13} == {}    [succeeded]
+i  {}   sym_diff     {13} == {13}  [succeeded]
+i  {}   union     i  {13} == {13}  [succeeded]
+i  {}   intersect i  {13} == {}    [succeeded]
+i  {}   subtract  i  {13} == {}    [succeeded]
+i  {}   sym_diff  i  {13} == {13}  [succeeded]
+i  {}   union     ip {13} == {13}  [succeeded]
+i  {}   intersect ip {13} == {}    [succeeded]
+i  {}   subtract  ip {13} == {}    [succeeded]
+i  {}   sym_diff  ip {13} == {13}  [succeeded]
+   {13} union        {}   == {13}  [succeeded]
+   {13} intersect    {}   == {}    [succeeded]
+   {13} subtract     {}   == {13}  [succeeded]
+   {13} sym_diff     {}   == {13}  [succeeded]
+   {13} union       n{}   == {13}  [succeeded]
+   {13} intersect   n{}   == {}    [succeeded]
+   {13} subtract    n{}   == {13}  [succeeded]
+   {13} sym_diff    n{}   == {13}  [succeeded]
+   {13} union      p {}   == {13}  [succeeded]
+   {13} intersect  p {}   == {}    [succeeded]
+   {13} subtract   p {}   == {13}  [succeeded]
+   {13} sym_diff   p {}   == {13}  [succeeded]
+   {13} union     i  {}   == {13}  [succeeded]
+   {13} intersect i  {}   == {}    [succeeded]
+   {13} subtract  i  {}   == {13}  [succeeded]
+   {13} sym_diff  i  {}   == {13}  [succeeded]
+   {13} union        {13} == {13}  [succeeded]
+   {13} intersect    {13} == {13}  [succeeded]
+   {13} subtract     {13} == {}    [succeeded]
+   {13} sym_diff     {13} == {}    [succeeded]
+   {13} union     i  {13} == {13}  [succeeded]
+   {13} intersect i  {13} == {13}  [succeeded]
+   {13} subtract  i  {13} == {}    [succeeded]
+   {13} sym_diff  i  {13} == {}    [succeeded]
+   {13} union     ip {13} == {13}  [succeeded]
+   {13} intersect ip {13} == {13}  [succeeded]
+   {13} subtract  ip {13} == {}    [succeeded]
+   {13} sym_diff  ip {13} == {}    [succeeded]
+i  {13} union        {}   == {13}  [succeeded]
+i  {13} intersect    {}   == {}    [succeeded]
+i  {13} subtract     {}   == {13}  [succeeded]
+i  {13} sym_diff     {}   == {13}  [succeeded]
+i  {13} union       n{}   == {13}  [succeeded]
+i  {13} intersect   n{}   == {}    [succeeded]
+i  {13} subtract    n{}   == {13}  [succeeded]
+i  {13} sym_diff    n{}   == {13}  [succeeded]
+i  {13} union      p {}   == {13}  [succeeded]
+i  {13} intersect  p {}   == {}    [succeeded]
+i  {13} subtract   p {}   == {13}  [succeeded]
+i  {13} sym_diff   p {}   == {13}  [succeeded]
+ip {13} union        {}   == {13}  [succeeded]
+ip {13} intersect    {}   == {}    [succeeded]
+ip {13} subtract     {}   == {13}  [succeeded]
+ip {13} sym_diff     {}   == {13}  [succeeded]
+ip {13} union       n{}   == {13}  [succeeded]
+ip {13} intersect   n{}   == {}    [succeeded]
+ip {13} subtract    n{}   == {13}  [succeeded]
+ip {13} sym_diff    n{}   == {13}  [succeeded]
+ip {13} union      p {}   == {13}  [succeeded]
+ip {13} intersect  p {}   == {}    [succeeded]
+ip {13} subtract   p {}   == {13}  [succeeded]
+ip {13} sym_diff   p {}   == {13}  [succeeded]
+i  {13} union     i  {}   == {13}  [succeeded]
+i  {13} intersect i  {}   == {}    [succeeded]
+i  {13} subtract  i  {}   == {13}  [succeeded]
+i  {13} sym_diff  i  {}   == {13}  [succeeded]
+ip {13} union     i  {}   == {13}  [succeeded]
+ip {13} intersect i  {}   == {}    [succeeded]
+ip {13} subtract  i  {}   == {13}  [succeeded]
+ip {13} sym_diff  i  {}   == {13}  [succeeded]
+i  {13} union        {13} == {13}  [succeeded]
+i  {13} intersect    {13} == {13}  [succeeded]
+i  {13} subtract     {13} == {}    [succeeded]
+i  {13} sym_diff     {13} == {}    [succeeded]
+ip {13} union        {13} == {13}  [succeeded]
+ip {13} intersect    {13} == {13}  [succeeded]
+ip {13} subtract     {13} == {}    [succeeded]
+ip {13} sym_diff     {13} == {}    [succeeded]
+i  {13} union     i  {13} == {13}  [succeeded]
+i  {13} intersect i  {13} == {13}  [succeeded]
+i  {13} subtract  i  {13} == {}    [succeeded]
+i  {13} sym_diff  i  {13} == {}    [succeeded]
+i  {13} union     ip {13} == {13}  [succeeded]
+i  {13} intersect ip {13} == {13}  [succeeded]
+i  {13} subtract  ip {13} == {}    [succeeded]
+i  {13} sym_diff  ip {13} == {}    [succeeded]
+ip {13} union     i  {13} == {13}  [succeeded]
+ip {13} intersect i  {13} == {13}  [succeeded]
+ip {13} subtract  i  {13} == {}    [succeeded]
+ip {13} sym_diff  i  {13} == {}    [succeeded]
+ip {13} union     ip {13} == {13}  [succeeded]
+ip {13} intersect ip {13} == {13}  [succeeded]
+ip {13} subtract  ip {13} == {}    [succeeded]
+ip {13} sym_diff  ip {13} == {}    [succeeded]
+ok 13 /set/inverted/operations
+# Start of iteration tests
+ok 14 /set/inverted/iteration/next
+ok 15 /set/inverted/iteration/prev
+# End of iteration tests
+# End of inverted tests
+# Start of next tests
+ok 16 /set/next/many
+# Start of many tests
+ok 17 /set/next/many/restricted
+ok 18 /set/next/many/inverted
+# Start of out tests
+# Start of of tests
+# Start of order tests
+ok 19 /set/next/many/out/of/order/pages
+# End of order tests
+# End of of tests
+# End of out tests
+# End of many tests
+# End of next tests
+# End of set tests
+# Start of hb tests
+# Start of set tests
+# Start of add tests
+# Start of sorted tests
+ok 20 /hb/set/add/sorted/array
+# End of sorted tests
+# End of add tests
+# End of set tests
+# End of hb tests
+0
+----------------------------
+
+test-shape
+TAP version 14
+# random seed: R02Sbb1ace6be0e7f5979a68771e4f170e07
+1..3
+ok 1 /shape
+# Start of shape tests
+ok 2 /shape/clusters
+ok 3 /shape/list
+# End of shape tests
+0
+----------------------------
+
+test-style
+TAP version 14
+# random seed: R02S6ba791336defc2d169ba319ee3aee128
+1..5
+# Start of empty tests
+ok 1 /empty/face
+# End of empty tests
+# Start of regular tests
+ok 2 /regular/face
+# End of regular tests
+# Start of bold tests
+ok 3 /bold/face
+# End of bold tests
+# Start of face tests
+# Start of user tests
+ok 4 /face/user/setting
+# End of user tests
+# End of face tests
+# Start of synthetic tests
+ok 5 /synthetic/slant
+# End of synthetic tests
+0
+----------------------------
+
+test-subset
+TAP version 14
+# random seed: R02S4c1fdbf71c1186d2a434b7e0087034ca
+1..7
+# Start of subset tests
+ok 1 /subset/crash
+ok 2 /subset/sets
+ok 3 /subset/plan
+# Start of 32 tests
+ok 4 /subset/32/tables
+# End of 32 tests
+# Start of no tests
+# Start of inf tests
+ok 5 /subset/no/inf/loop
+# End of inf tests
+# End of no tests
+# Start of set tests
+ok 6 /subset/set/flags
+# End of set tests
+# Start of create tests
+# Start of for tests
+# Start of tables tests
+ok 7 /subset/create/for/tables/face
+# End of tables tests
+# End of for tests
+# End of create tests
+# End of subset tests
+0
+----------------------------
+
+test-subset-cbdt
+TAP version 14
+# random seed: R02S4fc717852a3e89232905aeda46e10fd1
+1..5
+# Start of subset tests
+# Start of cbdt tests
+ok 1 /subset/cbdt/noop
+# Start of keep tests
+ok 2 /subset/cbdt/keep/one
+# Start of one tests
+# Start of last tests
+ok 3 /subset/cbdt/keep/one/last/subtable
+# End of last tests
+# End of one tests
+# Start of multiple tests
+ok 4 /subset/cbdt/keep/multiple/subtables
+# End of multiple tests
+# End of keep tests
+# Start of index tests
+# Start of format tests
+ok 5 /subset/cbdt/index/format/3
+# End of format tests
+# End of index tests
+# End of cbdt tests
+# End of subset tests
+0
+----------------------------
+
+test-subset-cff1
+TAP version 14
+# random seed: R02S2d47323a7942d42b3ec831e3bf14102f
+1..14
+# Start of subset tests
+ok 1 /subset/cff1
+# Start of cff1 tests
+ok 2 /subset/cff1/noop
+ok 3 /subset/cff1/desubr
+ok 4 /subset/cff1/j
+ok 5 /subset/cff1/expert
+ok 6 /subset/cff1/seac
+ok 7 /subset/cff1/dotsection
+ok 8 /subset/cff1/retaingids
+# Start of strip tests
+ok 9 /subset/cff1/strip/hints
+# End of strip tests
+# Start of desubr tests
+# Start of strip tests
+ok 10 /subset/cff1/desubr/strip/hints
+# End of strip tests
+# End of desubr tests
+# Start of j tests
+ok 11 /subset/cff1/j/desubr
+ok 12 /subset/cff1/j/retaingids
+# Start of strip tests
+ok 13 /subset/cff1/j/strip/hints
+# End of strip tests
+# Start of desubr tests
+# Start of strip tests
+ok 14 /subset/cff1/j/desubr/strip/hints
+# End of strip tests
+# End of desubr tests
+# End of j tests
+# End of cff1 tests
+# End of subset tests
+0
+----------------------------
+
+test-subset-cff2
+TAP version 14
+# random seed: R02Sbc951263fbe1d21258483b5714d32b16
+1..6
+# Start of subset tests
+ok 1 /subset/cff2
+# Start of cff2 tests
+ok 2 /subset/cff2/noop
+ok 3 /subset/cff2/desubr
+ok 4 /subset/cff2/retaingids
+# Start of strip tests
+ok 5 /subset/cff2/strip/hints
+# End of strip tests
+# Start of desubr tests
+# Start of strip tests
+ok 6 /subset/cff2/desubr/strip/hints
+# End of strip tests
+# End of desubr tests
+# End of cff2 tests
+# End of subset tests
+0
+----------------------------
+
+test-subset-cmap
+TAP version 14
+# random seed: R02S671c0cf79fb75b7dfcf41233b0aa052d
+1..7
+# Start of subset tests
+ok 1 /subset/cmap
+# Start of cmap tests
+ok 2 /subset/cmap/noop
+# Start of non tests
+# Start of consecutive tests
+ok 3 /subset/cmap/non/consecutive/glyphs
+# End of consecutive tests
+# End of non tests
+# Start of empty tests
+ok 4 /subset/cmap/empty/tables
+# End of empty tests
+# Start of noto tests
+# Start of color tests
+# Start of emoji tests
+ok 5 /subset/cmap/noto/color/emoji/noop
+# Start of non tests
+# Start of consecutive tests
+ok 6 /subset/cmap/noto/color/emoji/non/consecutive/glyphs
+# End of consecutive tests
+# End of non tests
+# End of emoji tests
+# End of color tests
+# End of noto tests
+# End of cmap tests
+# Start of cmap4 tests
+# Start of no tests
+# Start of exceeding tests
+# Start of maximum tests
+ok 7 /subset/cmap4/no/exceeding/maximum/codepoint
+# End of maximum tests
+# End of exceeding tests
+# End of no tests
+# End of cmap4 tests
+# End of subset tests
+0
+----------------------------
+
+test-subset-colr
+TAP version 14
+# random seed: R02S07ba512d68d16d576b4d4d548bd425f3
+1..4
+# Start of subset tests
+# Start of colr tests
+ok 1 /subset/colr/noop
+# Start of keep tests
+# Start of one tests
+# Start of colr tests
+ok 2 /subset/colr/keep/one/colr/glyph
+# End of colr tests
+# End of one tests
+# Start of mixed tests
+ok 3 /subset/colr/keep/mixed/glyph
+# End of mixed tests
+# Start of no tests
+# Start of colr tests
+ok 4 /subset/colr/keep/no/colr/glyph
+# End of colr tests
+# End of no tests
+# End of keep tests
+# End of colr tests
+# End of subset tests
+0
+----------------------------
+
+test-subset-drop-tables
+TAP version 14
+# random seed: R02S8b980b00b3d38bd83dfceea93c4cde46
+1..1
+# Start of subset tests
+# Start of drop tests
+ok 1 /subset/drop/tables
+# End of drop tests
+# End of subset tests
+0
+----------------------------
+
+test-subset-glyf
+TAP version 14
+# random seed: R02S577fd33bec68a4656cf498c30af57b35
+1..12
+# Start of subset tests
+ok 1 /subset/glyf
+# Start of glyf tests
+ok 2 /subset/glyf/noop
+# Start of set tests
+# Start of overlaps tests
+ok 3 /subset/glyf/set/overlaps/flag
+# End of overlaps tests
+# End of set tests
+# Start of with tests
+ok 4 /subset/glyf/with/components
+ok 5 /subset/glyf/with/gsub
+# Start of input tests
+ok 6 /subset/glyf/with/input/glyphs
+# End of input tests
+# End of with tests
+# Start of strip tests
+# Start of hints tests
+ok 7 /subset/glyf/strip/hints/simple
+ok 8 /subset/glyf/strip/hints/composite
+ok 9 /subset/glyf/strip/hints/invalid
+# End of hints tests
+# End of strip tests
+# Start of without tests
+ok 10 /subset/glyf/without/gsub
+# End of without tests
+# Start of retain tests
+ok 11 /subset/glyf/retain/gids
+# Start of gids tests
+ok 12 /subset/glyf/retain/gids/truncates
+# End of gids tests
+# End of retain tests
+# End of glyf tests
+# End of subset tests
+0
+----------------------------
+
+test-subset-gpos
+TAP version 14
+# random seed: R02S290167c9e5659816d141e8d6aabcf9ac
+1..2
+# Start of subset tests
+# Start of gpos tests
+# Start of lookup tests
+ok 1 /subset/gpos/lookup/subtable
+# End of lookup tests
+# Start of pairpos1 tests
+ok 2 /subset/gpos/pairpos1/vf
+# End of pairpos1 tests
+# End of gpos tests
+# End of subset tests
+0
+----------------------------
+
+test-subset-gvar
+TAP version 14
+# random seed: R02Sce5048d5aba4cab50bbd163a26000a4f
+1..3
+# Start of subset tests
+ok 1 /subset/gvar
+# Start of gvar tests
+ok 2 /subset/gvar/noop
+ok 3 /subset/gvar/retaingids
+# End of gvar tests
+# End of subset tests
+0
+----------------------------
+
+test-subset-hdmx
+TAP version 14
+# random seed: R02S67f579fcb5bde3b468c4df1b28c8ea30
+1..4
+# Start of subset tests
+# Start of hdmx tests
+ok 1 /subset/hdmx/invalid
+ok 2 /subset/hdmx/noop
+# Start of simple tests
+ok 3 /subset/hdmx/simple/subset
+# End of simple tests
+# Start of multiple tests
+# Start of device tests
+ok 4 /subset/hdmx/multiple/device/records
+# End of device tests
+# End of multiple tests
+# End of hdmx tests
+# End of subset tests
+0
+----------------------------
+
+test-subset-hmtx
+TAP version 14
+# random seed: R02S19e787f1daa00b373b36433762664cd5
+1..6
+# Start of subset tests
+# Start of hmtx tests
+ok 1 /subset/hmtx/monospace
+ok 2 /subset/hmtx/noop
+# Start of simple tests
+ok 3 /subset/hmtx/simple/subset
+# End of simple tests
+# Start of keep tests
+# Start of num tests
+ok 4 /subset/hmtx/keep/num/metrics
+# End of num tests
+# End of keep tests
+# Start of decrease tests
+# Start of num tests
+ok 5 /subset/hmtx/decrease/num/metrics
+# End of num tests
+# End of decrease tests
+# End of hmtx tests
+# Start of invalid tests
+ok 6 /subset/invalid/hmtx
+# End of invalid tests
+# End of subset tests
+0
+----------------------------
+
+test-subset-hvar
+TAP version 14
+# random seed: R02S9d5b7b02568578c69d10c0636cc0124f
+1..7
+# Start of subset tests
+# Start of map tests
+ok 1 /subset/map/HVAR
+ok 2 /subset/map/modHVAR
+# Start of HVAR tests
+ok 3 /subset/map/HVAR/noop
+ok 4 /subset/map/HVAR/retaingids
+# End of HVAR tests
+# End of map tests
+# Start of identity tests
+ok 5 /subset/identity/HVAR
+# Start of HVAR tests
+ok 6 /subset/identity/HVAR/noop
+ok 7 /subset/identity/HVAR/retaingids
+# End of HVAR tests
+# End of identity tests
+# End of subset tests
+0
+----------------------------
+
+test-subset-nameids
+TAP version 14
+# random seed: R02S813e7b7b19a7c0e2a9ce7277d994c9f6
+1..2
+# Start of subset tests
+ok 1 /subset/nameids
+# Start of nameids tests
+# Start of with tests
+# Start of dup tests
+ok 2 /subset/nameids/with/dup/strs
+# End of dup tests
+# End of with tests
+# End of nameids tests
+# End of subset tests
+0
+----------------------------
+
+test-subset-os2
+TAP version 14
+# random seed: R02Sc0b0a06c290fd76e85fa6ec033ef448b
+1..1
+# Start of subset tests
+ok 1 /subset/os2
+# End of subset tests
+0
+----------------------------
+
+test-subset-post
+TAP version 14
+# random seed: R02Sc2b730fcf2f2c81f90d70203d52ab0a6
+1..1
+# Start of post tests
+# Start of drops tests
+# Start of glyph tests
+ok 1 /post/drops/glyph/names
+# End of glyph tests
+# End of drops tests
+# End of post tests
+0
+----------------------------
+
+test-subset-repacker
+TAP version 14
+# random seed: R02S923d1fb8375ec439fc8ba5fdd1cd87cb
+1..1
+# Start of hb tests
+# Start of repack tests
+# Start of with tests
+# Start of cy tests
+ok 1 /hb/repack/with/cy/struct
+# End of cy tests
+# End of with tests
+# End of repack tests
+# End of hb tests
+0
+----------------------------
+
+test-subset-sbix
+TAP version 14
+# random seed: R02S59a869070c6794e2dda5fde32212fba0
+1..2
+# Start of subset tests
+# Start of sbix tests
+ok 1 /subset/sbix/noop
+# Start of keep tests
+ok 2 /subset/sbix/keep/one
+# End of keep tests
+# End of sbix tests
+# End of subset tests
+0
+----------------------------
+
+test-subset-vmtx
+TAP version 14
+# random seed: R02Sc21af1a84461b9e3d07ca53bc169ed0a
+1..2
+# Start of subset tests
+# Start of vmtx tests
+ok 1 /subset/vmtx/noop
+# Start of simple tests
+ok 2 /subset/vmtx/simple/subset
+# End of simple tests
+# End of vmtx tests
+# End of subset tests
+0
+----------------------------
+
+test-subset-vvar
+TAP version 14
+# random seed: R02S633a34f6e460e1c3cd04231576c74615
+1..3
+# Start of subset tests
+ok 1 /subset/VVAR
+# Start of VVAR tests
+ok 2 /subset/VVAR/noop
+ok 3 /subset/VVAR/retaingids
+# End of VVAR tests
+# End of subset tests
+0
+----------------------------
+
+test-unicode
+TAP version 14
+# random seed: R02Sf966c29cfb7839dae83464787de3bdad
+1..16
+# Start of unicode tests
+# Testing property combining_class
+# Test combining_class #0: U+0020
+# Test combining_class #1: U+0334
+# Test combining_class #2: U+093C
+# Test combining_class #3: U+3099
+# Test combining_class #4: U+094D
+# Test combining_class #5: U+05B0
+# Test combining_class #6: U+05B1
+# Test combining_class #7: U+05B2
+# Test combining_class #8: U+05B3
+# Test combining_class #9: U+05B4
+# Test combining_class #10: U+05B5
+# Test combining_class #11: U+05B6
+# Test combining_class #12: U+05B7
+# Test combining_class #13: U+05B8
+# Test combining_class #14: U+05B9
+# Test combining_class #15: U+05BB
+# Test combining_class #16: U+05BC
+# Test combining_class #17: U+05BD
+# Test combining_class #18: U+05BF
+# Test combining_class #19: U+05C1
+# Test combining_class #20: U+05C2
+# Test combining_class #21: U+FB1E
+# Test combining_class #22: U+064B
+# Test combining_class #23: U+064C
+# Test combining_class #24: U+064D
+# Test combining_class #25: U+05AE
+# Test combining_class #26: U+0300
+# Test combining_class #27: U+302C
+# Test combining_class #28: U+0362
+# Test combining_class #29: U+0360
+# Test combining_class #30: U+0345
+# Test combining_class #31: U+111111
+# Test combining_class more #0: U+1DCD
+# Test combining_class more #1: U+A8E0
+# Test combining_class more #2: U+135D
+# Test combining_class more #3: U+A674
+# Test combining_class more #4: U+1AB0
+# Test combining_class more #5: U+A69E
+# Test combining_class more #6: U+1E000
+# Test combining_class more #7: U+1DF6
+# Test combining_class more #8: U+07FD
+# Test combining_class more #9: U+0EBA
+# Test combining_class more #10: U+1ABF
+# Test combining_class more #11: U+1DFA
+# Test combining_class more #12: U+10EFD
+# Test combining_class more #13: U+0897
+# Test combining_class more #14: U+111111
+# Testing property general_category
+# Test general_category #0: U+000D
+# Test general_category #1: U+200E
+# Test general_category #2: U+0378
+# Test general_category #3: U+E000
+# Test general_category #4: U+D800
+# Test general_category #5: U+0061
+# Test general_category #6: U+02B0
+# Test general_category #7: U+3400
+# Test general_category #8: U+01C5
+# Test general_category #9: U+FF21
+# Test general_category #10: U+0903
+# Test general_category #11: U+20DD
+# Test general_category #12: U+A806
+# Test general_category #13: U+FF10
+# Test general_category #14: U+16EE
+# Test general_category #15: U+17F0
+# Test general_category #16: U+005F
+# Test general_category #17: U+058A
+# Test general_category #18: U+0F3B
+# Test general_category #19: U+2019
+# Test general_category #20: U+2018
+# Test general_category #21: U+2016
+# Test general_category #22: U+0F3A
+# Test general_category #23: U+20A0
+# Test general_category #24: U+309B
+# Test general_category #25: U+FB29
+# Test general_category #26: U+00A6
+# Test general_category #27: U+2028
+# Test general_category #28: U+2029
+# Test general_category #29: U+202F
+# Test general_category #30: U+111111
+# Test general_category more #0: U+1F131
+# Test general_category more #1: U+0620
+# Test general_category more #2: U+058F
+# Test general_category more #3: U+20BA
+# Test general_category more #4: U+061C
+# Test general_category more #5: U+058D
+# Test general_category more #6: U+08E3
+# Test general_category more #7: U+08D4
+# Test general_category more #8: U+09FD
+# Test general_category more #9: U+0560
+# Test general_category more #10: U+0C77
+# Test general_category more #11: U+32FF
+# Test general_category more #12: U+08BE
+# Test general_category more #13: U+20C0
+# Test general_category more #14: U+0CF3
+# Test general_category more #15: U+31EF
+# Test general_category more #16: U+10D6E
+# Test general_category more #17: U+111111
+# Testing property mirroring
+# Test mirroring #0: U+0020
+# Test mirroring #1: U+0041
+# Test mirroring #2: U+00F0
+# Test mirroring #3: U+27CC
+# Test mirroring #4: U+E01EF
+# Test mirroring #5: U+1D7C3
+# Test mirroring #6: U+100000
+# Test mirroring #7: U+0029
+# Test mirroring #8: U+0028
+# Test mirroring #9: U+003E
+# Test mirroring #10: U+003C
+# Test mirroring #11: U+005D
+# Test mirroring #12: U+005B
+# Test mirroring #13: U+007D
+# Test mirroring #14: U+007B
+# Test mirroring #15: U+00BB
+# Test mirroring #16: U+00AB
+# Test mirroring #17: U+226B
+# Test mirroring #18: U+226A
+# Test mirroring #19: U+22F1
+# Test mirroring #20: U+22F0
+# Test mirroring #21: U+FF60
+# Test mirroring #22: U+FF5F
+# Test mirroring #23: U+FF63
+# Test mirroring #24: U+FF62
+# Test mirroring #25: U+111111
+# Test mirroring more #0: U+27CB
+# Test mirroring more #1: U+2BFE
+# Test mirroring more #2: U+111111
+# Testing property script
+# Test script #0: U+002A
+# Test script #1: U+0670
+# Test script #2: U+060D
+# Test script #3: U+0559
+# Test script #4: U+09CD
+# Test script #5: U+31B6
+# Test script #6: U+13A2
+# Test script #7: U+2CFD
+# Test script #8: U+0482
+# Test script #9: U+10401
+# Test script #10: U+094D
+# Test script #11: U+1258
+# Test script #12: U+10FC
+# Test script #13: U+10341
+# Test script #14: U+0375
+# Test script #15: U+0A83
+# Test script #16: U+0A3C
+# Test script #17: U+3005
+# Test script #18: U+1100
+# Test script #19: U+05BF
+# Test script #20: U+309F
+# Test script #21: U+0CBC
+# Test script #22: U+30FF
+# Test script #23: U+17DD
+# Test script #24: U+0EDD
+# Test script #25: U+0061
+# Test script #26: U+0D3D
+# Test script #27: U+1843
+# Test script #28: U+1031
+# Test script #29: U+169C
+# Test script #30: U+10322
+# Test script #31: U+0B3C
+# Test script #32: U+16EF
+# Test script #33: U+0DBD
+# Test script #34: U+0711
+# Test script #35: U+0B82
+# Test script #36: U+0C03
+# Test script #37: U+07B1
+# Test script #38: U+0E31
+# Test script #39: U+0FD4
+# Test script #40: U+1401
+# Test script #41: U+A015
+# Test script #42: U+1700
+# Test script #43: U+1720
+# Test script #44: U+1740
+# Test script #45: U+1760
+# Test script #46: U+2800
+# Test script #47: U+10808
+# Test script #48: U+1932
+# Test script #49: U+10480
+# Test script #50: U+10450
+# Test script #51: U+10000
+# Test script #52: U+1950
+# Test script #53: U+1039F
+# Test script #54: U+1980
+# Test script #55: U+1A1F
+# Test script #56: U+2C00
+# Test script #57: U+2D6F
+# Test script #58: U+A800
+# Test script #59: U+103D0
+# Test script #60: U+10A3F
+# Test script #61: U+0378
+# Test script #62: U+1B04
+# Test script #63: U+12000
+# Test script #64: U+10900
+# Test script #65: U+A840
+# Test script #66: U+07C0
+# Test script #67: U+A900
+# Test script #68: U+1C00
+# Test script #69: U+A930
+# Test script #70: U+1B80
+# Test script #71: U+A880
+# Test script #72: U+AA00
+# Test script #73: U+1C50
+# Test script #74: U+A500
+# Test script #75: U+102A0
+# Test script #76: U+10280
+# Test script #77: U+1093F
+# Test script #78: U+111111
+# Test script more #0: U+10B00
+# Test script more #1: U+A6A0
+# Test script more #2: U+1400
+# Test script more #3: U+13000
+# Test script more #4: U+10840
+# Test script more #5: U+1CED
+# Test script more #6: U+10B60
+# Test script more #7: U+10B40
+# Test script more #8: U+A980
+# Test script more #9: U+11082
+# Test script more #10: U+A4D0
+# Test script more #11: U+ABE5
+# Test script more #12: U+10A60
+# Test script more #13: U+10C00
+# Test script more #14: U+0800
+# Test script more #15: U+1A20
+# Test script more #16: U+AA80
+# Test script more #17: U+1BC0
+# Test script more #18: U+11000
+# Test script more #19: U+0840
+# Test script more #20: U+10980
+# Test script more #21: U+109A0
+# Test script more #22: U+110D0
+# Test script more #23: U+11100
+# Test script more #24: U+11180
+# Test script more #25: U+11680
+# Test script more #26: U+16F00
+# Test script more #27: U+20BA
+# Test script more #28: U+2066
+# Test script more #29: U+10350
+# Test script more #30: U+10500
+# Test script more #31: U+10530
+# Test script more #32: U+10600
+# Test script more #33: U+10860
+# Test script more #34: U+10880
+# Test script more #35: U+10A80
+# Test script more #36: U+10AC0
+# Test script more #37: U+10B80
+# Test script more #38: U+11150
+# Test script more #39: U+11200
+# Test script more #40: U+112B0
+# Test script more #41: U+11300
+# Test script more #42: U+11480
+# Test script more #43: U+11580
+# Test script more #44: U+11600
+# Test script more #45: U+118A0
+# Test script more #46: U+11AC0
+# Test script more #47: U+16A40
+# Test script more #48: U+16AD0
+# Test script more #49: U+16B00
+# Test script more #50: U+1BC00
+# Test script more #51: U+1E800
+# Test script more #52: U+108E0
+# Test script more #53: U+10C80
+# Test script more #54: U+11280
+# Test script more #55: U+11700
+# Test script more #56: U+14400
+# Test script more #57: U+1D800
+# Test script more #58: U+104B0
+# Test script more #59: U+11400
+# Test script more #60: U+11C00
+# Test script more #61: U+11C70
+# Test script more #62: U+17000
+# Test script more #63: U+1E900
+# Test script more #64: U+11A00
+# Test script more #65: U+11A50
+# Test script more #66: U+11D00
+# Test script more #67: U+1B170
+# Test script more #68: U+10D00
+# Test script more #69: U+10F00
+# Test script more #70: U+10F30
+# Test script more #71: U+11800
+# Test script more #72: U+11D60
+# Test script more #73: U+11EE0
+# Test script more #74: U+16E40
+# Test script more #75: U+10FE0
+# Test script more #76: U+119A0
+# Test script more #77: U+1E100
+# Test script more #78: U+1E2C0
+# Test script more #79: U+32FF
+# Test script more #80: U+10E80
+# Test script more #81: U+10FB0
+# Test script more #82: U+11900
+# Test script more #83: U+18B00
+# Test script more #84: U+10570
+# Test script more #85: U+10F70
+# Test script more #86: U+12F90
+# Test script more #87: U+16A70
+# Test script more #88: U+1E290
+# Test script more #89: U+11F00
+# Test script more #90: U+1E4D0
+# Test script more #91: U+105C0
+# Test script more #92: U+10D40
+# Test script more #93: U+11380
+# Test script more #94: U+11BC0
+# Test script more #95: U+16100
+# Test script more #96: U+16D40
+# Test script more #97: U+1E5D0
+# Test script more #98: U+111111
+# Testing property combining_class
+# Test combining_class #0: U+0020
+# Test combining_class #1: U+0334
+# Test combining_class #2: U+093C
+# Test combining_class #3: U+3099
+# Test combining_class #4: U+094D
+# Test combining_class #5: U+05B0
+# Test combining_class #6: U+05B1
+# Test combining_class #7: U+05B2
+# Test combining_class #8: U+05B3
+# Test combining_class #9: U+05B4
+# Test combining_class #10: U+05B5
+# Test combining_class #11: U+05B6
+# Test combining_class #12: U+05B7
+# Test combining_class #13: U+05B8
+# Test combining_class #14: U+05B9
+# Test combining_class #15: U+05BB
+# Test combining_class #16: U+05BC
+# Test combining_class #17: U+05BD
+# Test combining_class #18: U+05BF
+# Test combining_class #19: U+05C1
+# Test combining_class #20: U+05C2
+# Test combining_class #21: U+FB1E
+# Test combining_class #22: U+064B
+# Test combining_class #23: U+064C
+# Test combining_class #24: U+064D
+# Test combining_class #25: U+05AE
+# Test combining_class #26: U+0300
+# Test combining_class #27: U+302C
+# Test combining_class #28: U+0362
+# Test combining_class #29: U+0360
+# Test combining_class #30: U+0345
+# Test combining_class #31: U+111111
+# Test combining_class more #0: U+1DCD
+# Test combining_class more #1: U+A8E0
+# Test combining_class more #2: U+135D
+# Test combining_class more #3: U+A674
+# Test combining_class more #4: U+1AB0
+# Test combining_class more #5: U+A69E
+# Test combining_class more #6: U+1E000
+# Test combining_class more #7: U+1DF6
+# Test combining_class more #8: U+07FD
+# Test combining_class more #9: U+0EBA
+# Test combining_class more #10: U+1ABF
+# Test combining_class more #11: U+1DFA
+# Test combining_class more #12: U+10EFD
+# Test combining_class more #13: U+0897
+# Test combining_class more #14: U+111111
+# Testing property general_category
+# Test general_category #0: U+000D
+# Test general_category #1: U+200E
+# Test general_category #2: U+0378
+# Test general_category #3: U+E000
+# Test general_category #4: U+D800
+# Test general_category #5: U+0061
+# Test general_category #6: U+02B0
+# Test general_category #7: U+3400
+# Test general_category #8: U+01C5
+# Test general_category #9: U+FF21
+# Test general_category #10: U+0903
+# Test general_category #11: U+20DD
+# Test general_category #12: U+A806
+# Test general_category #13: U+FF10
+# Test general_category #14: U+16EE
+# Test general_category #15: U+17F0
+# Test general_category #16: U+005F
+# Test general_category #17: U+058A
+# Test general_category #18: U+0F3B
+# Test general_category #19: U+2019
+# Test general_category #20: U+2018
+# Test general_category #21: U+2016
+# Test general_category #22: U+0F3A
+# Test general_category #23: U+20A0
+# Test general_category #24: U+309B
+# Test general_category #25: U+FB29
+# Test general_category #26: U+00A6
+# Test general_category #27: U+2028
+# Test general_category #28: U+2029
+# Test general_category #29: U+202F
+# Test general_category #30: U+111111
+# Test general_category more #0: U+1F131
+# Test general_category more #1: U+0620
+# Test general_category more #2: U+058F
+# Test general_category more #3: U+20BA
+# Test general_category more #4: U+061C
+# Test general_category more #5: U+058D
+# Test general_category more #6: U+08E3
+# Test general_category more #7: U+08D4
+# Test general_category more #8: U+09FD
+# Test general_category more #9: U+0560
+# Test general_category more #10: U+0C77
+# Test general_category more #11: U+32FF
+# Test general_category more #12: U+08BE
+# Test general_category more #13: U+20C0
+# Test general_category more #14: U+0CF3
+# Test general_category more #15: U+31EF
+# Test general_category more #16: U+10D6E
+# Test general_category more #17: U+111111
+# Testing property mirroring
+# Test mirroring #0: U+0020
+# Test mirroring #1: U+0041
+# Test mirroring #2: U+00F0
+# Test mirroring #3: U+27CC
+# Test mirroring #4: U+E01EF
+# Test mirroring #5: U+1D7C3
+# Test mirroring #6: U+100000
+# Test mirroring #7: U+0029
+# Test mirroring #8: U+0028
+# Test mirroring #9: U+003E
+# Test mirroring #10: U+003C
+# Test mirroring #11: U+005D
+# Test mirroring #12: U+005B
+# Test mirroring #13: U+007D
+# Test mirroring #14: U+007B
+# Test mirroring #15: U+00BB
+# Test mirroring #16: U+00AB
+# Test mirroring #17: U+226B
+# Test mirroring #18: U+226A
+# Test mirroring #19: U+22F1
+# Test mirroring #20: U+22F0
+# Test mirroring #21: U+FF60
+# Test mirroring #22: U+FF5F
+# Test mirroring #23: U+FF63
+# Test mirroring #24: U+FF62
+# Test mirroring #25: U+111111
+# Test mirroring more #0: U+27CB
+# Test mirroring more #1: U+2BFE
+# Test mirroring more #2: U+111111
+# Testing property script
+# Test script #0: U+002A
+# Test script #1: U+0670
+# Test script #2: U+060D
+# Test script #3: U+0559
+# Test script #4: U+09CD
+# Test script #5: U+31B6
+# Test script #6: U+13A2
+# Test script #7: U+2CFD
+# Test script #8: U+0482
+# Test script #9: U+10401
+# Test script #10: U+094D
+# Test script #11: U+1258
+# Test script #12: U+10FC
+# Test script #13: U+10341
+# Test script #14: U+0375
+# Test script #15: U+0A83
+# Test script #16: U+0A3C
+# Test script #17: U+3005
+# Test script #18: U+1100
+# Test script #19: U+05BF
+# Test script #20: U+309F
+# Test script #21: U+0CBC
+# Test script #22: U+30FF
+# Test script #23: U+17DD
+# Test script #24: U+0EDD
+# Test script #25: U+0061
+# Test script #26: U+0D3D
+# Test script #27: U+1843
+# Test script #28: U+1031
+# Test script #29: U+169C
+# Test script #30: U+10322
+# Test script #31: U+0B3C
+# Test script #32: U+16EF
+# Test script #33: U+0DBD
+# Test script #34: U+0711
+# Test script #35: U+0B82
+# Test script #36: U+0C03
+# Test script #37: U+07B1
+# Test script #38: U+0E31
+# Test script #39: U+0FD4
+# Test script #40: U+1401
+# Test script #41: U+A015
+# Test script #42: U+1700
+# Test script #43: U+1720
+# Test script #44: U+1740
+# Test script #45: U+1760
+# Test script #46: U+2800
+# Test script #47: U+10808
+# Test script #48: U+1932
+# Test script #49: U+10480
+# Test script #50: U+10450
+# Test script #51: U+10000
+# Test script #52: U+1950
+# Test script #53: U+1039F
+# Test script #54: U+1980
+# Test script #55: U+1A1F
+# Test script #56: U+2C00
+# Test script #57: U+2D6F
+# Test script #58: U+A800
+# Test script #59: U+103D0
+# Test script #60: U+10A3F
+# Test script #61: U+0378
+# Test script #62: U+1B04
+# Test script #63: U+12000
+# Test script #64: U+10900
+# Test script #65: U+A840
+# Test script #66: U+07C0
+# Test script #67: U+A900
+# Test script #68: U+1C00
+# Test script #69: U+A930
+# Test script #70: U+1B80
+# Test script #71: U+A880
+# Test script #72: U+AA00
+# Test script #73: U+1C50
+# Test script #74: U+A500
+# Test script #75: U+102A0
+# Test script #76: U+10280
+# Test script #77: U+1093F
+# Test script #78: U+111111
+# Test script more #0: U+10B00
+# Test script more #1: U+A6A0
+# Test script more #2: U+1400
+# Test script more #3: U+13000
+# Test script more #4: U+10840
+# Test script more #5: U+1CED
+# Test script more #6: U+10B60
+# Test script more #7: U+10B40
+# Test script more #8: U+A980
+# Test script more #9: U+11082
+# Test script more #10: U+A4D0
+# Test script more #11: U+ABE5
+# Test script more #12: U+10A60
+# Test script more #13: U+10C00
+# Test script more #14: U+0800
+# Test script more #15: U+1A20
+# Test script more #16: U+AA80
+# Test script more #17: U+1BC0
+# Test script more #18: U+11000
+# Test script more #19: U+0840
+# Test script more #20: U+10980
+# Test script more #21: U+109A0
+# Test script more #22: U+110D0
+# Test script more #23: U+11100
+# Test script more #24: U+11180
+# Test script more #25: U+11680
+# Test script more #26: U+16F00
+# Test script more #27: U+20BA
+# Test script more #28: U+2066
+# Test script more #29: U+10350
+# Test script more #30: U+10500
+# Test script more #31: U+10530
+# Test script more #32: U+10600
+# Test script more #33: U+10860
+# Test script more #34: U+10880
+# Test script more #35: U+10A80
+# Test script more #36: U+10AC0
+# Test script more #37: U+10B80
+# Test script more #38: U+11150
+# Test script more #39: U+11200
+# Test script more #40: U+112B0
+# Test script more #41: U+11300
+# Test script more #42: U+11480
+# Test script more #43: U+11580
+# Test script more #44: U+11600
+# Test script more #45: U+118A0
+# Test script more #46: U+11AC0
+# Test script more #47: U+16A40
+# Test script more #48: U+16AD0
+# Test script more #49: U+16B00
+# Test script more #50: U+1BC00
+# Test script more #51: U+1E800
+# Test script more #52: U+108E0
+# Test script more #53: U+10C80
+# Test script more #54: U+11280
+# Test script more #55: U+11700
+# Test script more #56: U+14400
+# Test script more #57: U+1D800
+# Test script more #58: U+104B0
+# Test script more #59: U+11400
+# Test script more #60: U+11C00
+# Test script more #61: U+11C70
+# Test script more #62: U+17000
+# Test script more #63: U+1E900
+# Test script more #64: U+11A00
+# Test script more #65: U+11A50
+# Test script more #66: U+11D00
+# Test script more #67: U+1B170
+# Test script more #68: U+10D00
+# Test script more #69: U+10F00
+# Test script more #70: U+10F30
+# Test script more #71: U+11800
+# Test script more #72: U+11D60
+# Test script more #73: U+11EE0
+# Test script more #74: U+16E40
+# Test script more #75: U+10FE0
+# Test script more #76: U+119A0
+# Test script more #77: U+1E100
+# Test script more #78: U+1E2C0
+# Test script more #79: U+32FF
+# Test script more #80: U+10E80
+# Test script more #81: U+10FB0
+# Test script more #82: U+11900
+# Test script more #83: U+18B00
+# Test script more #84: U+10570
+# Test script more #85: U+10F70
+# Test script more #86: U+12F90
+# Test script more #87: U+16A70
+# Test script more #88: U+1E290
+# Test script more #89: U+11F00
+# Test script more #90: U+1E4D0
+# Test script more #91: U+105C0
+# Test script more #92: U+10D40
+# Test script more #93: U+11380
+# Test script more #94: U+11BC0
+# Test script more #95: U+16100
+# Test script more #96: U+16D40
+# Test script more #97: U+1E5D0
+# Test script more #98: U+111111
+# Some property tests failed.  You probably have an old version of one of the libraries used.
+ok 1 /unicode/chainup
+# Testing property combining_class
+# Testing property general_category
+# Testing property mirroring
+# Testing property script
+ok 2 /unicode/setters
+# Start of properties tests
+# Testing property combining_class
+# Test combining_class #0: U+0020
+# Test combining_class #1: U+0334
+# Test combining_class #2: U+093C
+# Test combining_class #3: U+3099
+# Test combining_class #4: U+094D
+# Test combining_class #5: U+05B0
+# Test combining_class #6: U+05B1
+# Test combining_class #7: U+05B2
+# Test combining_class #8: U+05B3
+# Test combining_class #9: U+05B4
+# Test combining_class #10: U+05B5
+# Test combining_class #11: U+05B6
+# Test combining_class #12: U+05B7
+# Test combining_class #13: U+05B8
+# Test combining_class #14: U+05B9
+# Test combining_class #15: U+05BB
+# Test combining_class #16: U+05BC
+# Test combining_class #17: U+05BD
+# Test combining_class #18: U+05BF
+# Test combining_class #19: U+05C1
+# Test combining_class #20: U+05C2
+# Test combining_class #21: U+FB1E
+# Test combining_class #22: U+064B
+# Test combining_class #23: U+064C
+# Test combining_class #24: U+064D
+# Test combining_class #25: U+05AE
+# Test combining_class #26: U+0300
+# Test combining_class #27: U+302C
+# Test combining_class #28: U+0362
+# Test combining_class #29: U+0360
+# Test combining_class #30: U+0345
+# Test combining_class #31: U+111111
+# Test combining_class more #0: U+1DCD
+# Test combining_class more #1: U+A8E0
+# Test combining_class more #2: U+135D
+# Test combining_class more #3: U+A674
+# Test combining_class more #4: U+1AB0
+# Test combining_class more #5: U+A69E
+# Test combining_class more #6: U+1E000
+# Test combining_class more #7: U+1DF6
+# Test combining_class more #8: U+07FD
+# Test combining_class more #9: U+0EBA
+# Test combining_class more #10: U+1ABF
+# Test combining_class more #11: U+1DFA
+# Test combining_class more #12: U+10EFD
+# Test combining_class more #13: U+0897
+# Test combining_class more #14: U+111111
+# Testing property general_category
+# Test general_category #0: U+000D
+# Test general_category #1: U+200E
+# Test general_category #2: U+0378
+# Test general_category #3: U+E000
+# Test general_category #4: U+D800
+# Test general_category #5: U+0061
+# Test general_category #6: U+02B0
+# Test general_category #7: U+3400
+# Test general_category #8: U+01C5
+# Test general_category #9: U+FF21
+# Test general_category #10: U+0903
+# Test general_category #11: U+20DD
+# Test general_category #12: U+A806
+# Test general_category #13: U+FF10
+# Test general_category #14: U+16EE
+# Test general_category #15: U+17F0
+# Test general_category #16: U+005F
+# Test general_category #17: U+058A
+# Test general_category #18: U+0F3B
+# Test general_category #19: U+2019
+# Test general_category #20: U+2018
+# Test general_category #21: U+2016
+# Test general_category #22: U+0F3A
+# Test general_category #23: U+20A0
+# Test general_category #24: U+309B
+# Test general_category #25: U+FB29
+# Test general_category #26: U+00A6
+# Test general_category #27: U+2028
+# Test general_category #28: U+2029
+# Test general_category #29: U+202F
+# Test general_category #30: U+111111
+# Test general_category more #0: U+1F131
+# Test general_category more #1: U+0620
+# Test general_category more #2: U+058F
+# Test general_category more #3: U+20BA
+# Test general_category more #4: U+061C
+# Test general_category more #5: U+058D
+# Test general_category more #6: U+08E3
+# Test general_category more #7: U+08D4
+# Test general_category more #8: U+09FD
+# Test general_category more #9: U+0560
+# Test general_category more #10: U+0C77
+# Test general_category more #11: U+32FF
+# Test general_category more #12: U+08BE
+# Test general_category more #13: U+20C0
+# Test general_category more #14: U+0CF3
+# Test general_category more #15: U+31EF
+# Test general_category more #16: U+10D6E
+# Test general_category more #17: U+111111
+# Testing property mirroring
+# Test mirroring #0: U+0020
+# Test mirroring #1: U+0041
+# Test mirroring #2: U+00F0
+# Test mirroring #3: U+27CC
+# Test mirroring #4: U+E01EF
+# Test mirroring #5: U+1D7C3
+# Test mirroring #6: U+100000
+# Test mirroring #7: U+0029
+# Test mirroring #8: U+0028
+# Test mirroring #9: U+003E
+# Test mirroring #10: U+003C
+# Test mirroring #11: U+005D
+# Test mirroring #12: U+005B
+# Test mirroring #13: U+007D
+# Test mirroring #14: U+007B
+# Test mirroring #15: U+00BB
+# Test mirroring #16: U+00AB
+# Test mirroring #17: U+226B
+# Test mirroring #18: U+226A
+# Test mirroring #19: U+22F1
+# Test mirroring #20: U+22F0
+# Test mirroring #21: U+FF60
+# Test mirroring #22: U+FF5F
+# Test mirroring #23: U+FF63
+# Test mirroring #24: U+FF62
+# Test mirroring #25: U+111111
+# Test mirroring more #0: U+27CB
+# Test mirroring more #1: U+2BFE
+# Test mirroring more #2: U+111111
+# Testing property script
+# Test script #0: U+002A
+# Test script #1: U+0670
+# Test script #2: U+060D
+# Test script #3: U+0559
+# Test script #4: U+09CD
+# Test script #5: U+31B6
+# Test script #6: U+13A2
+# Test script #7: U+2CFD
+# Test script #8: U+0482
+# Test script #9: U+10401
+# Test script #10: U+094D
+# Test script #11: U+1258
+# Test script #12: U+10FC
+# Test script #13: U+10341
+# Test script #14: U+0375
+# Test script #15: U+0A83
+# Test script #16: U+0A3C
+# Test script #17: U+3005
+# Test script #18: U+1100
+# Test script #19: U+05BF
+# Test script #20: U+309F
+# Test script #21: U+0CBC
+# Test script #22: U+30FF
+# Test script #23: U+17DD
+# Test script #24: U+0EDD
+# Test script #25: U+0061
+# Test script #26: U+0D3D
+# Test script #27: U+1843
+# Test script #28: U+1031
+# Test script #29: U+169C
+# Test script #30: U+10322
+# Test script #31: U+0B3C
+# Test script #32: U+16EF
+# Test script #33: U+0DBD
+# Test script #34: U+0711
+# Test script #35: U+0B82
+# Test script #36: U+0C03
+# Test script #37: U+07B1
+# Test script #38: U+0E31
+# Test script #39: U+0FD4
+# Test script #40: U+1401
+# Test script #41: U+A015
+# Test script #42: U+1700
+# Test script #43: U+1720
+# Test script #44: U+1740
+# Test script #45: U+1760
+# Test script #46: U+2800
+# Test script #47: U+10808
+# Test script #48: U+1932
+# Test script #49: U+10480
+# Test script #50: U+10450
+# Test script #51: U+10000
+# Test script #52: U+1950
+# Test script #53: U+1039F
+# Test script #54: U+1980
+# Test script #55: U+1A1F
+# Test script #56: U+2C00
+# Test script #57: U+2D6F
+# Test script #58: U+A800
+# Test script #59: U+103D0
+# Test script #60: U+10A3F
+# Test script #61: U+0378
+# Test script #62: U+1B04
+# Test script #63: U+12000
+# Test script #64: U+10900
+# Test script #65: U+A840
+# Test script #66: U+07C0
+# Test script #67: U+A900
+# Test script #68: U+1C00
+# Test script #69: U+A930
+# Test script #70: U+1B80
+# Test script #71: U+A880
+# Test script #72: U+AA00
+# Test script #73: U+1C50
+# Test script #74: U+A500
+# Test script #75: U+102A0
+# Test script #76: U+10280
+# Test script #77: U+1093F
+# Test script #78: U+111111
+# Test script more #0: U+10B00
+# Test script more #1: U+A6A0
+# Test script more #2: U+1400
+# Test script more #3: U+13000
+# Test script more #4: U+10840
+# Test script more #5: U+1CED
+# Test script more #6: U+10B60
+# Test script more #7: U+10B40
+# Test script more #8: U+A980
+# Test script more #9: U+11082
+# Test script more #10: U+A4D0
+# Test script more #11: U+ABE5
+# Test script more #12: U+10A60
+# Test script more #13: U+10C00
+# Test script more #14: U+0800
+# Test script more #15: U+1A20
+# Test script more #16: U+AA80
+# Test script more #17: U+1BC0
+# Test script more #18: U+11000
+# Test script more #19: U+0840
+# Test script more #20: U+10980
+# Test script more #21: U+109A0
+# Test script more #22: U+110D0
+# Test script more #23: U+11100
+# Test script more #24: U+11180
+# Test script more #25: U+11680
+# Test script more #26: U+16F00
+# Test script more #27: U+20BA
+# Test script more #28: U+2066
+# Test script more #29: U+10350
+# Test script more #30: U+10500
+# Test script more #31: U+10530
+# Test script more #32: U+10600
+# Test script more #33: U+10860
+# Test script more #34: U+10880
+# Test script more #35: U+10A80
+# Test script more #36: U+10AC0
+# Test script more #37: U+10B80
+# Test script more #38: U+11150
+# Test script more #39: U+11200
+# Test script more #40: U+112B0
+# Test script more #41: U+11300
+# Test script more #42: U+11480
+# Test script more #43: U+11580
+# Test script more #44: U+11600
+# Test script more #45: U+118A0
+# Test script more #46: U+11AC0
+# Test script more #47: U+16A40
+# Test script more #48: U+16AD0
+# Test script more #49: U+16B00
+# Test script more #50: U+1BC00
+# Test script more #51: U+1E800
+# Test script more #52: U+108E0
+# Test script more #53: U+10C80
+# Test script more #54: U+11280
+# Test script more #55: U+11700
+# Test script more #56: U+14400
+# Test script more #57: U+1D800
+# Test script more #58: U+104B0
+# Test script more #59: U+11400
+# Test script more #60: U+11C00
+# Test script more #61: U+11C70
+# Test script more #62: U+17000
+# Test script more #63: U+1E900
+# Test script more #64: U+11A00
+# Test script more #65: U+11A50
+# Test script more #66: U+11D00
+# Test script more #67: U+1B170
+# Test script more #68: U+10D00
+# Test script more #69: U+10F00
+# Test script more #70: U+10F30
+# Test script more #71: U+11800
+# Test script more #72: U+11D60
+# Test script more #73: U+11EE0
+# Test script more #74: U+16E40
+# Test script more #75: U+10FE0
+# Test script more #76: U+119A0
+# Test script more #77: U+1E100
+# Test script more #78: U+1E2C0
+# Test script more #79: U+32FF
+# Test script more #80: U+10E80
+# Test script more #81: U+10FB0
+# Test script more #82: U+11900
+# Test script more #83: U+18B00
+# Test script more #84: U+10570
+# Test script more #85: U+10F70
+# Test script more #86: U+12F90
+# Test script more #87: U+16A70
+# Test script more #88: U+1E290
+# Test script more #89: U+11F00
+# Test script more #90: U+1E4D0
+# Test script more #91: U+105C0
+# Test script more #92: U+10D40
+# Test script more #93: U+11380
+# Test script more #94: U+11BC0
+# Test script more #95: U+16100
+# Test script more #96: U+16D40
+# Test script more #97: U+1E5D0
+# Test script more #98: U+111111
+ok 3 /unicode/properties/nil
+# Testing property combining_class
+# Test combining_class #0: U+0020
+# Test combining_class #1: U+0334
+# Test combining_class #2: U+093C
+# Test combining_class #3: U+3099
+# Test combining_class #4: U+094D
+# Test combining_class #5: U+05B0
+# Test combining_class #6: U+05B1
+# Test combining_class #7: U+05B2
+# Test combining_class #8: U+05B3
+# Test combining_class #9: U+05B4
+# Test combining_class #10: U+05B5
+# Test combining_class #11: U+05B6
+# Test combining_class #12: U+05B7
+# Test combining_class #13: U+05B8
+# Test combining_class #14: U+05B9
+# Test combining_class #15: U+05BB
+# Test combining_class #16: U+05BC
+# Test combining_class #17: U+05BD
+# Test combining_class #18: U+05BF
+# Test combining_class #19: U+05C1
+# Test combining_class #20: U+05C2
+# Test combining_class #21: U+FB1E
+# Test combining_class #22: U+064B
+# Test combining_class #23: U+064C
+# Test combining_class #24: U+064D
+# Test combining_class #25: U+05AE
+# Test combining_class #26: U+0300
+# Test combining_class #27: U+302C
+# Test combining_class #28: U+0362
+# Test combining_class #29: U+0360
+# Test combining_class #30: U+0345
+# Test combining_class #31: U+111111
+# Test combining_class more #0: U+1DCD
+# Test combining_class more #1: U+A8E0
+# Test combining_class more #2: U+135D
+# Test combining_class more #3: U+A674
+# Test combining_class more #4: U+1AB0
+# Test combining_class more #5: U+A69E
+# Test combining_class more #6: U+1E000
+# Test combining_class more #7: U+1DF6
+# Test combining_class more #8: U+07FD
+# Test combining_class more #9: U+0EBA
+# Test combining_class more #10: U+1ABF
+# Test combining_class more #11: U+1DFA
+# Test combining_class more #12: U+10EFD
+# Test combining_class more #13: U+0897
+# Test combining_class more #14: U+111111
+# Testing property general_category
+# Test general_category #0: U+000D
+# Test general_category #1: U+200E
+# Test general_category #2: U+0378
+# Test general_category #3: U+E000
+# Test general_category #4: U+D800
+# Test general_category #5: U+0061
+# Test general_category #6: U+02B0
+# Test general_category #7: U+3400
+# Test general_category #8: U+01C5
+# Test general_category #9: U+FF21
+# Test general_category #10: U+0903
+# Test general_category #11: U+20DD
+# Test general_category #12: U+A806
+# Test general_category #13: U+FF10
+# Test general_category #14: U+16EE
+# Test general_category #15: U+17F0
+# Test general_category #16: U+005F
+# Test general_category #17: U+058A
+# Test general_category #18: U+0F3B
+# Test general_category #19: U+2019
+# Test general_category #20: U+2018
+# Test general_category #21: U+2016
+# Test general_category #22: U+0F3A
+# Test general_category #23: U+20A0
+# Test general_category #24: U+309B
+# Test general_category #25: U+FB29
+# Test general_category #26: U+00A6
+# Test general_category #27: U+2028
+# Test general_category #28: U+2029
+# Test general_category #29: U+202F
+# Test general_category #30: U+111111
+# Test general_category more #0: U+1F131
+# Test general_category more #1: U+0620
+# Test general_category more #2: U+058F
+# Test general_category more #3: U+20BA
+# Test general_category more #4: U+061C
+# Test general_category more #5: U+058D
+# Test general_category more #6: U+08E3
+# Test general_category more #7: U+08D4
+# Test general_category more #8: U+09FD
+# Test general_category more #9: U+0560
+# Test general_category more #10: U+0C77
+# Test general_category more #11: U+32FF
+# Test general_category more #12: U+08BE
+# Test general_category more #13: U+20C0
+# Test general_category more #14: U+0CF3
+# Test general_category more #15: U+31EF
+# Test general_category more #16: U+10D6E
+# Test general_category more #17: U+111111
+# Testing property mirroring
+# Test mirroring #0: U+0020
+# Test mirroring #1: U+0041
+# Test mirroring #2: U+00F0
+# Test mirroring #3: U+27CC
+# Test mirroring #4: U+E01EF
+# Test mirroring #5: U+1D7C3
+# Test mirroring #6: U+100000
+# Test mirroring #7: U+0029
+# Test mirroring #8: U+0028
+# Test mirroring #9: U+003E
+# Test mirroring #10: U+003C
+# Test mirroring #11: U+005D
+# Test mirroring #12: U+005B
+# Test mirroring #13: U+007D
+# Test mirroring #14: U+007B
+# Test mirroring #15: U+00BB
+# Test mirroring #16: U+00AB
+# Test mirroring #17: U+226B
+# Test mirroring #18: U+226A
+# Test mirroring #19: U+22F1
+# Test mirroring #20: U+22F0
+# Test mirroring #21: U+FF60
+# Test mirroring #22: U+FF5F
+# Test mirroring #23: U+FF63
+# Test mirroring #24: U+FF62
+# Test mirroring #25: U+111111
+# Test mirroring more #0: U+27CB
+# Test mirroring more #1: U+2BFE
+# Test mirroring more #2: U+111111
+# Testing property script
+# Test script #0: U+002A
+# Test script #1: U+0670
+# Test script #2: U+060D
+# Test script #3: U+0559
+# Test script #4: U+09CD
+# Test script #5: U+31B6
+# Test script #6: U+13A2
+# Test script #7: U+2CFD
+# Test script #8: U+0482
+# Test script #9: U+10401
+# Test script #10: U+094D
+# Test script #11: U+1258
+# Test script #12: U+10FC
+# Test script #13: U+10341
+# Test script #14: U+0375
+# Test script #15: U+0A83
+# Test script #16: U+0A3C
+# Test script #17: U+3005
+# Test script #18: U+1100
+# Test script #19: U+05BF
+# Test script #20: U+309F
+# Test script #21: U+0CBC
+# Test script #22: U+30FF
+# Test script #23: U+17DD
+# Test script #24: U+0EDD
+# Test script #25: U+0061
+# Test script #26: U+0D3D
+# Test script #27: U+1843
+# Test script #28: U+1031
+# Test script #29: U+169C
+# Test script #30: U+10322
+# Test script #31: U+0B3C
+# Test script #32: U+16EF
+# Test script #33: U+0DBD
+# Test script #34: U+0711
+# Test script #35: U+0B82
+# Test script #36: U+0C03
+# Test script #37: U+07B1
+# Test script #38: U+0E31
+# Test script #39: U+0FD4
+# Test script #40: U+1401
+# Test script #41: U+A015
+# Test script #42: U+1700
+# Test script #43: U+1720
+# Test script #44: U+1740
+# Test script #45: U+1760
+# Test script #46: U+2800
+# Test script #47: U+10808
+# Test script #48: U+1932
+# Test script #49: U+10480
+# Test script #50: U+10450
+# Test script #51: U+10000
+# Test script #52: U+1950
+# Test script #53: U+1039F
+# Test script #54: U+1980
+# Test script #55: U+1A1F
+# Test script #56: U+2C00
+# Test script #57: U+2D6F
+# Test script #58: U+A800
+# Test script #59: U+103D0
+# Test script #60: U+10A3F
+# Test script #61: U+0378
+# Test script #62: U+1B04
+# Test script #63: U+12000
+# Test script #64: U+10900
+# Test script #65: U+A840
+# Test script #66: U+07C0
+# Test script #67: U+A900
+# Test script #68: U+1C00
+# Test script #69: U+A930
+# Test script #70: U+1B80
+# Test script #71: U+A880
+# Test script #72: U+AA00
+# Test script #73: U+1C50
+# Test script #74: U+A500
+# Test script #75: U+102A0
+# Test script #76: U+10280
+# Test script #77: U+1093F
+# Test script #78: U+111111
+# Test script more #0: U+10B00
+# Test script more #1: U+A6A0
+# Test script more #2: U+1400
+# Test script more #3: U+13000
+# Test script more #4: U+10840
+# Test script more #5: U+1CED
+# Test script more #6: U+10B60
+# Test script more #7: U+10B40
+# Test script more #8: U+A980
+# Test script more #9: U+11082
+# Test script more #10: U+A4D0
+# Test script more #11: U+ABE5
+# Test script more #12: U+10A60
+# Test script more #13: U+10C00
+# Test script more #14: U+0800
+# Test script more #15: U+1A20
+# Test script more #16: U+AA80
+# Test script more #17: U+1BC0
+# Test script more #18: U+11000
+# Test script more #19: U+0840
+# Test script more #20: U+10980
+# Test script more #21: U+109A0
+# Test script more #22: U+110D0
+# Test script more #23: U+11100
+# Test script more #24: U+11180
+# Test script more #25: U+11680
+# Test script more #26: U+16F00
+# Test script more #27: U+20BA
+# Test script more #28: U+2066
+# Test script more #29: U+10350
+# Test script more #30: U+10500
+# Test script more #31: U+10530
+# Test script more #32: U+10600
+# Test script more #33: U+10860
+# Test script more #34: U+10880
+# Test script more #35: U+10A80
+# Test script more #36: U+10AC0
+# Test script more #37: U+10B80
+# Test script more #38: U+11150
+# Test script more #39: U+11200
+# Test script more #40: U+112B0
+# Test script more #41: U+11300
+# Test script more #42: U+11480
+# Test script more #43: U+11580
+# Test script more #44: U+11600
+# Test script more #45: U+118A0
+# Test script more #46: U+11AC0
+# Test script more #47: U+16A40
+# Test script more #48: U+16AD0
+# Test script more #49: U+16B00
+# Test script more #50: U+1BC00
+# Test script more #51: U+1E800
+# Test script more #52: U+108E0
+# Test script more #53: U+10C80
+# Test script more #54: U+11280
+# Test script more #55: U+11700
+# Test script more #56: U+14400
+# Test script more #57: U+1D800
+# Test script more #58: U+104B0
+# Test script more #59: U+11400
+# Test script more #60: U+11C00
+# Test script more #61: U+11C70
+# Test script more #62: U+17000
+# Test script more #63: U+1E900
+# Test script more #64: U+11A00
+# Test script more #65: U+11A50
+# Test script more #66: U+11D00
+# Test script more #67: U+1B170
+# Test script more #68: U+10D00
+# Test script more #69: U+10F00
+# Test script more #70: U+10F30
+# Test script more #71: U+11800
+# Test script more #72: U+11D60
+# Test script more #73: U+11EE0
+# Test script more #74: U+16E40
+# Test script more #75: U+10FE0
+# Test script more #76: U+119A0
+# Test script more #77: U+1E100
+# Test script more #78: U+1E2C0
+# Test script more #79: U+32FF
+# Test script more #80: U+10E80
+# Test script more #81: U+10FB0
+# Test script more #82: U+11900
+# Test script more #83: U+18B00
+# Test script more #84: U+10570
+# Test script more #85: U+10F70
+# Test script more #86: U+12F90
+# Test script more #87: U+16A70
+# Test script more #88: U+1E290
+# Test script more #89: U+11F00
+# Test script more #90: U+1E4D0
+# Test script more #91: U+105C0
+# Test script more #92: U+10D40
+# Test script more #93: U+11380
+# Test script more #94: U+11BC0
+# Test script more #95: U+16100
+# Test script more #96: U+16D40
+# Test script more #97: U+1E5D0
+# Test script more #98: U+111111
+ok 4 /unicode/properties/empty
+# Start of strict tests
+# Testing property combining_class
+# Test combining_class #0: U+0020
+# Test combining_class #1: U+0334
+# Test combining_class #2: U+093C
+# Test combining_class #3: U+3099
+# Test combining_class #4: U+094D
+# Test combining_class #5: U+05B0
+# Test combining_class #6: U+05B1
+# Test combining_class #7: U+05B2
+# Test combining_class #8: U+05B3
+# Test combining_class #9: U+05B4
+# Test combining_class #10: U+05B5
+# Test combining_class #11: U+05B6
+# Test combining_class #12: U+05B7
+# Test combining_class #13: U+05B8
+# Test combining_class #14: U+05B9
+# Test combining_class #15: U+05BB
+# Test combining_class #16: U+05BC
+# Test combining_class #17: U+05BD
+# Test combining_class #18: U+05BF
+# Test combining_class #19: U+05C1
+# Test combining_class #20: U+05C2
+# Test combining_class #21: U+FB1E
+# Test combining_class #22: U+064B
+# Test combining_class #23: U+064C
+# Test combining_class #24: U+064D
+# Test combining_class #25: U+05AE
+# Test combining_class #26: U+0300
+# Test combining_class #27: U+302C
+# Test combining_class #28: U+0362
+# Test combining_class #29: U+0360
+# Test combining_class #30: U+0345
+# Test combining_class #31: U+111111
+# Test combining_class more #0: U+1DCD
+# Test combining_class more #1: U+A8E0
+# Test combining_class more #2: U+135D
+# Test combining_class more #3: U+A674
+# Test combining_class more #4: U+1AB0
+# Test combining_class more #5: U+A69E
+# Test combining_class more #6: U+1E000
+# Test combining_class more #7: U+1DF6
+# Test combining_class more #8: U+07FD
+# Test combining_class more #9: U+0EBA
+# Test combining_class more #10: U+1ABF
+# Test combining_class more #11: U+1DFA
+# Test combining_class more #12: U+10EFD
+# Test combining_class more #13: U+0897
+# Test combining_class more #14: U+111111
+# Testing property general_category
+# Test general_category #0: U+000D
+# Test general_category #1: U+200E
+# Test general_category #2: U+0378
+# Test general_category #3: U+E000
+# Test general_category #4: U+D800
+# Test general_category #5: U+0061
+# Test general_category #6: U+02B0
+# Test general_category #7: U+3400
+# Test general_category #8: U+01C5
+# Test general_category #9: U+FF21
+# Test general_category #10: U+0903
+# Test general_category #11: U+20DD
+# Test general_category #12: U+A806
+# Test general_category #13: U+FF10
+# Test general_category #14: U+16EE
+# Test general_category #15: U+17F0
+# Test general_category #16: U+005F
+# Test general_category #17: U+058A
+# Test general_category #18: U+0F3B
+# Test general_category #19: U+2019
+# Test general_category #20: U+2018
+# Test general_category #21: U+2016
+# Test general_category #22: U+0F3A
+# Test general_category #23: U+20A0
+# Test general_category #24: U+309B
+# Test general_category #25: U+FB29
+# Test general_category #26: U+00A6
+# Test general_category #27: U+2028
+# Test general_category #28: U+2029
+# Test general_category #29: U+202F
+# Test general_category #30: U+111111
+# Test general_category more #0: U+1F131
+# Test general_category more #1: U+0620
+# Test general_category more #2: U+058F
+# Test general_category more #3: U+20BA
+# Test general_category more #4: U+061C
+# Test general_category more #5: U+058D
+# Test general_category more #6: U+08E3
+# Test general_category more #7: U+08D4
+# Test general_category more #8: U+09FD
+# Test general_category more #9: U+0560
+# Test general_category more #10: U+0C77
+# Test general_category more #11: U+32FF
+# Test general_category more #12: U+08BE
+# Test general_category more #13: U+20C0
+# Test general_category more #14: U+0CF3
+# Test general_category more #15: U+31EF
+# Test general_category more #16: U+10D6E
+# Test general_category more #17: U+111111
+# Testing property mirroring
+# Test mirroring #0: U+0020
+# Test mirroring #1: U+0041
+# Test mirroring #2: U+00F0
+# Test mirroring #3: U+27CC
+# Test mirroring #4: U+E01EF
+# Test mirroring #5: U+1D7C3
+# Test mirroring #6: U+100000
+# Test mirroring #7: U+0029
+# Test mirroring #8: U+0028
+# Test mirroring #9: U+003E
+# Test mirroring #10: U+003C
+# Test mirroring #11: U+005D
+# Test mirroring #12: U+005B
+# Test mirroring #13: U+007D
+# Test mirroring #14: U+007B
+# Test mirroring #15: U+00BB
+# Test mirroring #16: U+00AB
+# Test mirroring #17: U+226B
+# Test mirroring #18: U+226A
+# Test mirroring #19: U+22F1
+# Test mirroring #20: U+22F0
+# Test mirroring #21: U+FF60
+# Test mirroring #22: U+FF5F
+# Test mirroring #23: U+FF63
+# Test mirroring #24: U+FF62
+# Test mirroring #25: U+111111
+# Test mirroring more #0: U+27CB
+# Test mirroring more #1: U+2BFE
+# Test mirroring more #2: U+111111
+# Testing property script
+# Test script #0: U+002A
+# Test script #1: U+0670
+# Test script #2: U+060D
+# Test script #3: U+0559
+# Test script #4: U+09CD
+# Test script #5: U+31B6
+# Test script #6: U+13A2
+# Test script #7: U+2CFD
+# Test script #8: U+0482
+# Test script #9: U+10401
+# Test script #10: U+094D
+# Test script #11: U+1258
+# Test script #12: U+10FC
+# Test script #13: U+10341
+# Test script #14: U+0375
+# Test script #15: U+0A83
+# Test script #16: U+0A3C
+# Test script #17: U+3005
+# Test script #18: U+1100
+# Test script #19: U+05BF
+# Test script #20: U+309F
+# Test script #21: U+0CBC
+# Test script #22: U+30FF
+# Test script #23: U+17DD
+# Test script #24: U+0EDD
+# Test script #25: U+0061
+# Test script #26: U+0D3D
+# Test script #27: U+1843
+# Test script #28: U+1031
+# Test script #29: U+169C
+# Test script #30: U+10322
+# Test script #31: U+0B3C
+# Test script #32: U+16EF
+# Test script #33: U+0DBD
+# Test script #34: U+0711
+# Test script #35: U+0B82
+# Test script #36: U+0C03
+# Test script #37: U+07B1
+# Test script #38: U+0E31
+# Test script #39: U+0FD4
+# Test script #40: U+1401
+# Test script #41: U+A015
+# Test script #42: U+1700
+# Test script #43: U+1720
+# Test script #44: U+1740
+# Test script #45: U+1760
+# Test script #46: U+2800
+# Test script #47: U+10808
+# Test script #48: U+1932
+# Test script #49: U+10480
+# Test script #50: U+10450
+# Test script #51: U+10000
+# Test script #52: U+1950
+# Test script #53: U+1039F
+# Test script #54: U+1980
+# Test script #55: U+1A1F
+# Test script #56: U+2C00
+# Test script #57: U+2D6F
+# Test script #58: U+A800
+# Test script #59: U+103D0
+# Test script #60: U+10A3F
+# Test script #61: U+0378
+# Test script #62: U+1B04
+# Test script #63: U+12000
+# Test script #64: U+10900
+# Test script #65: U+A840
+# Test script #66: U+07C0
+# Test script #67: U+A900
+# Test script #68: U+1C00
+# Test script #69: U+A930
+# Test script #70: U+1B80
+# Test script #71: U+A880
+# Test script #72: U+AA00
+# Test script #73: U+1C50
+# Test script #74: U+A500
+# Test script #75: U+102A0
+# Test script #76: U+10280
+# Test script #77: U+1093F
+# Test script #78: U+111111
+# Test script more #0: U+10B00
+# Test script more #1: U+A6A0
+# Test script more #2: U+1400
+# Test script more #3: U+13000
+# Test script more #4: U+10840
+# Test script more #5: U+1CED
+# Test script more #6: U+10B60
+# Test script more #7: U+10B40
+# Test script more #8: U+A980
+# Test script more #9: U+11082
+# Test script more #10: U+A4D0
+# Test script more #11: U+ABE5
+# Test script more #12: U+10A60
+# Test script more #13: U+10C00
+# Test script more #14: U+0800
+# Test script more #15: U+1A20
+# Test script more #16: U+AA80
+# Test script more #17: U+1BC0
+# Test script more #18: U+11000
+# Test script more #19: U+0840
+# Test script more #20: U+10980
+# Test script more #21: U+109A0
+# Test script more #22: U+110D0
+# Test script more #23: U+11100
+# Test script more #24: U+11180
+# Test script more #25: U+11680
+# Test script more #26: U+16F00
+# Test script more #27: U+20BA
+# Test script more #28: U+2066
+# Test script more #29: U+10350
+# Test script more #30: U+10500
+# Test script more #31: U+10530
+# Test script more #32: U+10600
+# Test script more #33: U+10860
+# Test script more #34: U+10880
+# Test script more #35: U+10A80
+# Test script more #36: U+10AC0
+# Test script more #37: U+10B80
+# Test script more #38: U+11150
+# Test script more #39: U+11200
+# Test script more #40: U+112B0
+# Test script more #41: U+11300
+# Test script more #42: U+11480
+# Test script more #43: U+11580
+# Test script more #44: U+11600
+# Test script more #45: U+118A0
+# Test script more #46: U+11AC0
+# Test script more #47: U+16A40
+# Test script more #48: U+16AD0
+# Test script more #49: U+16B00
+# Test script more #50: U+1BC00
+# Test script more #51: U+1E800
+# Test script more #52: U+108E0
+# Test script more #53: U+10C80
+# Test script more #54: U+11280
+# Test script more #55: U+11700
+# Test script more #56: U+14400
+# Test script more #57: U+1D800
+# Test script more #58: U+104B0
+# Test script more #59: U+11400
+# Test script more #60: U+11C00
+# Test script more #61: U+11C70
+# Test script more #62: U+17000
+# Test script more #63: U+1E900
+# Test script more #64: U+11A00
+# Test script more #65: U+11A50
+# Test script more #66: U+11D00
+# Test script more #67: U+1B170
+# Test script more #68: U+10D00
+# Test script more #69: U+10F00
+# Test script more #70: U+10F30
+# Test script more #71: U+11800
+# Test script more #72: U+11D60
+# Test script more #73: U+11EE0
+# Test script more #74: U+16E40
+# Test script more #75: U+10FE0
+# Test script more #76: U+119A0
+# Test script more #77: U+1E100
+# Test script more #78: U+1E2C0
+# Test script more #79: U+32FF
+# Test script more #80: U+10E80
+# Test script more #81: U+10FB0
+# Test script more #82: U+11900
+# Test script more #83: U+18B00
+# Test script more #84: U+10570
+# Test script more #85: U+10F70
+# Test script more #86: U+12F90
+# Test script more #87: U+16A70
+# Test script more #88: U+1E290
+# Test script more #89: U+11F00
+# Test script more #90: U+1E4D0
+# Test script more #91: U+105C0
+# Test script more #92: U+10D40
+# Test script more #93: U+11380
+# Test script more #94: U+11BC0
+# Test script more #95: U+16100
+# Test script more #96: U+16D40
+# Test script more #97: U+1E5D0
+# Test script more #98: U+111111
+# Some property tests failed.  You probably have an old version of one of the libraries used.
+ok 5 /unicode/properties/strict/default
+# End of strict tests
+# Start of lenient tests
+# Testing property combining_class
+# Test combining_class #0: U+0020
+# Test combining_class #1: U+0334
+# Test combining_class #2: U+093C
+# Test combining_class #3: U+3099
+# Test combining_class #4: U+094D
+# Test combining_class #5: U+05B0
+# Test combining_class #6: U+05B1
+# Test combining_class #7: U+05B2
+# Test combining_class #8: U+05B3
+# Test combining_class #9: U+05B4
+# Test combining_class #10: U+05B5
+# Test combining_class #11: U+05B6
+# Test combining_class #12: U+05B7
+# Test combining_class #13: U+05B8
+# Test combining_class #14: U+05B9
+# Test combining_class #15: U+05BB
+# Test combining_class #16: U+05BC
+# Test combining_class #17: U+05BD
+# Test combining_class #18: U+05BF
+# Test combining_class #19: U+05C1
+# Test combining_class #20: U+05C2
+# Test combining_class #21: U+FB1E
+# Test combining_class #22: U+064B
+# Test combining_class #23: U+064C
+# Test combining_class #24: U+064D
+# Test combining_class #25: U+05AE
+# Test combining_class #26: U+0300
+# Test combining_class #27: U+302C
+# Test combining_class #28: U+0362
+# Test combining_class #29: U+0360
+# Test combining_class #30: U+0345
+# Test combining_class #31: U+111111
+# Test combining_class more #0: U+1DCD
+# Test combining_class more #1: U+A8E0
+# Test combining_class more #2: U+135D
+# Test combining_class more #3: U+A674
+# Test combining_class more #4: U+1AB0
+# Test combining_class more #5: U+A69E
+# Test combining_class more #6: U+1E000
+# Test combining_class more #7: U+1DF6
+# Test combining_class more #8: U+07FD
+# Test combining_class more #9: U+0EBA
+# Test combining_class more #10: U+1ABF
+# Test combining_class more #11: U+1DFA
+# Test combining_class more #12: U+10EFD
+# Test combining_class more #13: U+0897
+# Test combining_class more #14: U+111111
+# Testing property general_category
+# Test general_category #0: U+000D
+# Test general_category #1: U+200E
+# Test general_category #2: U+0378
+# Test general_category #3: U+E000
+# Test general_category #4: U+D800
+# Test general_category #5: U+0061
+# Test general_category #6: U+02B0
+# Test general_category #7: U+3400
+# Test general_category #8: U+01C5
+# Test general_category #9: U+FF21
+# Test general_category #10: U+0903
+# Test general_category #11: U+20DD
+# Test general_category #12: U+A806
+# Test general_category #13: U+FF10
+# Test general_category #14: U+16EE
+# Test general_category #15: U+17F0
+# Test general_category #16: U+005F
+# Test general_category #17: U+058A
+# Test general_category #18: U+0F3B
+# Test general_category #19: U+2019
+# Test general_category #20: U+2018
+# Test general_category #21: U+2016
+# Test general_category #22: U+0F3A
+# Test general_category #23: U+20A0
+# Test general_category #24: U+309B
+# Test general_category #25: U+FB29
+# Test general_category #26: U+00A6
+# Test general_category #27: U+2028
+# Test general_category #28: U+2029
+# Test general_category #29: U+202F
+# Test general_category #30: U+111111
+# Test general_category more #0: U+1F131
+# Test general_category more #1: U+0620
+# Test general_category more #2: U+058F
+# Test general_category more #3: U+20BA
+# Test general_category more #4: U+061C
+# Test general_category more #5: U+058D
+# Test general_category more #6: U+08E3
+# Test general_category more #7: U+08D4
+# Test general_category more #8: U+09FD
+# Test general_category more #9: U+0560
+# Test general_category more #10: U+0C77
+# Test general_category more #11: U+32FF
+# Test general_category more #12: U+08BE
+# Test general_category more #13: U+20C0
+# Test general_category more #14: U+0CF3
+# Test general_category more #15: U+31EF
+# Test general_category more #16: U+10D6E
+# Test general_category more #17: U+111111
+# Testing property mirroring
+# Test mirroring #0: U+0020
+# Test mirroring #1: U+0041
+# Test mirroring #2: U+00F0
+# Test mirroring #3: U+27CC
+# Test mirroring #4: U+E01EF
+# Test mirroring #5: U+1D7C3
+# Test mirroring #6: U+100000
+# Test mirroring #7: U+0029
+# Test mirroring #8: U+0028
+# Test mirroring #9: U+003E
+# Test mirroring #10: U+003C
+# Test mirroring #11: U+005D
+# Test mirroring #12: U+005B
+# Test mirroring #13: U+007D
+# Test mirroring #14: U+007B
+# Test mirroring #15: U+00BB
+# Test mirroring #16: U+00AB
+# Test mirroring #17: U+226B
+# Test mirroring #18: U+226A
+# Test mirroring #19: U+22F1
+# Test mirroring #20: U+22F0
+# Test mirroring #21: U+FF60
+# Test mirroring #22: U+FF5F
+# Test mirroring #23: U+FF63
+# Test mirroring #24: U+FF62
+# Test mirroring #25: U+111111
+# Test mirroring more #0: U+27CB
+# Test mirroring more #1: U+2BFE
+# Test mirroring more #2: U+111111
+# Testing property script
+# Test script #0: U+002A
+# Test script #1: U+0670
+# Test script #2: U+060D
+# Test script #3: U+0559
+# Test script #4: U+09CD
+# Test script #5: U+31B6
+# Test script #6: U+13A2
+# Test script #7: U+2CFD
+# Test script #8: U+0482
+# Test script #9: U+10401
+# Test script #10: U+094D
+# Test script #11: U+1258
+# Test script #12: U+10FC
+# Test script #13: U+10341
+# Test script #14: U+0375
+# Test script #15: U+0A83
+# Test script #16: U+0A3C
+# Test script #17: U+3005
+# Test script #18: U+1100
+# Test script #19: U+05BF
+# Test script #20: U+309F
+# Test script #21: U+0CBC
+# Test script #22: U+30FF
+# Test script #23: U+17DD
+# Test script #24: U+0EDD
+# Test script #25: U+0061
+# Test script #26: U+0D3D
+# Test script #27: U+1843
+# Test script #28: U+1031
+# Test script #29: U+169C
+# Test script #30: U+10322
+# Test script #31: U+0B3C
+# Test script #32: U+16EF
+# Test script #33: U+0DBD
+# Test script #34: U+0711
+# Test script #35: U+0B82
+# Test script #36: U+0C03
+# Test script #37: U+07B1
+# Test script #38: U+0E31
+# Test script #39: U+0FD4
+# Test script #40: U+1401
+# Test script #41: U+A015
+# Test script #42: U+1700
+# Test script #43: U+1720
+# Test script #44: U+1740
+# Test script #45: U+1760
+# Test script #46: U+2800
+# Test script #47: U+10808
+# Test script #48: U+1932
+# Test script #49: U+10480
+# Test script #50: U+10450
+# Test script #51: U+10000
+# Test script #52: U+1950
+# Test script #53: U+1039F
+# Test script #54: U+1980
+# Test script #55: U+1A1F
+# Test script #56: U+2C00
+# Test script #57: U+2D6F
+# Test script #58: U+A800
+# Test script #59: U+103D0
+# Test script #60: U+10A3F
+# Test script #61: U+0378
+# Test script #62: U+1B04
+# Test script #63: U+12000
+# Test script #64: U+10900
+# Test script #65: U+A840
+# Test script #66: U+07C0
+# Test script #67: U+A900
+# Test script #68: U+1C00
+# Test script #69: U+A930
+# Test script #70: U+1B80
+# Test script #71: U+A880
+# Test script #72: U+AA00
+# Test script #73: U+1C50
+# Test script #74: U+A500
+# Test script #75: U+102A0
+# Test script #76: U+10280
+# Test script #77: U+1093F
+# Test script #78: U+111111
+# Test script more #0: U+10B00
+# Test script more #1: U+A6A0
+# Test script more #2: U+1400
+# Test script more #3: U+13000
+# Test script more #4: U+10840
+# Test script more #5: U+1CED
+# Test script more #6: U+10B60
+# Test script more #7: U+10B40
+# Test script more #8: U+A980
+# Test script more #9: U+11082
+# Test script more #10: U+A4D0
+# Test script more #11: U+ABE5
+# Test script more #12: U+10A60
+# Test script more #13: U+10C00
+# Test script more #14: U+0800
+# Test script more #15: U+1A20
+# Test script more #16: U+AA80
+# Test script more #17: U+1BC0
+# Test script more #18: U+11000
+# Test script more #19: U+0840
+# Test script more #20: U+10980
+# Test script more #21: U+109A0
+# Test script more #22: U+110D0
+# Test script more #23: U+11100
+# Test script more #24: U+11180
+# Test script more #25: U+11680
+# Test script more #26: U+16F00
+# Test script more #27: U+20BA
+# Test script more #28: U+2066
+# Test script more #29: U+10350
+# Test script more #30: U+10500
+# Test script more #31: U+10530
+# Test script more #32: U+10600
+# Test script more #33: U+10860
+# Test script more #34: U+10880
+# Test script more #35: U+10A80
+# Test script more #36: U+10AC0
+# Test script more #37: U+10B80
+# Test script more #38: U+11150
+# Test script more #39: U+11200
+# Test script more #40: U+112B0
+# Test script more #41: U+11300
+# Test script more #42: U+11480
+# Test script more #43: U+11580
+# Test script more #44: U+11600
+# Test script more #45: U+118A0
+# Test script more #46: U+11AC0
+# Test script more #47: U+16A40
+# Test script more #48: U+16AD0
+# Test script more #49: U+16B00
+# Test script more #50: U+1BC00
+# Test script more #51: U+1E800
+# Test script more #52: U+108E0
+# Test script more #53: U+10C80
+# Test script more #54: U+11280
+# Test script more #55: U+11700
+# Test script more #56: U+14400
+# Test script more #57: U+1D800
+# Test script more #58: U+104B0
+# Test script more #59: U+11400
+# Test script more #60: U+11C00
+# Test script more #61: U+11C70
+# Test script more #62: U+17000
+# Test script more #63: U+1E900
+# Test script more #64: U+11A00
+# Test script more #65: U+11A50
+# Test script more #66: U+11D00
+# Test script more #67: U+1B170
+# Test script more #68: U+10D00
+# Test script more #69: U+10F00
+# Test script more #70: U+10F30
+# Test script more #71: U+11800
+# Test script more #72: U+11D60
+# Test script more #73: U+11EE0
+# Test script more #74: U+16E40
+# Test script more #75: U+10FE0
+# Test script more #76: U+119A0
+# Test script more #77: U+1E100
+# Test script more #78: U+1E2C0
+# Test script more #79: U+32FF
+# Test script more #80: U+10E80
+# Test script more #81: U+10FB0
+# Test script more #82: U+11900
+# Test script more #83: U+18B00
+# Test script more #84: U+10570
+# Test script more #85: U+10F70
+# Test script more #86: U+12F90
+# Test script more #87: U+16A70
+# Test script more #88: U+1E290
+# Test script more #89: U+11F00
+# Test script more #90: U+1E4D0
+# Test script more #91: U+105C0
+# Test script more #92: U+10D40
+# Test script more #93: U+11380
+# Test script more #94: U+11BC0
+# Test script more #95: U+16100
+# Test script more #96: U+16D40
+# Test script more #97: U+1E5D0
+# Test script more #98: U+111111
+# Some property tests failed.  You probably have an old version of one of the libraries used.
+ok 6 /unicode/properties/lenient/glib
+# Testing property combining_class
+# Test combining_class #0: U+0020
+# Test combining_class #1: U+0334
+# Test combining_class #2: U+093C
+# Test combining_class #3: U+3099
+# Test combining_class #4: U+094D
+# Test combining_class #5: U+05B0
+# Test combining_class #6: U+05B1
+# Test combining_class #7: U+05B2
+# Test combining_class #8: U+05B3
+# Test combining_class #9: U+05B4
+# Test combining_class #10: U+05B5
+# Test combining_class #11: U+05B6
+# Test combining_class #12: U+05B7
+# Test combining_class #13: U+05B8
+# Test combining_class #14: U+05B9
+# Test combining_class #15: U+05BB
+# Test combining_class #16: U+05BC
+# Test combining_class #17: U+05BD
+# Test combining_class #18: U+05BF
+# Test combining_class #19: U+05C1
+# Test combining_class #20: U+05C2
+# Test combining_class #21: U+FB1E
+# Test combining_class #22: U+064B
+# Test combining_class #23: U+064C
+# Test combining_class #24: U+064D
+# Test combining_class #25: U+05AE
+# Test combining_class #26: U+0300
+# Test combining_class #27: U+302C
+# Test combining_class #28: U+0362
+# Test combining_class #29: U+0360
+# Test combining_class #30: U+0345
+# Test combining_class #31: U+111111
+# Test combining_class more #0: U+1DCD
+# Test combining_class more #1: U+A8E0
+# Test combining_class more #2: U+135D
+# Test combining_class more #3: U+A674
+# Test combining_class more #4: U+1AB0
+# Test combining_class more #5: U+A69E
+# Test combining_class more #6: U+1E000
+# Test combining_class more #7: U+1DF6
+# Test combining_class more #8: U+07FD
+# Test combining_class more #9: U+0EBA
+# Test combining_class more #10: U+1ABF
+# Test combining_class more #11: U+1DFA
+# Test combining_class more #12: U+10EFD
+# Test combining_class more #13: U+0897
+# Test combining_class more #14: U+111111
+# Testing property general_category
+# Test general_category #0: U+000D
+# Test general_category #1: U+200E
+# Test general_category #2: U+0378
+# Test general_category #3: U+E000
+# Test general_category #4: U+D800
+# Test general_category #5: U+0061
+# Test general_category #6: U+02B0
+# Test general_category #7: U+3400
+# Test general_category #8: U+01C5
+# Test general_category #9: U+FF21
+# Test general_category #10: U+0903
+# Test general_category #11: U+20DD
+# Test general_category #12: U+A806
+# Test general_category #13: U+FF10
+# Test general_category #14: U+16EE
+# Test general_category #15: U+17F0
+# Test general_category #16: U+005F
+# Test general_category #17: U+058A
+# Test general_category #18: U+0F3B
+# Test general_category #19: U+2019
+# Test general_category #20: U+2018
+# Test general_category #21: U+2016
+# Test general_category #22: U+0F3A
+# Test general_category #23: U+20A0
+# Test general_category #24: U+309B
+# Test general_category #25: U+FB29
+# Test general_category #26: U+00A6
+# Test general_category #27: U+2028
+# Test general_category #28: U+2029
+# Test general_category #29: U+202F
+# Test general_category #30: U+111111
+# Test general_category more #0: U+1F131
+# Test general_category more #1: U+0620
+# Test general_category more #2: U+058F
+# Test general_category more #3: U+20BA
+# Test general_category more #4: U+061C
+# Test general_category more #5: U+058D
+# Test general_category more #6: U+08E3
+# Test general_category more #7: U+08D4
+# Test general_category more #8: U+09FD
+# Test general_category more #9: U+0560
+# Test general_category more #10: U+0C77
+# Test general_category more #11: U+32FF
+# Test general_category more #12: U+08BE
+# Test general_category more #13: U+20C0
+# Test general_category more #14: U+0CF3
+# Test general_category more #15: U+31EF
+# Test general_category more #16: U+10D6E
+# Test general_category more #17: U+111111
+# Testing property mirroring
+# Test mirroring #0: U+0020
+# Test mirroring #1: U+0041
+# Test mirroring #2: U+00F0
+# Test mirroring #3: U+27CC
+# Test mirroring #4: U+E01EF
+# Test mirroring #5: U+1D7C3
+# Test mirroring #6: U+100000
+# Test mirroring #7: U+0029
+# Test mirroring #8: U+0028
+# Test mirroring #9: U+003E
+# Test mirroring #10: U+003C
+# Test mirroring #11: U+005D
+# Test mirroring #12: U+005B
+# Test mirroring #13: U+007D
+# Test mirroring #14: U+007B
+# Test mirroring #15: U+00BB
+# Test mirroring #16: U+00AB
+# Test mirroring #17: U+226B
+# Test mirroring #18: U+226A
+# Test mirroring #19: U+22F1
+# Test mirroring #20: U+22F0
+# Test mirroring #21: U+FF60
+# Test mirroring #22: U+FF5F
+# Test mirroring #23: U+FF63
+# Test mirroring #24: U+FF62
+# Test mirroring #25: U+111111
+# Test mirroring more #0: U+27CB
+# Test mirroring more #1: U+2BFE
+# Test mirroring more #2: U+111111
+# Testing property script
+# Test script #0: U+002A
+# Test script #1: U+0670
+# Test script #2: U+060D
+# Test script #3: U+0559
+# Test script #4: U+09CD
+# Test script #5: U+31B6
+# Test script #6: U+13A2
+# Test script #7: U+2CFD
+# Test script #8: U+0482
+# Test script #9: U+10401
+# Test script #10: U+094D
+# Test script #11: U+1258
+# Test script #12: U+10FC
+# Test script #13: U+10341
+# Test script #14: U+0375
+# Test script #15: U+0A83
+# Test script #16: U+0A3C
+# Test script #17: U+3005
+# Test script #18: U+1100
+# Test script #19: U+05BF
+# Test script #20: U+309F
+# Test script #21: U+0CBC
+# Test script #22: U+30FF
+# Test script #23: U+17DD
+# Test script #24: U+0EDD
+# Test script #25: U+0061
+# Test script #26: U+0D3D
+# Test script #27: U+1843
+# Test script #28: U+1031
+# Test script #29: U+169C
+# Test script #30: U+10322
+# Test script #31: U+0B3C
+# Test script #32: U+16EF
+# Test script #33: U+0DBD
+# Test script #34: U+0711
+# Test script #35: U+0B82
+# Test script #36: U+0C03
+# Test script #37: U+07B1
+# Test script #38: U+0E31
+# Test script #39: U+0FD4
+# Test script #40: U+1401
+# Test script #41: U+A015
+# Test script #42: U+1700
+# Test script #43: U+1720
+# Test script #44: U+1740
+# Test script #45: U+1760
+# Test script #46: U+2800
+# Test script #47: U+10808
+# Test script #48: U+1932
+# Test script #49: U+10480
+# Test script #50: U+10450
+# Test script #51: U+10000
+# Test script #52: U+1950
+# Test script #53: U+1039F
+# Test script #54: U+1980
+# Test script #55: U+1A1F
+# Test script #56: U+2C00
+# Test script #57: U+2D6F
+# Test script #58: U+A800
+# Test script #59: U+103D0
+# Test script #60: U+10A3F
+# Test script #61: U+0378
+# Test script #62: U+1B04
+# Test script #63: U+12000
+# Test script #64: U+10900
+# Test script #65: U+A840
+# Test script #66: U+07C0
+# Test script #67: U+A900
+# Test script #68: U+1C00
+# Test script #69: U+A930
+# Test script #70: U+1B80
+# Test script #71: U+A880
+# Test script #72: U+AA00
+# Test script #73: U+1C50
+# Test script #74: U+A500
+# Test script #75: U+102A0
+# Test script #76: U+10280
+# Test script #77: U+1093F
+# Test script #78: U+111111
+# Test script more #0: U+10B00
+# Test script more #1: U+A6A0
+# Test script more #2: U+1400
+# Test script more #3: U+13000
+# Test script more #4: U+10840
+# Test script more #5: U+1CED
+# Test script more #6: U+10B60
+# Test script more #7: U+10B40
+# Test script more #8: U+A980
+# Test script more #9: U+11082
+# Test script more #10: U+A4D0
+# Test script more #11: U+ABE5
+# Test script more #12: U+10A60
+# Test script more #13: U+10C00
+# Test script more #14: U+0800
+# Test script more #15: U+1A20
+# Test script more #16: U+AA80
+# Test script more #17: U+1BC0
+# Test script more #18: U+11000
+# Test script more #19: U+0840
+# Test script more #20: U+10980
+# Test script more #21: U+109A0
+# Test script more #22: U+110D0
+# Test script more #23: U+11100
+# Test script more #24: U+11180
+# Test script more #25: U+11680
+# Test script more #26: U+16F00
+# Test script more #27: U+20BA
+# Test script more #28: U+2066
+# Test script more #29: U+10350
+# Test script more #30: U+10500
+# Test script more #31: U+10530
+# Test script more #32: U+10600
+# Test script more #33: U+10860
+# Test script more #34: U+10880
+# Test script more #35: U+10A80
+# Test script more #36: U+10AC0
+# Test script more #37: U+10B80
+# Test script more #38: U+11150
+# Test script more #39: U+11200
+# Test script more #40: U+112B0
+# Test script more #41: U+11300
+# Test script more #42: U+11480
+# Test script more #43: U+11580
+# Test script more #44: U+11600
+# Test script more #45: U+118A0
+# Test script more #46: U+11AC0
+# Test script more #47: U+16A40
+# Test script more #48: U+16AD0
+# Test script more #49: U+16B00
+# Test script more #50: U+1BC00
+# Test script more #51: U+1E800
+# Test script more #52: U+108E0
+# Test script more #53: U+10C80
+# Test script more #54: U+11280
+# Test script more #55: U+11700
+# Test script more #56: U+14400
+# Test script more #57: U+1D800
+# Test script more #58: U+104B0
+# Test script more #59: U+11400
+# Test script more #60: U+11C00
+# Test script more #61: U+11C70
+# Test script more #62: U+17000
+# Test script more #63: U+1E900
+# Test script more #64: U+11A00
+# Test script more #65: U+11A50
+# Test script more #66: U+11D00
+# Test script more #67: U+1B170
+# Test script more #68: U+10D00
+# Test script more #69: U+10F00
+# Test script more #70: U+10F30
+# Test script more #71: U+11800
+# Test script more #72: U+11D60
+# Test script more #73: U+11EE0
+# Test script more #74: U+16E40
+# Test script more #75: U+10FE0
+# Test script more #76: U+119A0
+# Test script more #77: U+1E100
+# Test script more #78: U+1E2C0
+# Test script more #79: U+32FF
+# Test script more #80: U+10E80
+# Test script more #81: U+10FB0
+# Test script more #82: U+11900
+# Test script more #83: U+18B00
+# Test script more #84: U+10570
+# Test script more #85: U+10F70
+# Test script more #86: U+12F90
+# Test script more #87: U+16A70
+# Test script more #88: U+1E290
+# Test script more #89: U+11F00
+# Test script more #90: U+1E4D0
+# Test script more #91: U+105C0
+# Test script more #92: U+10D40
+# Test script more #93: U+11380
+# Test script more #94: U+11BC0
+# Test script more #95: U+16100
+# Test script more #96: U+16D40
+# Test script more #97: U+1E5D0
+# Test script more #98: U+111111
+# Some property tests failed.  You probably have an old version of one of the libraries used.
+ok 7 /unicode/properties/lenient/icu
+# End of lenient tests
+# End of properties tests
+# Start of normalization tests
+ok 8 /unicode/normalization/default
+ok 9 /unicode/normalization/glib
+ok 10 /unicode/normalization/icu
+# End of normalization tests
+# Start of script tests
+# Start of roundtrip tests
+# Test script roundtrip #0: 5a797979
+# Test script roundtrip #1: 5a696e68
+# Test script roundtrip #2: 41726162
+# Test script roundtrip #3: 41726d6e
+# Test script roundtrip #4: 42656e67
+# Test script roundtrip #5: 426f706f
+# Test script roundtrip #6: 43686572
+# Test script roundtrip #7: 436f7074
+# Test script roundtrip #8: 4379726c
+# Test script roundtrip #9: 44737274
+# Test script roundtrip #10: 44657661
+# Test script roundtrip #11: 45746869
+# Test script roundtrip #12: 47656f72
+# Test script roundtrip #13: 476f7468
+# Test script roundtrip #14: 4772656b
+# Test script roundtrip #15: 47756a72
+# Test script roundtrip #16: 47757275
+# Test script roundtrip #17: 48616e69
+# Test script roundtrip #18: 48616e67
+# Test script roundtrip #19: 48656272
+# Test script roundtrip #20: 48697261
+# Test script roundtrip #21: 4b6e6461
+# Test script roundtrip #22: 4b616e61
+# Test script roundtrip #23: 4b686d72
+# Test script roundtrip #24: 4c616f6f
+# Test script roundtrip #25: 4c61746e
+# Test script roundtrip #26: 4d6c796d
+# Test script roundtrip #27: 4d6f6e67
+# Test script roundtrip #28: 4d796d72
+# Test script roundtrip #29: 4f67616d
+# Test script roundtrip #30: 4974616c
+# Test script roundtrip #31: 4f727961
+# Test script roundtrip #32: 52756e72
+# Test script roundtrip #33: 53696e68
+# Test script roundtrip #34: 53797263
+# Test script roundtrip #35: 54616d6c
+# Test script roundtrip #36: 54656c75
+# Test script roundtrip #37: 54686161
+# Test script roundtrip #38: 54686169
+# Test script roundtrip #39: 54696274
+# Test script roundtrip #40: 43616e73
+# Test script roundtrip #41: 59696969
+# Test script roundtrip #42: 54676c67
+# Test script roundtrip #43: 48616e6f
+# Test script roundtrip #44: 42756864
+# Test script roundtrip #45: 54616762
+# Test script roundtrip #46: 42726169
+# Test script roundtrip #47: 43707274
+# Test script roundtrip #48: 4c696d62
+# Test script roundtrip #49: 4f736d61
+# Test script roundtrip #50: 53686177
+# Test script roundtrip #51: 4c696e62
+# Test script roundtrip #52: 54616c65
+# Test script roundtrip #53: 55676172
+# Test script roundtrip #54: 54616c75
+# Test script roundtrip #55: 42756769
+# Test script roundtrip #56: 476c6167
+# Test script roundtrip #57: 54666e67
+# Test script roundtrip #58: 53796c6f
+# Test script roundtrip #59: 5870656f
+# Test script roundtrip #60: 4b686172
+# Test script roundtrip #61: 5a7a7a7a
+# Test script roundtrip #62: 42616c69
+# Test script roundtrip #63: 58737578
+# Test script roundtrip #64: 50686e78
+# Test script roundtrip #65: 50686167
+# Test script roundtrip #66: 4e6b6f6f
+# Test script roundtrip #67: 4b616c69
+# Test script roundtrip #68: 4c657063
+# Test script roundtrip #69: 526a6e67
+# Test script roundtrip #70: 53756e64
+# Test script roundtrip #71: 53617572
+# Test script roundtrip #72: 4368616d
+# Test script roundtrip #73: 4f6c636b
+# Test script roundtrip #74: 56616969
+# Test script roundtrip #75: 43617269
+# Test script roundtrip #76: 4c796369
+# Test script roundtrip #77: 4c796469
+# Test script roundtrip #78: 5a7a7a7a
+# Test script roundtrip more #0: 41767374
+# Test script roundtrip more #1: 42616d75
+# Test script roundtrip more #2: 43616e73
+# Test script roundtrip more #3: 45677970
+# Test script roundtrip more #4: 41726d69
+# Test script roundtrip more #5: 5a696e68
+# Test script roundtrip more #6: 50686c69
+# Test script roundtrip more #7: 50727469
+# Test script roundtrip more #8: 4a617661
+# Test script roundtrip more #9: 4b746869
+# Test script roundtrip more #10: 4c697375
+# Test script roundtrip more #11: 4d746569
+# Test script roundtrip more #12: 53617262
+# Test script roundtrip more #13: 4f726b68
+# Test script roundtrip more #14: 53616d72
+# Test script roundtrip more #15: 4c616e61
+# Test script roundtrip more #16: 54617674
+# Test script roundtrip more #17: 4261746b
+# Test script roundtrip more #18: 42726168
+# Test script roundtrip more #19: 4d616e64
+# Test script roundtrip more #20: 4d65726f
+# Test script roundtrip more #21: 4d657263
+# Test script roundtrip more #22: 536f7261
+# Test script roundtrip more #23: 43616b6d
+# Test script roundtrip more #24: 53687264
+# Test script roundtrip more #25: 54616b72
+# Test script roundtrip more #26: 506c7264
+# Test script roundtrip more #27: 5a797979
+# Test script roundtrip more #28: 5a797979
+# Test script roundtrip more #29: 5065726d
+# Test script roundtrip more #30: 456c6261
+# Test script roundtrip more #31: 41676862
+# Test script roundtrip more #32: 4c696e61
+# Test script roundtrip more #33: 50616c6d
+# Test script roundtrip more #34: 4e626174
+# Test script roundtrip more #35: 4e617262
+# Test script roundtrip more #36: 4d616e69
+# Test script roundtrip more #37: 50686c70
+# Test script roundtrip more #38: 4d61686a
+# Test script roundtrip more #39: 4b686f6a
+# Test script roundtrip more #40: 53696e64
+# Test script roundtrip more #41: 4772616e
+# Test script roundtrip more #42: 54697268
+# Test script roundtrip more #43: 53696464
+# Test script roundtrip more #44: 4d6f6469
+# Test script roundtrip more #45: 57617261
+# Test script roundtrip more #46: 50617563
+# Test script roundtrip more #47: 4d726f6f
+# Test script roundtrip more #48: 42617373
+# Test script roundtrip more #49: 486d6e67
+# Test script roundtrip more #50: 4475706c
+# Test script roundtrip more #51: 4d656e64
+# Test script roundtrip more #52: 48617472
+# Test script roundtrip more #53: 48756e67
+# Test script roundtrip more #54: 4d756c74
+# Test script roundtrip more #55: 41686f6d
+# Test script roundtrip more #56: 486c7577
+# Test script roundtrip more #57: 53676e77
+# Test script roundtrip more #58: 4f736765
+# Test script roundtrip more #59: 4e657761
+# Test script roundtrip more #60: 42686b73
+# Test script roundtrip more #61: 4d617263
+# Test script roundtrip more #62: 54616e67
+# Test script roundtrip more #63: 41646c6d
+# Test script roundtrip more #64: 5a616e62
+# Test script roundtrip more #65: 536f796f
+# Test script roundtrip more #66: 476f6e6d
+# Test script roundtrip more #67: 4e736875
+# Test script roundtrip more #68: 526f6867
+# Test script roundtrip more #69: 536f676f
+# Test script roundtrip more #70: 536f6764
+# Test script roundtrip more #71: 446f6772
+# Test script roundtrip more #72: 476f6e67
+# Test script roundtrip more #73: 4d616b61
+# Test script roundtrip more #74: 4d656466
+# Test script roundtrip more #75: 456c796d
+# Test script roundtrip more #76: 4e616e64
+# Test script roundtrip more #77: 486d6e70
+# Test script roundtrip more #78: 5763686f
+# Test script roundtrip more #79: 5a797979
+# Test script roundtrip more #80: 59657a69
+# Test script roundtrip more #81: 43687273
+# Test script roundtrip more #82: 4469616b
+# Test script roundtrip more #83: 4b697473
+# Test script roundtrip more #84: 56697468
+# Test script roundtrip more #85: 4f756772
+# Test script roundtrip more #86: 43706d6e
+# Test script roundtrip more #87: 546e7361
+# Test script roundtrip more #88: 546f746f
+# Test script roundtrip more #89: 4b617769
+# Test script roundtrip more #90: 4e61676d
+# Test script roundtrip more #91: 546f6472
+# Test script roundtrip more #92: 47617261
+# Test script roundtrip more #93: 54757467
+# Test script roundtrip more #94: 53756e75
+# Test script roundtrip more #95: 47756b68
+# Test script roundtrip more #96: 4b726169
+# Test script roundtrip more #97: 4f6e616f
+# Test script roundtrip more #98: 5a7a7a7a
+ok 11 /unicode/script/roundtrip/default
+# Test script roundtrip #0: 5a797979
+# Test script roundtrip #1: 5a696e68
+# Test script roundtrip #2: 41726162
+# Test script roundtrip #3: 41726d6e
+# Test script roundtrip #4: 42656e67
+# Test script roundtrip #5: 426f706f
+# Test script roundtrip #6: 43686572
+# Test script roundtrip #7: 436f7074
+# Test script roundtrip #8: 4379726c
+# Test script roundtrip #9: 44737274
+# Test script roundtrip #10: 44657661
+# Test script roundtrip #11: 45746869
+# Test script roundtrip #12: 47656f72
+# Test script roundtrip #13: 476f7468
+# Test script roundtrip #14: 4772656b
+# Test script roundtrip #15: 47756a72
+# Test script roundtrip #16: 47757275
+# Test script roundtrip #17: 48616e69
+# Test script roundtrip #18: 48616e67
+# Test script roundtrip #19: 48656272
+# Test script roundtrip #20: 48697261
+# Test script roundtrip #21: 4b6e6461
+# Test script roundtrip #22: 4b616e61
+# Test script roundtrip #23: 4b686d72
+# Test script roundtrip #24: 4c616f6f
+# Test script roundtrip #25: 4c61746e
+# Test script roundtrip #26: 4d6c796d
+# Test script roundtrip #27: 4d6f6e67
+# Test script roundtrip #28: 4d796d72
+# Test script roundtrip #29: 4f67616d
+# Test script roundtrip #30: 4974616c
+# Test script roundtrip #31: 4f727961
+# Test script roundtrip #32: 52756e72
+# Test script roundtrip #33: 53696e68
+# Test script roundtrip #34: 53797263
+# Test script roundtrip #35: 54616d6c
+# Test script roundtrip #36: 54656c75
+# Test script roundtrip #37: 54686161
+# Test script roundtrip #38: 54686169
+# Test script roundtrip #39: 54696274
+# Test script roundtrip #40: 43616e73
+# Test script roundtrip #41: 59696969
+# Test script roundtrip #42: 54676c67
+# Test script roundtrip #43: 48616e6f
+# Test script roundtrip #44: 42756864
+# Test script roundtrip #45: 54616762
+# Test script roundtrip #46: 42726169
+# Test script roundtrip #47: 43707274
+# Test script roundtrip #48: 4c696d62
+# Test script roundtrip #49: 4f736d61
+# Test script roundtrip #50: 53686177
+# Test script roundtrip #51: 4c696e62
+# Test script roundtrip #52: 54616c65
+# Test script roundtrip #53: 55676172
+# Test script roundtrip #54: 54616c75
+# Test script roundtrip #55: 42756769
+# Test script roundtrip #56: 476c6167
+# Test script roundtrip #57: 54666e67
+# Test script roundtrip #58: 53796c6f
+# Test script roundtrip #59: 5870656f
+# Test script roundtrip #60: 4b686172
+# Test script roundtrip #61: 5a7a7a7a
+# Test script roundtrip #62: 42616c69
+# Test script roundtrip #63: 58737578
+# Test script roundtrip #64: 50686e78
+# Test script roundtrip #65: 50686167
+# Test script roundtrip #66: 4e6b6f6f
+# Test script roundtrip #67: 4b616c69
+# Test script roundtrip #68: 4c657063
+# Test script roundtrip #69: 526a6e67
+# Test script roundtrip #70: 53756e64
+# Test script roundtrip #71: 53617572
+# Test script roundtrip #72: 4368616d
+# Test script roundtrip #73: 4f6c636b
+# Test script roundtrip #74: 56616969
+# Test script roundtrip #75: 43617269
+# Test script roundtrip #76: 4c796369
+# Test script roundtrip #77: 4c796469
+# Test script roundtrip #78: 5a7a7a7a
+# Test script roundtrip more #0: 41767374
+# Test script roundtrip more #1: 42616d75
+# Test script roundtrip more #2: 43616e73
+# Test script roundtrip more #3: 45677970
+# Test script roundtrip more #4: 41726d69
+# Test script roundtrip more #5: 5a696e68
+# Test script roundtrip more #6: 50686c69
+# Test script roundtrip more #7: 50727469
+# Test script roundtrip more #8: 4a617661
+# Test script roundtrip more #9: 4b746869
+# Test script roundtrip more #10: 4c697375
+# Test script roundtrip more #11: 4d746569
+# Test script roundtrip more #12: 53617262
+# Test script roundtrip more #13: 4f726b68
+# Test script roundtrip more #14: 53616d72
+# Test script roundtrip more #15: 4c616e61
+# Test script roundtrip more #16: 54617674
+# Test script roundtrip more #17: 4261746b
+# Test script roundtrip more #18: 42726168
+# Test script roundtrip more #19: 4d616e64
+# Test script roundtrip more #20: 4d65726f
+# Test script roundtrip more #21: 4d657263
+# Test script roundtrip more #22: 536f7261
+# Test script roundtrip more #23: 43616b6d
+# Test script roundtrip more #24: 53687264
+# Test script roundtrip more #25: 54616b72
+# Test script roundtrip more #26: 506c7264
+# Test script roundtrip more #27: 5a797979
+# Test script roundtrip more #28: 5a797979
+# Test script roundtrip more #29: 5065726d
+# Test script roundtrip more #30: 456c6261
+# Test script roundtrip more #31: 41676862
+# Test script roundtrip more #32: 4c696e61
+# Test script roundtrip more #33: 50616c6d
+# Test script roundtrip more #34: 4e626174
+# Test script roundtrip more #35: 4e617262
+# Test script roundtrip more #36: 4d616e69
+# Test script roundtrip more #37: 50686c70
+# Test script roundtrip more #38: 4d61686a
+# Test script roundtrip more #39: 4b686f6a
+# Test script roundtrip more #40: 53696e64
+# Test script roundtrip more #41: 4772616e
+# Test script roundtrip more #42: 54697268
+# Test script roundtrip more #43: 53696464
+# Test script roundtrip more #44: 4d6f6469
+# Test script roundtrip more #45: 57617261
+# Test script roundtrip more #46: 50617563
+# Test script roundtrip more #47: 4d726f6f
+# Test script roundtrip more #48: 42617373
+# Test script roundtrip more #49: 486d6e67
+# Test script roundtrip more #50: 4475706c
+# Test script roundtrip more #51: 4d656e64
+# Test script roundtrip more #52: 48617472
+# Test script roundtrip more #53: 48756e67
+# Test script roundtrip more #54: 4d756c74
+# Test script roundtrip more #55: 41686f6d
+# Test script roundtrip more #56: 486c7577
+# Test script roundtrip more #57: 53676e77
+# Test script roundtrip more #58: 4f736765
+# Test script roundtrip more #59: 4e657761
+# Test script roundtrip more #60: 42686b73
+# Test script roundtrip more #61: 4d617263
+# Test script roundtrip more #62: 54616e67
+# Test script roundtrip more #63: 41646c6d
+# Test script roundtrip more #64: 5a616e62
+# Test script roundtrip more #65: 536f796f
+# Test script roundtrip more #66: 476f6e6d
+# Test script roundtrip more #67: 4e736875
+# Test script roundtrip more #68: 526f6867
+# Test script roundtrip more #69: 536f676f
+# Test script roundtrip more #70: 536f6764
+# Test script roundtrip more #71: 446f6772
+# Test script roundtrip more #72: 476f6e67
+# Test script roundtrip more #73: 4d616b61
+# Test script roundtrip more #74: 4d656466
+# Test script roundtrip more #75: 456c796d
+# Test script roundtrip more #76: 4e616e64
+# Test script roundtrip more #77: 486d6e70
+# Test script roundtrip more #78: 5763686f
+# Test script roundtrip more #79: 5a797979
+# Test script roundtrip more #80: 59657a69
+# Test script roundtrip more #81: 43687273
+# Test script roundtrip more #82: 4469616b
+# Test script roundtrip more #83: 4b697473
+# Test script roundtrip more #84: 56697468
+# Test script roundtrip more #85: 4f756772
+# Test script roundtrip more #86: 43706d6e
+# Test script roundtrip more #87: 546e7361
+# Test script roundtrip more #88: 546f746f
+# Test script roundtrip more #89: 4b617769
+# Test script roundtrip more #90: 4e61676d
+# Test script roundtrip more #91: 546f6472
+# Test script roundtrip more #92: 47617261
+# Test script roundtrip more #93: 54757467
+# Test script roundtrip more #94: 53756e75
+# Test script roundtrip more #95: 47756b68
+# Test script roundtrip more #96: 4b726169
+# Test script roundtrip more #97: 4f6e616f
+# Test script roundtrip more #98: 5a7a7a7a
+ok 12 /unicode/script/roundtrip/glib
+# Test script roundtrip #0: 5a797979
+# Test script roundtrip #1: 5a696e68
+# Test script roundtrip #2: 41726162
+# Test script roundtrip #3: 41726d6e
+# Test script roundtrip #4: 42656e67
+# Test script roundtrip #5: 426f706f
+# Test script roundtrip #6: 43686572
+# Test script roundtrip #7: 436f7074
+# Test script roundtrip #8: 4379726c
+# Test script roundtrip #9: 44737274
+# Test script roundtrip #10: 44657661
+# Test script roundtrip #11: 45746869
+# Test script roundtrip #12: 47656f72
+# Test script roundtrip #13: 476f7468
+# Test script roundtrip #14: 4772656b
+# Test script roundtrip #15: 47756a72
+# Test script roundtrip #16: 47757275
+# Test script roundtrip #17: 48616e69
+# Test script roundtrip #18: 48616e67
+# Test script roundtrip #19: 48656272
+# Test script roundtrip #20: 48697261
+# Test script roundtrip #21: 4b6e6461
+# Test script roundtrip #22: 4b616e61
+# Test script roundtrip #23: 4b686d72
+# Test script roundtrip #24: 4c616f6f
+# Test script roundtrip #25: 4c61746e
+# Test script roundtrip #26: 4d6c796d
+# Test script roundtrip #27: 4d6f6e67
+# Test script roundtrip #28: 4d796d72
+# Test script roundtrip #29: 4f67616d
+# Test script roundtrip #30: 4974616c
+# Test script roundtrip #31: 4f727961
+# Test script roundtrip #32: 52756e72
+# Test script roundtrip #33: 53696e68
+# Test script roundtrip #34: 53797263
+# Test script roundtrip #35: 54616d6c
+# Test script roundtrip #36: 54656c75
+# Test script roundtrip #37: 54686161
+# Test script roundtrip #38: 54686169
+# Test script roundtrip #39: 54696274
+# Test script roundtrip #40: 43616e73
+# Test script roundtrip #41: 59696969
+# Test script roundtrip #42: 54676c67
+# Test script roundtrip #43: 48616e6f
+# Test script roundtrip #44: 42756864
+# Test script roundtrip #45: 54616762
+# Test script roundtrip #46: 42726169
+# Test script roundtrip #47: 43707274
+# Test script roundtrip #48: 4c696d62
+# Test script roundtrip #49: 4f736d61
+# Test script roundtrip #50: 53686177
+# Test script roundtrip #51: 4c696e62
+# Test script roundtrip #52: 54616c65
+# Test script roundtrip #53: 55676172
+# Test script roundtrip #54: 54616c75
+# Test script roundtrip #55: 42756769
+# Test script roundtrip #56: 476c6167
+# Test script roundtrip #57: 54666e67
+# Test script roundtrip #58: 53796c6f
+# Test script roundtrip #59: 5870656f
+# Test script roundtrip #60: 4b686172
+# Test script roundtrip #61: 5a7a7a7a
+# Test script roundtrip #62: 42616c69
+# Test script roundtrip #63: 58737578
+# Test script roundtrip #64: 50686e78
+# Test script roundtrip #65: 50686167
+# Test script roundtrip #66: 4e6b6f6f
+# Test script roundtrip #67: 4b616c69
+# Test script roundtrip #68: 4c657063
+# Test script roundtrip #69: 526a6e67
+# Test script roundtrip #70: 53756e64
+# Test script roundtrip #71: 53617572
+# Test script roundtrip #72: 4368616d
+# Test script roundtrip #73: 4f6c636b
+# Test script roundtrip #74: 56616969
+# Test script roundtrip #75: 43617269
+# Test script roundtrip #76: 4c796369
+# Test script roundtrip #77: 4c796469
+# Test script roundtrip #78: 5a7a7a7a
+# Test script roundtrip more #0: 41767374
+# Test script roundtrip more #1: 42616d75
+# Test script roundtrip more #2: 43616e73
+# Test script roundtrip more #3: 45677970
+# Test script roundtrip more #4: 41726d69
+# Test script roundtrip more #5: 5a696e68
+# Test script roundtrip more #6: 50686c69
+# Test script roundtrip more #7: 50727469
+# Test script roundtrip more #8: 4a617661
+# Test script roundtrip more #9: 4b746869
+# Test script roundtrip more #10: 4c697375
+# Test script roundtrip more #11: 4d746569
+# Test script roundtrip more #12: 53617262
+# Test script roundtrip more #13: 4f726b68
+# Test script roundtrip more #14: 53616d72
+# Test script roundtrip more #15: 4c616e61
+# Test script roundtrip more #16: 54617674
+# Test script roundtrip more #17: 4261746b
+# Test script roundtrip more #18: 42726168
+# Test script roundtrip more #19: 4d616e64
+# Test script roundtrip more #20: 4d65726f
+# Test script roundtrip more #21: 4d657263
+# Test script roundtrip more #22: 536f7261
+# Test script roundtrip more #23: 43616b6d
+# Test script roundtrip more #24: 53687264
+# Test script roundtrip more #25: 54616b72
+# Test script roundtrip more #26: 506c7264
+# Test script roundtrip more #27: 5a797979
+# Test script roundtrip more #28: 5a797979
+# Test script roundtrip more #29: 5065726d
+# Test script roundtrip more #30: 456c6261
+# Test script roundtrip more #31: 41676862
+# Test script roundtrip more #32: 4c696e61
+# Test script roundtrip more #33: 50616c6d
+# Test script roundtrip more #34: 4e626174
+# Test script roundtrip more #35: 4e617262
+# Test script roundtrip more #36: 4d616e69
+# Test script roundtrip more #37: 50686c70
+# Test script roundtrip more #38: 4d61686a
+# Test script roundtrip more #39: 4b686f6a
+# Test script roundtrip more #40: 53696e64
+# Test script roundtrip more #41: 4772616e
+# Test script roundtrip more #42: 54697268
+# Test script roundtrip more #43: 53696464
+# Test script roundtrip more #44: 4d6f6469
+# Test script roundtrip more #45: 57617261
+# Test script roundtrip more #46: 50617563
+# Test script roundtrip more #47: 4d726f6f
+# Test script roundtrip more #48: 42617373
+# Test script roundtrip more #49: 486d6e67
+# Test script roundtrip more #50: 4475706c
+# Test script roundtrip more #51: 4d656e64
+# Test script roundtrip more #52: 48617472
+# Test script roundtrip more #53: 48756e67
+# Test script roundtrip more #54: 4d756c74
+# Test script roundtrip more #55: 41686f6d
+# Test script roundtrip more #56: 486c7577
+# Test script roundtrip more #57: 53676e77
+# Test script roundtrip more #58: 4f736765
+# Test script roundtrip more #59: 4e657761
+# Test script roundtrip more #60: 42686b73
+# Test script roundtrip more #61: 4d617263
+# Test script roundtrip more #62: 54616e67
+# Test script roundtrip more #63: 41646c6d
+# Test script roundtrip more #64: 5a616e62
+# Test script roundtrip more #65: 536f796f
+# Test script roundtrip more #66: 476f6e6d
+# Test script roundtrip more #67: 4e736875
+# Test script roundtrip more #68: 526f6867
+# Test script roundtrip more #69: 536f676f
+# Test script roundtrip more #70: 536f6764
+# Test script roundtrip more #71: 446f6772
+# Test script roundtrip more #72: 476f6e67
+# Test script roundtrip more #73: 4d616b61
+# Test script roundtrip more #74: 4d656466
+# Test script roundtrip more #75: 456c796d
+# Test script roundtrip more #76: 4e616e64
+# Test script roundtrip more #77: 486d6e70
+# Test script roundtrip more #78: 5763686f
+# Test script roundtrip more #79: 5a797979
+# Test script roundtrip more #80: 59657a69
+# Test script roundtrip more #81: 43687273
+# Test script roundtrip more #82: 4469616b
+# Test script roundtrip more #83: 4b697473
+# Test script roundtrip more #84: 56697468
+# Test script roundtrip more #85: 4f756772
+# Test script roundtrip more #86: 43706d6e
+# Test script roundtrip more #87: 546e7361
+# Test script roundtrip more #88: 546f746f
+# Test script roundtrip more #89: 4b617769
+# Test script roundtrip more #90: 4e61676d
+# Test script roundtrip more #91: 546f6472
+# Test script roundtrip more #92: 47617261
+# Test script roundtrip more #93: 54757467
+# Test script roundtrip more #94: 53756e75
+# Test script roundtrip more #95: 47756b68
+# Test script roundtrip more #96: 4b726169
+# Test script roundtrip more #97: 4f6e616f
+# Test script roundtrip more #98: 5a7a7a7a
+ok 13 /unicode/script/roundtrip/icu
+# End of roundtrip tests
+# End of script tests
+# Start of subclassing tests
+ok 14 /unicode/subclassing/nil
+ok 15 /unicode/subclassing/default
+ok 16 /unicode/subclassing/deep
+# End of subclassing tests
+# End of unicode tests
+0
+----------------------------
+
+test-var-coords
+TAP version 14
+# random seed: R02Sea0da96dc6896909c3e27879cfaba5ab
+1..2
+# Start of get tests
+# Start of var tests
+ok 1 /get/var/coords
+# Start of get tests
+# Start of axis tests
+ok 2 /get/var/get/axis/infos
+# End of axis tests
+# End of get tests
+# End of var tests
+# End of get tests
+0
+----------------------------
+
+test-version
+TAP version 14
+# random seed: R02Sa6e1b5b9be2564a16d00b30968d67aa4
+1..1
+ok 1 /version
+0
+----------------------------

@@ -1,0 +1,501 @@
+
+cxx-test
+0
+----------------------------
+
+test-bidi
+TAP version 14
+# random seed: R02S654b2293abb1356665528a13b03af1a5
+1..8
+# Start of bidi tests
+ok 1 /bidi/mirror-char
+ok 2 /bidi/type-for-unichar
+ok 3 /bidi/unichar-direction
+ok 4 /bidi/embedding-levels
+ok 5 /bidi/move-cursor-line
+ok 6 /bidi/move-cursor-para
+ok 7 /bidi/sinhala-cursor # SKIP missing Sinhala fonts
+ok 8 /bidi/nested
+# End of bidi tests
+0
+----------------------------
+
+test-break
+TAP version 14
+# random seed: R02S54c4f9a56c23b8e23d7912b7de35546d
+1..17
+# Start of break tests
+ok 1 /break/eight.break # SKIP Locale en_US.UTF-8 not available, skipping break ./breaks/eight.break
+ok 2 /break/eleven.break # SKIP Locale en_US.UTF-8 not available, skipping break ./breaks/eleven.break
+ok 3 /break/fifteen.break # SKIP Locale en_US.UTF-8 not available, skipping break ./breaks/fifteen.break
+ok 4 /break/five.break # SKIP Locale en_US.UTF-8 not available, skipping break ./breaks/five.break
+ok 5 /break/four.break # SKIP Locale en_US.UTF-8 not available, skipping break ./breaks/four.break
+ok 6 /break/fourteen.break # SKIP Locale en_US.UTF-8 not available, skipping break ./breaks/fourteen.break
+ok 7 /break/nine.break # SKIP Locale en_US.UTF-8 not available, skipping break ./breaks/nine.break
+ok 8 /break/one.break # SKIP Locale en_US.UTF-8 not available, skipping break ./breaks/one.break
+ok 9 /break/seven.break # SKIP Locale en_US.UTF-8 not available, skipping break ./breaks/seven.break
+ok 10 /break/seventeen.break # SKIP Locale en_US.UTF-8 not available, skipping break ./breaks/seventeen.break
+ok 11 /break/six.break # SKIP Locale en_US.UTF-8 not available, skipping break ./breaks/six.break
+ok 12 /break/sixteen.break # SKIP Locale en_US.UTF-8 not available, skipping break ./breaks/sixteen.break
+ok 13 /break/ten.break # SKIP Locale en_US.UTF-8 not available, skipping break ./breaks/ten.break
+ok 14 /break/thirteen.break # SKIP Locale en_US.UTF-8 not available, skipping break ./breaks/thirteen.break
+ok 15 /break/three.break # SKIP Locale en_US.UTF-8 not available, skipping break ./breaks/three.break
+ok 16 /break/twelve.break # SKIP Locale en_US.UTF-8 not available, skipping break ./breaks/twelve.break
+ok 17 /break/two.break # SKIP Locale en_US.UTF-8 not available, skipping break ./breaks/two.break
+# End of break tests
+0
+----------------------------
+
+test-coverage
+TAP version 14
+# random seed: R02S2e6303157235ec315db0cb6665064072
+1..2
+# Start of coverage tests
+ok 1 /coverage/basic
+ok 2 /coverage/copy
+# End of coverage tests
+0
+----------------------------
+
+test-ellipsize
+TAP version 14
+# random seed: R02S6002e8516345da6993eb40e5046a656c
+1..3
+# Start of layout tests
+# Start of ellipsize tests
+ok 1 /layout/ellipsize/height
+ok 2 /layout/ellipsize/crash
+ok 3 /layout/ellipsize/fully
+# End of ellipsize tests
+# End of layout tests
+0
+----------------------------
+
+test-font
+TAP version 14
+# random seed: R02S8bf133d7b644986e97173c0b350312d1
+1..24
+# Start of pango tests
+# Start of font tests
+# Cantarell 11 metrics
+# 	ascent: 14336
+# 	descent: 4096
+# 	height: 18432
+# 	char width: 7785
+# 	digit width: 9216
+# 	underline position: 0
+# 	underline thickness: 1024
+# 	strikethrough position: 4096
+# 	strikethrough thickness: 1024
+ok 1 /pango/font/metrics
+ok 2 /pango/font/extents
+ok 3 /pango/font/enumerate
+ok 4 /pango/font/models
+ok 5 /pango/font/glyph-extents
+ok 6 /pango/font/font-metrics
+ok 7 /pango/font/custom
+# Start of roundtrip tests
+ok 8 /pango/font/roundtrip/plain
+ok 9 /pango/font/roundtrip/absolute
+ok 10 /pango/font/roundtrip/variations
+ok 11 /pango/font/roundtrip/small-caps
+ok 12 /pango/font/roundtrip/emoji
+# End of roundtrip tests
+# Start of scale-font tests
+ok 13 /pango/font/scale-font/plain
+ok 14 /pango/font/scale-font/variations
+# End of scale-font tests
+# End of font tests
+# Start of fontdescription tests
+ok 15 /pango/fontdescription/parse
+ok 16 /pango/fontdescription/roundtrip
+ok 17 /pango/fontdescription/variations
+ok 18 /pango/fontdescription/empty-variations
+ok 19 /pango/fontdescription/features
+ok 20 /pango/fontdescription/features-and-variations
+ok 21 /pango/fontdescription/empty-features
+ok 22 /pango/fontdescription/to-filename
+ok 23 /pango/fontdescription/set-gravity
+ok 24 /pango/fontdescription/match
+# End of fontdescription tests
+# End of pango tests
+0
+----------------------------
+
+test-fonts
+TAP version 14
+# random seed: R02S352c1c3610c8859f00ff41a628378638
+1..4
+# Start of fontsets tests
+ok 1 /fontsets/cantarell # SKIP Locale en_US.UTF-8 not available, skipping layout ./fontsets/cantarell
+ok 2 /fontsets/cantarell2 # SKIP Locale en_US.UTF-8 not available, skipping layout ./fontsets/cantarell2
+ok 3 /fontsets/mono # SKIP Locale en_US.UTF-8 not available, skipping layout ./fontsets/mono
+ok 4 /fontsets/mono2 # SKIP Locale en_US.UTF-8 not available, skipping layout ./fontsets/mono2
+# End of fontsets tests
+0
+----------------------------
+
+test-harfbuzz
+TAP version 14
+# random seed: R02Se0829e52f8d00ac2706bf5fac24c2617
+1..1
+# Start of harfbuzz tests
+ok 1 /harfbuzz/font
+# End of harfbuzz tests
+0
+----------------------------
+
+test-itemize
+TAP version 14
+# random seed: R02Sec141720cc714b76aff4d99dbaec69ba
+1..3
+# Start of itemize tests
+ok 1 /itemize/one.items # SKIP Locale en_US.UTF-8 not available, skipping itemization ./itemize/one.items
+ok 2 /itemize/three.items # SKIP Locale en_US.UTF-8 not available, skipping itemization ./itemize/three.items
+ok 3 /itemize/two.items # SKIP Locale en_US.UTF-8 not available, skipping itemization ./itemize/two.items
+# End of itemize tests
+0
+----------------------------
+
+test-layout
+TAP version 14
+# random seed: R02S6e21ccc940bafe56964b33609242d4a8
+1..38
+# Start of layout tests
+ok 1 /layout/aaa.layout # SKIP Locale en_US.UTF-8 not available, skipping layout ./layouts/aaa.layout
+ok 2 /layout/arabic-format.layout # SKIP Locale en_US.UTF-8 not available, skipping layout ./layouts/arabic-format.layout
+ok 3 /layout/bratwurst.layout # SKIP Locale en_US.UTF-8 not available, skipping layout ./layouts/bratwurst.layout
+ok 4 /layout/bratwurst2.layout # SKIP Locale en_US.UTF-8 not available, skipping layout ./layouts/bratwurst2.layout
+ok 5 /layout/bratwurst3.layout # SKIP Locale en_US.UTF-8 not available, skipping layout ./layouts/bratwurst3.layout
+ok 6 /layout/bratwurst4.layout # SKIP Locale en_US.UTF-8 not available, skipping layout ./layouts/bratwurst4.layout
+ok 7 /layout/effigy.layout # SKIP Locale en_US.UTF-8 not available, skipping layout ./layouts/effigy.layout
+ok 8 /layout/kebab.layout # SKIP Locale en_US.UTF-8 not available, skipping layout ./layouts/kebab.layout
+ok 9 /layout/letterspacing.layout # SKIP Locale en_US.UTF-8 not available, skipping layout ./layouts/letterspacing.layout
+ok 10 /layout/no-space.layout # SKIP Locale en_US.UTF-8 not available, skipping layout ./layouts/no-space.layout
+ok 11 /layout/screaming.layout # SKIP Locale en_US.UTF-8 not available, skipping layout ./layouts/screaming.layout
+ok 12 /layout/tab-assert.layout # SKIP Locale en_US.UTF-8 not available, skipping layout ./layouts/tab-assert.layout
+ok 13 /layout/tab-crash.layout # SKIP Locale en_US.UTF-8 not available, skipping layout ./layouts/tab-crash.layout
+ok 14 /layout/tabs-nowrap.layout # SKIP Locale en_US.UTF-8 not available, skipping layout ./layouts/tabs-nowrap.layout
+ok 15 /layout/tabs.layout # SKIP Locale en_US.UTF-8 not available, skipping layout ./layouts/tabs.layout
+ok 16 /layout/valid-1.layout # SKIP Locale en_US.UTF-8 not available, skipping layout ./layouts/valid-1.layout
+ok 17 /layout/valid-10.layout # SKIP Locale en_US.UTF-8 not available, skipping layout ./layouts/valid-10.layout
+ok 18 /layout/valid-11.layout # SKIP Locale en_US.UTF-8 not available, skipping layout ./layouts/valid-11.layout
+ok 19 /layout/valid-12.layout # SKIP Locale en_US.UTF-8 not available, skipping layout ./layouts/valid-12.layout
+ok 20 /layout/valid-13.layout # SKIP Locale en_US.UTF-8 not available, skipping layout ./layouts/valid-13.layout
+ok 21 /layout/valid-14.layout # SKIP Locale en_US.UTF-8 not available, skipping layout ./layouts/valid-14.layout
+ok 22 /layout/valid-15.layout # SKIP Locale en_US.UTF-8 not available, skipping layout ./layouts/valid-15.layout
+ok 23 /layout/valid-16.layout # SKIP Locale en_US.UTF-8 not available, skipping layout ./layouts/valid-16.layout
+ok 24 /layout/valid-17.layout # SKIP Locale en_US.UTF-8 not available, skipping layout ./layouts/valid-17.layout
+ok 25 /layout/valid-18.layout # SKIP Locale en_US.UTF-8 not available, skipping layout ./layouts/valid-18.layout
+ok 26 /layout/valid-19.layout # SKIP Locale en_US.UTF-8 not available, skipping layout ./layouts/valid-19.layout
+ok 27 /layout/valid-2.layout # SKIP Locale en_US.UTF-8 not available, skipping layout ./layouts/valid-2.layout
+ok 28 /layout/valid-20.layout # SKIP Locale en_US.UTF-8 not available, skipping layout ./layouts/valid-20.layout
+ok 29 /layout/valid-21.layout # SKIP Locale en_US.UTF-8 not available, skipping layout ./layouts/valid-21.layout
+ok 30 /layout/valid-22.layout # SKIP Locale en_US.UTF-8 not available, skipping layout ./layouts/valid-22.layout
+ok 31 /layout/valid-3.layout # SKIP Locale en_US.UTF-8 not available, skipping layout ./layouts/valid-3.layout
+ok 32 /layout/valid-4.layout # SKIP Locale en_US.UTF-8 not available, skipping layout ./layouts/valid-4.layout
+ok 33 /layout/valid-5.layout # SKIP Locale en_US.UTF-8 not available, skipping layout ./layouts/valid-5.layout
+ok 34 /layout/valid-6.layout # SKIP Locale en_US.UTF-8 not available, skipping layout ./layouts/valid-6.layout
+ok 35 /layout/valid-7.layout # SKIP Locale en_US.UTF-8 not available, skipping layout ./layouts/valid-7.layout
+ok 36 /layout/valid-8.layout # SKIP Locale en_US.UTF-8 not available, skipping layout ./layouts/valid-8.layout
+ok 37 /layout/valid-9.layout # SKIP Locale en_US.UTF-8 not available, skipping layout ./layouts/valid-9.layout
+ok 38 /layout/vertical.layout # SKIP Locale en_US.UTF-8 not available, skipping layout ./layouts/vertical.layout
+# End of layout tests
+0
+----------------------------
+
+test-no-fonts
+TAP version 14
+# random seed: R02See635d21531fe817dcbf31af16cf0acd
+1..1
+# Start of layout tests
+ok 1 /layout/nofonts
+# End of layout tests
+0
+----------------------------
+
+test-ot-tags
+TAP version 14
+# random seed: R02S24605ee7da03af9e0901fd45d07b992c
+1..2
+# Start of tags tests
+ok 1 /tags/script
+ok 2 /tags/language
+# End of tags tests
+0
+----------------------------
+
+test-pangocairo-threads
+TAP version 14
+# random seed: R02S83554f12bc30e9538077891205715731
+1..1
+# Start of pangocairo tests
+ok 1 /pangocairo/threads
+# slow test /pangocairo/threads executed in 1.26 secs
+# End of pangocairo tests
+0
+----------------------------
+
+test-shape
+TAP version 14
+# random seed: R02S87a55706c1ad0e025a94661f251c50f6
+0
+----------------------------
+
+testattributes
+TAP version 14
+# random seed: R02Se1a625175d30453087fd44a1cb83e67d
+1..37
+# Start of attributes tests
+ok 1 /attributes/basic
+ok 2 /attributes/equal
+ok 3 /attributes/register
+ok 4 /attributes/binding-helpers
+ok 5 /attributes/gnumeric-splice
+ok 6 /attributes/pitivi-crash
+# Start of list tests
+ok 7 /attributes/list/basic
+ok 8 /attributes/list/change
+ok 9 /attributes/list/change2
+ok 10 /attributes/list/change3
+ok 11 /attributes/list/change4
+ok 12 /attributes/list/change5
+ok 13 /attributes/list/change6
+ok 14 /attributes/list/change7
+ok 15 /attributes/list/change8
+ok 16 /attributes/list/change9
+ok 17 /attributes/list/change10
+ok 18 /attributes/list/change11
+ok 19 /attributes/list/change12
+ok 20 /attributes/list/splice
+ok 21 /attributes/list/splice2
+ok 22 /attributes/list/splice3
+ok 23 /attributes/list/filter
+ok 24 /attributes/list/update
+ok 25 /attributes/list/update2
+ok 26 /attributes/list/update3
+ok 27 /attributes/list/equal
+ok 28 /attributes/list/insert
+ok 29 /attributes/list/insert2
+ok 30 /attributes/list/merge
+ok 31 /attributes/list/merge2
+ok 32 /attributes/list/change_order
+# End of list tests
+# Start of iter tests
+ok 33 /attributes/iter/basic
+ok 34 /attributes/iter/get
+ok 35 /attributes/iter/get_font
+ok 36 /attributes/iter/get_attrs
+ok 37 /attributes/iter/epsilon_zero
+# End of iter tests
+# End of attributes tests
+0
+----------------------------
+
+testboundaries
+TAP version 14
+# random seed: R02Sf76c5432cb32f77ef0f3d7e3fb340c06
+1..1
+# Start of text tests
+ok 1 /text/boundaries
+# End of text tests
+0
+----------------------------
+
+testboundaries_ucd
+TAP version 14
+# random seed: R02Sb4444c73c2b5055971a6492235221144
+1..6
+# Start of text tests
+# Start of break tests
+ok 1 /text/break/grapheme
+ok 2 /text/break/word
+ok 3 /text/break/sentence
+ok 4 /text/break/line # SKIP Compiled with libthai, skip the line break test.
+ok 5 /text/break/emoji
+ok 6 /text/break/char
+# End of break tests
+# End of text tests
+0
+----------------------------
+
+testcolor
+TAP version 14
+# random seed: R02S42309fe6f9134bcca6fb565c623584bb
+1..3
+# Start of color tests
+ok 1 /color/parse
+ok 2 /color/copy
+ok 3 /color/serialize
+# End of color tests
+0
+----------------------------
+
+testcontext
+TAP version 14
+# random seed: R02S53f4f69d6fa2fe0c3bdba78a90d258e5
+1..6
+# Start of context tests
+ok 1 /context/list-families
+ok 2 /context/set-language
+ok 3 /context/set-base-dir
+ok 4 /context/set-base-gravity
+ok 5 /context/set-gravity-hint
+ok 6 /context/set-round-glyph-positions
+# End of context tests
+0
+----------------------------
+
+testiter
+TAP version 14
+# random seed: R02Sf737b24e684ecb77cc8011d1f047aa69
+1..2
+# Start of layout tests
+ok 1 /layout/iter
+ok 2 /layout/glyphitem-iter
+# End of layout tests
+0
+----------------------------
+
+testlanguage
+TAP version 14
+# random seed: R02Sa39e69e8f6655b4ea6bddd6e24015fda
+1..2
+# Start of language tests
+ok 1 /language/to-string
+ok 2 /language/language-env
+# End of language tests
+0
+----------------------------
+
+testmatrix
+TAP version 14
+# random seed: R02S5b08c9058d5498a704b6406d3684f398
+1..10
+# Start of matrix tests
+ok 1 /matrix/translate
+ok 2 /matrix/rotate
+ok 3 /matrix/scale
+ok 4 /matrix/concat
+ok 5 /matrix/font-scale
+ok 6 /matrix/transform-point
+ok 7 /matrix/transform-distance
+ok 8 /matrix/transform-rect
+ok 9 /matrix/transform-pixel-rect
+ok 10 /matrix/slant-ratio
+# End of matrix tests
+0
+----------------------------
+
+testmisc
+TAP version 14
+# random seed: R02S98840be127f35b08a16590658f9776a9
+1..28
+# Start of layout tests
+ok 1 /layout/shape-tab-crash
+ok 2 /layout/itemize-empty-crash
+ok 3 /layout/itemize-utf8
+ok 4 /layout/short-string-crash
+ok 5 /layout/line-height
+ok 6 /layout/line-height2
+ok 7 /layout/line-height3
+ok 8 /layout/run-height
+ok 9 /layout/cursor-height
+ok 10 /layout/cursor-height2
+ok 11 /layout/fallback-shape
+ok 12 /layout/index-to-x
+ok 13 /layout/extents
+ok 14 /layout/empty-line-height
+ok 15 /layout/gravity-metrics
+ok 16 /layout/wrap-char
+# End of layout tests
+# Start of language tests
+ok 17 /language/emoji-crash
+ok 18 /language/to-tag
+# End of language tests
+# Start of attr-list tests
+ok 19 /attr-list/update
+# End of attr-list tests
+# Start of misc tests
+ok 20 /misc/version-info
+ok 21 /misc/is-zerowidth
+# End of misc tests
+# Start of gravity tests
+ok 22 /gravity/to-rotation
+ok 23 /gravity/from-matrix
+ok 24 /gravity/for-script
+# End of gravity tests
+# Start of bidi tests
+ok 25 /bidi/get-cursor-crash
+ok 26 /bidi/get-cursor
+# End of bidi tests
+# Start of matrix tests
+ok 27 /matrix/transform-rectangle
+# End of matrix tests
+# Start of itemize tests
+ok 28 /itemize/small-caps-crash
+# End of itemize tests
+0
+----------------------------
+
+testscript
+TAP version 14
+# random seed: R02S0411326313c6ccf0d2dcdac70ad78c5e
+1..1
+# Start of script tests
+# Total length: 125
+# 
+# Range: 0-23: 10
+# 
+# Range: 23-38: 2
+# 
+# Range: 38-53: 8
+# 
+# Range: 53-62: 25
+# 
+# Range: 62-71: 38
+# 
+# Range: 71-73: 25
+# 
+# Range: 73-79: 17
+# 
+# Range: 79-97: 20
+# 
+# Range: 97-109: 22
+# 
+# Range: 109-125: 9
+# 
+ok 1 /script/iter
+# End of script tests
+0
+----------------------------
+
+testserialize
+TAP version 14
+# random seed: R02S0d6e3f31961b81fd8e8bef74c7b41569
+1..7
+# Start of serialize tests
+ok 1 /serialize/attr-list
+ok 2 /serialize/tab-array
+ok 3 /serialize/font
+# Start of layout tests
+ok 4 /serialize/layout/minimal
+ok 5 /serialize/layout/valid
+ok 6 /serialize/layout/context
+ok 7 /serialize/layout/invalid
+# End of layout tests
+# End of serialize tests
+0
+----------------------------
+
+testtabs
+TAP version 14
+# random seed: R02S59025add59895b9f98cae745ef2f6866
+1..3
+# Start of tabs tests
+ok 1 /tabs/basic
+ok 2 /tabs/copy
+ok 3 /tabs/resize
+# End of tabs tests
+0
+----------------------------

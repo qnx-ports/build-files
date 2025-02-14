@@ -1,4 +1,4 @@
-# libffi [![Build](https://github.com/qnx-ports/build-files/actions/workflows/libffi.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/libffi.yml)
+# libiconv [![Build](https://github.com/qnx-ports/build-files/actions/workflows/libiconv.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/libiconv.yml)
 
 Supports QNX7.1 and QNX8.0
 
@@ -11,69 +11,46 @@ It is very likely that another version of these binaries are shipped with the QN
 Use `$(nproc)` instead of `4` after `JLEVEL=` and `-j` if you want to use the maximum number of cores to build this project.
 32GB of RAM is recommended for using `JLEVEL=$(nproc)` or `-j$(nproc)`.
 
-# Compile the port for QNX in a Docker container
+# Compile the port for QNX in a Docker container or Ubuntu host
 
 Pre-requisite: Install Docker on Ubuntu https://docs.docker.com/engine/install/ubuntu/
 ```bash
 # Create a workspace
 mkdir -p ~/qnx_workspace && cd ~/qnx_workspace
 git clone https://github.com/qnx-ports/build-files.git
+wget https://ftp.gnu.org/pub/gnu/libiconv/libiconv-1.18.tar.gz && tar -xf libiconv-1.18.tar.gz
 
-# Build the Docker image and create a container
+# Optionally Build the Docker image and create a container
 cd build-files/docker
 ./docker-build-qnx-image.sh
 ./docker-create-container.sh
 
-# Now you are in the Docker container
-
 # source qnxsdp-env.sh in
 source ~/qnx800/qnxsdp-env.sh
-
-# Clone libffi
 cd ~/qnx_workspace
-git clone https://github.com/libffi/libffi.git
 
-# check out to v3.2.1
-cd libffi
-git checkout v3.2.1
-cd ..
-
-# Build libffi
-QNX_PROJECT_ROOT="$(pwd)/libffi" JLEVEL=4 make -C build-files/ports/libffi install
-```
-
-# Compile the port for QNX on Ubuntu host
-```bash
-# Clone the repos
-mkdir -p ~/qnx_workspace && cd qnx_workspace
-git clone https://github.com/qnx-ports/build-files.git
-git clone https://github.com/libffi/libffi.git
-
-# check libffi out to v3.2.1
-cd libffi
-git checkout v3.2.1
-cd ..
-
-# source qnxsdp-env.sh
-source ~/qnx800/qnxsdp-env.sh
-
-# Build libffi
-QNX_PROJECT_ROOT="$(pwd)/libffi" JLEVEL=4 make -C build-files/ports/libffi install
+# Build libiconv
+QNX_PROJECT_ROOT="$(pwd)/libiconv-1.18" JLEVEL=4 make -C build-files/ports/libiconv install
 ```
 
 # Deploy binaries via SSH
+This port provides all `libiconv` binaries obtained from QSC, but may be slightly more updated. 
+On top of that, `libcharset` and `iconv` are also provided.
 ```bash
 #Set your target's IP here
 TARGET_IP_ADDRESS=<target-ip-address-or-hostname>
 TARGET_USER=<target-username>
 
-scp -r ~/qnx800/target/qnx/aarch64le/usr/local/lib/libffi* $TARGET_USER@$TARGET_IP_ADDRESS:~/lib
+scp -r ~/qnx800/target/qnx/aarch64le/usr/local/bin/iconv* $TARGET_USER@$TARGET_IP_ADDRESS:~/bin
+scp -r ~/qnx800/target/qnx/aarch64le/usr/local/lib/libiconv* $TARGET_USER@$TARGET_IP_ADDRESS:~/lib
+scp -r ~/qnx800/target/qnx/aarch64le/usr/local/lib/libcharset* $TARGET_USER@$TARGET_IP_ADDRESS:~/lib
 ```
 
-If `~/lib` directory do not exist, create them with:
+If the `~/bin` or `~/lib` directory does not exist, create them with:
 ```bash
+ssh $TARGET_USER@$TARGET_IP_ADDRESS "mkdir -p ~/bin"
 ssh $TARGET_USER@$TARGET_IP_ADDRESS "mkdir -p ~/lib"
 ````
 
 # Tests
-Tests are not avaliable.
+Tests are not available.
