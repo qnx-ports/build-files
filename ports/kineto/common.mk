@@ -41,8 +41,6 @@ NTO_DIR_NAME=nto-x86_64-o
 CMAKE_SYSTEM_PROCESSOR=x86_64
 endif
 
-BUILD_TESTING ?= OFF
-
 KINETO_VERSION = main
 
 CMAKE_ARGS =    -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
@@ -60,7 +58,7 @@ CMAKE_ARGS =    -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
                 -DBUILD_QNX_LINKER_FLAGS="$(LDFLAGS)" \
                 -DCMAKE_VERBOSE_MAKEFILE=1 \
                 -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
-                -DKINETO_BUILD_TESTS=$(BUILD_TESTING) \
+                -DKINETO_BUILD_TESTS=OFF \
                 -DKINETO_LIBRARY_TYPE=static \
                 -DLIBKINETO_NOXPUPTI=ON \
                 -DLIBKINETO_NOROCTRACER=ON \
