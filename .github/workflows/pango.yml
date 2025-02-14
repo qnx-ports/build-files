@@ -72,6 +72,6 @@ jobs:
           fi
           cd workspace
           chmod +x build-files/ports/pango/install_all.sh
-          ./build-files/ports/pango/install_all.sh
+          JLEVEL=$(nproc) ./build-files/ports/pango/install_all.sh
           JLEVEL=$(nproc) QNX_PROJECT_ROOT="$(pwd)/pango" make -C build-files/ports/pango clean install
           
