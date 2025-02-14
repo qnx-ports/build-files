@@ -2,8 +2,6 @@
 
 **NOTE**: QNX ports are only supported from a Linux host operating system
 
-**WARNING**: Only libkineto is supported.
-
 Use `$(nproc)` instead of `4` after `JLEVEL=` and `-j` if you want to use the maximum number of cores to build this project.
 32GB of RAM is recommended for using `JLEVEL=$(nproc)` or `-j$(nproc)`.
 
@@ -25,16 +23,13 @@ cd build-files/docker
 # source qnxsdp-env.sh in
 source ~/qnx800/qnxsdp-env.sh
 
-# Clone kineto
+# Clone sleef
 cd ~/qnx_workspace
-git clone https://github.com/qnx-ports/kineto.git && cd kineto
+git clone https://github.com/qnx-ports/sleef.git
 
-# Init submodules
-git submodule update --init --recursive
-
-# Build kineto
+# Build sleef
 cd ~/qnx_workspace
-QNX_PROJECT_ROOT="$(pwd)/kineto/libkineto" make -C build-files/ports/kineto install -j4
+QNX_PROJECT_ROOT="$(pwd)/sleef" make -C build-files/ports/sleef install -j4
 ```
 
 # Compile the port for QNX on Ubuntu host
@@ -45,12 +40,9 @@ git clone https://github.com/qnx-ports/build-files.git
 
 # source qnxsdp-env.sh
 source ~/qnx800/qnxsdp-env.sh
-git clone https://github.com/qnx-ports/kineto.git && cd kineto
+git clone https://github.com/qnx-ports/sleef.git
 
-# Init submodules
-git submodule update --init --recursive
-
-# Build kineto
+# Build sleef
 cd ~/qnx_workspace
-QNX_PROJECT_ROOT="$(pwd)/kineto/libkineto" make -C build-files/ports/kineto install -j4
+QNX_PROJECT_ROOT="$(pwd)/sleef" make -C build-files/ports/sleef install -j4
 ```
