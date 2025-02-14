@@ -1,6 +1,8 @@
 DEP_NAME=(libdatrie)
 DEP_NAME_SRC=(libdatrie-0.2.13)
-DEP_CLONE_CMD=("wget https://github.com/tlwg/libdatrie/releases/download/v0.2.13/libdatrie-0.2.13.tar.xz && tar -xf libdatrie-0.2.13.tar.xz")
+DEP_CLONE_CMD=("echo skipped")
+
+wget https://github.com/tlwg/libdatrie/releases/download/v0.2.13/libdatrie-0.2.13.tar.xz && tar -xf libdatrie-0.2.13.tar.xz
 
 DEP_COUNT=${#DEP_NAME[@]}
 DEP_COUNT=$(( DEP_COUNT - 1 ))
