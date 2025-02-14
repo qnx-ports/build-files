@@ -1,5 +1,5 @@
-DEP_NAME=(fribidi gettext libthai glib freetype fontconfig cairo harfbuzz)
-DEP_NAME_SRC=(libthai-0.1.29 fribidi gettext-0.23.1 glib freetype fontconfig cairo harfbuzz)
+DEP_NAME=(fribidi gettext libthai glib freetype2 fontconfig cairo harfbuzz)
+DEP_NAME_SRC=(fribidi gettext-0.23.1 libthai-0.1.29 glib freetype fontconfig cairo harfbuzz)
 DEP_CLONE_CMD=("git clone https://github.com/qnx-ports/fribidi.git"
                "wget https://ftp.gnu.org/pub/gnu/gettext/gettext-0.23.1.tar.gz && tar -xf gettext-0.23.1.tar.gz"
                "wget https://github.com/tlwg/libthai/releases/download/v0.2.13/libthai-0.1.29.tar.xz && tar -xf libthai-0.1.29.tar.xz"
