@@ -1,9 +1,8 @@
-DEP_NAME=(fribidi gettext libthai glib freetype2 fontconfig cairo harfbuzz)
+DEP_NAME=(fribidi gettext-runtime libthai glib freetype2 fontconfig cairo harfbuzz)
 DEP_NAME_SRC=(fribidi gettext-0.23.1 libthai-0.1.29 glib freetype fontconfig cairo harfbuzz)
-DEP_CLONE_CMD=(
-               "git clone https://github.com/qnx-ports/fribidi.git"
-               "echo skipped"
-               "echo skipped"
+DEP_CLONE_CMD=("git clone https://github.com/qnx-ports/fribidi.git"
+               "echo"
+               "echo"
                "git clone https://gitlab.gnome.org/GNOME/glib.git"
                "git clone -b VER-2-13-3 https://gitlab.freedesktop.org/freetype/freetype.git"
                "git clone -b 2.16.0 https://gitlab.freedesktop.org/fontconfig/fontconfig.git"
@@ -20,6 +19,8 @@ for NN in $(seq 0 ${DEP_COUNT}); do
     if ${DEP_CLONE_CMD[$NN]}; then
         chmod +x ./build-files/ports/"${DEP_NAME[$NN]}"/install_all.sh
         ./build-files/ports/"${DEP_NAME[$NN]}"/install_all.sh
-        QNX_PROJECT_ROOT="$(pwd)/${DEP_NAME_SRC[$NN]}" make -C "build-files/ports/${DEP_NAME[$NN]}/" install
+        if ! QNX_PROJECT_ROOT="$(pwd)/${DEP_NAME_SRC[$NN]}" make -C "build-files/ports/${DEP_NAME[$NN]}/" install; then
+            exit 1; 
+        fi
     fi
 done
