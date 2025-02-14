@@ -10,6 +10,6 @@ DEP_COUNT=$(( DEP_COUNT - 1 ))
 for NN in $(seq 0 ${DEP_COUNT}); do
     if ${DEP_CLONE_CMD[$NN]}; then
         ./build-files/ports/"${DEP_NAME}"/install_all.sh
-        QNX_PROJECT_ROOT="$(pwd)/${DEP_NAME_SRC}" make -C "build-files/ports/${DEP_NAME}/" install
+        QNX_PROJECT_ROOT="$(pwd)/${DEP_NAME_SRC[$NN]}" make -C "build-files/ports/${DEP_NAME[$NN]}/" install
     fi
 done

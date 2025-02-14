@@ -119,5 +119,6 @@ jobs:
             source ~/qnx/710/qnxsdp-env.sh
           fi
           cd ~/workspace
-          chmod +x ./build-files/ports/glib/install_all.sh && JLEVEL=$(nproc) ./build-files/ports/glib/install_all.sh
+          chmod +x ./build-files/ports/glib/install_all.sh 
+          JLEVEL=$(nproc) ./build-files/ports/glib/install_all.sh
           JLEVEL=$(nproc) QNX_PROJECT_ROOT="$(pwd)/glib" make -C build-files/ports/glib install
