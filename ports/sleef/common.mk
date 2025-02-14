@@ -24,8 +24,6 @@ PREFIX ?= /usr/local
 #choose Release or Debug
 CMAKE_BUILD_TYPE ?= Release
 
-BUILD_TESTING ?= OFF
-
 #override 'all' target to bypass the default QNX build system
 ALL_DEPENDENCIES = sleef_all
 .PHONY: sleef_all sleef_all_clean sleef_host_tools_all sleef_host_tools_clean
@@ -63,7 +61,7 @@ CMAKE_ARGS =    -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
                 -DSLEEF_BUILD_SHARED_LIBS=OFF \
                 -DSLEEF_BUILD_DFT=OFF \
                 -DSLEEF_BUILD_GNUABI_LIBS=OFF \
-                -DSLEEF_BUILD_TESTS=$(BUILD_TESTING) \
+                -DSLEEF_BUILD_TESTS=OFF \
                 -DSLEEF_BUILD_SCALAR_LIB=OFF \
                 -DSLEEF_DISABLE_SVE=ON \
                 -DNATIVE_BUILD_DIR=$(PROJECT_ROOT)/host/sleef \

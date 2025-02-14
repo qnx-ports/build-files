@@ -1,4 +1,4 @@
-# kineto
+# sleef
 
 **NOTE**: QNX ports are only supported from a Linux host operating system
 
