@@ -1,5 +1,5 @@
-DEP_NAME=( gettext libthai glib freetype2 fontconfig cairo harfbuzz)
-DEP_NAME_SRC=( gettext-0.23.1 libthai-0.1.29 glib freetype fontconfig cairo harfbuzz)
+DEP_NAME=(fribidi gettext libthai glib freetype2 fontconfig cairo harfbuzz)
+DEP_NAME_SRC=(fribidi gettext-0.23.1 libthai-0.1.29 glib freetype fontconfig cairo harfbuzz)
 DEP_CLONE_CMD=(
                "git clone https://github.com/qnx-ports/fribidi.git"
                "echo skipped"
