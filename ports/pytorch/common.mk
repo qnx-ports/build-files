@@ -61,11 +61,11 @@ PYTORCH_VERSION = main
 BUILD_TEST=$(BUILD_TESTING)
 BUILD_MOBILE_TEST=$(BUILD_TESTING)
 BUILD_MOBILE_BENCHMARK=OFF
+endif
 
-# Building with upstream googletest.
+# Building with upstream benchmark/googletest.
 ifneq ($(wildcard $(foreach dir,$(LIBVPATH),$(dir)/libregex.so)),)
                 LDFLAGS += -lregex
-endif
 endif
 
 PREFIX_PATH := $(shell python -c 'import sysconfig, sys; sys.stdout.write(sysconfig.get_path("purelib"))')

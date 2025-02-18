@@ -14,7 +14,6 @@ qnx_patch () {
 }
 
 # Apply QNX patches
-qnx_patch ${torch_dir}/third_party/benchmark benchmark.patch
 qnx_patch ${torch_dir}/third_party/cpuinfo cpuinfo.patch
 qnx_patch ${torch_dir}/third_party/kineto kineto.patch
 qnx_patch ${torch_dir}/third_party/sleef sleef.patch
