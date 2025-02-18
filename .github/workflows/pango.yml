@@ -18,11 +18,6 @@ on:
 jobs:
 
   build:
-    strategy:
-      matrix:
-        qnx_env:
-          - ghcr.io/qnx-ports/sdp800-build-env:latest
-          - ghcr.io/qnx-ports/sdp-build-env:latest
     runs-on: self-hosted
     if: |
       (github.event_name == 'workflow_dispatch') ||
