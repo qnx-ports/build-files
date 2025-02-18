@@ -36,6 +36,10 @@ ALL_DEPENDENCIES = Benchmark_all
 CFLAGS += $(FLAGS) -D_QNX_SOURCE
 LDFLAGS += -Wl,--build-id=md5
 
+ifneq ($(wildcard $(foreach dir,$(LIBVPATH),$(dir)/libregex.so)),)
+                LDFLAGS += -lregex
+endif
+
 include $(MKFILES_ROOT)/qtargets.mk
 
 #Search paths for all of CMake's find_* functions --
@@ -66,10 +70,10 @@ CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DCMAKE_INSTALL_INCLUDEDIR="$(INSTALL_ROOT)/$(PREFIX)/include" \
              -DCMAKE_FIND_ROOT_PATH="$(CMAKE_FIND_ROOT_PATH)" \
              -DCMAKE_BUILD_TYPE=$(CMAKE_BUILD_TYPE) \
-             -DEXTRA_CMAKE_C_FLAGS="$(CFLAGS)" \
-             -DEXTRA_CMAKE_CXX_FLAGS="$(CFLAGS)" \
-             -DEXTRA_CMAKE_ASM_FLAGS="$(FLAGS)" \
-             -DEXTRA_CMAKE_LINKER_FLAGS="$(LDFLAGS)" \
+             -DEXTRA_CMAKE_C_FLAGS="$(CFLAGS) " \
+             -DEXTRA_CMAKE_CXX_FLAGS="$(CFLAGS) " \
+             -DEXTRA_CMAKE_ASM_FLAGS="$(FLAGS) " \
+             -DEXTRA_CMAKE_LINKER_FLAGS="$(LDFLAGS) " \
              -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON \
              -DCPUVARDIR=$(CPUVARDIR) \
              -DCPU=$(CPU) \

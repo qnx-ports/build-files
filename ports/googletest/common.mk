@@ -64,10 +64,10 @@ CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DCMAKE_INSTALL_INCLUDEDIR="$(INSTALL_ROOT)/$(PREFIX)/include" \
              -DCMAKE_FIND_ROOT_PATH="$(CMAKE_FIND_ROOT_PATH)" \
              -DCMAKE_BUILD_TYPE=$(CMAKE_BUILD_TYPE) \
-             -DEXTRA_CMAKE_C_FLAGS="$(CFLAGS)" \
-             -DEXTRA_CMAKE_CXX_FLAGS="$(CFLAGS)" \
-             -DEXTRA_CMAKE_ASM_FLAGS="$(FLAGS)" \
-             -DEXTRA_CMAKE_LINKER_FLAGS="$(LDFLAGS)" \
+             -DEXTRA_CMAKE_C_FLAGS="$(CFLAGS) " \
+             -DEXTRA_CMAKE_CXX_FLAGS="$(CFLAGS) " \
+             -DEXTRA_CMAKE_ASM_FLAGS="$(FLAGS) " \
+             -DEXTRA_CMAKE_LINKER_FLAGS="$(LDFLAGS) " \
              -DBUILD_SHARED_LIBS=1 \
              -Dgtest_build_tests=$(BUILD_TESTING) \
              -Dgtest_build_samples=$(BUILD_TESTING) \
