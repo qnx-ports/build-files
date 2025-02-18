@@ -14,6 +14,10 @@ You should compile and install its dependencies before proceeding (in order).
 + [`cairo`](https://github.com/qnx-ports/build-files/tree/main/ports/cairo)
 + [`harfbuzz`](https://github.com/qnx-ports/build-files/tree/main/ports/harfbuzz)
 
+A convinience script `install_all.sh` is provided for easy installation of all required dependencies, execute it just like a regular installation and set INSTALL_ROOT and JLEVEL.
+To use the convinence script, please clone the entire `build-files` repository first. 
+This convinience script will call `install_all.sh` inside dependencies recursively.
+
 # Compile the port for QNX in a Docker container or Ubuntu host
 
 **NOTE**: QNX ports are only supported from a Linux host operating system
