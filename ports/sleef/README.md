@@ -25,7 +25,8 @@ source ~/qnx800/qnxsdp-env.sh
 
 # Clone sleef
 cd ~/qnx_workspace
-git clone https://github.com/qnx-ports/sleef.git
+git clone https://github.com/shibatch/sleef.git
+git checkout 90ae01e5c71e378229ce0b2960a8e95dc89b9f17
 
 # Build sleef
 cd ~/qnx_workspace
@@ -40,7 +41,8 @@ git clone https://github.com/qnx-ports/build-files.git
 
 # source qnxsdp-env.sh
 source ~/qnx800/qnxsdp-env.sh
-git clone https://github.com/qnx-ports/sleef.git
+git clone https://github.com/shibatch/sleef.git
+git checkout 90ae01e5c71e378229ce0b2960a8e95dc89b9f17
 
 # Build sleef
 cd ~/qnx_workspace
