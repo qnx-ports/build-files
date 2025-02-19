@@ -76,6 +76,7 @@ Click on a port below to navigate to its `README.md` for build and test instruct
 | [opencv](https://github.com/qnx-ports/build-files/blob/main/ports/opencv/README.md) | [![Build](https://github.com/qnx-ports/build-files/actions/workflows/opencv.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/opencv.yml) |
 | [pandas](https://github.com/qnx-ports/build-files/blob/main/ports/pandas/README.md) | |
 | [pixman](https://github.com/qnx-ports/build-files/blob/main/ports/pixman/README.md) | [![Build](https://github.com/qnx-ports/build-files/actions/workflows/pixman.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/pixman.yml) |
+| [pcre2](https://github.com/qnx-ports/build-files/blob/main/ports/pcre2/README.md) | [![Build](https://github.com/qnx-ports/build-files/actions/workflows/pcre2.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/pcre2.yml) |
 | [protobuf](https://github.com/qnx-ports/build-files/blob/main/ports/protobuf/README.md) | [![Build](https://github.com/qnx-ports/build-files/actions/workflows/protobuf.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/protobuf.yml) |
 | [pytorch](https://github.com/qnx-ports/build-files/blob/main/ports/pytorch/README.md) | [![Build](https://github.com/qnx-ports/build-files/actions/workflows/pytorch.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/pytorch.yml) |
 | [qt](https://github.com/qnx-ports/build-files/blob/main/ports/qt/README.md) | [![Build](https://github.com/qnx-ports/build-files/actions/workflows/qt.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/qt.yml) |
@@ -88,8 +89,6 @@ Click on a port below to navigate to its `README.md` for build and test instruct
 | [tftp-hpa](https://github.com/qnx-ports/build-files/blob/main/ports/tftp-hpa/README.md) | [![Build](https://github.com/qnx-ports/build-files/actions/workflows/tftp-hpa.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/tftp-hpa.yml) |
 | [tinyxml2](https://github.com/qnx-ports/build-files/blob/main/ports/tinyxml2/README.md) | [![Build](https://github.com/qnx-ports/build-files/actions/workflows/tinyxml2.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/tinyxml2.yml) |
 | [vsomeip](https://github.com/qnx-ports/build-files/blob/main/ports/vsomeip/README.md) | [![Build](https://github.com/qnx-ports/build-files/actions/workflows/vsomeip.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/vsomeip.yml) |
-
-
-
+| [zlib](https://github.com/qnx-ports/build-files/blob/main/ports/zlib/README.md) | [![Build](https://github.com/qnx-ports/build-files/actions/workflows/zlib.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/zlib.yml) |
 ---
 
