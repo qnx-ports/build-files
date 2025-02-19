@@ -32,7 +32,7 @@ ifneq (,$(findstring aarch64,$(CPUDIR)))
 HOST_DETECT = aarch64-unknown-nto-qnx8.0.0
 V_OPT=gcc_ntoaarch64le
 endif
-ifneq (,$(findstring x86_64,$(CPUVDIR)))
+ifneq (,$(findstring x86_64,$(CPUDIR)))
 HOST_DETECT = x86_64-pc-nto-qnx8.0.0
 V_OPT=gcc_ntox86_64
 endif
@@ -121,9 +121,9 @@ ifndef NO_TARGET_OVERRIDE
 SDL_all:
 	@echo "Building for $(HOST_DETECT)"
 	@mkdir -p build
-	@cd $(QNX_PROJECT_ROOT) && sh autogen.sh
-	@cd build && $(QNX_PROJECT_ROOT)/configure --host=$(HOST_DETECT) --disable-pulseaudio
-	@cd build && make $(MAKE_ARGS)
+	cd $(QNX_PROJECT_ROOT) && sh autogen.sh
+	cd build && $(QNX_PROJECT_ROOT)/configure --host=$(HOST_DETECT) --build=$(HOST_DETECT) --disable-pulseaudio
+	cd build && make $(MAKE_ARGS)
 
 #Unfortunately 2.0.5's install script is not viable for QNX.
 #	@mkdir -p $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/pkgconfig/
