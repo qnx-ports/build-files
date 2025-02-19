@@ -29,12 +29,11 @@ jobs:
       with:
         path: build-files
 
-    - name: Checkout curl
-      uses: actions/checkout@v4
-      with:
-        repository: curl/curl
-        path: curl
-        ref: 7eb8c048470ed2cc14dca75be9c1cdae7ac8498b
+    - name: Download and extract curl release
+      run: |
+        mkdir -p curl
+        curl -L https://github.com/curl/curl/releases/download/curl-8_10_1/curl-8.10.1.tar.bz2 -o curl/curl-8.10.1.tar.bz2
+        tar -xjf curl/curl-8.10.1.tar.bz2 -C curl --strip-components=1
 
     - name: Login to GitHub Container Registry
       uses: docker/login-action@v3
@@ -54,7 +53,6 @@ jobs:
         options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
         shell: bash
         run: |
-          source ~/qnx/800/qnxsdp-env.sh
           cd ~/workspace
           cd build-files/ports/curl
           sed -i "s/qnx710/qnx\/710/" setup

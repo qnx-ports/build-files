@@ -34,11 +34,10 @@ cd build-files/docker
 
 cd ~/qnx_workspace
 
-# Clone curl
-git clone https://github.com/curl/curl.git
-cd curl
-git checkout curl-8_10_1
-cd ..
+# Download and extract curl release
+mkdir -p curl
+curl -L https://github.com/curl/curl/releases/download/curl-8_10_1/curl-8.10.1.tar.bz2 -o curl/curl-8.10.1.tar.bz2
+tar -xjf curl/curl-8.10.1.tar.bz2 -C curl --strip-components=1
 
 # Build curl from build files
 cd build-files/ports/curl
@@ -51,9 +50,10 @@ SOURCE_ROOT="../../../curl" ./mkrelease.sh
 # Clone the repos
 mkdir -p ~/qnx_workspace && cd qnx_workspace
 git clone https://github.com/qnx-ports/build-files.git
-git clone https://github.com/curl/curl.git
-cd curl
-git checkout curl-8_10_1
+# Download and extract curl release
+mkdir -p curl
+curl -L https://github.com/curl/curl/releases/download/curl-8_10_1/curl-8.10.1.tar.bz2 -o curl/curl-8.10.1.tar.bz2
+tar -xjf curl/curl-8.10.1.tar.bz2 -C curl --strip-components=1
 
 # Source SDP environment
 cd ~/qnx_workspace
