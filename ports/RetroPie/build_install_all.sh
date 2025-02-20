@@ -13,8 +13,8 @@
 
 ### Variables
 TARGET_ARCH=aarch64le
-TARGET_IP=
-TARGET_USER=
+#TARGET_IP=
+#TARGET_USER=
 
 ### Directory Paths
 RETROARCH_SRC=${PWD}/../../../RetroArch
@@ -32,6 +32,7 @@ SDL_SRC=
 RAPIDJSON_SRC=
 FREEIMAGE_SRC=
 
+# DO NOT TOUCH BELOW HERE
 if [[ -z "$TARGET_IP" ]]; then
     TARGET_IP="<example-ip>"
 fi
@@ -40,17 +41,16 @@ if [[ -z "$TARGET_USER" ]]; then
     TARGET_USER="qnxuser"
 fi
 
-# DO NOT TOUCH
 TOP_LEVEL_BUILD_DIR=${PWD} 
 
 echo Targeting user $TARGET_USER@$TARGET_IP 
 ##########################################################################################
 
-if [[ -z "$QNX_TARGET" ]]
+if [[ -z "$QNX_TARGET" ]]; then
     echo Missing QNX SDP Environment variables! Make sure to source ~/qnx800/qnxsdp-env.sh or an equivalent!
     exit 1
 fi
-if [[ -z "$QNX_HOST" ]]
+if [[ -z "$QNX_HOST" ]]; then
     echo Missing QNX SDP Environment variables! Make sure to source ~/qnx800/qnxsdp-env.sh or an equivalent!
     exit 1
 fi
@@ -138,21 +138,5 @@ curl https://www.lexaloffle.com/bbs/thumbs/pico8_cmyplatonicsolids-0.png --outpu
 # make install
 
 ##########################################################################################
-#SSH installation
-ssh ${TARGET_USER}@${TARGET_IP} "mkdir -p ~/retroarch/"
-
-ssh ${TARGET_USER}@${TARGET_IP} "cd ~/retroarch && mkdir -p data/cores"
-ssh ${TARGET_USER}@${TARGET_IP} "cd ~/retroarch && mkdir -p data/assets"
-ssh ${TARGET_USER}@${TARGET_IP} "cd ~/retroarch && mkdir -p data/info"
-
-ssh ${TARGET_USER}@${TARGET_IP} "cd ~/retroarch && mkdir -p lib"
-ssh ${TARGET_USER}@${TARGET_IP} "cd ~/retroarch && mkdir -p rarch-shared"
-ssh ${TARGET_USER}@${TARGET_IP} "cd ~/retroarch && mkdir -p tmp"
-
-scp -pr ${TOP_LEVEL_BUILD_DIR}/staging/${TARGET_ARCH}/* ${TARGET_USER}@${TARGET_IP}:/data/home/${TARGET_USER}/retroarch/
-#XW Access for files
-# ssh ${TARGET_USER}@${TARGET_IP} "cd /data/home/${TARGET_USER}/retroarch/ && chmod +x startup.sh"
-# ssh ${TARGET_USER}@${TARGET_IP} "chmod 777 /data/home/${TARGET_USER}/retroarch/*/*"
-# ssh ${TARGET_USER}@${TARGET_IP} "chmod 777 /data/home/${TARGET_USER}/retroarch/*/*/*"
-# ssh ${TARGET_USER}@${TARGET_IP} "chmod 777 /data/home/${TARGET_USER}/retroarch/*/*/*/*"
-# ssh ${TARGET_USER}@${TARGET_IP} "chmod 777 /data/home/${TARGET_USER}/retroarch/*/*/*/*/*"
+#SSH installation via calling install.sh
+bash TARGET_USER=$TARGET_USER TARGET_IP=$TARGET_IP TARGET_ARCH=$TARGET_ARCH $TOP_LEVEL_BUILD_DIR/install.sh
