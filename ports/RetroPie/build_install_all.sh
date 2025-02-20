@@ -59,7 +59,7 @@ fi
 
 ########### RetroArch & Assets ###########
 if [ ! -d "$RETROARCH_SRC" ]; then
-    git clone https:/github.com/qnx-ports/RetroArch.git $RETROARCH_SRC
+    git clone https://github.com/qnx-ports/RetroArch.git $RETROARCH_SRC
 fi
 if [ ! -d "$RARCH_ASSETS_SRC" ]; then
     git clone https://github.com/libretro/retroarch-assets $RARCH_ASSETS_SRC
