@@ -1,0 +1,74 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 671fb2c..1e5ac13 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -127,6 +127,18 @@ elseif (CMAKE_SYSTEM_NAME STREQUAL "FreeBSD" OR CMAKE_SYSTEM_NAME STREQUAL "NetB
+     list(APPEND EVENT_LOOP_DEFINES "KQUEUE")
+     set(USE_S2N ON)
+ 
++elseif(CMAKE_SYSTEM_NAME STREQUAL "QNX")
++    file(GLOB AWS_IO_OS_HEADERS
++            )
++
++    file(GLOB AWS_IO_OS_SRC
++            "source/linux/*.c"
++            "source/posix/*.c"
++            )
++
++    list(APPEND EVENT_LOOP_DEFINES "EPOLL")
++    set(USE_S2N ON)
++
+ endif()
+ 
+ if (BYO_CRYPTO)
+diff --git a/source/linux/epoll_event_loop.c b/source/linux/epoll_event_loop.c
+index 147b000..694cf2d 100644
+--- a/source/linux/epoll_event_loop.c
++++ b/source/linux/epoll_event_loop.c
+@@ -43,6 +43,9 @@
+ #ifndef EPOLLRDHUP
+ #    define EPOLLRDHUP 0x2000
+ #endif
++#ifndef EPOLLET
++#    define EPOLLET (1 << 31)
++#endif
+ 
+ static void s_destroy(struct aws_event_loop *event_loop);
+ static int s_run(struct aws_event_loop *event_loop);
+diff --git a/source/posix/host_resolver.c b/source/posix/host_resolver.c
+index e4aafb8..efdcdfa 100644
+--- a/source/posix/host_resolver.c
++++ b/source/posix/host_resolver.c
+@@ -38,7 +38,7 @@ int aws_default_dns_resolve(
+     AWS_ZERO_STRUCT(hints);
+     hints.ai_family = AF_UNSPEC;
+     hints.ai_socktype = SOCK_STREAM;
+-#    if !defined(__OpenBSD__)
++#    if !defined(__OpenBSD__) && !defined(__QNX__)
+     hints.ai_flags = AI_ALL | AI_V4MAPPED;
+ #    endif /* __OpenBSD__ */
+ 
+diff --git a/source/posix/socket.c b/source/posix/socket.c
+index 266ad2d..1a30af9 100644
+--- a/source/posix/socket.c
++++ b/source/posix/socket.c
+@@ -762,6 +762,10 @@ static int s_socket_connect(
+     socket_impl->connect_args->task.fn = s_handle_socket_timeout;
+     socket_impl->connect_args->task.arg = socket_impl->connect_args;
+ 
++#if defined(__QNX__)
++    socket_impl->connect_args->task.type_tag = "";
++#endif
++
+     int error_code = connect(socket->io_handle.data.fd, (struct sockaddr *)&address.sock_addr_types, sock_size);
+     socket->event_loop = event_loop;
+ 
+@@ -1405,7 +1409,7 @@ static int s_socket_set_options(struct aws_socket *socket, const struct aws_sock
+             }
+         }
+ 
+-#if !defined(__OpenBSD__)
++#if !defined(__OpenBSD__) && !defined(__QNX__)
+         if (socket->options.keep_alive_interval_sec && socket->options.keep_alive_timeout_sec) {
+             int ival_in_secs = socket->options.keep_alive_interval_sec;
+             if (AWS_UNLIKELY(setsockopt(
