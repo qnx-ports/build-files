@@ -53,7 +53,7 @@ jobs:
             run: |
               source ~/qnx/800/qnxsdp-env.sh
               cd ~/workspace
-              PREFIX="/usr/local" QNX_PROJECT_ROOT="$(pwd)/RetroArch" make -C build-files/ports/RetroPie/libretro-cores/2048  -j$(nproc)
+              PREFIX="/usr/local" make -C build-files/ports/RetroPie/libretro-cores/2048  -j$(nproc)
     
     libretro_mrboom:
         runs-on: self-hosted
@@ -92,7 +92,7 @@ jobs:
             run: |
               source ~/qnx/800/qnxsdp-env.sh
               cd ~/workspace
-              PREFIX="/usr/local" QNX_PROJECT_ROOT="$(pwd)/RetroArch" make -C build-files/ports/RetroPie/libretro-cores/mrboom  -j$(nproc)
+              PREFIX="/usr/local" make -C build-files/ports/RetroPie/libretro-cores/mrboom  -j$(nproc)
 
     libretro_test:
         runs-on: self-hosted
@@ -131,7 +131,7 @@ jobs:
             run: |
               source ~/qnx/800/qnxsdp-env.sh
               cd ~/workspace
-              PREFIX="/usr/local" QNX_PROJECT_ROOT="$(pwd)/RetroArch" make -C build-files/ports/RetroPie/libretro-cores/test  -j$(nproc)
+              PREFIX="/usr/local" make -C build-files/ports/RetroPie/libretro-cores/test  -j$(nproc)
 
     libretro_retro8:
         runs-on: self-hosted
@@ -170,6 +170,6 @@ jobs:
             run: |
               source ~/qnx/800/qnxsdp-env.sh
               cd ~/workspace
-              PREFIX="/usr/local" QNX_PROJECT_ROOT="$(pwd)/RetroArch" make -C build-files/ports/RetroPie/libretro-cores/retro8  -j$(nproc)
+              PREFIX="/usr/local" make -C build-files/ports/RetroPie/libretro-cores/retro8  -j$(nproc)
 
     
