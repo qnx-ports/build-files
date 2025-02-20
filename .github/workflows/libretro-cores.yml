@@ -72,6 +72,7 @@ jobs:
           with:
             repository: Javanaise/mrboom-libretro
             path: mrboom-libretro
+            submodules: recursive
     
         - name: Login to GitHub Container Registry
           uses: docker/login-action@v3

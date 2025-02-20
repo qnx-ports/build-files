@@ -41,6 +41,7 @@ MAKE_ARGS = 	HOST=$(PLATFORM)-nto \
 
 mrboom_all:
 	@mkdir -p build
+	-cd $(QNX_PROJECT_ROOT) && patch -uf Makefile -i $(PRODUCT_ROOT)/mrboom/mrboom_qnx.patch
 	@cd $(QNX_PROJECT_ROOT) && make clean
 	@cd $(QNX_PROJECT_ROOT) && make HOST=$(PLATFORM)-nto CC="$(QNX_HOST)/usr/bin/qcc -V$(V_OPT)" CXX="$(QNX_HOST)/usr/bin/q++ -V$(V_OPT)_cxx" platform=qnx -fMakefile
 	@cp $(QNX_PROJECT_ROOT)/*.so build/
