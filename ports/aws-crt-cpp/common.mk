@@ -65,8 +65,6 @@ BYO_CRYPTO ?= OFF
 USE_OPENSSL ?= ON
 INSTALL_TESTS ?= ON
 
-$(info "CPUVARDIR:${CPUVARDIR}")
-$(info "CPU: ${CPU}")
 
 CMAKE_ARGS = -DEXTRA_CMAKE_CXX_FLAGS="-D_QNX_SOURCE" \
              -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
