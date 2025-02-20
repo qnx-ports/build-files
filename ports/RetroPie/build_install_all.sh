@@ -5,19 +5,32 @@
 # 2. Navigate to this file!
 # 3. Edit the environment variables below.
 # 3. run `source ~/qnxsdpinstallation/qnxsdp-env.sh`
-# 4. run `./build_install_all.sh`
+# 4. run `./build_install_all.sh` or `bash ./build_install_all.sh`
 
 ##########################################################################################
 ### Set Up Needed Environment Variables
-# Adjust these as needed
+### Adjust these as needed
+
+### Variables
+TARGET_ARCH=aarch64le
+TARGET_IP=
+TARGET_USER=
+
+### Directory Paths
 RETROARCH_SRC=${PWD}/../../../RetroArch
 EMULATIONSTATION_SRC=${PWD}/../../../EmulationStation
+
 LIBRETRO_2048_SRC=${PWD}/../../../libretro-2048
-EMULATIONSTATION_SRC=
+LIBRETRO_SAMPLES_SRC=${PWD}/../../../libretro-samples
+LIBRETRO_MRBOOM_SRC=${PWD}/../../../mrboom-libretro
+LIBRETRO_RETRO8_SRC=${PWD}/../../../retro8
+
+RARCH_CORE_INFO_SRC=${PWD}/../../../libretro-core-info
+RARCH_ASSETS_SRC=${PWD}/../../../retroarch-assets
+
 SDL_SRC=
 RAPIDJSON_SRC=
 FREEIMAGE_SRC=
-TARGET_ARCH=aarch64le
 
 if [[ -z "$TARGET_IP" ]]; then
     TARGET_IP="<example-ip>"
@@ -27,43 +40,61 @@ if [[ -z "$TARGET_USER" ]]; then
     TARGET_USER="qnxuser"
 fi
 
-echo Targeting user $TARGET_USER@$TARGET_IP 
-
 # DO NOT TOUCH
 TOP_LEVEL_BUILD_DIR=${PWD} 
 
+echo Targeting user $TARGET_USER@$TARGET_IP 
 ##########################################################################################
 
-if [ ! -d "$RETROARCH_SRC" ]; then
-    echo git clone TODO:: RETROARCH URL
+if [[ -z "$QNX_TARGET" ]]
+    echo Missing QNX SDP Environment variables! Make sure to source ~/qnx800/qnxsdp-env.sh or an equivalent!
+    exit 1
+fi
+if [[ -z "$QNX_HOST" ]]
+    echo Missing QNX SDP Environment variables! Make sure to source ~/qnx800/qnxsdp-env.sh or an equivalent!
+    exit 1
 fi
 
-#RARCH ASSETS HERE
+##TODO: Check for wayland/weston and req. screen libraries in $QNX_TARGET/$QNX_HOST
 
-#RETRO-8 HERE
+########### RetroArch & Assets ###########
+if [ ! -d "$RETROARCH_SRC" ]; then
+    git clone https://qnx-ports/retroarch.git $RETROARCH_SRC
+fi
+if [ ! -d "$RARCH_ASSETS_SRC" ]; then
+    git clone https://github.com/libretro/retroarch-assets $RARCH_ASSETS_SRC
+fi
+if [ ! -d "$RARCH_CORE_INFO_SRC" ]; then
+    git clone https://github.com/libretro/libretro-core-info $RARCH_CORE_INFO_SRC
+fi
 
-#mrboom assets here - need a git port or a patchfile. (prefer patch)
-
+########### LibRetro Cores ###########
 if [ ! -d "$LIBRETRO_SAMPLES_SRC" ]; then
-    echo git clone TODO:: RETROARCH URL
+    git clone https://github.com/libretro/libretro-samples.git $LIBRETRO_SAMPLES_SRC
 fi
 if [ ! -d "$LIBRETRO_2048_SRC" ]; then
-    echo git clone TODO:: RETROARCH URL
+    git clone https://github.com/libretro/libretro-2048 $LIBRETRO_2048_SRC
 fi
-if [ ! -d "$EMULATIONSTATION_SRC" ]; then
-    echo git clone TODO:: RETROARCH URL
+if [ ! -d "$LIBRETRO_MRBOOM_SRC" ]; then
+    git clone https://github.com/Javanaise/mrboom-libretro.git $LIBRETRO_MRBOOM_SRC
 fi
-if [ ! -d "$SDL_SRC" ]; then
-    echo git clone TODO:: RETROARCH URL
-fi
-if [ ! -d "$RAPIDJSON_SRC" ]; then
-    echo git clone TODO:: RETROARCH URL
-fi
-if [ ! -d "$FREEIMAGE_SRC" ]; then
-    echo git clone TODO:: RETROARCH URL
+if [ ! -d "$LIBRETRO_RETRO8_SRC" ]; then
+    git clone https://github.com/Jakz/retro8.git $LIBRETRO_RETRO8_SRC
 fi
 
-# https://github.com/libretro/libretro-core-info
+########### Emulation Station & Deps ###########
+if [ ! -d "$EMULATIONSTATION_SRC" ]; then
+    echo missing emustat
+fi
+if [ ! -d "$SDL_SRC" ]; then
+    echo missing sdl
+fi
+if [ ! -d "$RAPIDJSON_SRC" ]; then
+    echo missing rapidjson
+fi
+if [ ! -d "$FREEIMAGE_SRC" ]; then
+    echo missing freeimage
+fi
 
 
 ##########################################################################################
