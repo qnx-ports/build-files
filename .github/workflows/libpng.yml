@@ -64,6 +64,7 @@ jobs:
           else 
             source ~/qnx/710/qnxsdp-env.sh
           fi
+          cd workspace
           chmod +x build-files/ports/libpng/install_all.sh
           JLEVEL=$(nproc) ./build-files/ports/libpng/install_all.sh 
           JLEVEL=$(nproc) QNX_PROJECT_ROOT="$(pwd)/libpng" make -C build-files/ports/libpng install
