@@ -37,6 +37,7 @@ Click on a port below to navigate to its `README.md` for build and test instruct
 | [boost](https://github.com/qnx-ports/build-files/blob/main/ports/boost/README.md) | [![Build](https://github.com/qnx-ports/build-files/actions/workflows/boost.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/boost.yml) |
 | [brotli](https://github.com/qnx-ports/build-files/blob/main/ports/brotli/README.md) | [![Build](https://github.com/qnx-ports/build-files/actions/workflows/brotli.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/brotli.yml) |
 | [bzip2](https://github.com/qnx-ports/build-files/blob/main/ports/bzip2/README.md) | [![Build](https://github.com/qnx-ports/build-files/actions/workflows/bzip2.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/bzip2.yml) |
+| [CANdb](https://github.com/qnx-ports/build-files/blob/main/ports/CANdb/README.md) | [![Build](https://github.com/qnx-ports/build-files/actions/workflows/CANdb.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/CANdb.yml) |
 | [Catch2](https://github.com/qnx-ports/build-files/blob/main/ports/Catch2/README.md) | [![Build](https://github.com/qnx-ports/build-files/actions/workflows/Catch2.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/Catch2.yml) |
 | [cJSON](https://github.com/qnx-ports/build-files/blob/main/ports/cJSON/README.md) | [![Build](https://github.com/qnx-ports/build-files/actions/workflows/cJSON.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/cJSON.yml) |
 | [c-ares](https://github.com/qnx-ports/build-files/blob/main/ports/c-ares/README.md) | [![Build](https://github.com/qnx-ports/build-files/actions/workflows/c-ares.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/c-ares.yml) |
@@ -66,6 +67,7 @@ Click on a port below to navigate to its `README.md` for build and test instruct
 | [libjson](https://github.com/qnx-ports/build-files/blob/main/ports/libjson/README.md) | [![Build](https://github.com/qnx-ports/build-files/actions/workflows/libjson.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/libjson.yml) |
 | [libxml2](https://github.com/qnx-ports/build-files/blob/main/ports/libxml2/README.md) | [![Build](https://github.com/qnx-ports/build-files/actions/workflows/libxml2.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/libxml2.yml) |
 | [libyuv](https://github.com/qnx-ports/build-files/blob/main/ports/libyuv/README.md) | [![Build](https://github.com/qnx-ports/build-files/actions/workflows/libyuv.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/libyuv.yml) |
+| [libxkbcommon](https://github.com/qnx-ports/build-files/blob/main/ports/libxkbcommon/README.md) | [![Build](https://github.com/qnx-ports/build-files/actions/workflows/libxkbcommon.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/libxkbcommon.yml) |
 | [libzmq](https://github.com/qnx-ports/build-files/blob/main/ports/libzmq/README.md) | [![Build](https://github.com/qnx-ports/build-files/actions/workflows/libzmq.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/libzmq.yml) |
 | [lighttpd1.4](https://github.com/qnx-ports/build-files/blob/main/ports/lighttpd1.4/README.md) | [![Build](https://github.com/qnx-ports/build-files/actions/workflows/lighttpd1.4.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/lighttpd1.4.yml) |
 | [memory](https://github.com/qnx-ports/build-files/blob/main/ports/memory/README.md) | [![Build](https://github.com/qnx-ports/build-files/actions/workflows/memory.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/memory.yml) |
@@ -77,6 +79,7 @@ Click on a port below to navigate to its `README.md` for build and test instruct
 | [opencv](https://github.com/qnx-ports/build-files/blob/main/ports/opencv/README.md) | [![Build](https://github.com/qnx-ports/build-files/actions/workflows/opencv.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/opencv.yml) |
 | [pandas](https://github.com/qnx-ports/build-files/blob/main/ports/pandas/README.md) | |
 | [pixman](https://github.com/qnx-ports/build-files/blob/main/ports/pixman/README.md) | [![Build](https://github.com/qnx-ports/build-files/actions/workflows/pixman.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/pixman.yml) |
+| [pcre2](https://github.com/qnx-ports/build-files/blob/main/ports/pcre2/README.md) | [![Build](https://github.com/qnx-ports/build-files/actions/workflows/pcre2.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/pcre2.yml) |
 | [protobuf](https://github.com/qnx-ports/build-files/blob/main/ports/protobuf/README.md) | [![Build](https://github.com/qnx-ports/build-files/actions/workflows/protobuf.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/protobuf.yml) |
 | [pytorch](https://github.com/qnx-ports/build-files/blob/main/ports/pytorch/README.md) | [![Build](https://github.com/qnx-ports/build-files/actions/workflows/pytorch.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/pytorch.yml) |
 | [qt](https://github.com/qnx-ports/build-files/blob/main/ports/qt/README.md) | [![Build](https://github.com/qnx-ports/build-files/actions/workflows/qt.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/qt.yml) |
@@ -89,8 +92,6 @@ Click on a port below to navigate to its `README.md` for build and test instruct
 | [tftp-hpa](https://github.com/qnx-ports/build-files/blob/main/ports/tftp-hpa/README.md) | [![Build](https://github.com/qnx-ports/build-files/actions/workflows/tftp-hpa.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/tftp-hpa.yml) |
 | [tinyxml2](https://github.com/qnx-ports/build-files/blob/main/ports/tinyxml2/README.md) | [![Build](https://github.com/qnx-ports/build-files/actions/workflows/tinyxml2.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/tinyxml2.yml) |
 | [vsomeip](https://github.com/qnx-ports/build-files/blob/main/ports/vsomeip/README.md) | [![Build](https://github.com/qnx-ports/build-files/actions/workflows/vsomeip.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/vsomeip.yml) |
-
-
-
+| [zlib](https://github.com/qnx-ports/build-files/blob/main/ports/zlib/README.md) | [![Build](https://github.com/qnx-ports/build-files/actions/workflows/zlib.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/zlib.yml) |
 ---
 

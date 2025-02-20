@@ -2,12 +2,17 @@ ifndef QCONFIG
 QCONFIG=qconfig.mk
 endif
 include $(QCONFIG)
-
 include $(MKFILES_ROOT)/qmacros.mk
 
-NAME = nghttp2
+# Prevent qtargets.mk from re-including qmacros.mk
+define VARIANT_TAG
+endef
 
-QNX_PROJECT_ROOT ?= $(PRODUCT_ROOT)/../../nghttp2
+NAME=CANdb
+
+DIST_BASE=$(PRODUCT_ROOT)/../../$(NAME)
+
+QNX_TEST_SCRIPT=$(PRODUCT_ROOT)/$(NAME)/base_testsuite.sh
 
 #$(INSTALL_ROOT_$(OS)) is pointing to $QNX_TARGET
 #by default, unless it was manually re-routed to
@@ -26,9 +31,16 @@ PREFIX ?= /usr/local
 #choose Release or Debug
 CMAKE_BUILD_TYPE ?= Release
 
+ifeq ($(CMAKE_BUILD_TYPE), Debug)
+	DEBUG_F := -g
+endif
+
 #override 'all' target to bypass the default QNX build system
-ALL_DEPENDENCIES = nghttp2_all
-.PHONY: nghttp2_all install check clean
+ALL_DEPENDENCIES = candb_all
+.PHONY: candb_all install check clean
+
+CFLAGS += $(DEBUG_F) $(FLAGS) -D_QNX_SOURCE -Wno-error=deprecated-declarations
+LDFLAGS += $(DEBUG_F) -Wl,--build-id=md5
 
 include $(MKFILES_ROOT)/qtargets.mk
 
@@ -47,54 +59,35 @@ CMAKE_FIND_ROOT_PATH := $(QNX_TARGET);$(QNX_TARGET)/$(CPUVARDIR);$(INSTALL_ROOT)
 #installed in.
 CMAKE_MODULE_PATH := $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/cmake;$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/lib/cmake
 
-#Headers from INSTALL_ROOT need to be made available by default
-#because CMake and pkg-config do not necessary add it automatically
-#if the include path is "default"
-CFLAGS += $(FLAGS) \
-          -I$(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/include \
-          -I$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/include \
-          -D_QNX_SOURCE
-LDFLAGS += -Wl,--build-id=md5 -lm -lsocket
-CXXFLAGS += -D_QNX_SOURCE
-
-ENABLE_HPACK_TOOLS ?= ON
-ENABLE_APP ?= ON
-BUILD_STATIC_LIBS ?= OFF
-BUILD_TESTING ?= OFF
-
 CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DCMAKE_SYSTEM_PROCESSOR=$(CPUVARDIR) \
-             -DCMAKE_C_FLAGS="$(CFLAGS)" \
-             -DCMAKE_CXX_FLAGS="$(CXXFLAGS)" \
-             -DCMAKE_EXE_LINKER_FLAGS="$(LDFLAGS)" \
-             -DCMAKE_CXX_COMPILER_TARGET=gcc_nto$(CPUVARDIR) \
-             -DCMAKE_C_COMPILER_TARGET=gcc_nto$(CPUVARDIR) \
              -DCMAKE_INSTALL_PREFIX="$(PREFIX)" \
              -DCMAKE_STAGING_PREFIX="$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)" \
-             -DCMAKE_MODULE_PATH="$(CMAKE_MODULE_PATH)" \
              -DCMAKE_FIND_ROOT_PATH="$(CMAKE_FIND_ROOT_PATH)" \
+             -DCMAKE_MODULE_PATH="$(CMAKE_MODULE_PATH)" \
              -DCMAKE_BUILD_TYPE=$(CMAKE_BUILD_TYPE) \
-             -DENABLE_HPACK_TOOLS=$(ENABLE_HPACK_TOOLS) \
-             -DENABLE_APP=$(ENABLE_APP) \
-             -DBUILD_STATIC_LIBS=$(BUILD_STATIC_LIBS) \
-             -DBUILD_TESTING=$(BUILD_TESTING) \
-             -DENABLE_EXAMPLES=OFF
+             -DEXTRA_CMAKE_C_FLAGS="$(CFLAGS)" \
+             -DEXTRA_CMAKE_CXX_FLAGS="$(CFLAGS)" \
+             -DEXTRA_CMAKE_ASM_FLAGS="$(FLAGS)" \
+             -DEXTRA_CMAKE_LINKER_FLAGS="$(LDFLAGS)" \
+             -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON \
+             -DCPUVARDIR=$(CPUVARDIR) \
+             -DCPU=$(CPU) \
+             -DBUILD_SHARED_LIBS=ON \
+             -DBUILD_TESTING=ON \
+             -D__NTO_VERSION="$(__NTO_VERSION)" \
+             -DQNX_TEST_SCRIPT=$(QNX_TEST_SCRIPT)
 
 MAKE_ARGS ?= -j $(firstword $(JLEVEL) 1)
 
-ifndef NO_TARGET_OVERRIDE
-nghttp2_all:
+candb_all:
 	@mkdir -p build
-	cd build && cmake $(CMAKE_ARGS) $(QNX_PROJECT_ROOT)
-	@cd build && make VERBOSE=1 all $(MAKE_ARGS)
+	@cd build && cmake $(CMAKE_ARGS) $(DIST_BASE)
+	@cd build && $(MAKE) VERBOSE=1 all $(MAKE_ARGS)
 
-install check: nghttp2_all
-	@echo Installing...
-	@cd build && make VERBOSE=1 install $(MAKE_ARGS)
-	@echo Done.
+install check: candb_all
+#install only from tests dir
+	@cd build && cmake --install tests
 
 clean iclean spotless:
-	rm -rf build
-
-uninstall:
-endif
+	@rm -rf build

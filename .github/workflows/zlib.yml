@@ -1,22 +1,22 @@
-name: libffi
-
+name: zlib
+ 
 on:
   workflow_dispatch:
   push:
     branches:
       - main
     paths:
-      - '.github/workflows/libffi.yml'
-      - 'ports/libffi/**'
+      - '.github/workflows/zlib.yml'
+      - 'ports/zlib/**'
   pull_request:
     branches:
       - main
     paths:
-      - '.github/workflows/libffi.yml'
-      - 'ports/libffi/**'
+      - '.github/workflows/zlib.yml'
+      - 'ports/zlib/**'
 
 jobs:
-
+ 
   build:
     strategy:
       matrix:
@@ -27,31 +27,32 @@ jobs:
     if: |
       (github.event_name == 'workflow_dispatch') ||
       (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
-      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'libffi'))
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'zlib'))
     steps:
     - name: Checkout build-files
       uses: actions/checkout@v4
       with:
         path: build-files
-
-    - name: Checkout libffi
+ 
+    - name: Checkout zlib
       uses: actions/checkout@v4
       with:
-        repository: libffi/libffi
-        path: libffi
-        ref: v3.2.1
-
+        repository: madler/zlib
+        path: zlib
+        ref: v1.3.1
+ 
     - name: Login to GitHub Container Registry
       uses: docker/login-action@v3
       with:
         registry: ghcr.io
         username: ${{github.actor}}
         password: ${{secrets.GITHUB_TOKEN}}
-
+ 
     - name: Pull build environment
       run: |
         docker pull ${{ matrix.qnx_env }}
-    - name: Build libffi
+ 
+    - name: Build zlib
       uses: addnab/docker-run-action@v3
       with:
         image: ${{ matrix.qnx_env }}
@@ -63,6 +64,5 @@ jobs:
           else 
             source ~/qnx/710/qnxsdp-env.sh
           fi
-          cd workspace
-          JLEVEL=$(nproc) QNX_PROJECT_ROOT="$(pwd)/libffi" make -C build-files/ports/libffi clean install
-          
+          cd ~/workspace
+          JLEVEL=$(nproc) QNX_PROJECT_ROOT="$(pwd)/zlib" make -C build-files/ports/zlib install

@@ -1,5 +1,5 @@
-# Download base image ubuntu 20.04
-FROM ubuntu:20.04
+# Use latest LTS for ubuntu
+FROM ubuntu:22.04
 
 # LABEL about the custom image
 LABEL maintainer="chachoi@blackberry.com"

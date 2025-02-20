@@ -1,22 +1,22 @@
-name: libffi
-
+name: pcre2
+ 
 on:
   workflow_dispatch:
   push:
     branches:
       - main
     paths:
-      - '.github/workflows/libffi.yml'
-      - 'ports/libffi/**'
+      - '.github/workflows/pcre2.yml'
+      - 'ports/pcre2/**'
   pull_request:
     branches:
       - main
     paths:
-      - '.github/workflows/libffi.yml'
-      - 'ports/libffi/**'
+      - '.github/workflows/pcre2.yml'
+      - 'ports/pcre2/**'
 
 jobs:
-
+ 
   build:
     strategy:
       matrix:
@@ -27,31 +27,32 @@ jobs:
     if: |
       (github.event_name == 'workflow_dispatch') ||
       (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
-      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'libffi'))
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'pcre2'))
     steps:
     - name: Checkout build-files
       uses: actions/checkout@v4
       with:
         path: build-files
-
-    - name: Checkout libffi
+ 
+    - name: Checkout pcre2
       uses: actions/checkout@v4
       with:
-        repository: libffi/libffi
-        path: libffi
-        ref: v3.2.1
-
+        repository: PCRE2Project/pcre2
+        path: pcre2
+        ref: pcre2-10.45
+ 
     - name: Login to GitHub Container Registry
       uses: docker/login-action@v3
       with:
         registry: ghcr.io
         username: ${{github.actor}}
         password: ${{secrets.GITHUB_TOKEN}}
-
+ 
     - name: Pull build environment
       run: |
         docker pull ${{ matrix.qnx_env }}
-    - name: Build libffi
+ 
+    - name: Build pcre2
       uses: addnab/docker-run-action@v3
       with:
         image: ${{ matrix.qnx_env }}
@@ -63,6 +64,5 @@ jobs:
           else 
             source ~/qnx/710/qnxsdp-env.sh
           fi
-          cd workspace
-          JLEVEL=$(nproc) QNX_PROJECT_ROOT="$(pwd)/libffi" make -C build-files/ports/libffi clean install
-          
+          cd ~/workspace
+          JLEVEL=$(nproc) QNX_PROJECT_ROOT="$(pwd)/pcre2" make -C build-files/ports/pcre2 install
