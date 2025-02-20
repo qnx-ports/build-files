@@ -1,4 +1,4 @@
-#! /bin/sh
+#!/bin/bash
 
 #HOW TO RUN:
 # 1. Clone qnx-ports/build-files into a **new directory**
@@ -19,14 +19,15 @@ RAPIDJSON_SRC=
 FREEIMAGE_SRC=
 TARGET_ARCH=aarch64le
 
-if [[ -z "${TARGET_IP}" ]]; then
+if [[ -z "$TARGET_IP" ]]; then
     TARGET_IP="<example-ip>"
 fi
 
-if [[ -z "${TARGET_USER}" ]]; then
+if [[ -z "$TARGET_USER" ]]; then
     TARGET_USER="qnxuser"
 fi
 
+echo Targeting user $TARGET_USER@$TARGET_IP 
 
 # DO NOT TOUCH
 TOP_LEVEL_BUILD_DIR=${PWD} 
@@ -107,5 +108,20 @@ curl https://www.lexaloffle.com/bbs/thumbs/pico8_cmyplatonicsolids-0.png --outpu
 
 ##########################################################################################
 #SSH installation
-ssh ${TARGET_USER}@${TARGET_IP} "mkdir -p /data/home/${TARGET_USER}/retroarch/"
-scp -r ${TOP_LEVEL_BUILD_DIR}/staging/${TARGET_ARCH}/* ${TARGET_USER}@${TARGET_IP}:/data/home/${TARGET_USER}/retroarch/
+ssh ${TARGET_USER}@${TARGET_IP} "mkdir -p ~/retroarch/"
+
+ssh ${TARGET_USER}@${TARGET_IP} "cd ~/retroarch && mkdir -p data/cores"
+ssh ${TARGET_USER}@${TARGET_IP} "cd ~/retroarch && mkdir -p data/assets"
+ssh ${TARGET_USER}@${TARGET_IP} "cd ~/retroarch && mkdir -p data/info"
+
+ssh ${TARGET_USER}@${TARGET_IP} "cd ~/retroarch && mkdir -p lib"
+ssh ${TARGET_USER}@${TARGET_IP} "cd ~/retroarch && mkdir -p rarch-shared"
+ssh ${TARGET_USER}@${TARGET_IP} "cd ~/retroarch && mkdir -p tmp"
+
+scp -pr ${TOP_LEVEL_BUILD_DIR}/staging/${TARGET_ARCH}/* ${TARGET_USER}@${TARGET_IP}:/data/home/${TARGET_USER}/retroarch/
+#XW Access for files
+# ssh ${TARGET_USER}@${TARGET_IP} "cd /data/home/${TARGET_USER}/retroarch/ && chmod +x startup.sh"
+# ssh ${TARGET_USER}@${TARGET_IP} "chmod 777 /data/home/${TARGET_USER}/retroarch/*/*"
+# ssh ${TARGET_USER}@${TARGET_IP} "chmod 777 /data/home/${TARGET_USER}/retroarch/*/*/*"
+# ssh ${TARGET_USER}@${TARGET_IP} "chmod 777 /data/home/${TARGET_USER}/retroarch/*/*/*/*"
+# ssh ${TARGET_USER}@${TARGET_IP} "chmod 777 /data/home/${TARGET_USER}/retroarch/*/*/*/*/*"
