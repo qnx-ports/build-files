@@ -1,7 +1,7 @@
 # RetroArch
 A frontend for running games using libretro.
 
-**Repository:** https://github.com/qnx-ports/retroarch \
+**Repository:** https://github.com/qnx-ports/RetroArch \
 **Upstream:** https://github.com/libretro/RetroArch \
 **Website:** https://www.retroarch.com/ \
 **Supports:** QNX 8.0, aarch64 processors.
