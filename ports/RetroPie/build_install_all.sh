@@ -139,4 +139,5 @@ curl https://www.lexaloffle.com/bbs/thumbs/pico8_cmyplatonicsolids-0.png --outpu
 
 ##########################################################################################
 #SSH installation via calling install.sh
-bash TARGET_USER=$TARGET_USER TARGET_IP=$TARGET_IP TARGET_ARCH=$TARGET_ARCH $TOP_LEVEL_BUILD_DIR/install.sh
+cd $TOP_LEVEL_BUILD_DIR
+TARGET_USER=$TARGET_USER TARGET_IP=$TARGET_IP TARGET_ARCH=$TARGET_ARCH ./install.sh
