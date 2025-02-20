@@ -28,7 +28,7 @@ endif
 
 2048_all:
 	@mkdir -p build
-	@cd $(QNX_PROJECT_ROOT) && make clean
+	@cd $(QNX_PROJECT_ROOT) && make -fMakefile.libretro clean
 	@cd $(QNX_PROJECT_ROOT) && make HOST=$(PLATFORM)-nto CC="$(QNX_HOST)/usr/bin/qcc -V$(V_OPT) -D_QNX_SOURCE" CXX="$(QNX_HOST)/usr/bin/q++ -V$(V_OPT)_cxx -std=c++11 -D_QNX_SOURCE" platform=qnx -fMakefile.libretro
 	@cd build && cp $(QNX_PROJECT_ROOT)/*libretro*.so .
 
