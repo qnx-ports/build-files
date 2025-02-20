@@ -1,5 +1,5 @@
 name: pixman
-
+ 
 on:
   workflow_dispatch:
   push:
@@ -16,7 +16,13 @@ on:
       - 'ports/pixman/**'
 
 jobs:
+ 
   build:
+    strategy:
+      matrix:
+        qnx_env:
+          - ghcr.io/qnx-ports/sdp800-build-env:latest
+          - ghcr.io/qnx-ports/sdp-build-env:latest
     runs-on: self-hosted
     if: |
       (github.event_name == 'workflow_dispatch') ||
@@ -27,34 +33,36 @@ jobs:
       uses: actions/checkout@v4
       with:
         path: build-files
-
+ 
     - name: Checkout pixman
-      run: |
-        git clone https://gitlab.freedesktop.org/pixman/pixman.git && cd pixman && git checkout pixman-0.43.4
-
+      uses: actions/checkout@v4
+      with:
+        repository: https://gitlab.freedesktop.org/pixman/pixman.git
+        path: pixman
+        ref: pixman-0.44.2
+ 
     - name: Login to GitHub Container Registry
       uses: docker/login-action@v3
       with:
         registry: ghcr.io
         username: ${{github.actor}}
         password: ${{secrets.GITHUB_TOKEN}}
-
+ 
     - name: Pull build environment
       run: |
-        docker pull ghcr.io/qnx-ports/sdp800-build-env:latest
-
+        docker pull ${{ matrix.qnx_env }}
+ 
     - name: Build pixman
       uses: addnab/docker-run-action@v3
       with:
-        image: ghcr.io/qnx-ports/sdp800-build-env:latest
+        image: ${{ matrix.qnx_env }}
         options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
         shell: bash
         run: |
-          source ~/qnx/800/qnxsdp-env.sh
+          if [[ "${{ matrix.qnx_env}}" == "ghcr.io/qnx-ports/sdp800-build-env:latest" ]]; then
+            source ~/qnx/800/qnxsdp-env.sh
+          else 
+            source ~/qnx/710/qnxsdp-env.sh
+          fi
           cd workspace
-          mkdir -p output
-          cd pixman
-          git checkout pixman-0.43.4
-          /usr/local/qnx/env/bin/meson setup build-qnx800 --cross-file ../build-files/resources/meson/aarch64le/workflows/qnx800.ini -Dprefix=/usr -Dopenmp=disabled
-          /usr/local/qnx/env/bin/meson compile -C build-qnx800
-          DESTDIR=/home/runner/workspace/output /usr/local/qnx/env/bin/meson install --no-rebuild -C build-qnx800
+          JLEVEL=$(nproc) QNX_PROJECT_ROOT="$(pwd)/pixman" make -C build-files/ports/pixman install

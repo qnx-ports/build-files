@@ -53,7 +53,7 @@ ssh $TARGET_USER@$TARGET_IP_ADDRESS "mkdir -p ~/lib"
 
 # Tests
 Tests are available, the results are provided in `tests.result`
-Currently all tests are passed.
+Currently all tests are passed on both QNX7.1 and QNX8.0.
 
 ### Running tests
 Tests need to be built separately. 
