@@ -1,9 +1,8 @@
-# pugixml
+# nanosvg
 
-A lightweight and fast xml parser.
+A simple header-file based SVG parser. 
 
-**Repository:** https://github.com/zeux/pugixml \
-**Website:** https://pugixml.org/ \
+**Repository:** https://github.com/memononen/nanosvg \
 **Supports:** QNX 8.0, 7.1 on aarch64le and x86_64
 
 # Build
@@ -11,7 +10,7 @@ Make sure you have a QNX installation and license before beginning. You can get 
 ```bash
 # 1. Clone repos into a workspace
 cd workspace      #Or make a new one and navigate into it
-git clone https://github.com/zeux/pugixml.git
+git clone https://github.com/memononen/nanosvg.git
 git clone https://github.com/qnx-ports/build-files.git
 
 # 1a. (Optional) Start the docker build environment
@@ -23,7 +22,7 @@ cd workspace/build-files/docker
 source ~/qnx800/qnxsdp-env.sh
 
 # 3. Navigate here and run make/make install
-cd workspace/build-files/ports/pugixml
+cd workspace/build-files/ports/nanosvg
 make
 make install
 

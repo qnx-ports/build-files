@@ -1,17 +1,17 @@
-####################==================##################################
+####################==================#######################################
 ifndef QCONFIG     #  #### #  # #  #  # Last Modified 2/21/2025 
 QCONFIG=qconfig.mk #  #  # ## #  #/   # 
 endif              #  # #\ # ##  /#   # Made to be compatible with
-include $(QCONFIG) #  ##\# #  # #  #  # https://github.com/zeux/pugixml
-####################==================##################################
+include $(QCONFIG) #  ##\# #  # #  #  # https://github.com/memononen/nanosvg
+####################==================#######################################
 
 ## Set up user-overridden variables
 PREFIX 			 ?= /usr/local						# part of the install path in $QNX_TARGET
-QNX_PROJECT_ROOT ?=	$(PRODUCT_ROOT)/../../pugixml	# path to the pugixml source code
+QNX_PROJECT_ROOT ?=	$(PRODUCT_ROOT)/../../nanosvg	# path to the nanosvg source code
 
 ## Set up QNX recursive makefile specifics.
-.PHONY: pugixml_all install clean
-ALL_DEPENDENCIES = pugixml_all
+.PHONY: nanosvg_all install clean
+ALL_DEPENDENCIES = nanosvg_all
 INSTALL_ROOT ?= $(INSTALL_ROOT_$(OS))
 
 ## Flag settings for qtargets and cmake
@@ -43,15 +43,14 @@ CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DEXTRA_CMAKE_CXX_FLAGS="$(FLAGS)" \
              -DEXTRA_CMAKE_LINKER_FLAGS="$(LDFLAGS)" \
              -DCPU=$(CPU) \
-			 -DBUILD_SHARED_LIBS=ON \
 
-pugixml_all:
+nanosvg_all:
 	@echo "Building..."
 	@mkdir -p build
 	@cd build && cmake $(CMAKE_ARGS) $(QNX_PROJECT_ROOT)
 	@cd build && make
 
-install: pugixml_all
+install: nanosvg_all
 	@echo "Installing..."
 	@cd build && make install
 

@@ -12,8 +12,8 @@ A frontend for running games using libretro.
 ```bash
 # 1. Clone repos into a workspace
 cd workspace      #Or make a new one and navigate into it
-git clone https://github.com/qnx-ports/retroarch
-git clone https://github.com/qnx-ports/build-files
+git clone https://github.com/qnx-ports/retroarch.git
+git clone https://github.com/qnx-ports/build-files.git
 
 # 2. Source QNX SDP 8
 source ~/qnx800/qnxsdp-env.sh
