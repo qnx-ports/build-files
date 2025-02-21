@@ -13,7 +13,7 @@ The main pieces of the Retro*Pie* (forgive my humor) are listed below, alongside
 | Emulation Station | In Progress       | N/A |
 | RetroPie Menu     | Planned           | N/A |
 
-*Currently we are planning support for QNX 8.0*, which you can get access to from the ***[QNXE Free Non-Commercial License]()***. For RetroPie and dependencies, we only officially support aarch64le architectures (i.e. Raspberry Pi 4/5), however files for x86_64 devices can also be built and installed via the provided build script.
+*Currently we are planning support for QNX 8.0*, which you can get access to from the ***[QNXE Free Non-Commercial License](https://www.qnx.com/products/everywhere/)***. For RetroPie and dependencies, we only officially support aarch64le architectures (i.e. Raspberry Pi 4/5), however files for x86_64 devices can also be built and installed via the provided build script.
 
 For more specifics on RetroArch and supported Cores, as well as Emulation Station, visit their sections below.
 
@@ -21,9 +21,9 @@ For more specifics on RetroArch and supported Cores, as well as Emulation Statio
 
 ### Via Script
 To successfully build/install RetroPie on a QNX device, follow these steps:
-1. **Ensure you have a QNX License.** If not, see how to get one here: [QNXE Free Non-Commercial License](). You must also install the Wayland/Weston, Base Graphics, Vulkan SDK, and any board-specific (i.e. Quickstart Image or Raspberry Pi Board Support) packages from [QNX Software Centre](LINK TODO).
+1. **Ensure you have a QNX License.** If not, see how to get one here: [QNXE Free Non-Commercial License](https://www.qnx.com/products/everywhere/). You must also install the Wayland/Weston, Base Graphics, Vulkan SDK, and any board-specific (i.e. Quickstart Image or Raspberry Pi Board Support) packages from [QNX Software Centre](https://www.qnx.com/download/group.html?programid=29178).
 
-2. **Acquire a suitable Target.** If you have a QNXE license and a Raspberry Pi 4, it is recommended you follow the [instructions for setting up our quickstart image](LINK TODO). Your target should have aarch64 or x86_64 architecture and be running QNX 8.0 or newer.
+2. **Acquire a suitable Target.** If you have a QNXE license and a Raspberry Pi 4, it is recommended you follow the [instructions for setting up our quickstart image](https://gitlab.com/qnx/quick-start-images/raspberry-pi-qnx-8.0-quick-start-image/-/wikis/home). Your target should have aarch64 or x86_64 architecture and be running QNX 8.0 or newer.
 
 3. **Run build_install_all.sh with your target's ip and username.** Example seen below. You must have ssh installed. 
 ```bash
@@ -57,10 +57,10 @@ cd RetroArch && make install
 #### Supported
 | Core | Description |
 | -- | -- |
-| [2048](LINK TODO) | The game of 2048. Upstream can be built directly. |
-| [Retro8](LINK TODO) | A [PICO-8](LINK TODO) implementation for RetroArch. Currently has minor issues. |
-| [MrBoom](LINK TODO) | A port of BomberMan for MSDOS to RetroArch. Requires minor patching to build. |
-| [libretro-samples](LINK TODO) | Sample and demo apps for LibRetro. |
+| [2048](https://github.com/libretro/libretro-2048) | The game of 2048. Upstream can be built directly. |
+| [Retro8](https://github.com/Jakz/retro8) | A [PICO-8](https://www.lexaloffle.com/pico-8.php) implementation for RetroArch. Currently has minor issues. |
+| [MrBoom](https://github.com/Javanaise/mrboom-libretro) | A port of BomberMan for MSDOS to RetroArch. Requires minor patching to build. |
+| [libretro-samples](https://github.com/libretro/libretro-samples) | Sample and demo apps for LibRetro. |
 
 #### Planned
 | Core | Description |

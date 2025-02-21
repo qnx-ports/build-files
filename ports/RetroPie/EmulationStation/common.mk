@@ -33,7 +33,7 @@ ALL_DEPENDENCIES = EmulationStation_all
 .PHONY: EmulationStation_all install check clean
 
 FLAGS   += -g -D_QNX_SOURCE
-LDFLAGS += -Wl,--build-id=md5
+LDFLAGS += -Wl
 
 include $(MKFILES_ROOT)/qtargets.mk
 
@@ -71,6 +71,7 @@ CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DCMAKE_NO_SYSTEM_FROM_IMPORTED=ON \
              -DCPU=$(CPU) \
              -DGLES=ON \
+             -DUSE_MESA_GLES=ON \
              -DGLSystem:STRING="$(QNX_TARGET)/$(CPUDIR)/usr/lib/graphics/rpi4-drm/libGLESv2-mesa.so"
 
 MAKE_ARGS ?= -j $(firstword $(JLEVEL) 1)
