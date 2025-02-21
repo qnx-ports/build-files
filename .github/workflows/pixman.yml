@@ -34,13 +34,6 @@ jobs:
       with:
         path: build-files
  
-    - name: Checkout pixman
-      uses: actions/checkout@v4
-      with:
-        repository: https://gitlab.freedesktop.org/pixman/pixman.git
-        path: pixman
-        ref: pixman-0.44.2
- 
     - name: Login to GitHub Container Registry
       uses: docker/login-action@v3
       with:
@@ -65,4 +58,5 @@ jobs:
             source ~/qnx/710/qnxsdp-env.sh
           fi
           cd workspace
+          git clone -b pixman-0.44.2 https://gitlab.freedesktop.org/pixman/pixman.git
           JLEVEL=$(nproc) QNX_PROJECT_ROOT="$(pwd)/pixman" make -C build-files/ports/pixman install
