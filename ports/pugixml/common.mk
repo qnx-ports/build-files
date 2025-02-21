@@ -6,8 +6,9 @@ include $(QCONFIG) #  ##\# #  # #  #  # https://github.com/zeux/pugixml
 ####################==================##################################
 
 ## Set up user-overridden variables
-PREFIX 			 ?= /usr/local						# part of the install path in $QNX_TARGET
-QNX_PROJECT_ROOT ?=	$(PRODUCT_ROOT)/../../pugixml	# path to the pugixml source code
+PREFIX 			    ?= /usr/local
+QNX_PROJECT_ROOT    ?= $(PRODUCT_ROOT)/../../pugixml
+PUGIXML_BUILD_TESTS ?= "OFF"
 
 ## Set up QNX recursive makefile specifics.
 .PHONY: pugixml_all install clean
@@ -33,6 +34,7 @@ CFLAGS 				 += -I$(INSTALL_ROOT)/$(PREFIX)/include -I$(QNX_TARGET)/$(PREFIX)/inc
 
 ## CMAKE Arguments
 CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
+             -DCMAKE_PROJECT_INCLUDE=$(PROJECT_ROOT)/project_hooks.cmake \
              -DCMAKE_INSTALL_PREFIX="$(PREFIX)" \
              -DCMAKE_STAGING_PREFIX="$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)" \
              -DCMAKE_FIND_ROOT_PATH="$(CMAKE_FIND_ROOT_PATH)" \
@@ -44,6 +46,7 @@ CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DEXTRA_CMAKE_LINKER_FLAGS="$(LDFLAGS)" \
              -DCPU=$(CPU) \
 			 -DBUILD_SHARED_LIBS=ON \
+             -DPUGIXML_BUILD_TESTS=$(PUGIXML_BUILD_TESTS) \
 
 pugixml_all:
 	@echo "Building..."
@@ -51,9 +54,21 @@ pugixml_all:
 	@cd build && cmake $(CMAKE_ARGS) $(QNX_PROJECT_ROOT)
 	@cd build && make
 
+ifeq ($(PUGIXML_BUILD_TESTS),ON)
 install: pugixml_all
 	@echo "Installing..."
 	@cd build && make install
+	@mkdir -p ../staging/$(CPUDIR)/lib
+	@cp build/*.so* ../staging/$(CPUDIR)/lib
+	@cp build/pugixml-check ../staging/$(CPUDIR)/
+	@echo Copying test data from $(QNX_PROJECT_ROOT)/tests
+	@cp -r $(QNX_PROJECT_ROOT)/tests ../staging/$(CPUDIR)/
+else
+install: pugixml_all
+	@echo "Installing..."
+	@cd build && make install
+endif
 
 clean:
-	rm -rf build
+	-rm -rf build
+	-rm -rf ../staging
