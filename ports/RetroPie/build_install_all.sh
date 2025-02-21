@@ -77,7 +77,10 @@ if [ ! -d "$LIBRETRO_2048_SRC" ]; then
 fi
 if [ ! -d "$LIBRETRO_MRBOOM_SRC" ]; then
     git clone https://github.com/Javanaise/mrboom-libretro.git $LIBRETRO_MRBOOM_SRC
-    cd $LIBRETRO_MRBOOM_SRC && git submodule init --recursive
+    cd $LIBRETRO_MRBOOM_SRC
+    git submodule init
+    git submodule update --recursive
+
 fi
 if [ ! -d "$LIBRETRO_RETRO8_SRC" ]; then
     git clone https://github.com/Jakz/retro8.git $LIBRETRO_RETRO8_SRC
