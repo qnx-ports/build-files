@@ -32,4 +32,8 @@ make install
 # Install and Test
 TODO
 ```bash
+# 1. Copy over .so files
+
+# 2. Run tests
+
 ```
