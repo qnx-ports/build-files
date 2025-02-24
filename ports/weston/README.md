@@ -3,11 +3,18 @@
 Use `$(nproc)` instead of `4` after `JLEVEL=` and `-j` if you want to use the maximum number of cores to build this project.
 32GB of RAM is recommended for using `JLEVEL=$(nproc)` or `-j$(nproc)`.
 
-Presequisites to install Weston:
+Presequisites to install Weston (in order):
+- Install QNX SDP 8.0 Notification FD Interfaces
+- Install QNX SDP 8.0 memstream
+- Install libffi
+- Install wayland
+- Install libxkbcommon
+- Install xkeyboard-config
+- Install pcre2
 - Install glib
 - Install pixman
 - Install cairo
-- Install QNX SDP 8.0 Wayland/Weston from QNX Software Center
+
 
 # Compile the port for QNX in a Docker container
 
@@ -33,65 +40,116 @@ cd build-files/docker
 source ~/qnx800/qnxsdp-env.sh
 ```
 
-### Build glib
-
+### Build libffi
 ```bash
-# Change the path in ~/qnx-ports/build-files/resources/meson/$QNX_ARCH/qnx$QNX_VERSION.ini to your qnx_sdp_path
-# This file will be used to build pixman, glib, and cairo
 
-# Clone and build glib for both architecture
+# Clone libffi
 cd ~/qnx_workspace
-git clone https://github.com/qnx-ports/glib.git
-cd glib
-git checkout qnx-2.82.2
+git clone https://github.com/libffi/libffi.git
 
-# Build it for aarch64le and x86_64 architecrure
-export QNX_VERSION=800
-export QNX_ARCH=aarch64le
-meson setup build-qnx$QNX_VERSION --cross-file ~/qnx_workspace/build-files/resources/$QNX_ARCH/qnx$QNX_VERSION.ini -Dprefix=/usr -Dxattr=false
-meson compile -C build-qnx$QNX_VERSION
-DESTDIR=/path/to/qnx$QNX_VERSION/target/qnx/${QNX_ARCH} meson install --no-rebuild -C build-qnx800
+# check out to v3.2.1
+cd libffi
+git checkout v3.2.1
+cd ..
+
+# Build libffi
+PREFIX=/usr QNX_PROJECT_ROOT="$(pwd)/libffi" JLEVEL=4 make -C build-files/ports/libffi install
+```
+
+### Build wayland
+```bash
+# Clone wayland
+cd ~/qnx_workspace
+git clone https://github.com/qnx-ports/wayland.git && cd wayland
+
+# Build config.h and wayland-version.h
+# The command will fail but the files will be available in the dummy directory
+CC=ntox86_64-gcc \
+CXX=ntox86_64-g++ \
+RANLIB=ntox86_64-ranlib \
+AR=ntox86_64-ar \
+meson setup dummy --cross-file=/dev/null\
+    -Dlibraries=false \
+    -Ddocumentation=false \
+    -Ddtd_validation=false \
+    --prefix=/dev/null
+
+# Move the files to the appropriate location
+cp dummy/config.h .
+mv dummy/config.h src/
+mv dummy/src/wayland-version.h src/
+rm -rf dummy/
+
+# Build wayland
+cd ~/qnx_workspace
+DIST_ROOT=$(pwd)/wayland make -C build-files/ports/wayland/ install JLEVEL=4
+```
+
+### Build libxkbcommon and xkeyboard-config
+```bash
+# Install dependancies
+pip3 install strenum
+
+# Clone libxkbcommon and xkeyboard-config
+cd ~/qnx_workspace
+git clone https://github.com/xkbcommon/libxkbcommon.git
+git clone https://github.com/qnx-ports/xkeyboard-config.git
+
+# Install xkeyboard-config
+
+# cd to xkeyboard-config
+cd xkeyboard-config
+
+# Meson setup
+meson setup build --prefix=/usr
+
+# Meson compile
+meson compile -C build/
+
+# Meson install
+DESTDIR=$QNX_TARGET meson install -C build/
+
+# Install libxkbcommon
+
+# Checkout xkbcommon-1.8.0
+cd ~/qnx_workspace/libxkbcommon
+git checkout xkbcommon-1.8.0
+
+# Apply qnx_patches if you would like to run tests
+cd ~/qnx_workspace/build-files/ports/libxkbcommon
+./scripts/patch.sh ~/qnx_workspace/libxkbcommon
+
+cd ~/qnx_workspace
+QNX_PROJECT_ROOT="$(pwd)/libxkbcommon" JLEVEL=4 make -C build-files/ports/libxkbcommon install
+```
+
+### Build pcre2
+```bash
+# Clone pcre2
+cd ~/qnx_workspace
+git clone https://github.com/PCRE2Project/pcre2.git
+
+# check out to pcre2-10.45
+cd pcre2
+git checkout pcre2-10.45
+cd ..
+
+# Build pcre2
+QNX_PROJECT_ROOT="$(pwd)/pcre2" JLEVEL=4 make -C build-files/ports/pcre2 install
+```
+### Build glib
+```bash
+# TO DO LATER
 ```
 
 ### Build pixman
-
 ```bash
-# Change the path in ~/qnx-ports/build-files/resources/meson/$QNX_ARCH/qnx$QNX_VERSION.ini to your qnx_sdp_path
-# This file will be used to build pixman, glib, and cairo
-
-# Clone and build pixman for both architecture
-cd ~/qnx_workspace
-git clone https://gitlab.freedesktop.org/pixman/pixman.git
-cd pixman
-git checkout pixman-0.43.4
-
-# Build it for aarch64le and x86_64 architecrure
-export QNX_VERSION=800
-export QNX_ARCH=aarch64le
-meson setup build-qnx$QNX_VERSION --cross-file ~/qnx-ports/build-files/resources/meson/$QNX_ARCH/qnx$QNX_VERSION.ini -Dprefix=/usr -Dopenmp=disabled
-meson compile -C build-qnx$QNX_VERSION
-DESTDIR=/path/to/qnx$QNX_VERSION/target/qnx/${QNX_ARCH} meson install --no-rebuild -C build-qnx800
+# TO DO LATER
 ```
 
 ### Build cairo
-
 ```bash
-# Change the path in ~/qnx-ports/build-files/resources/meson/$QNX_ARCH/qnx$QNX_VERSION.ini to your qnx_sdp_path
-# This file will be used to build pixman, glib, and cairo
-
-# Clone and build pixman for both architecture
-cd ~/qnx_workspace
-git clone https://gitlab.freedesktop.org/cairo/cairo.git
-cd cairo
-git checkout 1.18.0
-
-# Copy everything from resources/pkgconfig/$SDP_VERSION/$ARCH to your QNX_TARGET's usr/lib/pkgconfig folder
-# Build it for aarch64le and x86_64 architecrure
-export QNX_VERSION=800
-export QNX_ARCH=aarch64le
-meson setup build-qnx$QNX_VERSION --cross-file ~/qnx-ports/build-files/resources/meson/$QNX_ARCH/qnx$QNX_VERSION.ini -Dprefix=/usr -Dtests=disabled
-meson compile -C build-qnx$QNX_VERSION
-DESTDIR=/path/to/qnx$QNX_VERSION/target/qnx/${QNX_ARCH} meson install --no-rebuild -C build-qnx800
+# TO DO LATER
 ```
 
 ### Build Weston
@@ -101,7 +159,7 @@ cd ~/qnx_workspace
 git clone https://github.com/qnx-ports/weston.git
 cd weston
 git checkout qnx-v11.0.3
-OSLIST=nto make -C qnx/build install JLEVEL=4 install
+OSLIST=nto DIST_ROOT=$(pwd)/unbuild-weston/weston make -C build-files/ports/weston/ install JLEVEL=4
 ```
 
 # Run weston examples on the target
