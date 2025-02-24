@@ -47,6 +47,7 @@ CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DCMAKE_INSTALL_LIBDIR=$(QNX_TARGET)/$(CPUVARDIR)/usr/lib \
              -DCMAKE_INSTALL_BINDIR=$(QNX_TARGET)/$(CPUVARDIR)/usr/bin \
              -DCPUVARDIR=$(CPUVARDIR) \
+             -DCPU=$(CPU)
 
 MAKE_ARGS ?= -j $(firstword $(JLEVEL) 1)
 
