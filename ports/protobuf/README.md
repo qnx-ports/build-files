@@ -24,6 +24,8 @@ cd build-files/docker
 # Clone protobuf
 cd ~/qnx_workspace
 git clone --recurse-submodules https://github.com/qnx-ports/protobuf.git
+# Older version of protobuf
+#git clone --recurse-submodules https://github.com/qnx-ports/protobuf.git -b qnx-v3.15.0
 ```
 
 # Or setup Ubuntu host
@@ -32,6 +34,8 @@ git clone --recurse-submodules https://github.com/qnx-ports/protobuf.git
 mkdir -p ~/qnx_workspace && cd qnx_workspace
 git clone https://github.com/qnx-ports/build-files.git
 git clone --recurse-submodules https://github.com/qnx-ports/protobuf.git
+# Older version of protobuf
+#git clone --recurse-submodules https://github.com/qnx-ports/protobuf.git -b qnx-v3.15.0
 ```
 
 # Compile protobuf and its tests for QNX
