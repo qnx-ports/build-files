@@ -63,6 +63,7 @@ export TARGET_USER=<target-username>
 
 scp -r ~/qnx800/target/qnx/aarch64le/usr/local/bin $TARGET_USER@$TARGET_IP_ADDRESS:~
 scp -r ~/qnx800/target/qnx/aarch64le/usr/local/lib $TARGET_USER@$TARGET_IP_ADDRESS:~
+scp -r ~/qnx800/target/qnx/aarch64le/usr/local/share $TARGET_USER@$TARGET_IP_ADDRESS:~
 ```
 
 # Tests

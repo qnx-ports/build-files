@@ -1,0 +1,128 @@
+#!/bin/sh
+
+function hook_configure {
+
+	# Ensure that all required environment variables are set
+	if [ -z "$SOURCE_ROOT" ]; then
+	echo "Error: SOURCE_ROOT is not set."
+	exit 1
+	fi
+
+    # Define the project root as the current directory or set it dynamically.
+	QNX_PROJECT_ROOT="${1:-$(pwd)}"
+    echo "Copying source into ${QNX_PROJECT_ROOT} ..."
+    echo "SOURCE_ROOT  ${SOURCE_ROOT} ..."
+    
+    # Use rsync to copy files
+    rsync -r --exclude=.git --exclude=.github "$SOURCE_ROOT/" .
+
+    case ${TARGET_SYSNAME} in
+    nto|linux|win64)
+
+        # Use the QNX_PROJECT_ROOT to dynamically refer to lib/zstd.h
+        LIBVER_MAJ=$(sed -n '/define ZSTD_VERSION_MAJOR/s/.*[[:blank:]]\([0-9][0-9]*\).*/\1/p' < "$QNX_PROJECT_ROOT/lib/zstd.h")
+        LIBVER_MIN=$(sed -n '/define ZSTD_VERSION_MINOR/s/.*[[:blank:]]\([0-9][0-9]*\).*/\1/p' < "$QNX_PROJECT_ROOT/lib/zstd.h")
+        LIBVER_REL=$(sed -n '/define ZSTD_VERSION_RELEASE/s/.*[[:blank:]]\([0-9][0-9]*\).*/\1/p' < "$QNX_PROJECT_ROOT/lib/zstd.h")
+        LIBVER=${LIBVER_MAJ}.${LIBVER_MIN}.${LIBVER_REL}
+		echo "################# ZSTD_VERSION ${LIBVER} #########################"
+        ;;
+    *)
+        echo "Unsupported target ${TARGET_SYSNAME}"
+        exit 1
+        ;;
+    esac
+}
+
+function gen_useinfo {
+
+	if ! use -i lib/libzstd.so.${LIBVER} > /dev/null 2>&1; then
+		gen_pinfo -nlib/libzstd.so.${LIBVER} libzstd.so.${LIBVER} usr/lib DESCRIPTION="zstd Library (${LIBVER})"
+		${UM_HOST} -iTAGID -iVERSION -f lib/libzstd.so.${LIBVER}.pinfo lib/libzstd.so.${LIBVER}
+	fi
+}
+
+function hook_make {
+
+	case ${TARGET_SYSNAME} in
+	nto)
+		MAKEDIR="lib"
+		TARGETS="lib-release"
+		TARGETS_INSTALL="install"
+		INSTALL_ROOT=${INSTALL_ROOT_nto}
+		EXAMPLES_DIR="examples"
+		;;
+	linux)
+		MAKEDIR="lib"
+		TARGETS="libzstd.a"
+		TARGETS_INSTALL="install-static install-includes"
+		INSTALL_ROOT=${INSTALL_ROOT_linux}
+		;;
+	win64)
+		MAKEDIR="lib"
+		TARGETS="libzstd.a"
+		TARGETS_INSTALL="install-static install-includes"
+		INSTALL_ROOT=${INSTALL_ROOT_win64}
+		;;
+	*)
+		echo "Unsupported target ${TARGET_SYSNAME}"
+		exit 1
+		;;
+	esac
+
+	export DESTDIR=${INSTALL_ROOT}
+	export PREFIX=/usr
+	export EXEC_PREFIX=/${cpudir}/usr
+
+	if [ "${make_cmds}" == "install" ]; then
+
+	make -C ${MAKEDIR} -fMakefile \
+		${make_CC:+"CC=${make_CC}"} \
+		${make_defns} \
+		${ac_autotools} \
+		${make_opts} \
+		${JLEVEL:+"-j${JLEVEL}"} ${TARGETS} \
+		|| exit;
+
+	# Building examples
+    make -C ${EXAMPLES_DIR} -fMakefile \
+      ${make_CC:+"CC=${make_CC}"} \
+      ${make_defns} \
+      ${ac_autotools} \
+      ${make_opts} \
+      ${JLEVEL:+"-j${JLEVEL}"} \
+      || exit
+
+	case ${TARGET_SYSNAME} in
+	nto)
+		gen_useinfo
+		;;
+	esac
+
+	make -C ${MAKEDIR} -fMakefile \
+		${make_CC:+"CC=${make_CC}"} \
+		${make_defns} \
+		${ac_autotools} \
+		${make_opts} \
+		${JLEVEL:+"-j${JLEVEL}"} ${TARGETS_INSTALL} \
+		|| exit;
+
+	else
+	make -C ${MAKEDIR} -fMakefile \
+		${make_CC:+"CC=${make_CC}"} \
+		${make_defns} \
+		${ac_autotools} \
+		${make_opts} \
+		${make_cmds} \
+		${JLEVEL:+"-j${JLEVEL}"} \
+		|| exit;
+	
+	# Building examples
+    make -C ${EXAMPLES_DIR} -fMakefile \
+      ${make_CC:+"CC=${make_CC}"} \
+      ${make_defns} \
+      ${ac_autotools} \
+      ${make_opts} \
+      ${JLEVEL:+"-j${JLEVEL}"} \
+      || exit
+	fi
+}

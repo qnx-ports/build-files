@@ -7,8 +7,6 @@ include $(MKFILES_ROOT)/qmacros.mk
 
 NAME = nghttp2
 
-NGHTTP2_VERSION = 1.64.0
-
 QNX_PROJECT_ROOT ?= $(PRODUCT_ROOT)/../../nghttp2
 
 #$(INSTALL_ROOT_$(OS)) is pointing to $QNX_TARGET
@@ -79,7 +77,8 @@ CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DENABLE_HPACK_TOOLS=$(ENABLE_HPACK_TOOLS) \
              -DENABLE_APP=$(ENABLE_APP) \
              -DBUILD_STATIC_LIBS=$(BUILD_STATIC_LIBS) \
-             -DBUILD_TESTING=$(BUILD_TESTING)
+             -DBUILD_TESTING=$(BUILD_TESTING) \
+             -DENABLE_EXAMPLES=OFF
 
 MAKE_ARGS ?= -j $(firstword $(JLEVEL) 1)
 
