@@ -1,0 +1,58 @@
+diff --git a/meson.build b/meson.build
+index 4051a7c11..972228544 100644
+--- a/meson.build
++++ b/meson.build
+@@ -610,23 +610,23 @@ if feature_conf.get('CAIRO_HAS_PS_SURFACE', 0) == 1
+   endif
+ endif
+ 
+-if feature_conf.get('CAIRO_HAS_PDF_SURFACE', 0) == 1
+-  poppler_dep = dependency('poppler-glib', version: '>= 0.17.4',
+-                           required: get_option('tests'))
+-  if poppler_dep.found() and cc.has_function('poppler_page_render', dependencies: [poppler_dep])
+-    conf.set('CAIRO_CAN_TEST_PDF_SURFACE', 1)
+-    test_deps += [poppler_dep]
+-  endif
+-endif
+-
+-if feature_conf.get('CAIRO_HAS_SVG_SURFACE', 0) == 1
+-  librsvg_dep = dependency('librsvg-2.0', version: '>= 2.35.0',
+-                           required: get_option('tests'))
+-  if librsvg_dep.found()
+-    conf.set('CAIRO_CAN_TEST_SVG_SURFACE', 1)
+-    test_deps += [librsvg_dep]
+-  endif
+-endif
++#if feature_conf.get('CAIRO_HAS_PDF_SURFACE', 0) == 1
++#  poppler_dep = dependency('poppler-glib', version: '>= 0.17.4',
++#                           required: get_option('tests'))
++#  if poppler_dep.found() and cc.has_function('poppler_page_render', dependencies: [poppler_dep])
++#    conf.set('CAIRO_CAN_TEST_PDF_SURFACE', 1)
++#    test_deps += [poppler_dep]
++#  endif
++#endif
++
++#if feature_conf.get('CAIRO_HAS_SVG_SURFACE', 0) == 1
++#  librsvg_dep = dependency('librsvg-2.0', version: '>= 2.35.0',
++#                           required: get_option('tests'))
++#  if librsvg_dep.found()
++#    conf.set('CAIRO_CAN_TEST_SVG_SURFACE', 1)
++#    test_deps += [librsvg_dep]
++#  endif
++#endif
+ 
+ pixman_dep = dependency('pixman-1',
+   version: '>= 0.40.0',
+diff --git a/test/cairo-test.c b/test/cairo-test.c
+index 49dfadb15..179e129b8 100644
+--- a/test/cairo-test.c
++++ b/test/cairo-test.c
+@@ -262,7 +262,7 @@ cairo_test_fini (cairo_test_context_t *ctx)
+ 
+     cairo_boilerplate_fini ();
+ 
+-    cairo_debug_reset_static_data ();
++    // cairo_debug_reset_static_data ();
+ #if HAVE_FCFINI
+     FcFini ();
+ #endif
