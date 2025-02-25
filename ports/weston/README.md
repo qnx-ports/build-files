@@ -167,12 +167,9 @@ Path where libraries are stored are crucial to running weston smoothly. If you w
 ```bash
 # Run script to tranfer libraries and executbles to the target
 cd ~/qnx_workspace/build-files/ports/weston/scripts
-./transfer.sh
 
-#Example inputs
-#Enter the QNX800 folder directory path (e.g., ~/qnx800): /home/flionardo/qnx800
-#Enter the target IP address: 107.195.40.66
-#Enter the password for the target user: qnxuser
+export TARGET_HOST=<target-ip-address-or-hostname>
+./transfer.sh
 ```
 ## Structure
 he following assumes that all dependency packages (from SDP) **and** all components built as part of this project are installed to the same location on the host machine. This location is referred to as `$INSTALL_DIR`. Adjust process accordingly if components built from this project are installed elsewhere.
