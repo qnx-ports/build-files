@@ -1,4 +1,10 @@
-# libffi [![libffi](https://github.com/qnx-ports/build-files/actions/workflows/libffi.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/libffi.yml)
+# libffi [![Build](https://github.com/qnx-ports/build-files/actions/workflows/libffi.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/libffi.yml)
+
+Supports QNX7.1 and QNX8.0
+
+## QNX Software Center (QSC) compatibility warning
+
+It is very likely that another version of these binaries are shipped with the QNX image by QSC, hence installation of this library might introduce linking conflicts at runtime. Double check which version of it was linked when cross compiling your software and make sure the proper `LD_LIBRARY_PATH` is set for the dynamic linker to work properly
 
 **NOTE**: QNX ports are only supported from a Linux host operating system
 
@@ -7,7 +13,7 @@ Use `$(nproc)` instead of `4` after `JLEVEL=` and `-j` if you want to use the ma
 
 # Compile the port for QNX in a Docker container
 
-**Pre-requisite**: Install Docker on Ubuntu https://docs.docker.com/engine/install/ubuntu/
+Pre-requisite: Install Docker on Ubuntu https://docs.docker.com/engine/install/ubuntu/
 ```bash
 # Create a workspace
 mkdir -p ~/qnx_workspace && cd ~/qnx_workspace
@@ -20,67 +26,54 @@ cd build-files/docker
 
 # Now you are in the Docker container
 
+# source qnxsdp-env.sh in
+source ~/qnx800/qnxsdp-env.sh
+
 # Clone libffi
 cd ~/qnx_workspace
 git clone https://github.com/libffi/libffi.git
 
-# Checkout v3.2.1
+# check out to v3.2.1
 cd libffi
 git checkout v3.2.1
+cd ..
 
-# Run autogen script
-./autogen.sh
-
-# Build for either 7.1 or 8.0
-
-# Build libffi on 7.1 for aarch64le and x86_64
-source ~/qnx710/qnxsdp-env.sh
-./configure --host=aarch64-unknown-nto-qnx7.1.0 --target=aarch64-unknown-nto-qnx7.1.0 --prefix=$QNX_TARGET/usr --exec-prefix=$QNX_TARGET/aarch64le/usr
-make install -j4
-./configure --host=x86_64-pc-nto-qnx7.1.0 --target=x86_64-pc-nto-qnx7.1.0 --prefix=$QNX_TARGET/usr --exec-prefix=$QNX_TARGET/x86_64/usr
-make install -j4
-
-# Build libffi on 8.0 for aarch64le and x86_64
-source ~/qnx800/qnxsdp-env.sh
-./configure --host=aarch64-unknown-nto-qnx8.0.0 --target=aarch64-unknown-nto-qnx8.0.0 --prefix=$QNX_TARGET/usr --exec-prefix=$QNX_TARGET/aarch64le/usr
-make install -j4
-./configure --host=x86_64-pc-nto-qnx8.0.0 --target=x86_64-pc-nto-qnx8.0.0 --prefix=$QNX_TARGET/usr --exec-prefix=$QNX_TARGET/x86_64/usr
-make install -j4
-
+# Build libffi
+QNX_PROJECT_ROOT="$(pwd)/libffi" JLEVEL=4 make -C build-files/ports/libffi install
 ```
 
 # Compile the port for QNX on Ubuntu host
 ```bash
 # Clone the repos
 mkdir -p ~/qnx_workspace && cd qnx_workspace
-
-# Clone libffi
-cd ~/qnx_workspace
+git clone https://github.com/qnx-ports/build-files.git
 git clone https://github.com/libffi/libffi.git
 
-# Checkout v3.2.1
+# check libffi out to v3.2.1
 cd libffi
 git checkout v3.2.1
+cd ..
 
-sudo apt install autoconf
-sudo apt install texinfo
-
-# Run autogen script
-./autogen.sh
-
-# Build for either 7.1 or 8.0
-
-# Build libffi on 7.1 for aarch64le and x86_64
-source ~/qnx710/qnxsdp-env.sh
-./configure --host=aarch64-unknown-nto-qnx7.1.0 --target=aarch64-unknown-nto-qnx7.1.0 --prefix=$QNX_TARGET/usr --exec-prefix=$QNX_TARGET/aarch64le/usr
-make install -j4
-./configure --host=x86_64-pc-nto-qnx7.1.0 --target=x86_64-pc-nto-qnx7.1.0 --prefix=$QNX_TARGET/usr --exec-prefix=$QNX_TARGET/x86_64/usr
-make install -j4
-
-# Build libffi on 8.0 for aarch64le and x86_64
+# source qnxsdp-env.sh
 source ~/qnx800/qnxsdp-env.sh
-./configure --host=aarch64-unknown-nto-qnx8.0.0 --target=aarch64-unknown-nto-qnx8.0.0 --prefix=$QNX_TARGET/usr --exec-prefix=$QNX_TARGET/aarch64le/usr
-make install -j4
-./configure --host=x86_64-pc-nto-qnx8.0.0 --target=x86_64-pc-nto-qnx8.0.0 --prefix=$QNX_TARGET/usr --exec-prefix=$QNX_TARGET/x86_64/usr
-make install -j4
+
+# Build libffi
+QNX_PROJECT_ROOT="$(pwd)/libffi" JLEVEL=4 make -C build-files/ports/libffi install
 ```
+
+# Deploy binaries via SSH
+```bash
+#Set your target's IP here
+TARGET_IP_ADDRESS=<target-ip-address-or-hostname>
+TARGET_USER=<target-username>
+
+scp -r ~/qnx800/target/qnx/aarch64le/usr/local/lib/libffi* $TARGET_USER@$TARGET_IP_ADDRESS:~/lib
+```
+
+If `~/lib` directory do not exist, create them with:
+```bash
+ssh $TARGET_USER@$TARGET_IP_ADDRESS "mkdir -p ~/lib"
+````
+
+# Tests
+Tests are not avaliable.
