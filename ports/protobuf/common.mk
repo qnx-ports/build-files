@@ -6,6 +6,8 @@ include $(QCONFIG)
 NAME=protobuf
 
 QNX_PROJECT_ROOT ?= $(PRODUCT_ROOT)/../../protobuf/
+# Uncomment line below for older versions whose CMakeLists.txt is in cmake folder
+#QNX_PROJECT_ROOT ?= $(PRODUCT_ROOT)/../../protobuf/cmake
 
 #$(INSTALL_ROOT_$(OS)) is pointing to $QNX_TARGET
 #by default, unless it was manually re-routed to

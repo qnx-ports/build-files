@@ -4,6 +4,8 @@
 
 Use `$(nproc)` instead of `4` after `JLEVEL=` if you want to use the maximum number of cores to build this project.
 
+If you want to build an old version of protobuf like v3.15.0 whose CMakeLists.txt is in cmake folder instead of project root directory, comment out line 8 and uncomment line 10 in `common.mk`.
+
 # Setup a Docker container
 
 Pre-requisite: Install Docker on Ubuntu https://docs.docker.com/engine/install/ubuntu/
