@@ -1,4 +1,4 @@
-name: SDL2
+name: SDL
 
 on:
   workflow_dispatch:
@@ -7,13 +7,13 @@ on:
       - main
     paths:
       - '.github/workflows/SDL.yml'
-      - 'ports/SDL2/**'
+      - 'ports/SDL/**'
   pull_request:
     branches:
       - main
     paths:
       - '.github/workflows/SDL.yml'
-      - 'ports/SDL2/**'
+      - 'ports/SDL/**'
 
 jobs:
 
@@ -22,7 +22,7 @@ jobs:
     if: |
       (github.event_name == 'workflow_dispatch') ||
       (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
-      (github.event_name == 'pull_request' && (contains(github.event.pull_request.title, 'SDL2') || contains(github.event.pull_request.title, 'SDL')))
+      (github.event_name == 'pull_request' && (contains(github.event.pull_request.title, 'SDL') || contains(github.event.pull_request.title, 'SDL')))
     steps:
     - name: Checkout build-files
       uses: actions/checkout@v4
@@ -52,7 +52,7 @@ jobs:
       run: |
         docker pull ghcr.io/qnx-ports/sdp800-build-env:latest
 
-    - name: Build SDL2
+    - name: Build SDL
       uses: addnab/docker-run-action@v3
       with:
         image: ghcr.io/qnx-ports/sdp800-build-env:latest
@@ -61,14 +61,14 @@ jobs:
         run: |
           source ~/qnx/800/qnxsdp-env.sh
           cd ~/workspace
-          PREFIX="/usr/local" QNX_PROJECT_ROOT="$(pwd)/SDL" make -C build-files/ports/SDL2 install -j$(nproc)
+          PREFIX="/usr/local" QNX_PROJECT_ROOT="$(pwd)/SDL" make -C build-files/ports/SDL install -j$(nproc)
 
   build_230:
     runs-on: self-hosted
     if: |
       (github.event_name == 'workflow_dispatch') ||
       (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
-      (github.event_name == 'pull_request' && (contains(github.event.pull_request.title, 'SDL2') || contains(github.event.pull_request.title, 'SDL')))
+      (github.event_name == 'pull_request' && (contains(github.event.pull_request.title, 'SDL') || contains(github.event.pull_request.title, 'SDL')))
     steps:
     - name: Checkout build-files
       uses: actions/checkout@v4
@@ -98,7 +98,7 @@ jobs:
       run: |
         docker pull ghcr.io/qnx-ports/sdp800-build-env:latest
 
-    - name: Build SDL2
+    - name: Build SDL
       uses: addnab/docker-run-action@v3
       with:
         image: ghcr.io/qnx-ports/sdp800-build-env:latest
@@ -107,14 +107,14 @@ jobs:
         run: |
           source ~/qnx/800/qnxsdp-env.sh
           cd ~/workspace
-          PREFIX="/usr/local" QNX_PROJECT_ROOT="$(pwd)/SDL" make -C build-files/ports/SDL2 install -j$(nproc)
+          PREFIX="/usr/local" QNX_PROJECT_ROOT="$(pwd)/SDL" make -C build-files/ports/SDL install -j$(nproc)
 
   build_2022:
     runs-on: self-hosted
     if: |
       (github.event_name == 'workflow_dispatch') ||
       (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
-      (github.event_name == 'pull_request' && (contains(github.event.pull_request.title, 'SDL2') || contains(github.event.pull_request.title, 'SDL')))
+      (github.event_name == 'pull_request' && (contains(github.event.pull_request.title, 'SDL') || contains(github.event.pull_request.title, 'SDL')))
     steps:
     - name: Checkout build-files
       uses: actions/checkout@v4
@@ -144,7 +144,7 @@ jobs:
       run: |
         docker pull ghcr.io/qnx-ports/sdp800-build-env:latest
 
-    - name: Build SDL2
+    - name: Build SDL
       uses: addnab/docker-run-action@v3
       with:
         image: ghcr.io/qnx-ports/sdp800-build-env:latest
@@ -153,4 +153,4 @@ jobs:
         run: |
           source ~/qnx/800/qnxsdp-env.sh
           cd ~/workspace
-          PREFIX="/usr/local" QNX_PROJECT_ROOT="$(pwd)/SDL" make -C build-files/ports/SDL2 install -j$(nproc)
+          PREFIX="/usr/local" QNX_PROJECT_ROOT="$(pwd)/SDL" make -C build-files/ports/SDL install -j$(nproc)
