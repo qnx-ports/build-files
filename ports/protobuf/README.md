@@ -22,6 +22,8 @@ cd build-files/docker
 # Clone protobuf
 cd ~/qnx_workspace
 git clone --recurse-submodules https://github.com/qnx-ports/protobuf.git
+# Older version of protobuf
+#git clone --recurse-submodules https://github.com/qnx-ports/protobuf.git -b qnx-v3.15.0
 ```
 
 # Or setup Ubuntu host
@@ -30,6 +32,8 @@ git clone --recurse-submodules https://github.com/qnx-ports/protobuf.git
 mkdir -p ~/qnx_workspace && cd qnx_workspace
 git clone https://github.com/qnx-ports/build-files.git
 git clone --recurse-submodules https://github.com/qnx-ports/protobuf.git
+# Older version of protobuf
+#git clone --recurse-submodules https://github.com/qnx-ports/protobuf.git -b qnx-v3.15.0
 ```
 
 # Compile protobuf and its tests for QNX
@@ -37,5 +41,8 @@ git clone --recurse-submodules https://github.com/qnx-ports/protobuf.git
 # source qnxsdp-env.sh
 source ~/qnx800/qnxsdp-env.sh
 # Build protobuf
-make -C build-files/ports/protobuf install JLEVEL=4 [INSTALL_ROOT_nto=PATH_TO_YOUR_STAGING_AREA USE_INSTALL_ROOT=true]
+make -C build-files/ports/protobuf install JLEVEL=4 #[INSTALL_ROOT_nto=PATH_TO_YOUR_STAGING_AREA USE_INSTALL_ROOT=true]
+
+# Build older version of protobuf
+#QNX_PROJECT_ROOT=$(pwd)/protobuf/cmake make -C build-files/ports/protobuf install JLEVEL=4
 ```

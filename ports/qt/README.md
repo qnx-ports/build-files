@@ -20,12 +20,17 @@ cd build-files/docker
 
 # Now you are in the Docker container
 
-# source qnxsdp-env.sh in
+# source qnxsdp-env.sh to buld for qnx710
+source ~/qnx710/qnxsdp-env.sh
+
+# source qnxsdp-env.sh to buld for qnx800
 source ~/qnx800/qnxsdp-env.sh
 
 # Build QT for host machine
 cd ~/qnx_workspace/build-files/ports/qt/nto-aarch64-le
 git clone --recurse-submodules https://github.com/qt/qt5.git --branch 6.8.1
+cp -r qt5 ../nto-x86_64-o
+cd ../
 mkdir qthostbuild && mkdir qthost
 cd qthostbuild
 cmake -GNinja \
@@ -36,7 +41,7 @@ cmake -GNinja \
   -DQT_FEATURE_opengles2=ON \
   -DBUILD_qtopcua=OFF \
   -Wno-dev \
-  ../qt5
+  ../nto-aarch64-le/qt5
 
 cmake --build . --parallel
 cmake --install .
@@ -103,12 +108,17 @@ sudo apt-get install -y \
   libxslt1-dev \
   freeglut3-dev
 
-# Source qnxsdp-env.sh
+# source qnxsdp-env.sh to buld for qnx710
+source ~/qnx710/qnxsdp-env.sh
+
+# source qnxsdp-env.sh to buld for qnx800
 source ~/qnx800/qnxsdp-env.sh
 
 # Build QT for host machine
 cd ~/qnx_workspace/build-files/ports/qt/nto-aarch64-le
 git clone --recurse-submodules https://github.com/qt/qt5.git --branch 6.8.1
+cp -r qt5 ../nto-x86_64-o
+cd ../
 mkdir qthostbuild && mkdir qthost
 cd qthostbuild
 cmake -GNinja \
@@ -119,14 +129,11 @@ cmake -GNinja \
   -DQT_FEATURE_opengles2=ON \
   -DBUILD_qtopcua=OFF \
   -Wno-dev \
-  ../qt5
+  ../nto-aarch64-le/qt5
 
 cmake --build . --parallel
 cmake --install .
 cd ~/qnx_workspace
-
-# Build QT
-BUILD_TESTING=OFF make -C build-files/ports/qt JLEVEL=4 install
 ```
 
 # How to run example
@@ -200,7 +207,7 @@ export QML2_IMPORT_PATH=/data/home/qnxuser/qml/
 export QT_QPA_PLATFORM=qnx:rootwindow
 
 # Run the particles3d example
-cd /home/data/qnxuser
+cd /data/home/qnxuser
 ./particles3d
 ```
 
@@ -245,7 +252,7 @@ export QML2_IMPORT_PATH=/data/home/qnxuser/qml/
 export QT_QPA_PLATFORM=qnx
 
 # Run test script
-cd /home/data/qnxuser
+cd /data/home/qnxuser
 
 # Some test requires temp directory.
 mkdir temp
