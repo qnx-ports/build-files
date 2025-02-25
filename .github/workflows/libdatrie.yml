@@ -1,4 +1,4 @@
-name: icu
+name: libdatrie
  
 on:
   workflow_dispatch:
@@ -6,14 +6,14 @@ on:
     branches:
       - main
     paths:
-      - '.github/workflows/icu.yml'
-      - 'ports/icu/**'
+      - '.github/workflows/libdatrie.yml'
+      - 'ports/libdatrie/**'
   pull_request:
     branches:
       - main
     paths:
-      - '.github/workflows/icu.yml'
-      - 'ports/icu/**'
+      - '.github/workflows/libdatrie.yml'
+      - 'ports/libdatrie/**'
 
 jobs:
  
@@ -27,18 +27,12 @@ jobs:
     if: |
       (github.event_name == 'workflow_dispatch') ||
       (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
-      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'icu'))
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'libdatrie'))
     steps:
     - name: Checkout build-files
       uses: actions/checkout@v4
       with:
         path: build-files
- 
-    - name: Checkout icu
-      uses: actions/checkout@v4
-      with:
-        repository: qnx-ports/icu
-        path: icu
  
     - name: Login to GitHub Container Registry
       uses: docker/login-action@v3
@@ -51,7 +45,7 @@ jobs:
       run: |
         docker pull ${{ matrix.qnx_env }}
  
-    - name: Build icu
+    - name: Build libdatrie
       uses: addnab/docker-run-action@v3
       with:
         image: ${{ matrix.qnx_env }}
@@ -64,4 +58,5 @@ jobs:
             source ~/qnx/710/qnxsdp-env.sh
           fi
           cd ~/workspace
-          QNX_PROJECT_ROOT="$(pwd)/icu" MAKE_BUILD_TEST=true JLEVEL=$(nproc) make -C build-files/ports/icu clean install
+          wget https://github.com/tlwg/libdatrie/releases/download/v0.2.13/libdatrie-0.2.13.tar.xz && tar -xf libdatrie-0.2.13.tar.xz
+          QNX_PROJECT_ROOT="$(pwd)/libdatrie-0.2.13" JLEVEL=$(nproc) make -C build-files/ports/libdatrie clean install
