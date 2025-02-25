@@ -54,5 +54,5 @@ scp -r * <username>@<ip>:~/pugixml/
 # 2. Run tests
 ssh <username>@<ip>
 cd pugixml
-./pugixml-check
+LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PWD/lib ./pugixml-check
 ```

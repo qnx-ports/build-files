@@ -15,6 +15,7 @@
 TARGET_ARCH=aarch64le
 #TARGET_IP=
 #TARGET_USER=
+#DO_NOT_REBUILD=TRUE
 
 ### Directory Paths
 RETROARCH_SRC=${PWD}/../../../RetroArch
@@ -28,9 +29,11 @@ LIBRETRO_RETRO8_SRC=${PWD}/../../../retro8
 RARCH_CORE_INFO_SRC=${PWD}/../../../libretro-core-info
 RARCH_ASSETS_SRC=${PWD}/../../../retroarch-assets
 
-SDL_SRC=
-RAPIDJSON_SRC=
-FREEIMAGE_SRC=
+SDL_SRC=${PWD}/../../../SDL
+RAPIDJSON_SRC=${PWD}/../../../rapidjson
+FREEIMAGE_SRC=${PWD}/../../../FreeImage
+PUGIXML_SRC=${PWD}/../../../pugixml
+NANOSVG_SRC=${PWD}/../../../nanosvg
 
 # DO NOT TOUCH BELOW HERE
 if [[ -z "$TARGET_IP" ]]; then
@@ -42,16 +45,27 @@ if [[ -z "$TARGET_USER" ]]; then
 fi
 
 TOP_LEVEL_BUILD_DIR=${PWD} 
+WKSP=${PWD}/../../../
 
-echo Targeting user $TARGET_USER@$TARGET_IP 
+
+##########################################################################################
+VERSION=0.1
+echo "[INFO]: Running build_install_all.sh v$VERSION"
+echo "[INFO]: Targeting user $TARGET_USER@$TARGET_IP "
 ##########################################################################################
 
+if [ "$DO_NOT_REBUILD" = "TRUE" ]; then
+    echo "[WARNING]: \$DO_NOT_REBUILD is set to \"TRUE\"." 
+    echo "           Script will NOT attempt to build libraries or executables if it thinks they are already built."
+    sleep 7
+fi
+
 if [[ -z "$QNX_TARGET" ]]; then
-    echo Missing QNX SDP Environment variables! Make sure to source ~/qnx800/qnxsdp-env.sh or an equivalent!
+    echo "[FATAL]: Missing QNX SDP Environment variables! Make sure to source ~/qnx800/qnxsdp-env.sh or an equivalent!"
     exit 1
 fi
 if [[ -z "$QNX_HOST" ]]; then
-    echo Missing QNX SDP Environment variables! Make sure to source ~/qnx800/qnxsdp-env.sh or an equivalent!
+    echo "[FATAL]: Missing QNX SDP Environment variables! Make sure to source ~/qnx800/qnxsdp-env.sh or an equivalent!"
     exit 1
 fi
 
@@ -59,23 +73,29 @@ fi
 
 ########### RetroArch & Assets ###########
 if [ ! -d "$RETROARCH_SRC" ]; then
+    echo "[INFO]: Missing RetroArch source. Cloning..."
     git clone https://github.com/qnx-ports/RetroArch.git $RETROARCH_SRC
 fi
 if [ ! -d "$RARCH_ASSETS_SRC" ]; then
+    echo "[INFO]: Missing RetroArch assets. Cloning..."
     git clone https://github.com/libretro/retroarch-assets $RARCH_ASSETS_SRC
 fi
 if [ ! -d "$RARCH_CORE_INFO_SRC" ]; then
+    echo "[INFO]: Missing RetroArch core information. Cloning..."
     git clone https://github.com/libretro/libretro-core-info $RARCH_CORE_INFO_SRC
 fi
 
 ########### LibRetro Cores ###########
-if [ ! -d "$LIBRETRO_SAMPLES_SRC" ]; then
+if [ ! -d "$LIBRETRO_SAMPLES_SRC" ]; then  
+    echo "[INFO]: Missing RetroArch core samples. Cloning..."
     git clone https://github.com/libretro/libretro-samples.git $LIBRETRO_SAMPLES_SRC
 fi
 if [ ! -d "$LIBRETRO_2048_SRC" ]; then
+    echo "[INFO]: Missing RetroArch 2048 core source . Cloning..."
     git clone https://github.com/libretro/libretro-2048 $LIBRETRO_2048_SRC
 fi
 if [ ! -d "$LIBRETRO_MRBOOM_SRC" ]; then
+    echo "[INFO]: Missing RetroArch mrboom core source. Cloning..."
     git clone https://github.com/Javanaise/mrboom-libretro.git $LIBRETRO_MRBOOM_SRC
     cd $LIBRETRO_MRBOOM_SRC
     git submodule init
@@ -83,38 +103,78 @@ if [ ! -d "$LIBRETRO_MRBOOM_SRC" ]; then
 
 fi
 if [ ! -d "$LIBRETRO_RETRO8_SRC" ]; then
+    echo "[INFO]: Missing RetroArch retro8 core source. Cloning..."
     git clone https://github.com/Jakz/retro8.git $LIBRETRO_RETRO8_SRC
 fi
 
 ########### Emulation Station & Deps ###########
 if [ ! -d "$EMULATIONSTATION_SRC" ]; then
-    echo missing emustat
+    echo "[INFO]: Missing EmulationStation source. Cloning..."
+    git clone git@github.com:qnx-ports/EmulationStation.git $EMULATIONSTATION_SRC
 fi
 if [ ! -d "$SDL_SRC" ]; then
-    echo missing sdl
+    echo "[INFO]: Missing SDL source. Cloning..."
+    git clone git@github.com:qnx-ports/SDL.git $SDL_SRC
 fi
 if [ ! -d "$RAPIDJSON_SRC" ]; then
-    echo missing rapidjson
+    echo "[INFO]: Missing rapidjson source. Cloning..."
+    git clone git@github.com:qnx-ports/rapidjson.git $RAPIDJSON_SRC
 fi
 if [ ! -d "$FREEIMAGE_SRC" ]; then
-    echo missing freeimage
+    echo "[INFO]: Missing FreeImage source. Cloning..."
+    git clone git@github.com:qnx-ports/FreeImage.git $FREEIMAGE_SRC
+fi
+if [ ! -d "$PUGIXML_SRC" ]; then
+    echo "[INFO]: Missing pugixml source. Cloning..."
+    git clone https://github.com/zeux/pugixml.git $PUGIXML_SRC
+fi
+if [ ! -d "$NANOSVG_SRC" ]; then
+    echo "[INFO]: Missing nanosvg source. Cloning..."
+    git clone https://github.com/memononen/nanosvg.git $NANOSVG_SRC
 fi
 
 
 ##########################################################################################
+
+
 ### Build RetroArch
-cd ${TOP_LEVEL_BUILD_DIR}/RetroArch
-make install
+if [ ! -e "${TOP_LEVEL_BUILD_DIR}/RetroArch/nto-aarch64-le/build/retroarch" -o ! "${DO_NOT_REBUILD}" = "TRUE" ]; then
+    echo "[INFO]: Building RetroArch..."
+    cd ${TOP_LEVEL_BUILD_DIR}/RetroArch
+    make install
+else 
+    echo "[SKIP]: Skipping RetroArch - build detected."
+fi
 
 ### Build Sample Cores
-cd ${TOP_LEVEL_BUILD_DIR}/libretro-cores/test
-make install
-cd ${TOP_LEVEL_BUILD_DIR}/libretro-cores/2048
-make install
-cd ${TOP_LEVEL_BUILD_DIR}/libretro-cores/retro8
-make install
-cd ${TOP_LEVEL_BUILD_DIR}/libretro-cores/mrboom
-make install
+if [ ! -d "${TOP_LEVEL_BUILD_DIR}/libretro-cores/test/nto-aarch64-le/build/" -o ! "${DO_NOT_REBUILD}" = "TRUE" ]; then
+    echo "[INFO]: Building RetroArch test cores..."
+    cd ${TOP_LEVEL_BUILD_DIR}/libretro-cores/test
+    make install
+else 
+    echo "[SKIP]: Skipping RetroArch Test Cores - build detected."
+fi
+if [ ! -e "${TOP_LEVEL_BUILD_DIR}/libretro-cores/2048/nto-aarch64-le/build/2048_libretro_qnx.so" -o ! "${DO_NOT_REBUILD}" = "TRUE" ]; then
+    echo "[INFO]: Building RetroArch 2048 cores..."
+    cd ${TOP_LEVEL_BUILD_DIR}/libretro-cores/2048
+    make install
+else 
+    echo "[SKIP]: Skipping RetroArch 2048 Core - build detected."
+fi
+if [ ! -e "${TOP_LEVEL_BUILD_DIR}/libretro-cores/retro8/nto-aarch64-le/build/retro8_libretro_qnx.so" -o ! "${DO_NOT_REBUILD}" = "TRUE" ]; then
+    echo "[INFO]: Building RetroArch retro8 core..."
+    cd ${TOP_LEVEL_BUILD_DIR}/libretro-cores/retro8
+    make install
+else 
+    echo "[SKIP]: Skipping RetroArch retro8 Core - build detected."
+fi
+if [ ! -d "${TOP_LEVEL_BUILD_DIR}/libretro-cores/mrboom/nto-aarch64-le/build/" -o ! "${DO_NOT_REBUILD}" = "TRUE" ]; then
+    echo "[INFO]: Building RetroArch mrboom core..."
+    cd ${TOP_LEVEL_BUILD_DIR}/libretro-cores/mrboom
+    make install
+else 
+    echo "[SKIP]: Skipping RetroArch mrboom Core - build detected."
+fi
 
 #PICO-8 Example !! Maybe swap this for an official one
 cd $TOP_LEVEL_BUILD_DIR/staging/aarch64le/rarch-shared/content/
@@ -124,18 +184,48 @@ curl https://www.lexaloffle.com/bbs/thumbs/pico8_cmyplatonicsolids-0.png --outpu
 
 ##########################################################################################
 ### Build Emulation Station
-# # Dependencies:
-# # SDL
-# cd ${TOP_LEVEL_BUILD_DIR}/../SDL
-# make install
-# # FreeImage
-# cd ${TOP_LEVEL_BUILD_DIR}/../FreeImage
-# make install
-# # RapidJson
-# cd ${TOP_LEVEL_BUILD_DIR}/../rapidjson
-# make install
-# #
-# #
+## Dependencies:
+#==============VLC=================
+# SDL
+if [ ! -d "${TOP_LEVEL_BUILD_DIR}/../SDL/nto-aarch64-le/build/" -o ! "${DO_NOT_REBUILD}" = "TRUE" ]; then
+    echo "[INFO]: Building SDL..."
+    cd ${TOP_LEVEL_BUILD_DIR}/../SDL
+    make install
+else 
+    echo "[SKIP]: Skipping SDL2 - build detected."
+fi
+# FreeImage
+if [ ! -d "${TOP_LEVEL_BUILD_DIR}/../FreeImage/nto-aarch64-le/build/" -o ! "${DO_NOT_REBUILD}" = "TRUE" ]; then
+    echo "[INFO]: Building FreeImage..."
+    cd ${TOP_LEVEL_BUILD_DIR}/../FreeImage
+    make install
+else 
+    echo "[SKIP]: Skipping FreeImage - build detected."
+fi
+# RapidJson
+if [ ! -d "${TOP_LEVEL_BUILD_DIR}/../rapidjson/nto-aarch64-le/build/" -o ! "${DO_NOT_REBUILD}" = "TRUE" ]; then
+    echo "[INFO]: Building rapidjson..."
+    cd ${TOP_LEVEL_BUILD_DIR}/../rapidjson
+    make install
+else 
+    echo "[SKIP]: Skipping rapidjson - build detected."
+fi
+# pugixml
+if [ ! -d "${TOP_LEVEL_BUILD_DIR}/../pugixml/nto-aarch64-le/build/" -o ! "${DO_NOT_REBUILD}" = "TRUE" ]; then
+    echo "[INFO]: Building pugixml..."
+    cd ${TOP_LEVEL_BUILD_DIR}/../pugixml
+    make install
+else 
+    echo "[SKIP]: Skipping pugixml - build detected."
+fi
+# nanosvg
+if [ ! -d "${TOP_LEVEL_BUILD_DIR}/../nanosvg/nto-aarch64-le/build/" -o ! "${DO_NOT_REBUILD}" = "TRUE" ]; then
+    echo "[INFO]: Building nanosvg..."
+    cd ${TOP_LEVEL_BUILD_DIR}/../nanosvg
+    make install
+else 
+    echo "[SKIP]: Skipping nanosvg - build detected."
+fi
 
 # # Main Build
 # cd ${TOP_LEVEL_BUILD_DIR}/EmulationStation

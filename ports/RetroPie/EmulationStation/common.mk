@@ -65,26 +65,33 @@ CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DCMAKE_MODULE_PATH="$(CMAKE_MODULE_PATH)" \
              -DCMAKE_SYSTEM_PROCESSOR=$(CPUVARDIR) \
              -DCMAKE_BUILD_TYPE=$(CMAKE_BUILD_TYPE) \
-             -DEXTRA_CMAKE_C_FLAGS="$(FLAGS)" \
-             -DEXTRA_CMAKE_CXX_FLAGS="$(FLAGS)" \
+             -DEXTRA_CMAKE_C_FLAGS="$(CFLAGS)" \
+             -DEXTRA_CMAKE_CXX_FLAGS="$(CFLAGS)" \
              -DEXTRA_CMAKE_LINKER_FLAGS="$(LDFLAGS)" \
              -DCMAKE_NO_SYSTEM_FROM_IMPORTED=ON \
              -DCPU=$(CPU) \
              -DGLES=ON \
              -DUSE_MESA_GLES=ON \
-             -DGLSystem:STRING="$(QNX_TARGET)/$(CPUDIR)/usr/lib/graphics/rpi4-drm/libGLESv2-mesa.so"
+             -DGLSystem:STRING="$(QNX_TARGET)/$(CPUDIR)/usr/lib/graphics/rpi4-drm/libGLESv2-mesa.so" \
+             -DSDL2_LIBRARY="$(QNX_TARGET)/$(CPUDIR)/$(PREFIX)/lib/libSDL2.so" \
+             -DSDL2_PATH="$(QNX_TARGET)/$(CPUDIR)/$(PREFIX)/lib/libSDL2.so" \
+             -DSDL2_INCLUDE_DIR="$(QNX_TARGET)/$(CPUDIR)/$(PREFIX)/include/SDL" \
+             -DSDL2MAIN_LIBRARY="$(QNX_TARGET)/$(CPUDIR)/$(PREFIX)/lib/libSDL2main.a" \
+             -DSDL2_NO_DEFAULT_PATH:BOOL=ON \
 
 MAKE_ARGS ?= -j $(firstword $(JLEVEL) 1)
+
+MAKE_PREARGS = PKG_CONFIG_PATH=$(QNX_TARGET)/$(CPUDIR)/$(PREFIX)/lib/pkgconfig SDL2DIR=$(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)
 
 ifndef NO_TARGET_OVERRIDE
 EmulationStation_all:
 	@mkdir -p build
-	@cd build && cmake $(CMAKE_ARGS) $(DIST_BASE)
-	@cd build && make VERBOSE=1 all $(MAKE_ARGS)
+	@cd build && $(MAKE_PREARGS) cmake $(CMAKE_ARGS) $(DIST_BASE)
+	@cd build && $(MAKE_PREARGS) make VERBOSE=1 all $(MAKE_ARGS)
 
 install check: EmulationStation_all
 	@echo Installing...
-	@cd build && make VERBOSE=1 install $(MAKE_ARGS)
+	@cd build && $(MAKE_PREARGS) make VERBOSE=1 install $(MAKE_ARGS)
 	@echo Done.
 
 clean iclean spotless:

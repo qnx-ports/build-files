@@ -71,7 +71,7 @@ CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DEXTRA_CMAKE_CXX_FLAGS="$(FLAGS)" \
              -DEXTRA_CMAKE_LINKER_FLAGS="$(LDFLAGS)" \
              -DCMAKE_NO_SYSTEM_FROM_IMPORTED=ON \
-			 -DSDL_THREADS_ENABLED_BY_DEFAULT=ON \
+			 -DSDL_THREADS_ENABLED_BY_DEFAULT=ON
 
 
 #### Flags for g++/gcc C/CPP 
@@ -121,9 +121,10 @@ ifndef NO_TARGET_OVERRIDE
 SDL_all:
 	@echo "Building for $(HOST_DETECT)"
 	@mkdir -p build
-	cd $(QNX_PROJECT_ROOT) && sh autogen.sh
-	cd build && $(QNX_PROJECT_ROOT)/configure --host=$(HOST_DETECT) --build=$(HOST_DETECT) --disable-pulseaudio
-	cd build && make $(MAKE_ARGS)
+	@cd $(QNX_PROJECT_ROOT) && sh autogen.sh
+	@cd build && $(QNX_PROJECT_ROOT)/configure --host=$(HOST_DETECT) --disable-pulseaudio --enable-audio=no --prefix=$(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)
+	@cd build && make $(MAKE_ARGS)
+	@cd build && cp $(QNX_PROJECT_ROOT)/include/* include/
 
 #Unfortunately 2.0.5's install script is not viable for QNX.
 #	@mkdir -p $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/pkgconfig/
@@ -136,12 +137,13 @@ SDL_all:
 #	@cp build/*.cmake $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/cmake/
 install: SDL_all
 	@echo Installing...
+# @cd build && make $(MAKE_ARGS) install
 	@mkdir -p $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/pkgconfig/
 	@mkdir -p $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/cmake/
-	@mkdir -p $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/SDL/
+	@mkdir -p $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/include/SDL/
 	@cp build/build/libSDL*.a $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/
 	@cp build/build/.libs/libSDL* $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/
-	@cp build/include/SDL_config.h  $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/SDL/
+	@cp build/include/*.h  $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/include/SDL/
 	@sed -i s+prefix=.*+prefix=$(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)+ build/sdl2.pc
 	@cp build/*.pc $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/pkgconfig/
 	@cp build/*.cmake $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/cmake/

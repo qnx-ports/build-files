@@ -53,4 +53,4 @@ jobs:
         run: |
           source ~/qnx/800/qnxsdp-env.sh
           cd ~/workspace
-          QNX_PROJECT_ROOT="$(pwd)/pugixml" make -C build-files/ports/pugixml install 
+          PUGIXML_BUILD_TESTS=ON QNX_PROJECT_ROOT="$(pwd)/pugixml" make -C build-files/ports/pugixml install 
