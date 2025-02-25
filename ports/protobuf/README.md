@@ -4,8 +4,6 @@
 
 Use `$(nproc)` instead of `4` after `JLEVEL=` if you want to use the maximum number of cores to build this project.
 
-If you want to build an old version of protobuf like v3.15.0 whose CMakeLists.txt is in cmake folder instead of project root directory, comment out line 8 and uncomment line 10 in `common.mk`.
-
 # Setup a Docker container
 
 Pre-requisite: Install Docker on Ubuntu https://docs.docker.com/engine/install/ubuntu/
@@ -43,5 +41,8 @@ git clone --recurse-submodules https://github.com/qnx-ports/protobuf.git
 # source qnxsdp-env.sh
 source ~/qnx800/qnxsdp-env.sh
 # Build protobuf
-make -C build-files/ports/protobuf install JLEVEL=4 [INSTALL_ROOT_nto=PATH_TO_YOUR_STAGING_AREA USE_INSTALL_ROOT=true]
+make -C build-files/ports/protobuf install JLEVEL=4 #[INSTALL_ROOT_nto=PATH_TO_YOUR_STAGING_AREA USE_INSTALL_ROOT=true]
+
+# Build older version of protobuf
+#QNX_PROJECT_ROOT=$(pwd)/protobuf/cmake make -C build-files/ports/protobuf install JLEVEL=4
 ```
