@@ -5,7 +5,7 @@ include $(QCONFIG)
 
 include $(MKFILES_ROOT)/qmacros.mk
 
-NAME=pixman
+NAME=fontconfig
 
 QNX_PROJECT_ROOT ?= $(PRODUCT_ROOT)/../../
 
@@ -37,19 +37,17 @@ LDFLAGS += -Wl,--build-id=md5
 
 include $(MKFILES_ROOT)/qtargets.mk
 
-BUILD_TESTS ?= disabled
-PIXMAN_INSTALL_DIR=$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)
+FC_INSTALL_DIR=$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)
 
 # Use submoduled Meson
 MESON := $(QNX_PROJECT_ROOT)/../meson/meson.py
-MESON_FLAGS :=  -Dtests=$(BUILD_TESTS)\
-                -Dgnu-inline-asm=enabled\
-                -Dopenmp=disabled\
+MESON_FLAGS :=  -Ddoc=disabled \
+                -Dtests=disabled\
+                -Diconv=enabled\
                 --reconfigure \
 				--buildtype=$(MESON_BUILD_TYPE) \
-                --prefix=$(PIXMAN_INSTALL_DIR) \
+                --prefix=$(FC_INSTALL_DIR) \
 				--cross-file=../qnx_cross.cfg
-
 
 NINJA_ARGS := -j $(firstword $(JLEVEL) 1)
 
@@ -58,7 +56,7 @@ qnx_cross.cfg: $(PROJECT_ROOT)/qnx_cross.cfg.in
 	cp $(PROJECT_ROOT)/qnx_cross.cfg.in $@
 	sed -i "s|QSDP|$(QNX_HOST)|" $@
 	sed -i "s|CPU|$(CPU)|" $@
-	sed -i "s|INSTALL_DIR|$(FT2_INSTALL_DIR)|" $@
+	sed -i "s|INSTALL_DIR|$(FC_INSTALL_DIR)|" $@
 	sed -i "s|QNX_TARGET_DIR|$(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)|" $@
 
 $(NAME)_all: qnx_cross.cfg

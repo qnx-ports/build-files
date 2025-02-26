@@ -1,4 +1,4 @@
-# cairo [![Build](https://github.com/qnx-ports/build-files/actions/workflows/cairo.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/cairo.yml)
+# fontconfig [![Build](https://github.com/qnx-ports/build-files/actions/workflows/fontconfig.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/fontconfig.yml)
 
 Supports QNX7.1 and QNX8.0
 
@@ -9,10 +9,8 @@ It is very likely that another version of these binaries are shipped with the QN
 # Dependency warning
 
 You should compile and install its dependencies before proceeding (in order).
++ [`libexpat`](https://github.com/qnx-ports/build-files/tree/main/ports/libexpat)
 + [`freetype2`](https://github.com/qnx-ports/build-files/tree/main/ports/freetype2)
-+ [`fontconfig`](https://github.com/qnx-ports/build-files/tree/main/ports/fontconfig)
-+ [`glib`](https://github.com/qnx-ports/build-files/tree/main/ports/glib)
-+ [`pixman`](https://github.com/qnx-ports/build-files/tree/main/ports/pixman)
 
 A convinience script `install_all.sh` is provided for easy installation of all required dependencies, execute it just like a regular installation and set INSTALL_ROOT and JLEVEL.
 To use the convinence script, please clone the entire `build-files` repository first. 
@@ -34,11 +32,11 @@ mkdir -p ~/qnx_workspace && cd ~/qnx_workspace
 # Obtain build tools and sources
 git clone https://github.com/qnx-ports/build-files.git
 git clone https://github.com/mesonbuild/meson.git
-git clone https://gitlab.freedesktop.org/cairo/cairo.git
+git clone https://gitlab.freedesktop.org/fontconfig/fontconfig.git
 
 #checkout to the latest stable 
-cd cairo
-git checkout 1.18.2
+cd fontconfig
+git checkout 2.16.0
 cd ..
 
 # Optionally Build the Docker image and create a container
@@ -50,11 +48,8 @@ cd build-files/docker
 source ~/qnx800/qnxsdp-env.sh
 cd ~/qnx_workspace
 
-# Optionally use the convenience script to install all dependencies
-./build-files/ports/freetype/install_all.sh
-
-# Build cairo
-QNX_PROJECT_ROOT="$(pwd)/cairo" JLEVEL=4 make -C build-files/ports/cairo install
+# Build fontconfig
+QNX_PROJECT_ROOT="$(pwd)/fontconfig" JLEVEL=4 make -C build-files/ports/fontconfig install
 ```
 
 # Deploy binaries via SSH
@@ -64,11 +59,13 @@ Ensure all dependencies are deployed to the target system as well.
 TARGET_IP_ADDRESS=<target-ip-address-or-hostname>
 TARGET_USER=<target-username>
 
-scp -r ~/qnx800/target/qnx/aarch64le/usr/local/lib/libcairo* $TARGET_USER@$TARGET_IP_ADDRESS:~/lib
+scp -r ~/qnx800/target/qnx/aarch64le/usr/local/bin/fc-* $TARGET_USER@$TARGET_IP_ADDRESS:~/bin
+scp -r ~/qnx800/target/qnx/aarch64le/usr/local/lib/libfontconfig* $TARGET_USER@$TARGET_IP_ADDRESS:~/lib
 ```
 
-If the `~/lib` directory does not exist, create them with:
+If the `~/bin`, `~/lib` directories do not exist, create them with:
 ```bash
+ssh $TARGET_USER@$TARGET_IP_ADDRESS "mkdir -p ~/bin"
 ssh $TARGET_USER@$TARGET_IP_ADDRESS "mkdir -p ~/lib"
 ```
 

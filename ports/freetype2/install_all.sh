@@ -1,8 +1,9 @@
-DEP_NAME=(zlib pcre2 libffi)
-DEP_NAME_SRC=(zlib pcre2 libffi)
+DEP_NAME=(zlib brotli bzip2 libpng)
+DEP_NAME_SRC=(zlib brotli bzip2 libpng)
 DEP_CLONE_CMD=("git clone -b v1.3.1 https://github.com/madler/zlib.git"
-               "git clone -b pcre2-10.45 https://github.com/PCRE2Project/pcre2.git"
-               "git clone -b v3.2.1 https://github.com/libffi/libffi.git")
+               "git clone -b v1.1.0 https://github.com/google/brotli.git"
+               "git clone -b bzip2-1.0.8 https://github.com/libarchive/bzip2.git"
+               "git clone -b v1.6.46 https://github.com/pnggroup/libpng.git")
 
 DEP_COUNT=${#DEP_NAME[@]}
 DEP_COUNT=$(( DEP_COUNT - 1 ))

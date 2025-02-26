@@ -1,23 +1,22 @@
-# cairo [![Build](https://github.com/qnx-ports/build-files/actions/workflows/cairo.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/cairo.yml)
+# pango [![Build](https://github.com/qnx-ports/build-files/actions/workflows/pango.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/pango.yml)
 
 Supports QNX7.1 and QNX8.0
-
-## QNX Software Center (QSC) compatibility warning
-
-It is very likely that another version of these binaries are shipped with the QNX image by QSC, hence installation of this library might introduce linking conflicts at runtime. Double check which version of it was linked when cross compiling your software and make sure the proper `LD_LIBRARY_PATH` is set for the dynamic linker to work properly.
 
 # Dependency warning
 
 You should compile and install its dependencies before proceeding (in order).
++ [`libthai`](https://github.com/qnx-ports/build-files/tree/main/ports/libthai)
++ [`gettext-runtime`](https://github.com/qnx-ports/build-files/tree/main/ports/gettext-runtime)
++ [`fribidi`](https://github.com/qnx-ports/build-files/tree/main/ports/fribidi)
++ [`glib`](https://github.com/qnx-ports/build-files/tree/main/ports/glib)
 + [`freetype2`](https://github.com/qnx-ports/build-files/tree/main/ports/freetype2)
 + [`fontconfig`](https://github.com/qnx-ports/build-files/tree/main/ports/fontconfig)
-+ [`glib`](https://github.com/qnx-ports/build-files/tree/main/ports/glib)
-+ [`pixman`](https://github.com/qnx-ports/build-files/tree/main/ports/pixman)
++ [`cairo`](https://github.com/qnx-ports/build-files/tree/main/ports/cairo)
++ [`harfbuzz`](https://github.com/qnx-ports/build-files/tree/main/ports/harfbuzz)
 
 A convinience script `install_all.sh` is provided for easy installation of all required dependencies, execute it just like a regular installation and set INSTALL_ROOT and JLEVEL.
 To use the convinence script, please clone the entire `build-files` repository first. 
 This convinience script will call `install_all.sh` inside dependencies recursively.
-harfbuzz is not included in the convinience script.
 
 # Compile the port for QNX in a Docker container or Ubuntu host
 
@@ -34,11 +33,12 @@ mkdir -p ~/qnx_workspace && cd ~/qnx_workspace
 # Obtain build tools and sources
 git clone https://github.com/qnx-ports/build-files.git
 git clone https://github.com/mesonbuild/meson.git
-git clone https://gitlab.freedesktop.org/cairo/cairo.git
+git clone https://gitlab.gnome.org/GNOME/pango.git
 
 #checkout to the latest stable 
-cd cairo
-git checkout 1.18.2
+cd pango
+git checkout 1.56.1 
+# or version 1.54.0 for gtk support
 cd ..
 
 # Optionally Build the Docker image and create a container
@@ -50,11 +50,8 @@ cd build-files/docker
 source ~/qnx800/qnxsdp-env.sh
 cd ~/qnx_workspace
 
-# Optionally use the convenience script to install all dependencies
-./build-files/ports/freetype/install_all.sh
-
-# Build cairo
-QNX_PROJECT_ROOT="$(pwd)/cairo" JLEVEL=4 make -C build-files/ports/cairo install
+# Build pango
+QNX_PROJECT_ROOT="$(pwd)/pango" JLEVEL=4 make -C build-files/ports/pango install
 ```
 
 # Deploy binaries via SSH
@@ -64,13 +61,15 @@ Ensure all dependencies are deployed to the target system as well.
 TARGET_IP_ADDRESS=<target-ip-address-or-hostname>
 TARGET_USER=<target-username>
 
-scp -r ~/qnx800/target/qnx/aarch64le/usr/local/lib/libcairo* $TARGET_USER@$TARGET_IP_ADDRESS:~/lib
+scp -r ~/qnx800/target/qnx/aarch64le/usr/local/bin/pango-* $TARGET_USER@$TARGET_IP_ADDRESS:~/bin
+scp -r ~/qnx800/target/qnx/aarch64le/usr/local/lib/libpango* $TARGET_USER@$TARGET_IP_ADDRESS:~/lib
 ```
 
-If the `~/lib` directory does not exist, create them with:
+If the `~/bin`, `~/lib` directories do not exist, create them with:
 ```bash
+ssh $TARGET_USER@$TARGET_IP_ADDRESS "mkdir -p ~/bin"
 ssh $TARGET_USER@$TARGET_IP_ADDRESS "mkdir -p ~/lib"
 ```
 
 # Tests
-Tests are not available.
+Tests are available, but currently there are no easy ways to run them on a QNX target system. Therefore the results will be provided instead as result.txt

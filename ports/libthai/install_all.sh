@@ -1,8 +1,8 @@
-DEP_NAME=(zlib pcre2 libffi)
-DEP_NAME_SRC=(zlib pcre2 libffi)
-DEP_CLONE_CMD=("git clone -b v1.3.1 https://github.com/madler/zlib.git"
-               "git clone -b pcre2-10.45 https://github.com/PCRE2Project/pcre2.git"
-               "git clone -b v3.2.1 https://github.com/libffi/libffi.git")
+DEP_NAME=(libdatrie)
+DEP_NAME_SRC=(libdatrie-0.2.13)
+DEP_CLONE_CMD=("echo")
+
+wget https://github.com/tlwg/libdatrie/releases/download/v0.2.13/libdatrie-0.2.13.tar.xz && tar -xf libdatrie-0.2.13.tar.xz
 
 DEP_COUNT=${#DEP_NAME[@]}
 DEP_COUNT=$(( DEP_COUNT - 1 ))

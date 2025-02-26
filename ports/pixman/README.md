@@ -63,3 +63,4 @@ Tests need to be built separately.
 4. Copy all executables left inside `build-files/ports/pixman/nto-aarch64-le/build/test` to the target system.
 5. On the target system, make sure all `libpixman` binaries are deployed and the correct `LD_LIBARAY_PATH` is set.
 6. Execute test binaries one by one or using a scripts; tests will take a while on weeker machines and this is expected.
+

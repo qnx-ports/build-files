@@ -5,7 +5,7 @@ include $(QCONFIG)
 
 include $(MKFILES_ROOT)/qmacros.mk
 
-NAME=pixman
+NAME=pango
 
 QNX_PROJECT_ROOT ?= $(PRODUCT_ROOT)/../../
 
@@ -32,24 +32,25 @@ ALL_DEPENDENCIES = $(NAME)_all
 CFLAGS += $(FLAGS)
 
 #Define _QNX_SOURCE 
-CFLAGS += -D_QNX_SOURCE -fPIC
+CFLAGS += -D_QNX_SOURCE
 LDFLAGS += -Wl,--build-id=md5
 
 include $(MKFILES_ROOT)/qtargets.mk
 
-BUILD_TESTS ?= disabled
-PIXMAN_INSTALL_DIR=$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)
+PANGO_INSTALL_DIR=$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)
 
 # Use submoduled Meson
 MESON := $(QNX_PROJECT_ROOT)/../meson/meson.py
-MESON_FLAGS :=  -Dtests=$(BUILD_TESTS)\
-                -Dgnu-inline-asm=enabled\
-                -Dopenmp=disabled\
+MESON_FLAGS :=  -Dbuild-testsuite=false \
+                -Dbuild-examples=false \
+                -Dfontconfig=enabled \
+                -Dfreetype=enabled \
+                -Dcairo=enabled \
+                -Dxft=disabled \
                 --reconfigure \
 				--buildtype=$(MESON_BUILD_TYPE) \
-                --prefix=$(PIXMAN_INSTALL_DIR) \
+                --prefix=$(PANGO_INSTALL_DIR) \
 				--cross-file=../qnx_cross.cfg
-
 
 NINJA_ARGS := -j $(firstword $(JLEVEL) 1)
 
@@ -58,10 +59,13 @@ qnx_cross.cfg: $(PROJECT_ROOT)/qnx_cross.cfg.in
 	cp $(PROJECT_ROOT)/qnx_cross.cfg.in $@
 	sed -i "s|QSDP|$(QNX_HOST)|" $@
 	sed -i "s|CPU|$(CPU)|" $@
-	sed -i "s|INSTALL_DIR|$(FT2_INSTALL_DIR)|" $@
+	sed -i "s|INSTALL_DIR|$(PANGO_INSTALL_DIR)|" $@
 	sed -i "s|QNX_TARGET_DIR|$(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)|" $@
 
 $(NAME)_all: qnx_cross.cfg
+# patch pango
+	@cd $(QNX_PROJECT_ROOT) && if ! patch -N -i ../build-files/ports/pango/001-cairo-ft-test-removed.patch; \
+								then echo "Patch applied"; fi
 	@mkdir -p build
 	@cd build && $(MESON) setup $(MESON_FLAGS) . $(QNX_PROJECT_ROOT)
 	@cd build && ninja $(NINJA_ARGS)

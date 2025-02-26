@@ -105,5 +105,4 @@ scp ./libpng/pngtest.png $TARGET_USER@$TARGET_IP_ADDRESS:~
 # On your target system, navigate to ~, excute the following command to run all tests
 sh ./pngtest
 sh ./pngstest
-
 ```
