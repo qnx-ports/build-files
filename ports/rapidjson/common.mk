@@ -59,13 +59,14 @@ MAKE_ARGS ?= -j $(firstword $(JLEVEL) 1) VERBOSE=1
 
 #### Make Targets ####
 ifndef NO_TARGET_OVERRIDE
+
+ifdef BUILD_TESTS
 rapidjson_all:
 	@mkdir -p build
-	@echo $(CPUDIR)
+	@echo Building for $(CPUDIR)
 	@cd build && cmake $(CMAKE_ARGS) $(QNX_PROJECT_ROOT)
 	@cd build && make
 
-ifdef BUILD_TESTS
 install check: rapidjson_all
 	@echo Installing...
 	@cd build && cmake --install .
@@ -76,6 +77,12 @@ install check: rapidjson_all
 	@cd build/bin && cp -r * $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/bin/rapidjson_tests/
 	@echo Done!
 else
+rapidjson_all:
+	@mkdir -p build
+	@echo Building for $(CPUDIR)
+	@cd build && cmake $(CMAKE_ARGS) $(QNX_PROJECT_ROOT)
+# 	NO MAKE CALL - no need to build for headers (investigate whether this is true, and what the make options are. all is unideal)
+
 install check: rapidjson_all
 	@echo Installing...
 	@cd build && cmake --install .

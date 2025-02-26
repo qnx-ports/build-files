@@ -8,6 +8,7 @@ RapidJSON is a fast, header-based JSON parsing library for C++. It is recommende
 If you wish to build tests or install the headers, pkg-config, and cmake files please follow the instructions below:
 
 ## Installation
+*Note:* This process will install rapidjson's headers and optionally build test executables. rapidjson does not have an associated archive or library.
 1. Clone the source and QNX build-files repos into a new workspace
 ```bash
 mkdir ~/your-wksp && cd ~/your-wksp
@@ -24,7 +25,7 @@ cd -
 
 3. **\[Optional | Needed for Tests\]** Clone googletest
 ```bash
-git clone git@github.com:qnx-ports/rapidjson.git
+git clone git@github.com:qnx-ports/googletest.git
 ```
 
 4. Build the project. *Note:* *replace* *qnx800* *with* *your* *SDP* *installation*.
