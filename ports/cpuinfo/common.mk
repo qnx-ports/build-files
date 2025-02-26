@@ -38,6 +38,10 @@ NTO_NAME=$(CPU)
 #if the include path is "default"
 CFLAGS += -I$(INSTALL_ROOT)/$(PREFIX)/include
 
+ifneq ($(wildcard $(foreach dir,$(LIBVPATH),$(dir)/libregex.so)),)
+    LDFLAGS += -lregex
+endif
+
 CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DCMAKE_INSTALL_PREFIX=$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX) \
              -DNTO_NAME=$(NTO_NAME) \
@@ -50,7 +54,10 @@ CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DEXTRA_CMAKE_ASM_FLAGS="$(FLAGS)" \
              -DEXTRA_CMAKE_LINKER_FLAGS="$(LDFLAGS)" \
              -DBUILD_SHARED_LIBS=1 \
-             -DBUILD_TESTING=$(BUILD_TESTING)
+             -DCPUINFO_BUILD_UNIT_TESTS=$(BUILD_TESTING) \
+             -DCPUINFO_BUILD_MOCK_TESTS=$(BUILD_TESTING) \
+             -DCPUINFO_BUILD_BENCHMARKS=$(BUILD_TESTING) \
+             -DCPUINFO_LIBRARY_TYPE=static \
 
 ifndef NO_TARGET_OVERRIDE
 cpuinfo_all:

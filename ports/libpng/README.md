@@ -1,5 +1,7 @@
 # libpng [![Build](https://github.com/qnx-ports/build-files/actions/workflows/libpng.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/libpng.yml)
 
+Supports QNX7.1 and QNX8.0
+
 ## QNX Software Center (QSC) compatibility warning
 
 It is very likely that another version of these binaries are shipped with the QNX image by QSC, hence installation of this library might introduce linking conflicts at runtime. Double check which version of it was linked when cross compiling your software and make sure the proper `LD_LIBRARY_PATH` is set for the dynamic linker to work properly.
@@ -34,7 +36,7 @@ cd build-files/docker
 # Now you are in the Docker container
 
 # source qnxsdp-env.sh in
-source ~/qnx800/qnxsdp-env.sh
+source ~/qnx800/qnxsdp-env.sh # or source ~/qnx710/qnxsdp-env.sh for QNX 7.1
 
 # Clone libpng
 cd ~/qnx_workspace
@@ -103,5 +105,4 @@ scp ./libpng/pngtest.png $TARGET_USER@$TARGET_IP_ADDRESS:~
 # On your target system, navigate to ~, excute the following command to run all tests
 sh ./pngtest
 sh ./pngstest
-
 ```

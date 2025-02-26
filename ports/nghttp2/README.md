@@ -2,7 +2,7 @@
 
 **Note**: QNX ports are only supported from a **Linux host** operating system
 
-Please make sure you have `com.qnx.qnx800.osr.libev` QNX Package installed to your SDP
+Please make sure you have `com.qnx.qnx800.osr.libev` or `com.qnx.qnx710.osr.libev` QNX Package installed according to your SDP version
 
 Use `$(nproc)` instead of `4` after `JLEVEL=` and `-j` if you want to use the maximum number of cores to build this project.
 32GB of RAM is recommended for using `JLEVEL=$(nproc)` or `-j$(nproc)`.
@@ -32,7 +32,8 @@ source ~/qnx800/qnxsdp-env.sh
 # Clone brotli, jansson and nghttp2
 git clone -b v1.1 https://github.com/google/brotli.git
 git clone https://github.com/qnx-ports/jansson.git
-git clone https://github.com/qnx-ports/nghttp2.git
+git clone https://github.com/nghttp2/nghttp2.git
+# Or, to compile nghttp2 for QNX 7.1 do `git clone -b qnx-1.61.0 https://github.com/qnx-ports/nghttp2.git`
 
 # Build brotli
 QNX_PROJECT_ROOT="$(pwd)/brotli" make -C build-files/ports/brotli/ install -j4
@@ -59,7 +60,8 @@ mkdir -p ~/qnx_workspace && cd qnx_workspace
 git clone https://github.com/qnx-ports/build-files.git
 git clone -b v1.1 https://github.com/google/brotli.git
 git clone https://github.com/qnx-ports/jansson.git
-git clone https://github.com/qnx-ports/nghttp2.git
+git clone https://github.com/nghttp2/nghttp2.git
+# Or, to compile nghttp2 for QNX 7.1 do `git clone -b qnx-1.61.0 https://github.com/qnx-ports/nghttp2.git`
 
 # Source SDP environment
 source ~/qnx800/qnxsdp-env.sh
@@ -103,27 +105,28 @@ export PATH=$PATH:/data/home/qnxuser/bin
 ./failmalloc
 ```
 
-2. To run applications
+2. To run applications on QNX 8 (or QNX 7.1)
 
-- Applications have following library dependencies:
+- Applications have following library dependencies for QNX 8 (and specific version changed dependencies for QNX 7.1 in parentheses):
   - libm.so.3
-  - libsocket.so.4
+  - libsocket.so.4 (or libsocket.so.3)
   - libnghttp2.so.14
   - libxml2.so.2
   - libev.so.4
-  - libssl.so.3
-  - libcrypto.so.3
+  - libssl.so.3 (or libssl.so.2.1)
+  - libcrypto.so.3 (or libcrypto.so.2.1)
   - libcares.so.8
   - libjansson.so.4
   - libz.so.2
   - libbrotlienc.so.1
   - libbrotlidec.so.1
-  - libc++.so.2
-  - libc.so.6
+  - libc++.so.2 (or libc++.so.1)
+  - libc.so.6 (or libc.so.5)
   - libgcc_s.so.1
   - liblzma.so.5
   - libiconv.so.1
   - libbrotlicommon.so.1
+  - libcatalog.so.1
 
 ```bash
 # Transfer the necessary libraries from host SDP to target

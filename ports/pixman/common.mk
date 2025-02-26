@@ -37,11 +37,12 @@ LDFLAGS += -Wl,--build-id=md5
 
 include $(MKFILES_ROOT)/qtargets.mk
 
+BUILD_TESTS ?= disabled
 PIXMAN_INSTALL_DIR=$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)
 
 # Use submoduled Meson
 MESON := $(QNX_PROJECT_ROOT)/../meson/meson.py
-MESON_FLAGS :=  -Dtests=disabled\
+MESON_FLAGS :=  -Dtests=$(BUILD_TESTS)\
                 -Dgnu-inline-asm=enabled\
                 -Dopenmp=disabled\
                 --reconfigure \

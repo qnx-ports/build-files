@@ -49,8 +49,18 @@ scp -r ~/qnx800/target/qnx/aarch64le/usr/local/lib/libpixman* $TARGET_USER@$TARG
 If the `~/lib` directory does not exist, create them with:
 ```bash
 ssh $TARGET_USER@$TARGET_IP_ADDRESS "mkdir -p ~/lib"
-````
+```
 
 # Tests
-Tests are available, but currently there are no easy ways to run them on a QNX target system. Therefore the results will be provided instead in `tests.result`
-Currently all tests are passed.
+Tests are available, the results are provided in `tests.result`
+Currently all tests are passed on both QNX7.1 and QNX8.0.
+
+### Running tests
+Tests need to be built separately. 
+1. Set the environment variable: `export BUILD_TESTS=enabled`.
+2. Build pixman as usual.
+3. Once built, navigate to `build-files/ports/pixman/nto-aarch64-le/build/test` and remove all directories ending `.p` to remove temporary files.
+4. Copy all executables left inside `build-files/ports/pixman/nto-aarch64-le/build/test` to the target system.
+5. On the target system, make sure all `libpixman` binaries are deployed and the correct `LD_LIBARAY_PATH` is set.
+6. Execute test binaries one by one or using a scripts; tests will take a while on weeker machines and this is expected.
+
