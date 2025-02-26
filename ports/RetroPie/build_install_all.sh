@@ -16,6 +16,7 @@ TARGET_ARCH=aarch64le
 #TARGET_IP=
 #TARGET_USER=
 #DO_NOT_REBUILD=TRUE
+#DO_NOT_INSTALL=TRUE
 
 ### Directory Paths
 RETROARCH_SRC=${PWD}/../../../RetroArch
@@ -232,6 +233,9 @@ fi
 # make install
 
 ##########################################################################################
-#SSH installation via calling install.sh
-cd $TOP_LEVEL_BUILD_DIR
-TARGET_USER=$TARGET_USER TARGET_IP=$TARGET_IP TARGET_ARCH=$TARGET_ARCH ./install.sh
+
+if [ ! "${DO_NOT_INSTALL}" = "TRUE" ]; then
+    #SSH installation via calling install.sh
+    cd $TOP_LEVEL_BUILD_DIR
+    TARGET_USER=$TARGET_USER TARGET_IP=$TARGET_IP TARGET_ARCH=$TARGET_ARCH ./install.sh
+fi

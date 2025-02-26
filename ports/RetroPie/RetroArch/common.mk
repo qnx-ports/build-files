@@ -126,7 +126,7 @@ assets:
 	@echo "3DS/DualScreen Backgrounds..." && cp -r $(DIST_BASE)/../retroarch-assets/ctr $(PRODUCT_ROOT)/staging/$(CPUDIR)/data/assets/
 #Platform Specifics
 	@echo "'nxrgui' Platform Assets" && cp -r $(DIST_BASE)/../retroarch-assets/nxrgui $(PRODUCT_ROOT)/staging/$(CPUDIR)/data/assets/
-	@echo "Switch Icon..." && cp -r $(DIST_BASE)/../retroarch-assets/switch $(PRODUCT_ROOT)/staging/$(CPUDIR)/data/assets/
+	@echo "Switch Icons..." && cp -r $(DIST_BASE)/../retroarch-assets/switch $(PRODUCT_ROOT)/staging/$(CPUDIR)/data/assets/
 #Audio
 	@echo "Audio..." && cp -r $(DIST_BASE)/../retroarch-assets/sounds $(PRODUCT_ROOT)/staging/$(CPUDIR)/data/assets/
 	
