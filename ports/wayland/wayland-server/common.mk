@@ -32,7 +32,8 @@ PUBLIC_HEADERS = \
 	$(DIST_ROOT)/src/wayland-server-core.h \
 	$(PROJECT_ROOT)/$(OS)/protocol/wayland-server-protocol.h \
 	$(DIST_ROOT)/src/wayland-util.h \
-	$(DIST_ROOT)/src/wayland-version.h
+	$(DIST_ROOT)/src/wayland-version.h \
+	$(QNX_TARGET)/usr/include/sys/memstream.h
 
 # Trigger the TARGET_HINSTALL/HUNINSTALL overrides
 PUBLIC_INCVPATH = $(space)

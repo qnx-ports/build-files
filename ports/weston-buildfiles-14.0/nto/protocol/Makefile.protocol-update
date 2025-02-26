@@ -1,0 +1,60 @@
+# To update all the protocol source when protocols are updated:
+#    cd $GRAPHICS_ROOT
+#    find . -name Makefile.protocol-update -execdir make -f {} clean all \;
+# To update this protocol source when the protocols are updated:
+#    EXTRA_PROTOCOLVPATH=/path/to/weston/protocol make -f Makefile.protocol-update clean all
+
+ifndef QCONFIG
+QCONFIG=qconfig.mk
+endif
+include $(QCONFIG)
+WAYLAND_MKFILES_ROOT = $(dir $(firstword $(wildcard $(if $(USE_INSTALL_ROOT),$(INSTALL_ROOT_nto)/usr/include/mk/wayland-config.mk) $(MKFILES_ROOT)/wayland-config.mk)))
+include $(WAYLAND_MKFILES_ROOT)wayland-config.mk
+
+.PHONY : all clean
+all :
+_vpath_normalize=$(1)
+OS = nto
+
+PROTOCOL_ROOT = .
+
+PROTOCOL_HEADER_LIST=client server
+
+EXTRA_PROTOCOLVPATH += ../../../dist/protocol
+
+PROTOCOLS += \
+	color-management-v1 \
+	fullscreen-shell-unstable-v1 \
+	input-method-unstable-v1 \
+    input-timestamps-unstable-v1 \
+	ivi-application \
+	ivi-hmi-controller \
+	linux-dmabuf-unstable-v1 \
+    linux-explicit-synchronization-unstable-v1 \
+    pointer-constraints-unstable-v1 \
+	presentation-time \
+    relative-pointer-unstable-v1 \
+	tablet-unstable-v2 \
+	tearing-control-v1 \
+    text-cursor-position \
+	text-input-unstable-v1 \
+    viewporter \
+	weston-content-protection \
+    weston-debug \
+	weston-desktop-shell \
+	weston-direct-display \
+	weston-output-capture \
+	weston-test \
+	weston-touch-calibration \
+	xdg-output-unstable-v1 \
+	xdg-shell \
+	xdg-shell-unstable-v6 \
+	single-pixel-buffer-v1
+
+include $(WAYLAND_MKFILES_ROOT)wayland-pretargets.mk
+include $(WAYLAND_MKFILES_ROOT)wayland-targets.mk
+
+all : protocols
+
+clean :
+	$(RM_HOST) $(PROTOCOL_SERVER_HDRS) $(PROTOCOL_CLIENT_HDRS) $(PROTOCOL_SRCS)
