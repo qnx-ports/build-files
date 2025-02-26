@@ -40,11 +40,11 @@ include $(MKFILES_ROOT)/qtargets.mk
 SMI_INSTALL_DIR=$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)
 
 # testing not availiable for gdk-pixbuf when cross-compiling
-BUILD_TESTING = OFF
+BUILD_TESTING = false
 
 # Use submoduled Meson
-MESON := $(QNX_PROJECT_ROOT)/../meson/meson.py
-MESON_FLAGS :=  -Dbuild-tests=false \
+MESON := python3 $(QNX_PROJECT_ROOT)/../meson/meson.py
+MESON_FLAGS :=  -Dbuild-tests=$(BUILD_TESTING) \
 				-Dbuild-tools=false \
                 --reconfigure \
 				--buildtype=$(MESON_BUILD_TYPE) \
