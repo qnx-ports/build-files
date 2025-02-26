@@ -79,7 +79,7 @@ if [[ -z "$QNX_HOST" ]]; then
     echo "[FATAL]: Missing QNX SDP Environment variables! Make sure to source ~/qnx800/qnxsdp-env.sh or an equivalent!"
     exit 1
 fi
-if [ ! "$TARGET_ARCH" = "aarch64le" && ! "$TARGET_ARCH" = "x86_64" ]; then
+if [ ! "$TARGET_ARCH" = "aarch64le" -a ! "$TARGET_ARCH" = "x86_64" ]; then
     echo "[FATAL]: Invalid Architecture '$TARGET_ARCH'! Allowed: 'aarch64le' 'x86_64'"
     exit 1
 fi
