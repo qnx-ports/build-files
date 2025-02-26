@@ -55,8 +55,7 @@ CONFIGURE_PREOPTS= CC=$(QNX_HOST)/usr/bin/qcc \
 				   CXXFLAGS="-D_QNX_SOURCE -std=c++17 -V$(V_OPT)_cxx -Wno-deprecated-definitions $(CXXFLAGS)"\
 				   LDFLAGS=$(LDFLAGS) \
 				   CPPFLAGS="-D_QNX_SOURCE $(CPPFLAGS)"\
-				   PKG_CONFIG_LIBDIR="$(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/pkgconfig" \
-				   PKG_CONFIG_PATH="pkg-config"
+				   PKG_CONFIG_PATH="$(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/pkgconfig"
 
 # Yes, these are correct. It is a very strange "configure" script - seems to be handmade.
 CONFIGURE_OPTS= --host="$(PLATFORM)-nto-qnx8.0.0-"\
