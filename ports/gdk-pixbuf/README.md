@@ -16,7 +16,6 @@ Please ensure that you install `zlib` before `libpng`, otherwise you might compi
 + [`glib`](https://github.com/qnx-ports/build-files/tree/main/ports/glib) (glib/main is prefered)
 + [`libjpeg-turbo`](https://github.com/qnx-ports/build-files/tree/main/ports/jpeg-turbo)
 + [`libpng`](https://github.com/qnx-ports/build-files/tree/main/ports/libpng)
-+ [`shared-mime-info`](https://github.com/qnx-ports/build-files/tree/main/ports/shared-mime-info)
 
 A convinience script `install_all.sh` is provided for easy installation of all required dependencies, execute it just like a regular installation and set INSTALL_ROOT and JLEVEL.
 To use the convinence script, please clone the entire `build-files` repository first. 
