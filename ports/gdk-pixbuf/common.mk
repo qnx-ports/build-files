@@ -43,7 +43,7 @@ GDK_PIXBUF_INSTALL_DIR=$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)
 BUILD_TESTING = OFF
 
 # Use submoduled Meson
-MESON := python $(QNX_PROJECT_ROOT)/../meson/meson.py
+MESON := $(QNX_PROJECT_ROOT)/../meson/meson.py
 MESON_FLAGS :=  -Dtiff=disabled \
 			    -Dgio_sniffing=false \
                 --reconfigure \
