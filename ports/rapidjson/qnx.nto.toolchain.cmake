@@ -19,7 +19,7 @@ set(QNX TRUE)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_SYSTEM_NAME QNX)
 set(CMAKE_C_COMPILER ${QNX_HOST}/usr/bin/qcc)
-set(CMAKE_CXX_COMPILER ${QNX_HOST}/usr/bin/qcc)
+set(CMAKE_CXX_COMPILER ${QNX_HOST}/usr/bin/q++)
 set(CMAKE_ASM_COMPILER ${QNX_HOST}/usr/bin/qcc)
 
 ##### Compiler Flags (sets correct architecture etc)
