@@ -51,15 +51,25 @@ WKSP=${PWD}/../../../
 
 ##########################################################################################
 VERSION=0.1
+echo "========================="
 echo "[INFO]: Running build_install_all.sh v$VERSION"
-echo "[INFO]: Targeting user $TARGET_USER@$TARGET_IP "
-##########################################################################################
+if [ ! "$DO_NOT_INSTALL" = "TRUE" ]; then
+    echo "        Installing Targeting user $TARGET_USER@$TARGET_IP "
+fi
+echo "        Target Architecture: $TARGET_ARCH "
+
 
 if [ "$DO_NOT_REBUILD" = "TRUE" ]; then
     echo "[WARNING]: \$DO_NOT_REBUILD is set to \"TRUE\"." 
     echo "           Script will NOT attempt to build libraries or executables if it thinks they are already built."
-    sleep 7
 fi
+
+if [ "$DO_NOT_INSTALL" = "TRUE" ]; then 
+    echo "[WARNING]: \$DO_NOT_INSTALL is set to \"TRUE\"." 
+    echo "           Script will NOT attempt to install liraries from staging/$TARGET_ARCH."
+fi
+
+echo "========================="
 
 if [[ -z "$QNX_TARGET" ]]; then
     echo "[FATAL]: Missing QNX SDP Environment variables! Make sure to source ~/qnx800/qnxsdp-env.sh or an equivalent!"
@@ -69,6 +79,13 @@ if [[ -z "$QNX_HOST" ]]; then
     echo "[FATAL]: Missing QNX SDP Environment variables! Make sure to source ~/qnx800/qnxsdp-env.sh or an equivalent!"
     exit 1
 fi
+if [ ! "$TARGET_ARCH" = "aarch64le" && ! "$TARGET_ARCH" = "x86_64" ]; then
+    echo "[FATAL]: Invalid Architecture '$TARGET_ARCH'! Allowed: 'aarch64le' 'x86_64'"
+    exit 1
+fi
+sleep 7
+
+##########################################################################################
 
 ##TODO: Check for wayland/weston and req. screen libraries in $QNX_TARGET/$QNX_HOST
 
