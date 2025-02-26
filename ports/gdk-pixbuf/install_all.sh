@@ -1,5 +1,5 @@
 DEP_NAME=(zlib libpng libjpeg-turbo glib)
-DEP_NAME_SRC=(zlib libpng libjpeg-turbo)
+DEP_NAME_SRC=(zlib libpng libjpeg-turbo glib)
 DEP_CLONE_CMD=("git clone -b v1.3.1 https://github.com/madler/zlib.git"
                "git clone -b v1.6.46 https://github.com/pnggroup/libpng.git"
                "git clone -b 3.1.0 https://github.com/libjpeg-turbo/libjpeg-turbo.git"
