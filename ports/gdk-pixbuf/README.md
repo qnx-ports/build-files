@@ -16,6 +16,11 @@ Please ensure that you install `zlib` before `libpng`, otherwise you might compi
 + [`glib`](https://github.com/qnx-ports/build-files/tree/main/ports/glib) (glib/main is prefered)
 + [`libjpeg-turbo`](https://github.com/qnx-ports/build-files/tree/main/ports/jpeg-turbo)
 + [`libpng`](https://github.com/qnx-ports/build-files/tree/main/ports/libpng)
++ [`shared-mime-info`](https://github.com/qnx-ports/build-files/tree/main/ports/shared-mime-info)
+
+A convinience script `install_all.sh` is provided for easy installation of all required dependencies, execute it just like a regular installation and set INSTALL_ROOT and JLEVEL.
+To use the convinence script, please clone the entire `build-files` repository first. 
+This convinience script will call `install_all.sh` inside dependencies recursively.
 
 # Compile the port for QNX in a Docker container
 
@@ -35,18 +40,17 @@ cd build-files/docker
 # source qnxsdp-env.sh in
 source ~/qnx800/qnxsdp-env.sh
 
-
 # Clone gdk-pixbuf
 cd ~/qnx_workspace
 git clone https://gitlab.gnome.org/GNOME/gdk-pixbuf.git
-
-# Optional: call the helper script, or you can build them by yourself
-JLEVEL=4 sh build-files/ports/gdk-pixbuf/install-dependencies.sh
 
 # checkout to the latest stable
 cd gdk-pixbuf
 git checkout 2.42.12
 cd ..
+
+# Optionally use the convenience script to install all dependencies
+./build-files/ports/gdk-pixbuf/install_all.sh
 
 # Build gdk-pixbuf
 QNX_PROJECT_ROOT="$(pwd)/gdk-pixbuf" JLEVEL=4 make -C build-files/ports/gdk-pixbuf install
@@ -67,8 +71,8 @@ cd ..
 # source qnxsdp-env.sh
 source ~/qnx800/qnxsdp-env.sh
 
-# Optional: call the helper script, or you can build them by yourself
-JLEVEL=4 sh build-files/ports/gdk-pixbuf/install-dependencies.sh
+# Optionally use the convenience script to install all dependencies
+./build-files/ports/gdk-pixbuf/install_all.sh
 
 # Build gdk-pixbuf
 QNX_PROJECT_ROOT="$(pwd)/gdk-pixbuf" JLEVEL=4 make -C build-files/ports/gdk-pixbuf install
@@ -82,14 +86,13 @@ TARGET_USER=<target-username>
 
 scp -r $QNX_TARGET/aarch64le/usr/local/bin $TARGET_USER@$TARGET_IP_ADDRESS:~
 scp -r $QNX_TARGET/aarch64le/usr/local/lib $TARGET_USER@$TARGET_IP_ADDRESS:~
-scp -r $QNX_TARGET/aarch64le/usr/local/libexec $TARGET_USER@$TARGET_IP_ADDRESS:~
 ```
 
 # Tests
 Tests are not avaliable when cross compiling.
 
 # Update gdk-pixbuf module path
-Make sure all binaries required are installed. In cmdline
+Make sure all binaries required are installed. In shell:
 ```bash
 export GDK_PIXBUF_MODULE_FILE=/path/to/cache/file
 gdk-pixbuf-query-loaders --update-cache /path/to/directory/contains/module/binaries
