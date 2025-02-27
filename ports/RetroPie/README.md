@@ -25,12 +25,13 @@ To successfully build/install RetroPie on a QNX device, follow these steps:
 
 2. **Acquire a suitable Target.** If you have a QNXE license and a Raspberry Pi 4, it is recommended you follow the [instructions for setting up our quickstart image](https://gitlab.com/qnx/quick-start-images/raspberry-pi-qnx-8.0-quick-start-image/-/wikis/home). Your target should have aarch64 or x86_64 architecture and be running QNX 8.0 or newer.
 
-3. **Run build_install_all.sh with your target's ip and username.** Example seen below. You must have ssh installed. 
+3. **Run build_install_all.sh with your target's ip and username.** Example seen below. More information on the build_install_all script can be found in SCRIPTINFO.md. You must have ssh set up for installation to target. 
 ```bash
 source ~/qnx800/qnxsdp-env.sh
 TARGET_IP="###.###.###.###" TARGET_USER="qnxuser" ./build_install_all
 ``` 
 NOTE: Currently only RetroArch and an assortment of cores will be installed. To start RetroArch, navigate to ~/retroarch on your target and run startup.sh via `./startup.sh`.
+
 
 ### Manually
 You can also 'pick and choose' what specifically you want built by navigating to the relevant folder and running `make install`. This applies both to applications such as RetroArch and content such as its cores (stored under the libretro-cores section). 

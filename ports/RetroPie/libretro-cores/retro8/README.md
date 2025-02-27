@@ -15,7 +15,7 @@ Note: Currently, there are still many issues with retro8 on QNX. A fork may be c
 ```bash
 # 1. Clone repos into a workspace
 cd workspace      #Or make a new one and navigate into it
-git clone https://github.com/.git
+git clone https://github.com/Jakz/retro8.git
 git clone https://github.com/qnx-ports/build-files.git
 
 # 2. Source QNX SDP 8
