@@ -53,7 +53,7 @@ CMAKE_FIND_ROOT_PATH := $(QNX_TARGET);$(QNX_TARGET)/$(CPUVARDIR);$(INSTALL_ROOT)
 #CMake-based packages from inside SDP or in the staging area.
 #Note that CMake modules can automatically detect the prefix they are
 #installed in.
-CMAKE_MODULE_PATH := $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/cmake;$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/lib/cmake
+CMAKE_MODULE_PATH := $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/cmake:$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/lib/cmake
 
 #Headers from INSTALL_ROOT need to be made available by default
 #because CMake and pkg-config do not necessary add it automatically

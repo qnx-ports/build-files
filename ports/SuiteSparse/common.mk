@@ -18,14 +18,11 @@ define PINFO
 PINFO DESCRIPTION=SuiteSparse library
 endef
 
-PREFIX?="/usr"
+INSTALLDIR=usr/lib
 
-QNX_PROJECT_ROOT?=../../../SuiteSparse
-PROJECT_ROOT=$(QNX_PROJECT_ROOT)
+QNX_PROJECT_ROOT?=../../../suitesparse
 
-INSTALLDIR=$(PREFIX)/lib
-
-BUILD?=suitesparse
+BUILD=suitesparse
 
 ifeq ($(BUILD),suitesparse)
 EXTRA_SRCVPATH += $(QNX_PROJECT_ROOT)/SuiteSparse_config
@@ -56,16 +53,12 @@ EXTRA_INCVPATH += $(QNX_PROJECT_ROOT)/KLU/Include
 EXTRA_INCVPATH += $(QNX_PROJECT_ROOT)/LDL/Include
 EXTRA_INCVPATH += $(QNX_PROJECT_ROOT)/UMFPACK/Include
 EXTRA_INCVPATH += $(QNX_PROJECT_ROOT)/SPQR/Include
-else 
-	ifeq ($(BUILD),cxsparse)
-	EXTRA_SRCVPATH += $(QNX_PROJECT_ROOT)/SuiteSparse_config
+EXTRA_SRCVPATH += $(QNX_PROJECT_ROOT)/SuiteSparse_config
 
-	EXTRA_INCVPATH += $(QNX_PROJECT_ROOT)/SuiteSparse_config
-	EXTRA_INCVPATH += $(QNX_PROJECT_ROOT)/CXSparse/Include
-
-	else
-	$(error "Unrecognized build: $(BUILD)")
-	endif
+EXTRA_INCVPATH += $(QNX_PROJECT_ROOT)/SuiteSparse_config
+EXTRA_INCVPATH += $(QNX_PROJECT_ROOT)/CXSparse/Include
+else
+$(error "Unrecognized build: $(BUILD)")
 endif
 
 include $(MKFILES_ROOT)/qmacros.mk
@@ -209,6 +202,19 @@ CXXFLAGS += -DBLAS_F2C -DNGPL
 include $(MKFILES_ROOT)/qtargets.mk
 
 COMPILE_c_o += -I$(QNX_TARGET)/include
+
+
+%_di.o : CXSparse/Source/%.c
+	$(COMPILE_c_o) -o $@
+
+%_dl.o : CXSparse/Source/%.c
+	$(COMPILE_c_o) -DCS_LONG -o $@
+
+%_ci.o : CXSparse/Source/%.c
+	$(COMPILE_c_o) -DCS_COMPLEX -o $@
+
+%_cl.o : CXSparse/Source/%.c
+	$(COMPILE_c_o) -DCS_LONG -DCS_COMPLEX -o $@
 
 cholmod_l_check.o: $(QNX_PROJECT_ROOT)/CHOLMOD/Check/cholmod_check.c
 	$(COMPILE_c_o) -DDLONG -o $@
@@ -365,18 +371,6 @@ cholmod_l_super_symbolic.o: $(QNX_PROJECT_ROOT)/CHOLMOD/Supernodal/cholmod_super
 cholmod_l_super_solve.o: $(QNX_PROJECT_ROOT)/CHOLMOD/Supernodal/cholmod_super_solve.c \
 	$(QNX_PROJECT_ROOT)/CHOLMOD/Supernodal/t_cholmod_super_solve.c
 	$(COMPILE_c_o) -DDLONG -o $@
-
-%_di.o : CXSparse/Source/%.c
-	$(COMPILE_c_o) -o $@
-
-%_dl.o : CXSparse/Source/%.c
-	$(COMPILE_c_o) -DCS_LONG -o $@
-
-%_ci.o : CXSparse/Source/%.c
-	$(COMPILE_c_o) -DCS_COMPLEX -o $@
-
-%_cl.o : CXSparse/Source/%.c
-	$(COMPILE_c_o) -DCS_LONG -DCS_COMPLEX -o $@
 
 colamd_l.o: $(QNX_PROJECT_ROOT)/COLAMD/Source/colamd.c
 	$(COMPILE_c_o) -DDLONG -o $@
