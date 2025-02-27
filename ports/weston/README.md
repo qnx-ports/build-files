@@ -6,15 +6,13 @@ Use `$(nproc)` instead of `4` after `JLEVEL=` and `-j` if you want to use the ma
 Presequisites to install Weston (in order):
 - Install QNX SDP 8.0 Notification FD Interfaces
 - Install QNX SDP 8.0 memstream
-- Install libffi
-- Install wayland
-- Install libxkbcommon
-- Install xkeyboard-config
-- Install pcre2
 - Install glib
 - Install pixman
 - Install cairo
-
+- Install wayland
+- Install libxkbcommon
+- Install xkeyboard-config
+- Install libdrm headers
 
 # Compile the port for QNX in a Docker container
 
@@ -24,36 +22,16 @@ Install meson if you decide not to use docker
 ```bash
 sudo apt install meson
 ```
+
+### Build cairo
 ```bash
 # Create a workspace
 mkdir -p ~/qnx_workspace && cd ~/qnx_workspace
 git clone https://github.com/qnx-ports/build-files.git
 
-# Build the Docker image and create a container
-cd build-files/docker
-./docker-build-qnx-image.sh
-./docker-create-container.sh
+# Clone 
 
-# Now you are in the Docker container
-
-# source qnxsdp-env.sh to build for QNX 8.0
-source ~/qnx800/qnxsdp-env.sh
-```
-
-### Build libffi
-```bash
-
-# Clone libffi
-cd ~/qnx_workspace
-git clone https://github.com/libffi/libffi.git
-
-# check out to v3.2.1
-cd libffi
-git checkout v3.2.1
-cd ..
-
-# Build libffi
-PREFIX=/usr QNX_PROJECT_ROOT="$(pwd)/libffi" JLEVEL=4 make -C build-files/ports/libffi install
+# TO DO LATER
 ```
 
 ### Build wayland
@@ -123,33 +101,14 @@ cd ~/qnx_workspace
 QNX_PROJECT_ROOT="$(pwd)/libxkbcommon" JLEVEL=4 make -C build-files/ports/libxkbcommon install
 ```
 
-### Build pcre2
+### Install libdrm headers
 ```bash
-# Clone pcre2
+# Clone libdrm
 cd ~/qnx_workspace
-git clone https://github.com/PCRE2Project/pcre2.git
+git clone https://gitlab.freedesktop.org/mesa/drm.git
 
-# check out to pcre2-10.45
-cd pcre2
-git checkout pcre2-10.45
-cd ..
-
-# Build pcre2
-QNX_PROJECT_ROOT="$(pwd)/pcre2" JLEVEL=4 make -C build-files/ports/pcre2 install
-```
-### Build glib
-```bash
-# TO DO LATER
-```
-
-### Build pixman
-```bash
-# TO DO LATER
-```
-
-### Build cairo
-```bash
-# TO DO LATER
+# Install libdrm headers
+DIST_ROOT=$(pwd)/drm make -C build-files/ports/libdrm/ install
 ```
 
 ### Build Weston
