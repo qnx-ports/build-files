@@ -10,7 +10,7 @@ The main pieces of the Retro*Pie* (forgive my humor) are listed below, alongside
 | | | |
 | --- | :---: | :---: |
 | RetroArch         | Supported via [Fork](https://github.com/qnx-ports/retroarch) | N/A |
-| Emulation Station | In Progress       | N/A |
+| Emulation Station | In Progress        | N/A |
 | RetroPie Menu     | Planned           | N/A |
 
 *Currently we are planning support for QNX 8.0*, which you can get access to from the ***[QNXE Free Non-Commercial License](https://www.qnx.com/products/everywhere/)***. For RetroPie and dependencies, we only officially support aarch64le architectures (i.e. Raspberry Pi 4/5), however files for x86_64 devices can also be built and installed via the provided build script.

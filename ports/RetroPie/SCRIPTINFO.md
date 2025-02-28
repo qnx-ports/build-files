@@ -34,6 +34,9 @@ By default, build_install_all will rebuild all libraries, binaries, and dependen
 `DO_NOT_INSTALL=TRUE` \
 Skips the installation step, but still copies files to the staging directory.
 
+`DO_NOT_BUILD_UNUSED=TRUE` \
+Skips builds for architectures other than the targeted one. (i.e., only builds for aarch64le and not x86_64 if $TARGET_ARCH=aarch64le)
+
 ---- 
 
 ### `install.sh`

@@ -89,6 +89,9 @@ EmulationStation_all:
 	@cd build && $(MAKE_PREARGS) cmake $(CMAKE_ARGS) $(DIST_BASE)
 	@cd build && $(MAKE_PREARGS) make VERBOSE=1 all $(MAKE_ARGS)
 
+
+#TODO: Install to staging/$CPUDIR/
+#NOTE: may need to mess w retroarch locs :(
 install check: EmulationStation_all
 	@echo Installing...
 	@cd build && $(MAKE_PREARGS) make VERBOSE=1 install $(MAKE_ARGS)

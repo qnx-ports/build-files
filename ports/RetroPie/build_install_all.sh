@@ -18,6 +18,8 @@ TARGET_ARCH=aarch64le
 #TARGET_DIR=
 #DO_NOT_REBUILD=TRUE
 #DO_NOT_INSTALL=TRUE
+#DO_NOT_BUILD_UNUSED=TRUE
+
 
 ### Directory Paths
 RETROARCH_SRC=${PWD}/../../../RetroArch
@@ -87,6 +89,14 @@ fi
 if [ ! "$TARGET_ARCH" = "aarch64le" -a ! "$TARGET_ARCH" = "x86_64" ]; then
     echo "[FATAL]: Invalid Architecture '$TARGET_ARCH'! Allowed: 'aarch64le' 'x86_64'"
     exit 1
+else
+    if [ "$TARGET_ARCH" = "aarch64le" ]; then
+        _CHECK_BUILD_ARCH=aarch64-le
+        _OPPOSITE_ARCH=x86_64-o
+    else
+        _CHECK_BUILD_ARCH=x86_64-o
+        _OPPOSITE_ARCH=aarch64-le
+    fi
 fi
 sleep 7
 
@@ -161,39 +171,59 @@ fi
 
 
 ### Build RetroArch
-if [ ! -e "${TOP_LEVEL_BUILD_DIR}/RetroArch/nto-aarch64-le/build/retroarch" -o ! "${DO_NOT_REBUILD}" = "TRUE" ]; then
+if [ ! -e "${TOP_LEVEL_BUILD_DIR}/RetroArch/nto-${_CHECK_BUILD_ARCH}/build/retroarch" -o ! "${DO_NOT_REBUILD}" = "TRUE" ]; then
     echo "[INFO]: Building RetroArch..."
     cd ${TOP_LEVEL_BUILD_DIR}/RetroArch
+    rm nto-${_CHECK_BUILD_ARCH}/Makefile.dnm
+    if [ "$DO_NOT_BUILD_UNUSED" = "TRUE" ]; then
+        touch nto-${_OPPOSITE_ARCH}/Makefile.dnm
+    fi
     make install
 else 
     echo "[SKIP]: Skipping RetroArch - build detected."
 fi
 
 ### Build Sample Cores
-if [ ! -d "${TOP_LEVEL_BUILD_DIR}/libretro-cores/test/nto-aarch64-le/build/" -o ! "${DO_NOT_REBUILD}" = "TRUE" ]; then
+if [ ! -d "${TOP_LEVEL_BUILD_DIR}/libretro-cores/test/nto-${_CHECK_BUILD_ARCH}/build/" -o ! "${DO_NOT_REBUILD}" = "TRUE" ]; then
     echo "[INFO]: Building RetroArch test cores..."
     cd ${TOP_LEVEL_BUILD_DIR}/libretro-cores/test
+    rm nto-${_CHECK_BUILD_ARCH}/Makefile.dnm
+    if [ "$DO_NOT_BUILD_UNUSED" = "TRUE" ]; then
+        touch nto-${_OPPOSITE_ARCH}/Makefile.dnm
+    fi
     make install
 else 
     echo "[SKIP]: Skipping RetroArch Test Cores - build detected."
 fi
-if [ ! -e "${TOP_LEVEL_BUILD_DIR}/libretro-cores/2048/nto-aarch64-le/build/2048_libretro_qnx.so" -o ! "${DO_NOT_REBUILD}" = "TRUE" ]; then
+if [ ! -e "${TOP_LEVEL_BUILD_DIR}/libretro-cores/2048/nto-${_CHECK_BUILD_ARCH}/build/2048_libretro_qnx.so" -o ! "${DO_NOT_REBUILD}" = "TRUE" ]; then
     echo "[INFO]: Building RetroArch 2048 cores..."
     cd ${TOP_LEVEL_BUILD_DIR}/libretro-cores/2048
+    rm nto-${_CHECK_BUILD_ARCH}/Makefile.dnm
+    if [ "$DO_NOT_BUILD_UNUSED" = "TRUE" ]; then
+        touch nto-${_OPPOSITE_ARCH}/Makefile.dnm
+    fi
     make install
 else 
     echo "[SKIP]: Skipping RetroArch 2048 Core - build detected."
 fi
-if [ ! -e "${TOP_LEVEL_BUILD_DIR}/libretro-cores/retro8/nto-aarch64-le/build/retro8_libretro_qnx.so" -o ! "${DO_NOT_REBUILD}" = "TRUE" ]; then
+if [ ! -e "${TOP_LEVEL_BUILD_DIR}/libretro-cores/retro8/nto-${_CHECK_BUILD_ARCH}/build/retro8_libretro_qnx.so" -o ! "${DO_NOT_REBUILD}" = "TRUE" ]; then
     echo "[INFO]: Building RetroArch retro8 core..."
     cd ${TOP_LEVEL_BUILD_DIR}/libretro-cores/retro8
+    rm nto-${_CHECK_BUILD_ARCH}/Makefile.dnm
+    if [ "$DO_NOT_BUILD_UNUSED" = "TRUE" ]; then
+        touch nto-${_OPPOSITE_ARCH}/Makefile.dnm
+    fi
     make install
 else 
     echo "[SKIP]: Skipping RetroArch retro8 Core - build detected."
 fi
-if [ ! -d "${TOP_LEVEL_BUILD_DIR}/libretro-cores/mrboom/nto-aarch64-le/build/" -o ! "${DO_NOT_REBUILD}" = "TRUE" ]; then
+if [ ! -d "${TOP_LEVEL_BUILD_DIR}/libretro-cores/mrboom/nto-${_CHECK_BUILD_ARCH}/build/" -o ! "${DO_NOT_REBUILD}" = "TRUE" ]; then
     echo "[INFO]: Building RetroArch mrboom core..."
     cd ${TOP_LEVEL_BUILD_DIR}/libretro-cores/mrboom
+    rm nto-${_CHECK_BUILD_ARCH}/Makefile.dnm
+    if [ "$DO_NOT_BUILD_UNUSED" = "TRUE" ]; then
+        touch nto-${_OPPOSITE_ARCH}/Makefile.dnm
+    fi
     make install
 else 
     echo "[SKIP]: Skipping RetroArch mrboom Core - build detected."
@@ -209,50 +239,79 @@ curl https://www.lexaloffle.com/bbs/thumbs/pico8_cmyplatonicsolids-0.png --outpu
 ### Build Emulation Station
 ## Dependencies:
 #==============VLC=================
+
 # SDL
-if [ ! -d "${TOP_LEVEL_BUILD_DIR}/../SDL/nto-aarch64-le/build/" -o ! "${DO_NOT_REBUILD}" = "TRUE" ]; then
+if [ ! -d "${TOP_LEVEL_BUILD_DIR}/../SDL/nto-${_CHECK_BUILD_ARCH}/build/" -o ! "${DO_NOT_REBUILD}" = "TRUE" ]; then
     echo "[INFO]: Building SDL..."
     cd ${TOP_LEVEL_BUILD_DIR}/../SDL
+    rm nto-${_CHECK_BUILD_ARCH}/Makefile.dnm
+    if [ "$DO_NOT_BUILD_UNUSED" = "TRUE" ]; then
+        touch nto-${_OPPOSITE_ARCH}/Makefile.dnm
+    fi
     make install
 else 
     echo "[SKIP]: Skipping SDL2 - build detected."
 fi
 # FreeImage
-if [ ! -d "${TOP_LEVEL_BUILD_DIR}/../FreeImage/nto-aarch64-le/build/" -o ! "${DO_NOT_REBUILD}" = "TRUE" ]; then
+if [ ! -d "${TOP_LEVEL_BUILD_DIR}/../FreeImage/nto-${_CHECK_BUILD_ARCH}/build/" -o ! "${DO_NOT_REBUILD}" = "TRUE" ]; then
     echo "[INFO]: Building FreeImage..."
     cd ${TOP_LEVEL_BUILD_DIR}/../FreeImage
+    rm nto-${_CHECK_BUILD_ARCH}/Makefile.dnm
+    if [ "$DO_NOT_BUILD_UNUSED" = "TRUE" ]; then
+        touch nto-${_OPPOSITE_ARCH}/Makefile.dnm
+    fi
     make install
 else 
     echo "[SKIP]: Skipping FreeImage - build detected."
 fi
 # RapidJson
-if [ ! -d "${TOP_LEVEL_BUILD_DIR}/../rapidjson/nto-aarch64-le/build/" -o ! "${DO_NOT_REBUILD}" = "TRUE" ]; then
+if [ ! -d "${TOP_LEVEL_BUILD_DIR}/../rapidjson/nto-${_CHECK_BUILD_ARCH}/build/" -o ! "${DO_NOT_REBUILD}" = "TRUE" ]; then
     echo "[INFO]: Building rapidjson..."
     cd ${TOP_LEVEL_BUILD_DIR}/../rapidjson
+    rm nto-${_CHECK_BUILD_ARCH}/Makefile.dnm
+    if [ "$DO_NOT_BUILD_UNUSED" = "TRUE" ]; then
+        touch nto-${_OPPOSITE_ARCH}/Makefile.dnm
+    fi
     make install
 else 
     echo "[SKIP]: Skipping rapidjson - build detected."
 fi
 # pugixml
-if [ ! -d "${TOP_LEVEL_BUILD_DIR}/../pugixml/nto-aarch64-le/build/" -o ! "${DO_NOT_REBUILD}" = "TRUE" ]; then
+if [ ! -d "${TOP_LEVEL_BUILD_DIR}/../pugixml/nto-${_CHECK_BUILD_ARCH}/build/" -o ! "${DO_NOT_REBUILD}" = "TRUE" ]; then
     echo "[INFO]: Building pugixml..."
     cd ${TOP_LEVEL_BUILD_DIR}/../pugixml
+    rm nto-${_CHECK_BUILD_ARCH}/Makefile.dnm
+    if [ "$DO_NOT_BUILD_UNUSED" = "TRUE" ]; then
+        touch nto-${_OPPOSITE_ARCH}/Makefile.dnm
+    fi
     make install
 else 
     echo "[SKIP]: Skipping pugixml - build detected."
 fi
 # nanosvg
-if [ ! -d "${TOP_LEVEL_BUILD_DIR}/../nanosvg/nto-aarch64-le/build/" -o ! "${DO_NOT_REBUILD}" = "TRUE" ]; then
+if [ ! -d "${TOP_LEVEL_BUILD_DIR}/../nanosvg/nto-${_CHECK_BUILD_ARCH}/build/" -o ! "${DO_NOT_REBUILD}" = "TRUE" ]; then
     echo "[INFO]: Building nanosvg..."
     cd ${TOP_LEVEL_BUILD_DIR}/../nanosvg
+    rm nto-${_CHECK_BUILD_ARCH}/Makefile.dnm
+    if [ "$DO_NOT_BUILD_UNUSED" = "TRUE" ]; then
+        touch nto-${_OPPOSITE_ARCH}/Makefile.dnm
+    fi
     make install
 else 
     echo "[SKIP]: Skipping nanosvg - build detected."
 fi
 
-# # Main Build
-# cd ${TOP_LEVEL_BUILD_DIR}/EmulationStation
-# make install
+# Main Build
+if [ ! -d "${TOP_LEVEL_BUILD_DIR}/EmulationStation/nto-${_CHECK_BUILD_ARCH}/build/" -o ! "${DO_NOT_REBUILD}" = "TRUE" ]; then
+    cd ${TOP_LEVEL_BUILD_DIR}/EmulationStation
+    rm nto-${_CHECK_BUILD_ARCH}/Makefile.dnm
+    if [ "$DO_NOT_BUILD_UNUSED" = "TRUE" ]; then
+        touch nto-${_OPPOSITE_ARCH}/Makefile.dnm
+    fi
+    make install
+else
+    echo "[SKIP]: Skipping Emulation Station - build detected."
+fi
 
 ##########################################################################################
 
