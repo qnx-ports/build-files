@@ -25,6 +25,9 @@ Sets the user that the script will attempt to ssh into at the target IP.
 `TARGET_ARCH=<aarch64le|x86_64>` \
 Sets the installation target's architecture, either aarch64le or x86_64. 
 
+`TARGET_DIR=/path/to/install/loc/` \
+Sets the installation directory on the target. Defaults to ~/retroarch (~ evaluated on target).
+
 `DO_NOT_REBUILD=TRUE` \
 By default, build_install_all will rebuild all libraries, binaries, and dependencies with its own options. Set this to 'TRUE' to have it detect whether a rebuild is necessary and skip built projects. Note that its detection is not perfect.
 
@@ -46,6 +49,9 @@ Sets the user that the script will attempt to ssh into at the target IP.
 
 `TARGET_ARCH=<aarch64le|x86_64>` \
 Sets the installation target's architecture, either aarch64le or x86_64. 
+
+`TARGET_DIR=/path/to/install/loc/` \
+Sets the installation directory on the target. Defaults to ~/retroarch (~ evaluated on target).
 
 ## Build/Install Manifest
 

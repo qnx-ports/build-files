@@ -7,9 +7,20 @@ An implementation of PICO-8 using libretro.
 
 You must build [RetroArch for QNX](../../RetroArch/README.md) to use this core. \
 You should first run `make install` for RetroArch and any cores you wish to use, then follow the installation instructions in [RetroArch for QNX README.md](../../RetroArch/README.md). \
-Make sure to grab some [PICO-8 Carts](https://www.lexaloffle.com/bbs/?cat=7&carts_tab=1#mode=carts&sub=2), which can be copied over to your target and installed via the install content option in retroarch.
+Make sure to grab some [PICO-8 Carts](https://www.lexaloffle.com/bbs/?cat=7&carts_tab=1#mode=carts&sub=2), which can be copied over to your target and installed via the install content option in retroarch. (alternatively, copy them directly to `retroarch/rarch-shared/content/`)
 
-Note: Currently, there are still many issues with retro8 on QNX. A fork may be coming in the near future to resolve these.
+**IMPORTANT:** \
+-> Default libretro controls work by translating your keyboard into a gamepad. \
+-> Standard keyboard controls are *not* what you may be expecting. \
+-> PICO-8 Games that you download with keyboard control labels can be incorrect
+
+**The controls are as follows:** \
+D-Pad Up: E \
+D-Pad Down: S \
+D-Pad Left: W \
+D-Pad Right: D \
+A-Button: K \
+B-Button: L
 
 ## Build
 ```bash

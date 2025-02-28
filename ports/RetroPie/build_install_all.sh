@@ -15,6 +15,7 @@
 TARGET_ARCH=aarch64le
 #TARGET_IP=
 #TARGET_USER=
+#TARGET_DIR=
 #DO_NOT_REBUILD=TRUE
 #DO_NOT_INSTALL=TRUE
 
@@ -45,6 +46,10 @@ if [[ -z "$TARGET_USER" ]]; then
     TARGET_USER="qnxuser"
 fi
 
+if [[ -z "$TARGET_DIR" ]]; then
+    TARGET_DIR="~/retroarch/"
+fi
+
 TOP_LEVEL_BUILD_DIR=${PWD} 
 WKSP=${PWD}/../../../
 
@@ -54,7 +59,7 @@ VERSION=0.1
 echo "========================="
 echo "[INFO]: Running build_install_all.sh v$VERSION"
 if [ ! "$DO_NOT_INSTALL" = "TRUE" ]; then
-    echo "        Installing Targeting user $TARGET_USER@$TARGET_IP "
+    echo "        Installing Targeting user $TARGET_USER@$TARGET_IP for location $TARGET_DIR "
 fi
 echo "        Target Architecture: $TARGET_ARCH "
 
@@ -254,5 +259,5 @@ fi
 if [ ! "${DO_NOT_INSTALL}" = "TRUE" ]; then
     #SSH installation via calling install.sh
     cd $TOP_LEVEL_BUILD_DIR
-    TARGET_USER=$TARGET_USER TARGET_IP=$TARGET_IP TARGET_ARCH=$TARGET_ARCH ./install.sh
+    TARGET_USER=$TARGET_USER TARGET_IP=$TARGET_IP TARGET_ARCH=$TARGET_ARCH TARGET_DIR=$TARGET_DIR ./install.sh
 fi
