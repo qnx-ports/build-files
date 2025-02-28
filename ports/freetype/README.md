@@ -1,4 +1,4 @@
-# freetype2 [![Build](https://github.com/qnx-ports/build-files/actions/workflows/freetype2.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/freetype2.yml)
+# freetype [![Build](https://github.com/qnx-ports/build-files/actions/workflows/freetype.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/freetype.yml)
 
 Supports QNX7.1 and QNX8.0
 
@@ -7,7 +7,7 @@ Supports QNX7.1 and QNX8.0
 It is very likely that another version of these binaries are shipped with the QNX image by QSC, hence installation of this library might introduce linking conflicts at runtime. Double check which version of it was linked when cross compiling your software and make sure the proper `LD_LIBRARY_PATH` is set for the dynamic linker to work properly.
 
 ### Naming clarification
-freetype2 is sometimes called "freetype", "freetype6" or even "freetype-2.0". For the most of the time they are the same software.
+freetype is sometimes called "freetype2", "freetype6" or even "freetype-2.0". For the most of the time they are the same software.
 
 # Dependency warning
 
