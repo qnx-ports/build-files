@@ -1,4 +1,4 @@
-# sleef
+# sleef [![sleef](https://github.com/qnx-ports/build-files/actions/workflows/sleef.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/sleef.yml)
 
 **NOTE**: QNX ports are only supported from a Linux host operating system
 

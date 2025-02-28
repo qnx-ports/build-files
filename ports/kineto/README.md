@@ -1,4 +1,4 @@
-# kineto
+# kineto [![kineto](https://github.com/qnx-ports/build-files/actions/workflows/kineto.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/kineto.yml)
 
 **NOTE**: QNX ports are only supported from a Linux host operating system
 

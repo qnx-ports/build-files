@@ -1,4 +1,4 @@
-# XNNPACK
+# XNNPACK [![XNNPACK](https://github.com/qnx-ports/build-files/actions/workflows/XNNPACK.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/XNNPACK.yml)
 
 **NOTE**: QNX ports are only supported from a Linux host operating system
 

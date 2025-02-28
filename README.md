@@ -52,6 +52,7 @@ You have two options for building the ports:
 | [gtk](https://github.com/qnx-ports/build-files/blob/main/ports/gtk/README.md) | [![Build](https://github.com/qnx-ports/build-files/actions/workflows/gtk.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/gtk.yml) |
 | [gtsam](https://github.com/qnx-ports/build-files/blob/main/ports/gtsam/README.md) | [![Build](https://github.com/qnx-ports/build-files/actions/workflows/gtsam.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/gtsam.yml) |
 | [jansson](https://github.com/qnx-ports/build-files/blob/main/ports/jansson/README.md) | [![Build](https://github.com/qnx-ports/build-files/actions/workflows/jansson.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/jansson.yml) |
+| [kineto](https://github.com/qnx-ports/build-files/blob/main/ports/kineto/README.md) | [![Build](https://github.com/qnx-ports/build-files/actions/workflows/kineto.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/kineto.yml) |
 | [lely-core](https://github.com/qnx-ports/build-files/blob/main/ports/lely-core/README.md) | [![Build](https://github.com/qnx-ports/build-files/actions/workflows/lely-core.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/lely-core.yml) |
 | [libffi](https://github.com/qnx-ports/build-files/blob/main/ports/libffi/README.md) | [![Build](https://github.com/qnx-ports/build-files/actions/workflows/libffi.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/libffi.yml) |
 | [libjson](https://github.com/qnx-ports/build-files/blob/main/ports/libjson/README.md) | [![Build](https://github.com/qnx-ports/build-files/actions/workflows/libjson.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/libjson.yml) |
@@ -73,11 +74,13 @@ You have two options for building the ports:
 | [ros2](https://github.com/qnx-ports/build-files/blob/main/ports/ros2/README.md) | [![Build](https://github.com/qnx-ports/build-files/actions/workflows/ros2.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/ros2.yml) |
 | [rust](https://github.com/qnx-ports/build-files/blob/main/ports/rust/README.md) | |
 | [ruy](https://github.com/qnx-ports/build-files/blob/main/ports/ruy/README.md) | [![Build](https://github.com/qnx-ports/build-files/actions/workflows/ruy.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/ruy.yml) |
+| [sleef](https://github.com/qnx-ports/build-files/blob/main/ports/sleef/README.md) | [![Build](https://github.com/qnx-ports/build-files/actions/workflows/sleef.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/sleef.yml) |
 | [sqlite_orm](https://github.com/qnx-ports/build-files/blob/main/ports/sqlite_orm/README.md) | [![Build](https://github.com/qnx-ports/build-files/actions/workflows/sqlite_orm.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/sqlite_orm.yml)|
 | [tensorflow](https://github.com/qnx-ports/build-files/blob/main/ports/tensorflow/README.md) | [![Build](https://github.com/qnx-ports/build-files/actions/workflows/tensorflow.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/tensorflow.yml) |
 | [tftp-hpa](https://github.com/qnx-ports/build-files/blob/main/ports/tftp-hpa/README.md) | [![Build](https://github.com/qnx-ports/build-files/actions/workflows/tftp-hpa.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/tftp-hpa.yml) |
 | [tinyxml2](https://github.com/qnx-ports/build-files/blob/main/ports/tinyxml2/README.md) | [![Build](https://github.com/qnx-ports/build-files/actions/workflows/tinyxml2.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/tinyxml2.yml) |
 | [vsomeip](https://github.com/qnx-ports/build-files/blob/main/ports/vsomeip/README.md) | [![Build](https://github.com/qnx-ports/build-files/actions/workflows/vsomeip.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/vsomeip.yml) |
+| [XNNPACK](https://github.com/qnx-ports/build-files/blob/main/ports/XNNPACK/README.md) | [![Build](https://github.com/qnx-ports/build-files/actions/workflows/XNNPACK.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/XNNPACK.yml) |
 
 
 
