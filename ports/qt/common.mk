@@ -53,6 +53,7 @@ CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DCMAKE_INSTALL_PREFIX="$(PREFIX)" \
              -DCMAKE_STAGING_PREFIX="$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)" \
              -DCPUVARDIR=$(CPUVARDIR) \
+             -DCPU=$(CPU) \
              -DCMAKE_BUILD_TYPE=$(CMAKE_BUILD_TYPE) \
              -DCMAKE_INSTALL_LIBDIR=$(INSTALL_ROOT)/usr/lib \
              -DCMAKE_INSTALL_INCLUDEDIR=$(INSTALL_ROOT)/usr \
@@ -84,9 +85,9 @@ CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DQT_BUILD_TESTS=$(BUILD_TESTING) \
              -DBUILD_SHARED_LIBS=ON \
              -GNinja \
-             -DQT_HOST_PATH=$(PROJECT_ROOT)/nto-aarch64-le/qthost \
+             -DQT_HOST_PATH=$(PROJECT_ROOT)/qthost \
              -DCMAKE_EXE_LINKER_FLAGS="-lsocket -lc++ -lm -lscreen" \
-             -DQT_QMAKE_TARGET_MKSPEC=qnx-aarch64le-qcc \
+             -DQT_QMAKE_TARGET_MKSPEC=qnx-$(subst _,-,$(CPUVARDIR))-qcc \
              -Wno-dev   
 
 MAKE_ARGS ?= -j $(firstword $(JLEVEL) 1)
