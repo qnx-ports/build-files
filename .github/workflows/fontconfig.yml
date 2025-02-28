@@ -67,5 +67,5 @@ jobs:
           cd ~/workspace
           chmod +x ./build-files/ports/fontconfig/install_all.sh 
           JLEVEL=$(nproc) ./build-files/ports/fontconfig/install_all.sh
-          git clone 2.16.0 -b https://gitlab.freedesktop.org/fontconfig/fontconfig.git
+          git clone -b 2.16.0 https://gitlab.freedesktop.org/fontconfig/fontconfig.git 
           JLEVEL=$(nproc) QNX_PROJECT_ROOT="$(pwd)/fontconfig" make -C build-files/ports/fontconfig install
