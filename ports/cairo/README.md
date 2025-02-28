@@ -1,33 +1,110 @@
 # cairo [![Build](https://github.com/qnx-ports/build-files/actions/workflows/cairo.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/cairo.yml)
 
-Current these versions are tested:
-+ 1.18.0
+Supports QNX7.1 and QNX8.0
 
-# Compile cairo on a Linux host
-## Prepare dependencies
-We will need the font engine package from software center. We will also need to add the missing pkg-config files so that meson can actually find them, without manually hack the build script. Copy everything from `resources/pkgconfig/$SDP_VERSION/$ARCH` to your QNX_TARGET's `usr/lib/pkgconfig` folder.
+## QNX Software Center (QSC) compatibility warning
 
-We will also need these from this repository:
-+ pixman
-+ glib
+It is very likely that another version of these binaries are shipped with the QNX image by QSC, hence installation of this library might introduce linking conflicts at runtime. Double check which version of it was linked when cross compiling your software and make sure the proper `LD_LIBRARY_PATH` is set for the dynamic linker to work properly.
 
-Build them and install them into the SDP target.
+# Dependency warning
 
-**Note**: you might want a copy of the target since this will install arch-dependent files to the root of the target folder (since meson don't use the multiarch file hierarchy as SDP) and might cause trouble down the line.
+You should compile and install its dependencies before proceeding (in order).
++ [`freetype2`](https://github.com/qnx-ports/build-files/tree/main/ports/freetype2)
++ [`fontconfig`](https://github.com/qnx-ports/build-files/tree/main/ports/fontconfig)
++ [`glib`](https://github.com/qnx-ports/build-files/tree/main/ports/glib)
++ [`pixman`](https://github.com/qnx-ports/build-files/tree/main/ports/pixman)
 
-## Build it!
+A convinience script `install_all.sh` is provided for easy installation of all required dependencies, execute it just like a regular installation and set INSTALL_ROOT and JLEVEL.
+To use the convinence script, please clone the entire `build-files` repository first. 
+This convinience script will call `install_all.sh` inside dependencies recursively.
+
+## Available features
+```
+Surface Backends
+    Image                   : YES
+    Recording               : YES
+    Observer                : YES
+    Mime                    : YES
+    Tee                     : YES
+    CairoScript             : YES
+    PostScript              : YES
+    PDF                     : YES # Tests skipped
+    SVG                     : YES # Tests skipped
+Font Backends
+    User                    : YES
+    FreeType                : YES
+    Fontconfig              : YES
+Functions
+    PNG functions           : YES
+Features and Utilities
+    cairo-script-interpreter: YES
+```
+
+# Compile the port for QNX in a Docker container or Ubuntu host
+
+**NOTE**: QNX ports are only supported from a Linux host operating system
+
+Use `$(nproc)` instead of `4` after `JLEVEL=` and `-j` if you want to use the maximum number of cores to build this project.
+32GB of RAM is recommended for using `JLEVEL=$(nproc)` or `-j$(nproc)`.
+
+Pre-requisite: Install Docker on Ubuntu https://docs.docker.com/engine/install/ubuntu/
 ```bash
-# Using the official cairo repository
+# Create a workspace
+mkdir -p ~/qnx_workspace && cd ~/qnx_workspace
+
+# Obtain build tools and sources
+git clone https://github.com/qnx-ports/build-files.git
+git clone https://github.com/mesonbuild/meson.git
 git clone https://gitlab.freedesktop.org/cairo/cairo.git
-cd cairo/
-# Using a release, rather than master branch
-git checkout 1.18.0
-# We use QNX SDP 8.0.0 as an example here. 7.1.0 should work as well.
-# tests are disabled for now
-meson setup build-qnx800 --cross-file ../qnx800.ini -Dprefix=/usr -Dtests=disabled
-meson compile -C build-qnx800
-# For installing into your SDP to be used as a dependency
-DESTDIR=/path/to/qnx800/target/qnx meson install --no-rebuild -C build-qnx800
-# For installing to image, or a clean folder to be transferred to test platform
-DESTDIR=/path/to/output meson install --no-rebuild -C build-qnx800
+
+#checkout to the latest stable 
+cd cairo
+git checkout 1.18.2
+cd ..
+
+# Optionally Build the Docker image and create a container
+cd build-files/docker
+./docker-build-qnx-image.sh
+./docker-create-container.sh
+
+# source qnxsdp-env.sh in
+source ~/qnx800/qnxsdp-env.sh
+cd ~/qnx_workspace
+
+# Optionally use the convenience script to install all dependencies
+./build-files/ports/freetype/install_all.sh
+
+# Build cairo
+QNX_PROJECT_ROOT="$(pwd)/cairo" JLEVEL=4 make -C build-files/ports/cairo install
+```
+
+# Deploy binaries via SSH
+Ensure all dependencies are deployed to the target system as well.
+```bash
+#Set your target's IP here
+TARGET_IP_ADDRESS=<target-ip-address-or-hostname>
+TARGET_USER=<target-username>
+
+scp -r ~/qnx800/target/qnx/aarch64le/usr/local/lib/libcairo* $TARGET_USER@$TARGET_IP_ADDRESS:~/lib
+```
+
+If the `~/lib` directory does not exist, create them with:
+```bash
+ssh $TARGET_USER@$TARGET_IP_ADDRESS "mkdir -p ~/lib"
+```
+
+# Tests
+Tests are available and it takes a long time. Please refer to this [link](https://github.com/qnx-ports/cairo-test-result) and clone it to see the results. If you want to build the tests, set `BUILD_TEST=enabled`.
+
+All pdf-surface and svg-surface tests are skipped due to missing dependencies, but you can still render to both surface normally using cairo.
+
+Copy all files and directories in `build-files/ports/cairo/nto-aarch64-le/build/test` to the target, make sure all binaries of cairo and its dependencies are installed as well. You can remove all temporary files or directories ending `.p` or `.o` to speed up the process.
+```bash
+scp -r ~/build-files/ports/cairo/nto-aarch64-le/build/test $TARGET_USER@$TARGET_IP_ADDRESS:~
+```
+
+On the target system, make sure the correct `LD_LIBRARY_PATH` is set, run the test by executing `cairo-test-suite`
+```bash
+# In ~/test
+./cairo-test-suite
 ```

@@ -1,5 +1,5 @@
 name: cairo
-
+ 
 on:
   workflow_dispatch:
   push:
@@ -16,8 +16,13 @@ on:
       - 'ports/cairo/**'
 
 jobs:
-
+ 
   build:
+    strategy:
+      matrix:
+        qnx_env:
+          - ghcr.io/qnx-ports/sdp800-build-env:latest
+          - ghcr.io/qnx-ports/sdp-build-env:latest
     runs-on: self-hosted
     if: |
       (github.event_name == 'workflow_dispatch') ||
@@ -29,54 +34,38 @@ jobs:
       with:
         path: build-files
 
-    - name: Checkout cairo
-      run: |
-        git clone https://gitlab.freedesktop.org/cairo/cairo.git && cd cairo && git checkout 1.18.0
-
-    - name: Checkout glib
+    - name: Checkout meson
       uses: actions/checkout@v4
       with:
-        repository: qnx-ports/glib
-        path: glib
-        ref: qnx-2.82.2
-
-    - name: Checkout pixman
-      run: |
-        git clone https://gitlab.freedesktop.org/pixman/pixman.git && cd pixman && git checkout pixman-0.43.4
-
+        repository: mesonbuild/meson
+        path: meson
+        ref: 1.7.0
+ 
     - name: Login to GitHub Container Registry
       uses: docker/login-action@v3
       with:
         registry: ghcr.io
         username: ${{github.actor}}
         password: ${{secrets.GITHUB_TOKEN}}
-
+ 
     - name: Pull build environment
       run: |
-        docker pull ghcr.io/qnx-ports/sdp800-build-env:latest
-
+        docker pull ${{ matrix.qnx_env }}
+ 
     - name: Build cairo
       uses: addnab/docker-run-action@v3
       with:
-        image: ghcr.io/qnx-ports/sdp800-build-env:latest
+        image: ${{ matrix.qnx_env }}
         options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
         shell: bash
         run: |
-          source ~/qnx/800/qnxsdp-env.sh
+          if [[ "${{ matrix.qnx_env}}" == "ghcr.io/qnx-ports/sdp800-build-env:latest" ]]; then
+            source ~/qnx/800/qnxsdp-env.sh
+          else 
+            source ~/qnx/710/qnxsdp-env.sh
+          fi
           cd ~/workspace
-          mkdir -p output
-          export QNX_VERSION=800
-          export QNX_ARCH=aarch64le
-          cd pixman
-          git checkout pixman-0.43.4
-          /usr/local/qnx/env/bin/meson setup build-qnx800 --cross-file ../build-files/resources/meson/aarch64le/workflows/qnx800.ini -Dprefix=/usr -Dopenmp=disabled
-          /usr/local/qnx/env/bin/meson compile -C build-qnx800
-          DESTDIR=/home/runner/qnx/800/target/qnx /usr/local/qnx/env/bin/meson install --no-rebuild -C build-qnx800
-          cd ../glib
-          /usr/local/qnx/env/bin/meson setup build-qnx$QNX_VERSION --cross-file ../build-files/resources/meson/aarch64le/workflows/qnx800.ini -Dprefix=/usr -Dxattr=false
-          /usr/local/qnx/env/bin/meson compile -C build-qnx$QNX_VERSION
-          DESTDIR=/home/runner/qnx/800/target/qnx /usr/local/qnx/env/bin/meson install --no-rebuild -C build-qnx$QNX_VERSION
-          cd ../cairo
-          /usr/local/qnx/env/bin/meson setup build-qnx800 --cross-file ../build-files/resources/meson/aarch64le/workflows/qnx800.ini -Dprefix=/usr -Dtests=disabled
-          /usr/local/qnx/env/bin/meson compile -C build-qnx800
-          DESTDIR=/home/runner/workspace/output /usr/local/qnx/env/bin/meson install --no-rebuild -C build-qnx800
+          chmod +x ./build-files/ports/cairo/install_all.sh 
+          JLEVEL=$(nproc) ./build-files/ports/cairo/install_all.sh
+          git clone -b 1.18.2 https://gitlab.freedesktop.org/cairo/cairo.git
+          JLEVEL=$(nproc) QNX_PROJECT_ROOT="$(pwd)/cairo" make -C build-files/ports/cairo install
