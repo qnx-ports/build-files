@@ -39,9 +39,11 @@ include $(MKFILES_ROOT)/qtargets.mk
 
 HB_INSTALL_DIR=$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)
 
+BUILD_TEST ?= disabled
+
 # Use submoduled Meson
 MESON := $(QNX_PROJECT_ROOT)/../meson/meson.py
-MESON_FLAGS :=  -Dtests=disabled \
+MESON_FLAGS :=  -Dtests=$(BUILD_TEST) \
                 -Dgobject=enabled \
                 -Dcairo=enabled \
                 -Dgraphite2=enabled \
