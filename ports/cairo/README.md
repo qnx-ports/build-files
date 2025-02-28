@@ -72,7 +72,7 @@ source ~/qnx800/qnxsdp-env.sh
 cd ~/qnx_workspace
 
 # Optionally use the convenience script to install all dependencies
-./build-files/ports/freetype/install_all.sh
+./build-files/ports/cairo/install_all.sh
 
 # Build cairo
 QNX_PROJECT_ROOT="$(pwd)/cairo" JLEVEL=4 make -C build-files/ports/cairo install
