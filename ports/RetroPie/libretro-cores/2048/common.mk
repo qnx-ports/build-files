@@ -34,5 +34,5 @@ endif
 
 install:
 	@echo "Installing..."
-	mkdir -p $(PRODUCT_ROOT)/../staging/$(CPUDIR)/data/cores/
-	cd build && cp * $(PRODUCT_ROOT)/../staging/$(CPUDIR)/data/cores/
+	mkdir -p $(PRODUCT_ROOT)/../staging/$(CPUDIR)/retroarch/data/cores/
+	cd build && cp * $(PRODUCT_ROOT)/../staging/$(CPUDIR)/retroarch/data/cores/

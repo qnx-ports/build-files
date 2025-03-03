@@ -122,7 +122,7 @@ SDL_all:
 	@echo "Building for $(HOST_DETECT)"
 	@mkdir -p build
 	@cd $(QNX_PROJECT_ROOT) && sh autogen.sh
-	@cd build && $(QNX_PROJECT_ROOT)/configure --host=$(HOST_DETECT) --disable-pulseaudio --enable-audio=no --prefix=$(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)
+	@cd build && $(QNX_PROJECT_ROOT)/configure --host=$(HOST_DETECT) --disable-pulseaudio --enable-wayland-shared=no --enable-video-wayland=no --enable-audio=no --prefix=$(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)
 	@cd build && make $(MAKE_ARGS)
 	@cd build && cp $(QNX_PROJECT_ROOT)/include/* include/
 
@@ -147,7 +147,14 @@ install: SDL_all
 	@sed -i s+prefix=.*+prefix=$(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)+ build/sdl2.pc
 	@cp build/*.pc $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/pkgconfig/
 	@cp build/*.cmake $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/cmake/
-	@echo Done!
+
+# Shortcut for RetroPie's build/install all script
+install_rpie: install
+	@mkdir -p $(PRODUCT_ROOT)/staging/$(CPUDIR)/lib/
+	@cp build/build/.libs/*.so* $(PRODUCT_ROOT)/RetroPie/staging/$(CPUDIR)/lib/
+	@cp build/build/.libs/*.a* $(PRODUCT_ROOT)/RetroPie/staging/$(CPUDIR)/lib/
+	@cp build/build/.libs/*.la $(PRODUCT_ROOT)/RetroPie/staging/$(CPUDIR)/lib/
+
 
 test check: install
 	@mkdir -p build_test 

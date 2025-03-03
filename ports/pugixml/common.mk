@@ -69,6 +69,11 @@ install: pugixml_all
 	@cd build && make install
 endif
 
+# Shortcut for RetroPie's build/install all script
+install_rpie: install
+	@mkdir -p $(PRODUCT_ROOT)/RetroPie/staging/$(CPUDIR)/lib/
+	@cp build/*.so* $(PRODUCT_ROOT)/RetroPie/staging/$(CPUDIR)/lib/
+
 clean:
 	-rm -rf build
 	-rm -rf ../staging

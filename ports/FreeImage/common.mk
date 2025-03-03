@@ -74,16 +74,12 @@ freeimage_all:
 install check:
 	@echo Installing...
 	@cd build && make install $(MAKE_ARGS)
-# @cd build/Dist && cp *.so $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib
-# @cd build/Dist && ls *.so 
-# @echo "-> $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib"
-# @cd build/Dist && cp *.h $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/include
-# @cd build/Dist && ls *.h 
-# @echo "-> $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/include"
-# @cd build/Dist && cp *.pc $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/pkgconfig
-# @cd build/Dist && ls *.pc
-# @echo "-> $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/pkgconfig"
 	@echo Done! Installed.
+
+# Shortcut for RetroPie's build/install all script
+install_rpie: install
+	@mkdir -p $(PRODUCT_ROOT)/RetroPie/staging/$(CPUDIR)/lib/
+	@cp build/*.so* $(PRODUCT_ROOT)/RetroPie/staging/$(CPUDIR)/lib/
 
 clean:
 	rm -rf build

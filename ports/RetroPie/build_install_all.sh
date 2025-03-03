@@ -230,9 +230,9 @@ else
 fi
 
 #PICO-8 Example !! Maybe swap this for an official one
-cd $TOP_LEVEL_BUILD_DIR/staging/aarch64le/rarch-shared/content/
+cd $TOP_LEVEL_BUILD_DIR/staging/aarch64le/retroarch/rarch-shared/content/
 curl https://www.lexaloffle.com/bbs/thumbs/pico8_cmyplatonicsolids-0.png --output pico8_cmyplatonicsolids-0.png 
-cd $TOP_LEVEL_BUILD_DIR/staging/x86_64/rarch-shared/content/
+cd $TOP_LEVEL_BUILD_DIR/staging/x86_64/retroarch/rarch-shared/content/
 curl https://www.lexaloffle.com/bbs/thumbs/pico8_cmyplatonicsolids-0.png --output pico8_cmyplatonicsolids-0.png 
 
 ##########################################################################################
@@ -260,7 +260,7 @@ if [ ! -d "${TOP_LEVEL_BUILD_DIR}/../FreeImage/nto-${_CHECK_BUILD_ARCH}/build/" 
     if [ "$DO_NOT_BUILD_UNUSED" = "TRUE" ]; then
         touch nto-${_OPPOSITE_ARCH}/Makefile.dnm
     fi
-    make install
+    make install_rpie
 else 
     echo "[SKIP]: Skipping FreeImage - build detected."
 fi
@@ -284,7 +284,7 @@ if [ ! -d "${TOP_LEVEL_BUILD_DIR}/../pugixml/nto-${_CHECK_BUILD_ARCH}/build/" -o
     if [ "$DO_NOT_BUILD_UNUSED" = "TRUE" ]; then
         touch nto-${_OPPOSITE_ARCH}/Makefile.dnm
     fi
-    make install
+    make install_rpie
 else 
     echo "[SKIP]: Skipping pugixml - build detected."
 fi

@@ -1,9 +1,11 @@
-# RetroPie
+# QNX RetroPie
 This section serves as a home for our fork of **RetroPie** - an amalgamation of various emulators combined into one nice package. You can learn more at [the official RetroPie website](https://retropie.org.uk/)!
 
 **Upstream:** https://github.com/RetroPie \
 **Website:** https://retropie.org.uk/ \
-**Supports:** QNX 8.0, aarch64 processors.
+**Supports:** QNX 8.0, aarch64 processors. \
+\
+**Licencing, Dependencies, Accreditations**: Please see [SCRIPTINFO.md](./SCRIPTINFO.md) section "Build/Install Manifest" For a full list of upstream projects and links to their respective licenses. The original RetroPie is licensed under [GPL](https://retropie.org.uk/about/legal/).
 
 The main pieces of the Retro*Pie* (forgive my humor) are listed below, alongside their current port and build status.
 

@@ -85,9 +85,12 @@ MAKE_PREARGS = PKG_CONFIG_PATH=$(QNX_TARGET)/$(CPUDIR)/$(PREFIX)/lib/pkgconfig S
 
 ifndef NO_TARGET_OVERRIDE
 EmulationStation_all:
-	@mkdir -p build
+	@mkdir -p build/output
 	@cd build && $(MAKE_PREARGS) cmake $(CMAKE_ARGS) $(DIST_BASE)
 	@cd build && $(MAKE_PREARGS) make VERBOSE=1 all $(MAKE_ARGS)
+	@cd build && cp $(DIST_BASE)/emulationstation output/
+	@cd build && cp $(DIST_BASE)/*.a output/
+
 
 
 #TODO: Install to staging/$CPUDIR/
@@ -95,6 +98,11 @@ EmulationStation_all:
 install check: EmulationStation_all
 	@echo Installing...
 	@cd build && $(MAKE_PREARGS) make VERBOSE=1 install $(MAKE_ARGS)
+	@mkdir -p $(PRODUCT_ROOT)/staging/$(CPUDIR)/emulationstation/
+	@mkdir -p $(PRODUCT_ROOT)/staging/$(CPUDIR)/lib/
+	@cp build/output/emulationstation $(PRODUCT_ROOT)/staging/$(CPUDIR)/emulationstation/
+	@cp build/output/*.a $(PRODUCT_ROOT)/staging/$(CPUDIR)/lib/
+	@cp ../start-es.sh $(PRODUCT_ROOT)/staging/$(CPUDIR)/emulationstation/
 	@echo Done.
 
 clean iclean spotless:
