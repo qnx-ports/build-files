@@ -85,13 +85,30 @@ QNX_SEVEN_COMPAT="true" QNX_PROJECT_ROOT="$(pwd)/abseil-cpp" make -C build-files
 
 # How to run tests
 
+Get the time zone database from https://www.iana.org/time-zones
+```bash
+TARGET_HOST=<target-ip-address-or-hostname>
+
+WORKSPACE=$PWD
+wget https://data.iana.org/time-zones/releases/tzdb-2025a.tar.lz
+mkdir -p tz/src && mkdir -p tz/stage
+mv tzdb-2025a.tar.lz tz/src && cd tz/src
+tar --lzip -xvf tzdb-2025a.tar.lz && cd tzdb-2025a
+
+# Build
+make TOPDIR="$WORKSPACE/tz/stage" install
+
+# Install the database to the target
+cd $WORKSPACE/tz/stage
+scp -r usr/share qnxuser@$TARGET_HOST:/data/home/qnxuser
+cd $WORKPACE
+```
+
 **RPI4**: Move abseil-cpp library and the test binary to the target (note, mDNS
 is configured from /boot/qnx_config.txt and uses qnxpi.local by default):
 
 e.g.
 ```bash
-TARGET_HOST=<target-ip-address-or-hostname>
-
 scp ~/qnx_workspace/build-files/ports/abseil-cpp/nto-aarch64-le/build/bin/* qnxuser@$TARGET_HOST:/data/home/qnxuser/bin
 scp $(find ~/qnx_workspace/build-files/ports/abseil-cpp/nto-aarch64-le/build/ -name "libabsl*") qnxuser@$TARGET_HOST:/data/home/qnxuser/lib
 scp $QNX_TARGET/aarch64le/usr/local/lib/libgmock* qnxuser@$TARGET_HOST:/data/home/qnxuser/lib
@@ -101,5 +118,16 @@ scp $QNX_TARGET/aarch64le/usr/local/lib/libgtest* qnxuser@$TARGET_HOST:/data/hom
 ssh into target and run the binaries you copied over to target `/data/home/qnxuser/bin` folder.
 
 In order to run all test binaries, you can copy over the qnxtests.sh file and run the file instead.
+
+```bash
+scp build-files/ports/abseil-cpp/qnxtests.sh qnxuser@$TARGET_HOST:/data/home/qnxuser
+
+ssh qnxuser@$TARGET_HOST
+
+export TZDIR=$PWD/share/zoneinfo
+
+chmod +x qnxtests.sh
+./qnxtests.sh
+```
 
 ---
