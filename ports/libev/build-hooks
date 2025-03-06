@@ -1,0 +1,40 @@
+#!/bin/sh
+
+libev_dir="$(pwd)/../../../../libev"
+
+function hook_preconfigure {
+
+		configure_opts="${configure_opts} --srcdir=${libev_dir}"
+
+		base_prefix="/usr/local"
+		prefix="${INSTALL_ROOT_nto}/${base_prefix}"
+		exec_prefix="${INSTALL_ROOT_nto}/${cpudir}/${base_prefix}"
+		includedir="${INSTALL_ROOT_HDR}"
+
+		configure_opts="${configure_opts} --prefix=${prefix}"
+		configure_opts="${configure_opts} --exec-prefix=${exec_prefix}"
+		configure_opts="${configure_opts} --includedir=${includedir}"
+
+		export PKG_CONFIG_ALLOW_SYSTEM_CFLAGS=1
+		export PKG_CONFIG_ALLOW_SYSTEM_LIBS=1
+		export PKG_CONFIG_PATH="${INSTALL_ROOT_nto}${exec_prefix}/lib/pkgconfig"
+		export PKG_CONFIG_LIBDIR="${INSTALL_ROOT_nto}${exec_prefix}/lib/pkgconfig"
+		export PKG_CONFIG_SYSROOT_DIR="${INSTALL_ROOT_nto}"
+		configure_opts="${configure_opts} --with-sysroot=${INSTALL_ROOT_nto}"
+
+		# QNX build info
+		CFLAGS="${CFLAGS} -D_QNX_SOURCE -Wno-strict-aliasing -Wno-unused-value -Wno-unused-function"
+		LDFLAGS="${LDFLAGS} -Wl,--build-id=md5"
+}
+
+function hook_configure {
+		${libev_dir}/configure \
+		${ac_host:+"--host=${ac_host}"} \
+		${ac_build:+"--build=${ac_build}"} \
+		${configure_opts} \
+		${ac_params:+${CC:+"CC=${CC}"}} \
+		${ac_params:+${CFLAGS:+"CFLAGS=-O2 ${CFLAGS}"}} \
+		${ac_params:+${LDFLAGS:+"LDFLAGS=${LDFLAGS}"}} \
+		${ac_params:+${ac_autotools:+${ac_autotools}}} \
+		|| Error 'configure failed';
+}
