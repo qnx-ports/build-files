@@ -60,6 +60,7 @@ QNX_PROJECT_ROOT="$(pwd)/numpy" make -C build-files/ports/numpy install -j4
 
 # Compile the port for QNX on Ubuntu host
 ```bash
+
 # Clone the repos
 mkdir -p ~/qnx_workspace && cd qnx_workspace
 git clone https://github.com/qnx-ports/build-files.git
@@ -74,6 +75,9 @@ sudo apt-get install -y python3.11-dev python3.11-venv python3.11-distutils soft
 # Create a python virtual environment and install necessary packages
 python3.11 -m venv env
 source env/bin/activate
+
+#setting path to  ignore warning of not including in  path for cython
+export PATH="$HOME/.local/bin:$PATH"
 pip install -U pip Cython wheel
 
 # source qnxsdp-env.sh
