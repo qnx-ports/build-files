@@ -19,9 +19,11 @@ jobs:
   build:
     strategy:
       matrix:
-        qnx_env:
-          - ghcr.io/qnx-ports/sdp800-build-env:latest
-          - ghcr.io/qnx-ports/sdp-build-env:latest
+        qnx_env: ["sdp800-build-env", "sdp-build-env"]
+    name: Build for QNX ${{
+      matrix.qnx_env == 'sdp800-build-env' && '800' ||
+      matrix.qnx_env == 'sdp-build-env' && '710'
+    }}
     runs-on: self-hosted
     if: |
       (github.event_name == 'workflow_dispatch') ||
@@ -42,16 +44,16 @@ jobs:
 
       - name: Pull build environment
         run: |
-          docker pull ${{ matrix.qnx_env }}
+          docker pull "ghcr.io/qnx-ports/${{ matrix.qnx_env }}:latest"
 
       - name: Build libev
         uses: addnab/docker-run-action@v3
         with:
-          image: ${{ matrix.qnx_env }}
+          image: "ghcr.io/qnx-ports/${{ matrix.qnx_env }}:latest"
           options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
           shell: bash
           run: |
-            if [[ "${{ matrix.qnx_env}}" == "ghcr.io/qnx-ports/sdp800-build-env:latest" ]]; then
+            if [[ "${{ matrix.qnx_env }}" == "sdp800-build-env" ]]; then
               source ~/qnx/800/qnxsdp-env.sh
             else
               source ~/qnx/710/qnxsdp-env.sh
