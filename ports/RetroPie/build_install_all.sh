@@ -49,7 +49,7 @@ if [[ -z "$TARGET_USER" ]]; then
 fi
 
 if [[ -z "$TARGET_DIR" ]]; then
-    TARGET_DIR="~/retroarch/"
+    TARGET_DIR="~/retropie/"
 fi
 
 TOP_LEVEL_BUILD_DIR=${PWD} 
@@ -57,7 +57,7 @@ WKSP=${PWD}/../../../
 
 
 ##########################################################################################
-VERSION=0.1
+VERSION=0.2
 echo "========================="
 echo "[INFO]: Running build_install_all.sh v$VERSION"
 if [ ! "$DO_NOT_INSTALL" = "TRUE" ]; then
@@ -239,6 +239,10 @@ curl https://www.lexaloffle.com/bbs/thumbs/pico8_cmyplatonicsolids-0.png --outpu
 ### Build Emulation Station
 ## Dependencies:
 #==============VLC=================
+echo "VLC! (temp)"
+cd $TOP_LEVEL_BUILD_DIR
+cp $QNX_TARGET/$TARGET_ARCH/usr/local/lib/*libvlc* $PWD/staging/$TARGET_ARCH/lib
+
 
 # SDL
 if [ ! -d "${TOP_LEVEL_BUILD_DIR}/../SDL/nto-${_CHECK_BUILD_ARCH}/build/" -o ! "${DO_NOT_REBUILD}" = "TRUE" ]; then
@@ -248,7 +252,7 @@ if [ ! -d "${TOP_LEVEL_BUILD_DIR}/../SDL/nto-${_CHECK_BUILD_ARCH}/build/" -o ! "
     if [ "$DO_NOT_BUILD_UNUSED" = "TRUE" ]; then
         touch nto-${_OPPOSITE_ARCH}/Makefile.dnm
     fi
-    make install
+    make install_rpie
 else 
     echo "[SKIP]: Skipping SDL2 - build detected."
 fi

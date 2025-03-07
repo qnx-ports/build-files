@@ -82,7 +82,7 @@ Last Updated 2/27/2025 M/D/Y
 
 ## Installed File Structure
 The following file structure will be installed in the `home` directory (`~/`) of `TARGET_USER` by install.sh. \
-You can start RetroArch by navigating to this directory and running `./startup.sh`.
+You can start RetroArch by navigating to this directory and running `./startup.sh`. You can also install your own content or cores by directly copying them into these folders instead of using RetroArch's menu.
 
 ```
 retroarch
@@ -90,7 +90,7 @@ retroarch
 |retroarch
 |-data
 | |-cores
-| | |(retroarch cores here)
+| | |*libretro*.so (retroarch cores here)
 | |
 | |-info
 | | |*.info (retroarch core info files)

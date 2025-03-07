@@ -16,7 +16,6 @@ cd ${TOP_LEVEL_BUILD_DIR}/RetroArch
 make clean
 
 ### Clean Sample Cores
-if [ ! -d "${TOP_LEVEL_BUILD_DIR}/libretro-cores/test/nto-${_CHECK_BUILD_ARCH}/build/" -o ! "${DO_NOT_REBUILD}" = "TRUE" ]; then
 echo "[INFO]: Cleaning RetroArch test cores..."
 cd ${TOP_LEVEL_BUILD_DIR}/libretro-cores/test
 make clean
@@ -51,7 +50,7 @@ make clean
 # RapidJson
 echo "[INFO]: Cleaning rapidjson..."
 cd ${TOP_LEVEL_BUILD_DIR}/../rapidjson
-make install
+make clean
 
 # pugixml
 echo "[INFO]: Cleaning pugixml..."
@@ -68,5 +67,5 @@ echo "[INFO]: Cleaning Emulation Station..."
 cd ${TOP_LEVEL_BUILD_DIR}/EmulationStation
 make clean
 
-
-rm -rf staging
+cd ${TOP_LEVEL_BUILD_DIR}
+rm -r staging
