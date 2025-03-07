@@ -58,6 +58,7 @@ source ~/qnx800/qnxsdp-env.sh
 cd ~/qnx_workspace
 
 # Optionally use the convenience script to install all dependencies
+chmod +x ./build-files/ports/harfbuzz/install_all.sh
 ./build-files/ports/harfbuzz/install_all.sh
 
 # Build harfbuzz
