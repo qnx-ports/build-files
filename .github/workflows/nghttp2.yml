@@ -17,6 +17,12 @@ on:
 
 jobs:
   build:
+    strategy:
+      matrix:
+        qnx_env:
+          - { sdp: 710, repo: "qnx-ports/nghttp2", ref: "qnx-1.61.0" }
+          - { sdp: 800, repo: "nghttp2/nghttp2", ref: "master" }
+    name: Build for QNX ${{ matrix.qnx_env.sdp }}
     runs-on: self-hosted
     if: |
       (github.event_name == 'workflow_dispatch') ||
@@ -41,19 +47,12 @@ jobs:
           repository: qnx-ports/jansson
           path: jansson
 
-      - name: Checkout QNX 8 compatible nghttp2
+      - name: Checkout QNX ${{ matrix.qnx_env.sdp }} compatible nghttp2
         uses: actions/checkout@v4
         with:
-          repository: nghttp2/nghttp2
+          repository: ${{ matrix.qnx_env.repo }}
           path: nghttp2
-          submodules: recursive
-
-      - name: Checkout QNX 71 compatible nghttp2
-        uses: actions/checkout@v4
-        with:
-          repository: qnx-ports/nghttp2
-          path: nghttp2
-          ref: 445e7c33443ff51beb90d289c3db68faba9fa501
+          ref: ${{ matrix.qnx_env.ref }}
           submodules: recursive
 
       - name: Login to GitHub Container Registry
@@ -74,25 +73,17 @@ jobs:
           options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
           shell: bash
           run: |
-            source ~/qnx/800/qnxsdp-env.sh
+            if [[ ${{ matrix.qnx_env.sdp }} == 800 ]]; then
+              source ~/qnx/800/qnxsdp-env.sh
+            else
+              source ~/qnx/710/qnxsdp-env.sh
+            fi
             cd ~/workspace
+            curl -O https://dist.schmorp.de/libev/libev-4.33.tar.gz
+            tar xvf libev-4.33.tar.gz
+            mv libev-4.33 libev
+            patch -i build-files/ports/libev/libev-4.33.patch libev/ev.c
+            make -C build-files/ports/libev install
             QNX_PROJECT_ROOT="$(pwd)/brotli" make -C build-files/ports/brotli/ install -j4
             make -C build-files/ports/jansson/ install -j4
             make -C build-files/ports/nghttp2/ install -j4
-            make -C build-files/ports/nghttp2 clean
-            BUILD_STATIC_LIBS=ON BUILD_TESTING=ON ENABLE_HPACK_TOOLS=OFF ENABLE_APP=OFF make -C build-files/ports/nghttp2/ install -j4
-
-      - name: Build nghttp2 for QNX 71
-        uses: addnab/docker-run-action@v3
-        with:
-          image: ghcr.io/qnx-ports/sdp-build-env:latest
-          options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
-          shell: bash
-          run: |
-            source ~/qnx/710/qnxsdp-env.sh
-            cd ~/workspace
-            QNX_PROJECT_ROOT="$(pwd)/brotli" make -C build-files/ports/brotli/ install -j4
-            make -C build-files/ports/jansson/ install -j4
-            make -C build-files/ports/nghttp2/ install -j4
-            make -C build-files/ports/nghttp2 clean
-            BUILD_STATIC_LIBS=ON BUILD_TESTING=ON ENABLE_HPACK_TOOLS=OFF ENABLE_APP=OFF make -C build-files/ports/nghttp2/ install -j4
