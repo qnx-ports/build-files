@@ -37,7 +37,7 @@ jobs:
     - name: Checkout vim
       uses: actions/checkout@v4
       with:
-        repository: qnx-ports/vim
+        repository: vim/vim
         path: vim
         ref: v9.1.1115
         submodules: recursive
