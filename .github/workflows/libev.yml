@@ -16,7 +16,7 @@ on:
       - "ports/libev/**"
 
 jobs:
-  build-sdp-710:
+  build:
     strategy:
       matrix:
         qnx_env:
