@@ -9,12 +9,11 @@ NAME = SDL
 QNX_PROJECT_ROOT ?= $(PROJECT_ROOT)/../../../SDL
 PREFIX ?= /usr/local
 CMAKE_BUILD_TYPE ?= Release
-BUILD_TEST ?= false
 
 #### Set up default target (QNX-specific) 
 #Overriding `all` bypasses built-in qnx stuff.
 ALL_DEPENDENCIES = SDL_all
-.PHONY: SDL_all install check clean test
+.PHONY: SDL_all install check clean SDL_test
 
 #### LD Flags and global C/C++ Flags
 FLAGS   += -g -D_QNX_SOURCE
@@ -95,14 +94,16 @@ CONFIGURE_PREOPTS= CC=$(QNX_HOST)/usr/bin/qcc \
 				   LDFLAGS=$(LDFLAGS) \
 				   CPPFLAGS="-D_QNX_SOURCE $(CPPFLAGS)"\
 
-TEST_CONFIGURE_PREOPS= 	CC=$(QNX_HOST)/usr/bin/qcc \
+TEST_CONFIGURE_PREOPTS= CC=$(QNX_HOST)/usr/bin/qcc \
 				  	 	CXX=$(QNX_HOST)/usr/bin/q++ \
-				   		LD=$(HOST_DETECT)-ld \
-						CFLAGS="-D_QNX_SOURCE -std=c17 -V$(V_OPT) $(FLAGS) -I$(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/include"\
+				   		LD=$(QNX_HOST)/usr/bin/qcc \
+						CFLAGS="-I$(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/include/SDL2 -D_QNX_SOURCE -std=c17 -V$(V_OPT) $(FLAGS) -I$(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/include"\
 						CXXFLAGS="-D_QNX_SOURCE -std=c++17 -V$(V_OPT)_cxx -Wno-deprecated-definitions $(FLAGS)"\
 						CPPFLAGS="-D_QNX_SOURCE $(CPPFLAGS)"\
 						LDFLAGS="-L$(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib" \
-						PKG_CONFIG_LIBDIR="$(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib"
+						PKG_CONFIG_LIBDIR="$(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/pkgconfig"\
+						SDL_LIBS="-L$(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib -lSDL2"\
+						SDL_CFLAGS="-I$(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/include/SDL2  -D_REENTRANT"
 
 
 MAKE_ARGS ?= -j $(firstword $(JLEVEL) 1) VERBOSE=1
@@ -137,7 +138,8 @@ SDL_all:
 #	@cp build/*.cmake $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/cmake/
 install: SDL_all
 	@echo Installing...
-# @cd build && make $(MAKE_ARGS) install
+	@cd build && $(QNX_PROJECT_ROOT)/configure --host=$(HOST_DETECT) --disable-pulseaudio --enable-wayland-shared=no --enable-video-wayland=no --enable-audio=no --prefix=$(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)
+	@cd build && make $(MAKE_ARGS) install
 	@mkdir -p $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/pkgconfig/
 	@mkdir -p $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/cmake/
 	@mkdir -p $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/include/SDL/
@@ -156,14 +158,20 @@ install_rpie: install
 	@cp build/build/.libs/*.la $(PRODUCT_ROOT)/RetroPie/staging/$(CPUDIR)/lib/
 
 
-test check: install
-	@mkdir -p build_test 
-	@cd build_test && $(TEST_CONFIGURE_PREOPTS) $(QNX_PROJECT_ROOT)/test/configure --host=$(HOST_DETECT) $(CONFIGURE_OPTS)
-	@make -i $(MAKE_ARGS) -C build_test
-	@mkdir -p staging/tests
+SDL_test check: install
+	@mkdir -p build/test 
+	@cd build/test && $(TEST_CONFIGURE_PREOPTS) $(QNX_PROJECT_ROOT)/test/configure --host=$(HOST_DETECT) --disable-pulseaudio --enable-wayland-shared=no --enable-video-wayland=no --enable-audio=no --prefix=$(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)
+	@make -i $(TEST_CONFIGURE_PREOPTS) $(MAKE_ARGS) -C build/test
+	@mkdir -p staging
 	@mkdir -p staging/lib
-	-cp build_test/tests* staging/test
-	-cp $(PROJECT_ROOT)/run_tests.sh staging
+	-cp build/test/test* staging/
+	-cp build/test/*.bmp staging/
+	-cp build/test/*.txt staging/
+	-cp build/test/checkkeys staging/
+	-cp build/test/loopwave* staging/
+	-cp build/test/torturethread staging/
+	-cp build/test/*.wav staging/
+	-cp ../run_tests.sh staging/
 	-cp build/build/libSDL*.a staging/lib
 	-cp build/build/.libs/libSDL* staging/lib
 	@echo "Test Setup Staged in $(pwd)/staging !"
@@ -171,6 +179,6 @@ test check: install
 
 clean:
 	-rm -rf build
-	-rm -rf build_test
+	-rm -rf build/test
 	-rm -rf staging
 endif
