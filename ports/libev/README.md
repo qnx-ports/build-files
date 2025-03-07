@@ -1,4 +1,4 @@
-# libev port for QNX
+# libev [![Build](https://github.com/qnx-ports/build-files/actions/workflows/libev.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/libev.yml)
 
 **NOTE**: QNX ports are only supported from a Linux host operating system
 
@@ -24,11 +24,11 @@ cd ~/qnx_workspace
 
 # Install libev archive
 curl -O https://dist.schmorp.de/libev/libev-4.33.tar.gz
-tar -xzvf libev-4.33
+tar xvf libev-4.33.tar.gz
 mv libev-4.33 libev
 
 # Apply libev patch
-patch -i build-files/ports/libev/libev-qnx.patch libev/ev.c
+patch -i build-files/ports/libev/libev-4.33.patch libev/ev.c
 
 # Build libev
 make -C build-files/ports/libev install
@@ -46,11 +46,11 @@ source ~/qnx800/qnxsdp-env.sh
 
 # Install libev archive
 curl -O https://dist.schmorp.de/libev/libev-4.33.tar.gz
-tar -xzvf libev-4.33
+tar xvf libev-4.33.tar.gz
 mv libev-4.33 libev
 
 # Apply libev patch
-patch -i build-files/ports/libev/libev-qnx.patch libev/ev.c
+patch -i build-files/ports/libev/libev-4.33.patch libev/ev.c
 
 # Build libev
 make -C build-files/ports/libev install
