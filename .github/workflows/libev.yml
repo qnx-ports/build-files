@@ -22,10 +22,10 @@ jobs:
         qnx_env:
           - ghcr.io/qnx-ports/sdp800-build-env:latest
           - ghcr.io/qnx-ports/sdp-build-env:latest
-      name: Build for QNX ${{
-        matrix.qnx_env == 'ghcr.io/qnx-ports/sdp800-build-env:latest' && '800' ||
-        matrix.qnx_env == 'ghcr.io/qnx-ports/sdp-build-env:latest' && '710'
-      }}
+    name: Build for QNX ${{
+      matrix.qnx_env == 'ghcr.io/qnx-ports/sdp800-build-env:latest' && '800' ||
+      matrix.qnx_env == 'ghcr.io/qnx-ports/sdp-build-env:latest' && '710'
+    }}
     runs-on: self-hosted
     if: |
       (github.event_name == 'workflow_dispatch') ||
