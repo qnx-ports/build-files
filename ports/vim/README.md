@@ -84,10 +84,7 @@ su root -c mv vim /system/share
 
 # Run tests
 cd src/testdir
-for test in $(ls test_*.vim)
-do
-vim -u NONE -S runtest.vim $test
-done
+for test in $(ls test_*.vim); do vim -u NONE -S runtest.vim $test; done
 ```
 
 The test results will be written to `/data/home/qnxuser/testdir/messages`
