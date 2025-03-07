@@ -20,7 +20,7 @@ jobs:
     strategy:
       matrix:
         qnx_env: ["sdp800-build-env", "sdp-build-env"]
-    name: Build for QNX ${{ matrix.qnx_env }}
+    name: Build for QNX ${{ matrix.qnx_env == 'sdp800-build-env' && '800' || matrix.qnx_env == 'sdp-build-env' && '710' }}
     runs-on: self-hosted
     if: |
       (github.event_name == 'workflow_dispatch') ||
