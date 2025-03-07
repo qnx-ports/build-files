@@ -56,16 +56,20 @@ QNX_PROJECT_ROOT="$(pwd)/vim" make -C build-files/ports/vim install JLEVEL=4
 
 ## Run tests
 
+**NOTE** This port has many features disabled so we can't guarrantee full test
+support.
+
 Move files to the target (note, mDNS is configured from /boot/qnx_config.txt and
 uses qnxpi.local by default):
 ```bash
 TARGET_HOST=<target-ip-address-or-hostname>
 
-scp ~/qnx_workspace/build-files/ports/pytorch/nto-aarch64-le/build/bin/*_test qnxuser@$TARGET_HOST:/data/home/qnxuser/bin
-scp ~/qnx_workspace/build-files/ports/pytorch/nto-aarch64-le/build/lib/libc10.so qnxuser@$TARGET_HOST:/data/home/qnxuser/lib
-scp ~/qnx_workspace/build-files/ports/pytorch/nto-aarch64-le/build/lib/libtorch_cpu.so qnxuser@$TARGET_HOST:/data/home/qnxuser/lib
-scp ~/qnx_workspace/build-files/ports/pytorch/nto-aarch64-le/build/lib/libtorch_global_deps.so qnxuser@$TARGET_HOST:/data/home/qnxuser/lib
-scp ~/qnx_workspace/build-files/ports/pytorch/nto-aarch64-le/build/lib/libtorch.so qnxuser@$TARGET_HOST:/data/home/qnxuser/lib
+# scp vim to the target
+scp $QNX_TARGET/aarch64le/usr/local/bin/vim qnxuser@$TARGET_HOST:/data/home/qnxuser/bin
+scp -r $QNX_TARGET/usr/local/share/vim qnxuser@$TARGET_HOST:/data/home/qnxuser
+
+# scp tests to the target
+scp -r ~/qnx_workspace/build-files/ports/vim/nto-aarch64-le/build/src qnxuser@$TARGET_HOST:/data/home/qnxuser
 ```
 
 Run unit tests on the target.
@@ -74,14 +78,16 @@ Run unit tests on the target.
 # ssh into the target
 ssh qnxuser@$TARGET_HOST
 
+# Install vim
+su root -c mv bin/vim /system/bin
+su root -c mv vim /system/share
+
 # Run tests
-cd /data/home/qnxuser/bin
-for test in $(ls | grep _test) ; do
-    ./$test
+cd src/testdir
+for test in $(ls test_*.vim)
+do
+vim -u NONE -S runtest.vim $test
 done
 ```
 
-Known lite interpreter test failures:
-```
-typeid_test - CtorDtorAndCopy (aborts)
-```
+The test results will be written to `/data/home/qnxuser/testdir/messages`
