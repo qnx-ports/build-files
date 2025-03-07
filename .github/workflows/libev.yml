@@ -1,0 +1,68 @@
+name: libev
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/libev.yml"
+      - "ports/libev/**"
+  pull_request:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/libev.yml"
+      - "ports/libev/**"
+
+jobs:
+  build-sdp-710:
+    strategy:
+      matrix:
+        qnx_env:
+          - ghcr.io/qnx-ports/sdp800-build-env:latest
+          - ghcr.io/qnx-ports/sdp-build-env:latest
+      name: Build for QNX ${{
+        matrix.qnx_env == 'ghcr.io/qnx-ports/sdp800-build-env:latest' && '800' ||
+        matrix.qnx_env == 'ghcr.io/qnx-ports/sdp-build-env:latest' && '710'
+      }}
+    runs-on: self-hosted
+    if: |
+      (github.event_name == 'workflow_dispatch') ||
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'libev'))
+    steps:
+      - name: Checkout build-files
+        uses: actions/checkout@v4
+        with:
+          path: build-files
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{github.actor}}
+          password: ${{secrets.GITHUB_TOKEN}}
+
+      - name: Pull build environment
+        run: |
+          docker pull ${{ matrix.qnx_env }}
+
+      - name: Build libev
+        uses: addnab/docker-run-action@v3
+        with:
+          image: ${{ matrix.qnx_env }}
+          options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
+          shell: bash
+          run: |
+            if [[ "${{ matrix.qnx_env}}" == "ghcr.io/qnx-ports/sdp800-build-env:latest" ]]; then
+              source ~/qnx/800/qnxsdp-env.sh
+            else 
+              source ~/qnx/710/qnxsdp-env.sh
+            fi
+            cd ~/workspace
+            curl -O https://dist.schmorp.de/libev/libev-4.33.tar.gz
+            tar xvf libev-4.33.tar.gz
+            mv libev-4.33 libev
+            patch -i build-files/ports/libev/libev-4.33.patch libev/ev.c
+            make -C build-files/ports/libev install

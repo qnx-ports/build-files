@@ -9,11 +9,9 @@ function hook_preconfigure {
 		base_prefix="/usr/local"
 		prefix="${INSTALL_ROOT_nto}/${base_prefix}"
 		exec_prefix="${INSTALL_ROOT_nto}/${cpudir}/${base_prefix}"
-		includedir="${INSTALL_ROOT_HDR}"
 
 		configure_opts="${configure_opts} --prefix=${prefix}"
 		configure_opts="${configure_opts} --exec-prefix=${exec_prefix}"
-		configure_opts="${configure_opts} --includedir=${includedir}"
 
 		export PKG_CONFIG_ALLOW_SYSTEM_CFLAGS=1
 		export PKG_CONFIG_ALLOW_SYSTEM_LIBS=1
