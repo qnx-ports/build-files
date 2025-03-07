@@ -21,8 +21,8 @@ jobs:
       matrix:
         qnx_env: ['sdp800-build-env', 'sdp-build-env']
     name: Build for QNX ${{
-      matrix.qnx_env == 'sdp800-build-env' && '800' ||
-      matrix.qnx_env == 'sdp-build-env' && '710' ||
+      (matrix.qnx_env == 'sdp800-build-env' && '800') ||
+      (matrix.qnx_env == 'sdp-build-env' && '710') ||
       'unknown'
     }}
     runs-on: self-hosted
