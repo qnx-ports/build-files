@@ -78,10 +78,13 @@ CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DSDL2_INCLUDE_DIR="$(QNX_TARGET)/$(CPUDIR)/$(PREFIX)/include/SDL" \
              -DSDL2MAIN_LIBRARY="$(QNX_TARGET)/$(CPUDIR)/$(PREFIX)/lib/libSDL2main.a" \
              -DSDL2_NO_DEFAULT_PATH:BOOL=ON \
+             -DPKG_CONFIG_EXECUTABLE="/usr/bin/pkgconf"
+             
 
 MAKE_ARGS ?= -j $(firstword $(JLEVEL) 1)
 
-MAKE_PREARGS = PKG_CONFIG_PATH=$(QNX_TARGET)/$(CPUDIR)/$(PREFIX)/lib/pkgconfig SDL2DIR=$(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)
+MAKE_PREARGS = PKG_CONFIG_PATH=$(QNX_TARGET)/$(CPUDIR)/$(PREFIX)/lib/pkgconfig \
+               SDL2DIR=$(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX) 
 
 ifndef NO_TARGET_OVERRIDE
 EmulationStation_all:
@@ -103,6 +106,7 @@ install check: EmulationStation_all
 	@cp build/output/emulationstation $(PRODUCT_ROOT)/staging/$(CPUDIR)/emulationstation/
 	@cp build/output/*.a $(PRODUCT_ROOT)/staging/$(CPUDIR)/lib/
 	@cp ../start-es.sh $(PRODUCT_ROOT)/staging/$(CPUDIR)/emulationstation/
+	@cp -r $(DIST_BASE)/resources $(PRODUCT_ROOT)/staging/$(CPUDIR)/emulationstation/
 	@echo Done.
 
 clean iclean spotless:
