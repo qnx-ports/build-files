@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Control installation
-DIST_BASE=${QNX_PROJECT_ROOT:-"${PRODUCT_ROOT}/../../"}
+DIST_BASE=${QNX_PROJECT_ROOT:-"${PWD}/../../../../vim"}
 INSTALL_ROOT=$(eval "echo \${INSTALL_ROOT_${TARGET_SYSNAME}}")
 PREFIX="/usr/local"
 
@@ -10,9 +10,6 @@ function hook_preconfigure
   # Override srcdir
   rm -rf ${PWD}/build
   mkdir -p ${PWD}/build
-  for file in "*vim ex *view";do
-    find ${INSTALL_ROOT} -name $file -exec rm -rf {} \;
-  done
   cp -r ${DIST_BASE}/src build
   cp ${DIST_BASE}/README.txt build
   cp ${DIST_BASE}/LICENSE build
