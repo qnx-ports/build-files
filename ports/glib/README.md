@@ -11,7 +11,7 @@ glib currently has 2 different building profiles and only one of them should be 
 **NOTE**: currently both x86_64 and aarch64le are supported
 
 Current these versions are tested:
-+ main
++ 2.83.5 
 
 See test reports in `tests/`. They remain the same as the other version
 
@@ -36,7 +36,7 @@ Optional pre-requisite: Install Docker on Ubuntu https://docs.docker.com/engine/
 # Create a workspace
 mkdir -p ~/qnx_workspace && cd ~/qnx_workspace
 git clone https://github.com/qnx-ports/build-files.git
-git clone https://gitlab.gnome.org/GNOME/glib.git
+git clone -b 2.83.5 https://gitlab.gnome.org/GNOME/glib.git
 
 # Optionally build the Docker image and create a container
 cd build-files/docker
