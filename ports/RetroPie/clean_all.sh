@@ -10,8 +10,13 @@ echo "        QUIT WITHIN 5 SECONDS BEFORE ALL BUILDS ARE WIPED."
 echo "========================="
 sleep 6
 
+### Clean lua
+echo "[INFO]: Cleaning lua..."
+cd ${TOP_LEVEL_BUILD_DIR}/../lua
+make clean
+
 ### Clean RetroArch
-echo "[INFO]: Building RetroArch..."
+echo "[INFO]: Cleaning RetroArch..."
 cd ${TOP_LEVEL_BUILD_DIR}/RetroArch
 make clean
 
@@ -38,12 +43,12 @@ make clean
 #==============VLC=================
 
 # SDL
-echo "[INFO]: Building SDL..."
+echo "[INFO]: Cleaning SDL..."
 cd ${TOP_LEVEL_BUILD_DIR}/../SDL
 make clean
 
 # FreeImage
-echo "[INFO]: Building FreeImage..."
+echo "[INFO]: Cleaning FreeImage..."
 cd ${TOP_LEVEL_BUILD_DIR}/../FreeImage
 make clean
 

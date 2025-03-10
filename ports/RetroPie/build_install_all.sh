@@ -38,6 +38,7 @@ RAPIDJSON_SRC=${PWD}/../../../rapidjson
 FREEIMAGE_SRC=${PWD}/../../../FreeImage
 PUGIXML_SRC=${PWD}/../../../pugixml
 NANOSVG_SRC=${PWD}/../../../nanosvg
+LUA_SRC=${PWD}/../../../lua
 
 # DO NOT TOUCH BELOW HERE
 if [[ -z "$TARGET_IP" ]]; then
@@ -166,9 +167,25 @@ if [ ! -d "$NANOSVG_SRC" ]; then
     git clone https://github.com/memononen/nanosvg.git $NANOSVG_SRC
 fi
 
+########### Additional Deps ###########
+if [ ! -d "$LUA_SRC" ]; then
+    echo "[INFO]: Missing lua source. Cloning..."
+    git clone https://github.com/lua/lua.git $NANOSVG_SRC
+fi
 
 ##########################################################################################
-
+### Build Lua
+if [ ! -d "${TOP_LEVEL_BUILD_DIR}/../lua/nto-${_CHECK_BUILD_ARCH}/build/" -o ! "${DO_NOT_REBUILD}" = "TRUE" ]; then
+    echo "[INFO]: Building lua..."
+    cd ${TOP_LEVEL_BUILD_DIR}/../lua
+    rm nto-${_CHECK_BUILD_ARCH}/Makefile.dnm
+    if [ "$DO_NOT_BUILD_UNUSED" = "TRUE" ]; then
+        touch nto-${_OPPOSITE_ARCH}/Makefile.dnm
+    fi
+    make install_rpie
+else 
+    echo "[SKIP]: Skipping lua - build detected."
+fi
 
 ### Build RetroArch
 if [ ! -e "${TOP_LEVEL_BUILD_DIR}/RetroArch/nto-${_CHECK_BUILD_ARCH}/build/retroarch" -o ! "${DO_NOT_REBUILD}" = "TRUE" ]; then
@@ -316,6 +333,7 @@ if [ ! -d "${TOP_LEVEL_BUILD_DIR}/EmulationStation/nto-${_CHECK_BUILD_ARCH}/buil
 else
     echo "[SKIP]: Skipping Emulation Station - build detected."
 fi
+
 
 ##########################################################################################
 
