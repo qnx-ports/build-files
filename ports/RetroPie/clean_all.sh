@@ -10,6 +10,11 @@ echo "        QUIT WITHIN 5 SECONDS BEFORE ALL BUILDS ARE WIPED."
 echo "========================="
 sleep 6
 
+### Clean muslflt
+echo "[INFO]: Cleaning muslflt..."
+cd ${TOP_LEVEL_BUILD_DIR}/../muslflt
+make clean
+
 ### Clean lua
 echo "[INFO]: Cleaning lua..."
 cd ${TOP_LEVEL_BUILD_DIR}/../lua

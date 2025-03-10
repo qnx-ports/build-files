@@ -38,7 +38,9 @@ RAPIDJSON_SRC=${PWD}/../../../rapidjson
 FREEIMAGE_SRC=${PWD}/../../../FreeImage
 PUGIXML_SRC=${PWD}/../../../pugixml
 NANOSVG_SRC=${PWD}/../../../nanosvg
+
 LUA_SRC=${PWD}/../../../lua
+MUSLFLT_SRC=${PWD}/../../../muslflt
 
 # DO NOT TOUCH BELOW HERE
 if [[ -z "$TARGET_IP" ]]; then
@@ -93,9 +95,13 @@ if [ ! "$TARGET_ARCH" = "aarch64le" -a ! "$TARGET_ARCH" = "x86_64" ]; then
 else
     if [ "$TARGET_ARCH" = "aarch64le" ]; then
         _CHECK_BUILD_ARCH=aarch64-le
+        _MUSL_BUILD_ARCH=aarch64/so.le
+        _STAGING_ARCH=aarch64le
         _OPPOSITE_ARCH=x86_64-o
     else
         _CHECK_BUILD_ARCH=x86_64-o
+        _MUSL_BUILD_ARCH=aarch64/so
+        _STAGING_ARCH=x86_64
         _OPPOSITE_ARCH=aarch64-le
     fi
 fi
@@ -173,7 +179,18 @@ if [ ! -d "$LUA_SRC" ]; then
     git clone https://github.com/qnx-ports/lua.git $LUA_SRC
 fi
 
+if [ ! -d "$MUSLFLT_SRC" ]; then
+    echo "[INFO]: Missing lua source. Cloning..."
+    git clone https://github.com/qnx-ports/muslflt.git $MUSLFLT_SRC
+fi
 ##########################################################################################
+### Build Muslflt
+echo "[INFO]: Building muslflt..."
+cd ${TOP_LEVEL_BUILD_DIR}/../muslflt
+make install
+cd ${TOP_LEVEL_BUILD_DIR}/../muslflt/nto-${_CHECK_BUILD_ARCH}/
+cp *.so ${TOP_LEVEL_BUILD_DIR}/staging/${_STAGING_ARCH}/lib/
+
 ### Build Lua
 if [ ! -d "${TOP_LEVEL_BUILD_DIR}/../lua/nto-${_CHECK_BUILD_ARCH}/build/" -o ! "${DO_NOT_REBUILD}" = "TRUE" ]; then
     echo "[INFO]: Building lua..."
@@ -187,6 +204,7 @@ else
     echo "[SKIP]: Skipping lua - build detected."
 fi
 
+##########################################################################################
 ### Build RetroArch
 if [ ! -e "${TOP_LEVEL_BUILD_DIR}/RetroArch/nto-${_CHECK_BUILD_ARCH}/build/retroarch" -o ! "${DO_NOT_REBUILD}" = "TRUE" ]; then
     echo "[INFO]: Building RetroArch..."

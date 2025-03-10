@@ -79,6 +79,7 @@ Last Updated 2/27/2025 M/D/Y
 |                |[nanosvg](../nanosvg/README.md)                |[zlib](https://github.com/memononen/nanosvg/blob/master/LICENSE.txt)|.svg parsing library, for vector graphics. Needed by Emulation Station.|
 |                |[rapidjson](../rapidjson/README.md)            |[MIT](https://github.com/Tencent/rapidjson/blob/master/license.txt)|.json parser, needed by Emulation Station.|
 |                |[FreeImage](../FreeImage/README.md)            |[GPLv3, FIPL](https://freeimage.sourceforge.io/license.html)|Multifaceted image library, needed by Emulation Station.|
+|                |[Lua](../lua/README.md)            |[MIT](https://www.lua.org/license.html)|Scripting language, needed by many games.|
 
 ## Installed File Structure
 The following file structure will be installed in the `home` directory (`~/`) of `TARGET_USER` by install.sh. \

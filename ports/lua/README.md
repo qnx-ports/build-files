@@ -15,10 +15,21 @@ cd workspace      #Or make a new one and navigate into it
 git clone https://github.com/qnx-ports/lua.git
 git clone https://github.com/qnx-ports/build-files.git
 
-# 2. Source QNX SDP 8
+# 2. Build muslflt or rename LuaMakefileNoMuslflt.qnx to LuaMakefile.qnx
+#    libmuslflt corrects floating point accuracy.
+git clone https://github.com/qnx-ports/muslflt.git
+source ~/qnx800/qnxsdp-env.sh
+cd workspace/build-files/ports/muslflt
+make install
+#--OR--
+cd workspace/build-files/ports/lua
+rm LuaMakefile.qnx
+mv LuaMakefileNoMuslflt.qnx LuaMakefile.qnx
+
+# 3. Source QNX SDP 8
 source ~/qnx800/qnxsdp-env.sh
 
-# 3. Navigate here and run make/make install
+# 4. Navigate here and run make/make install
 cd workspace/build-files/ports/lua
 make
 #OR
@@ -38,3 +49,8 @@ cd lua
 #OR FOR .lua FILES:
 ./lua <path-to-file>
 ```
+Currently Broken: \
+test calls.lua tries to call an infinite loop c function, and catch the caused error.
+On QNX, results in sigsev -> immediate termination.
+
+big.lua: attempt to yield from outside a coroutine

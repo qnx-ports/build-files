@@ -78,6 +78,7 @@ install: lua_all
 	@cd build && $(MAKE_PREOPTS) make $(MAKE_ARGS) -fLuaMakefile.qnx
 
 lua_tests: lua_all install
+	@cd build/testes/libs && $(MAKE_PREOPTS) make $(MAKE_ARGS)
 	@mkdir -p test_staging/lib
 	@mkdir -p test_staging/test
 	@cp build/*.a test_staging/lib/
