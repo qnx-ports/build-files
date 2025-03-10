@@ -170,7 +170,7 @@ fi
 ########### Additional Deps ###########
 if [ ! -d "$LUA_SRC" ]; then
     echo "[INFO]: Missing lua source. Cloning..."
-    git clone https://github.com/lua/lua.git $NANOSVG_SRC
+    git clone https://github.com/qnx-ports/lua.git $LUA_SRC
 fi
 
 ##########################################################################################
