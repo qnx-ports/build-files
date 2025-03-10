@@ -12,15 +12,9 @@ function hook_preconfigure {
 
 		configure_opts="${configure_opts} --prefix=${prefix}"
 		configure_opts="${configure_opts} --exec-prefix=${exec_prefix}"
-
-		export PKG_CONFIG_ALLOW_SYSTEM_CFLAGS=1
-		export PKG_CONFIG_ALLOW_SYSTEM_LIBS=1
-		export PKG_CONFIG_PATH="${INSTALL_ROOT_nto}${exec_prefix}/lib/pkgconfig"
-		export PKG_CONFIG_LIBDIR="${INSTALL_ROOT_nto}${exec_prefix}/lib/pkgconfig"
-		export PKG_CONFIG_SYSROOT_DIR="${INSTALL_ROOT_nto}"
 		configure_opts="${configure_opts} --with-sysroot=${INSTALL_ROOT_nto}"
 
-		# QNX build info
+		# set flags
 		CFLAGS="${CFLAGS} -D_QNX_SOURCE -Wno-strict-aliasing -Wno-unused-value -Wno-unused-function"
 		LDFLAGS="${LDFLAGS} -Wl,--build-id=md5"
 }
