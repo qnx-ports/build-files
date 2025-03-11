@@ -9,7 +9,7 @@ It is very likely that another version of these binaries are shipped with the QN
 # Dependency warning
 
 You should compile and install its dependencies before proceeding (in order).
-+ [`freetype2`](https://github.com/qnx-ports/build-files/tree/main/ports/freetype2)
++ [`freetype`](https://github.com/qnx-ports/build-files/tree/main/ports/freetype)
 + [`fontconfig`](https://github.com/qnx-ports/build-files/tree/main/ports/fontconfig)
 + [`glib`](https://github.com/qnx-ports/build-files/tree/main/ports/glib)
 + [`pixman`](https://github.com/qnx-ports/build-files/tree/main/ports/pixman)
