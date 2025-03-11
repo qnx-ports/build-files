@@ -60,7 +60,7 @@ cd ~/qnx_workspace
 ./build-files/ports/freetype/install_all.sh
 
 # Build freetype2
-QNX_PROJECT_ROOT="$(pwd)/freetype2" JLEVEL=4 make -C build-files/ports/freetype install
+QNX_PROJECT_ROOT="$(pwd)/freetype" JLEVEL=4 make -C build-files/ports/freetype install
 ```
 
 # Deploy binaries via SSH
