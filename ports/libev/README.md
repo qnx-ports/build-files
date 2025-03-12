@@ -22,6 +22,7 @@ cd build-files/docker
 source ~/qnx800/qnxsdp-env.sh
 cd ~/qnx_workspace
 
+# Note: libev does not have an official latest upstream source on GitHub. Hence we download latest official source as archive from their website and then apply QNX specific changes as a patch to this source.
 # Install libev archive
 curl -O https://dist.schmorp.de/libev/libev-4.33.tar.gz
 tar xvf libev-4.33.tar.gz
