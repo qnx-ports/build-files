@@ -66,17 +66,17 @@ jobs:
         run: |
           docker pull ghcr.io/qnx-ports/sdp-build-env:latest
 
-      - name: Build nghttp2 for QNX 8
+      - name: Build nghttp2
         uses: addnab/docker-run-action@v3
         with:
           image: ghcr.io/qnx-ports/sdp-build-env:latest
           options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
           shell: bash
           run: |
-            if [[ ${{ matrix.qnx_env.sdp }} == 800 ]]; then
-              source ~/qnx/800/qnxsdp-env.sh
-            else
+            if [[ ${{ matrix.qnx_env.sdp }} == 710 ]]; then
               source ~/qnx/710/qnxsdp-env.sh
+            else
+              source ~/qnx/800/qnxsdp-env.sh
             fi
             cd ~/workspace
             curl -O https://dist.schmorp.de/libev/libev-4.33.tar.gz
