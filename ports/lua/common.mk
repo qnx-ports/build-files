@@ -52,7 +52,7 @@ endif
 MAKE_PREOPTS= 	   CC="$(QNX_HOST)/usr/bin/qcc -V$(V_OPT) -Wno-deprecated-declarations " \
 				   AR="$(QNX_HOST)/usr/bin/nto$(CPU)-ar cq "\
 				   RANLIB=$(QNX_HOST)/usr/bin/nto$(CPU)-gcc-ranlib \
-				   CFLAGS="-D_QNX_SOURCE -std=c99 -V$(V_OPT) $(FLAGS)" \
+				   CFLAGS="-D_QNX_SOURCE -DLUA_USE_QNX -std=c99 -V$(V_OPT) $(FLAGS)" \
 				   LD="$(QNX_HOST)/usr/bin/qcc -V$(V_OPT)"
 
 
@@ -78,19 +78,20 @@ install: lua_all
 	@cd build && $(MAKE_PREOPTS) make $(MAKE_ARGS) -fLuaMakefile.qnx
 
 lua_tests: lua_all install
-	@cd build/testes/libs && $(MAKE_PREOPTS) make $(MAKE_ARGS)
+	@cd build/testes/libs && $(MAKE_PREOPTS) make $(MAKE_ARGS) -fmakefile.qnx
 	@mkdir -p test_staging/lib
 	@mkdir -p test_staging/test
 	@cp build/*.a test_staging/lib/
+	@cp $(QNX_TARGET)/$(CPUDIR)/$(PREFIX)/lib/*muslflt* test_staging/lib/
 	@cp -r build/testes/* test_staging/test/
 	@cp build/lua test_staging/
 
 install_rpie: lua_tests
 	@mkdir -p ../../RetroPie/staging/$(CPUDIR)/lib
 	@mkdir -p ../../RetroPie/staging/$(CPUDIR)/lua/test
-	@cp build/*.a ../../RetroPie/staging/$(CPUDIR)/lib/
-	@cp build/lua ../../RetroPie/staging/$(CPUDIR)/lua/
-	@cp -r build/testes/* ../../RetroPie/staging/$(CPUDIR)/lua/test/
+	-cp test_staging/lib/* ../../RetroPie/staging/$(CPUDIR)/lib/
+	-cp build/lua ../../RetroPie/staging/$(CPUDIR)/lua/
+	-cp -r build/testes/* ../../RetroPie/staging/$(CPUDIR)/lua/test/
 
 clean:
 	-rm -rf build

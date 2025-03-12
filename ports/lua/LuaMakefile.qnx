@@ -71,11 +71,11 @@ LOCAL = $(TESTS) $(CWARNS)
 # To enable Linux goodies, -DLUA_USE_LINUX
 # For C89, "-std=c89 -DLUA_USE_C89"
 # Note that Linux/Posix options are not compatible with C89
-MYCFLAGS= $(CFLAGS)
+MYCFLAGS= $(CFLAGS) -DLUA_USE_QNX -D_QNX_SOURCE -DLUA_USE_CTYPE -DLUA_USE_QNX -DLUA_USE_APICHECK
 MYLDFLAGS= $(LDFLAGS) -Wl,-E -Wl,--whole-archive -lmuslflt -Wl,--no-whole-archive
-MYLIBS= 
+MYLIBS= -lregex
 
-
+#COMMENTED OUT FOR QNX - SET MANUALLY
 # CC= gcc
 # CFLAGS= -Wall -O2 $(MYCFLAGS) -fno-stack-protector -fno-common -march=native
 # AR= ar rc
