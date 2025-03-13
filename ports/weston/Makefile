@@ -6,6 +6,7 @@ endif
 endif
 
 EARLY_DIRS = \
+	headers \
 	libs \
 	renderers \
 	backends \

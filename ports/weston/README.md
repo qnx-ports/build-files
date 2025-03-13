@@ -27,11 +27,32 @@ sudo apt install meson
 ```bash
 # Create a workspace
 mkdir -p ~/qnx_workspace && cd ~/qnx_workspace
+
+# Obtain build tools and sources
 git clone https://github.com/qnx-ports/build-files.git
+git clone https://github.com/mesonbuild/meson.git
+git clone https://gitlab.freedesktop.org/cairo/cairo.git
 
-# Clone 
+# Checkout to the latest stable 
+cd cairo
+git checkout 1.18.2
+cd ..
 
-# TO DO LATER
+# Build the Docker image and create a container
+cd build-files/docker
+./docker-build-qnx-image.sh
+./docker-create-container.sh
+
+# Source qnxsdp-env.sh in
+source ~/qnx800/qnxsdp-env.sh
+cd ~/qnx_workspace
+
+# Optionally use the convenience script to install all dependencies
+# This script will install glib and pixman
+./build-files/ports/cairo/install_all.sh
+
+# Build cairo
+QNX_PROJECT_ROOT="$(pwd)/cairo" JLEVEL=4 make -C build-files/ports/cairo install
 ```
 
 ### Build wayland
@@ -101,24 +122,18 @@ cd ~/qnx_workspace
 QNX_PROJECT_ROOT="$(pwd)/libxkbcommon" JLEVEL=4 make -C build-files/ports/libxkbcommon install
 ```
 
-### Install libdrm headers
-```bash
-# Clone libdrm
-cd ~/qnx_workspace
-git clone https://gitlab.freedesktop.org/mesa/drm.git
-
-# Install libdrm headers
-DIST_ROOT=$(pwd)/drm make -C build-files/ports/libdrm/ install
-```
-
 ### Build Weston
 
 ```bash
 cd ~/qnx_workspace
+# Clone libdrm (will be used to install header files)
+git clone https://gitlab.freedesktop.org/mesa/drm.git
+
+# Clone weston
 git clone https://github.com/qnx-ports/weston.git
 cd weston
 git checkout qnx-v11.0.3
-OSLIST=nto DIST_ROOT=$(pwd)/unbuild-weston/weston make -C build-files/ports/weston/ install JLEVEL=4
+OSLIST=nto DRM_ROOT=$(pwd)/drm DIST_ROOT=$(pwd)/weston make -C build-files/ports/weston/ install JLEVEL=4
 ```
 
 # Run weston examples on the target
@@ -131,7 +146,7 @@ export TARGET_HOST=<target-ip-address-or-hostname>
 ./transfer.sh
 ```
 ## Structure
-he following assumes that all dependency packages (from SDP) **and** all components built as part of this project are installed to the same location on the host machine. This location is referred to as `$INSTALL_DIR`. Adjust process accordingly if components built from this project are installed elsewhere.
+the following assumes that all dependency packages (from SDP) **and** all components built as part of this project are installed to the same location on the host machine. This location is referred to as `$INSTALL_DIR`. Adjust process accordingly if components built from this project are installed elsewhere.
 
 Usually, in the default QNX host machine configuration, `$INSTALL_DIR`=`$QNX_TARGET`. `$PROCESSOR` indicates the target-specific install folder (i.e. aarch64le or x86_64).
 
@@ -172,6 +187,8 @@ Wayland:
 Others:
 - `$INSTALL_DIR`/`$PROCESSOR`/usr/lib/libpixman*
     - --> /data/home/qnxuser/lib/
+- `$INSTALL_DIR`/`$PROCESSOR`/usr/lib/libcairo*
+    - --> /data/home/qnxuser/lib/
 
 ```bash
 # Login as root
@@ -188,6 +205,7 @@ export TMPDIR=/data/home/qnxuser/tmp
 export XDG_RUNTIME_DIR=/data/var/run/user/$(id -u ${USER})
 export XKB_CONFIG_ROOT=/data/home/qnxuser/xkb
 export LD_LIBRARY_PATH=/data/home/qnxuser/lib/:$LD_LIBRARY_PATH
+export LD_LIBRARY_PATH=/data/home/qnxuser/lib/libweston:$LD_LIBRARY_PATH
 export PATH=/data/home/qnxuser/bin:$PATH
 
 # Move data directories to the right path
@@ -273,6 +291,7 @@ export TMPDIR=/data/home/qnxuser/tmp
 export XDG_RUNTIME_DIR=/data/var/run/user/$(id -u ${USER})
 export XKB_CONFIG_ROOT=/data/home/qnxuser/xkb
 export LD_LIBRARY_PATH=/data/home/qnxuser/lib/:$LD_LIBRARY_PATH
+export LD_LIBRARY_PATH=/data/home/qnxuser/lib/libweston:$LD_LIBRARY_PATH
 export PATH=/data/home/qnxuser/bin:$PATH
 
 # Run the test executables

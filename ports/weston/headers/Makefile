@@ -5,10 +5,11 @@ include $(QCONFIG)
 
 INCLUDE_DIR ?= $(INSTALL_ROOT_nto)/usr/include/libdrm
 DIST_ROOT ?= $(PROJECT_ROOT)
+DRM_ROOT ?= $(PROJECT_ROOT)
 
 # Source directories
-SRC_DIR1 = $(DIST_ROOT)/include/drm
-SRC_DIR2 = $(DIST_ROOT)
+SRC_DIR1 = $(DRM_ROOT)/include/drm
+SRC_DIR2 = $(DRM_ROOT)
 
 # Header files
 HEADERS1 = $(wildcard $(SRC_DIR1)/*.h)

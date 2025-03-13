@@ -31,7 +31,7 @@ sshpass -p "$TARGET_PASSWORD" scp -r $QNX_TARGET/aarch64le/usr/libexec "$TARGET_
 
 # Transfer weston test libraries to the target
 echo "Transferring weston test libraries..."
-sshpass -p "$TARGET_PASSWORD" scp $QNX_TARGET/aarch64le/usr/lib/test-plugin.so "$TARGET_USER@$TARGET_HOST:$TARGET_BASE/lib/weston"
+sshpass -p "$TARGET_PASSWORD" scp $QNX_TARGET/aarch64le/usr/lib/test-plugin.so "$TARGET_USER@$TARGET_HOST:$TARGET_BASE/lib"
 sshpass -p "$TARGET_PASSWORD" scp $QNX_TARGET/aarch64le/usr/lib/test-ivi-layout.so "$TARGET_USER@$TARGET_HOST:$TARGET_BASE/lib"
 sshpass -p "$TARGET_PASSWORD" scp $QNX_TARGET/aarch64le/usr/lib/weston-test-desktop-shell.so "$TARGET_USER@$TARGET_HOST:$TARGET_BASE/lib"
 
@@ -55,13 +55,16 @@ for lib in libmemstream libpixman libepoll libtimerfd libsignalfd libeventfd; do
     sshpass -p "$TARGET_PASSWORD" scp $QNX_TARGET/aarch64le/usr/lib/${lib}* "$TARGET_USER@$TARGET_HOST:$TARGET_BASE/lib"
 done
 
+# Transfer cairo dependancy
+sshpass -p "$TARGET_PASSWORD" scp $QNX_TARGET/aarch64le/usr/lib/libcairo* "$TARGET_USER@$TARGET_HOST:$TARGET_BASE/lib"
+
 # Transfer xkbcommon dependency
 echo "Transferring xkbcommon dependency..."
 sshpass -p "$TARGET_PASSWORD" scp $QNX_TARGET/aarch64le/usr/lib/libxkbcommon* "$TARGET_USER@$TARGET_HOST:$TARGET_BASE/lib"
-sshpass -p "$TARGET_PASSWORD" scp -r $QNX_TARGET/usr/share/xkb "$TARGET_USER@$TARGET_HOST:$TARGET_BASE/"
+sshpass -p "$TARGET_PASSWORD" scp -r $QNX_TARGET/usr/share/X11/xkb "$TARGET_USER@$TARGET_HOST:$TARGET_BASE/"
 
 # Transfer test data and executables to the target
 echo "Transferring test data and executables..."
 sshpass -p "$TARGET_PASSWORD" scp -r ~/qnx_workspace/weston/tests/reference "$TARGET_USER@$TARGET_HOST:$TARGET_BASE/"
 sshpass -p "$TARGET_PASSWORD" scp $QNX_TARGET/aarch64le/usr/lib/weston-test-* "$TARGET_USER@$TARGET_HOST:$TARGET_BASE/lib"
-sshpass -p "$TARGET_PASSWORD" scp $QNX_TARGET/aarch64le/usr/bin/weston_tests "$TARGET_USER@$TARGET_HOST:$TARGET_BASE"
+sshpass -p "$TARGET_PASSWORD" scp -r $QNX_TARGET/aarch64le/usr/bin/weston_tests "$TARGET_USER@$TARGET_HOST:$TARGET_BASE"
