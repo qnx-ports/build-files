@@ -4,6 +4,8 @@ Supports QNX7.1 and QNX8.0
 
 ## Version notice
 
+**!!!** Please ensure that you are not using Meson from its master branch, it is currently causing issues right now.
+
 glib currently has 2 different building profiles and only one of them should be installed on both the target and host system.
 
 # glib (main) for QNX (Recommanded)

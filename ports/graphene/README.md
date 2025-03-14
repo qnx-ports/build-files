@@ -28,7 +28,7 @@ cd ~/qnx_workspace
 git clone https://github.com/qnx-ports/graphene.git
 
 # graphene requires Meson for building, clone meson before proceed
-git clone https://github.com/mesonbuild/meson.git
+git clone -b 1.7.0 https://github.com/mesonbuild/meson.git
 
 # build graphene
 QNX_PROJECT_ROOT="$(pwd)/graphene" make -C build-files/ports/graphene/ JLEVEL=4 install
@@ -43,7 +43,7 @@ sudo apt install python3 ninja
 mkdir -p ~/qnx_workspace && cd qnx_workspace
 git clone https://github.com/qnx-ports/build-files.git
 git clone https://github.com/qnx-ports/graphene.git
-git clone https://github.com/mesonbuild/meson.git
+git clone -b 1.7.0 https://github.com/mesonbuild/meson.git
 
 # source qnxsdp-env.sh
 source ~/qnx800/qnxsdp-env.sh
