@@ -3,16 +3,18 @@
 Use `$(nproc)` instead of `4` after `JLEVEL=` and `-j` if you want to use the maximum number of cores to build this project.
 32GB of RAM is recommended for using `JLEVEL=$(nproc)` or `-j$(nproc)`.
 
-Presequisites to install Weston (in order):
-- Install QNX SDP 8.0 Notification FD Interfaces
-- Install QNX SDP 8.0 memstream
-- Install glib
-- Install pixman
-- Install cairo
-- Install wayland
-- Install libxkbcommon
-- Install xkeyboard-config
+Presequisites to install Weston:
+- Install QNX SDP 8.0 Notification FD Interfaces (com.qnx.qnx800.target.notify_fd)
+- Install QNX SDP 8.0 memstream (com.qnx.qnx800.target.memstream)
+- Install [glib](https://github.com/qnx-ports/build-files/tree/main/ports/glib)
+- Install [pixman](https://github.com/qnx-ports/build-files/tree/main/ports/pixman)
+- Install [cairo](https://github.com/qnx-ports/build-files/tree/main/ports/cairo)
+- Install [wayland](https://github.com/qnx-ports/build-files/tree/main/ports/wayland)
+- Install [libxkbcommon](https://github.com/qnx-ports/build-files/tree/main/ports/libxkbcommon)
+- Install [xkeyboard-config](https://github.com/qnx-ports/build-files/tree/main/ports/xkeyboard-config)
 - Install libdrm headers
+
+**Note: com.qnx.qnx800.target.notify_fd and com.qnx.qnx800.target.memstream are not currently available with the QNX Everywhere license**
 
 # Compile the port for QNX in a Docker container
 
