@@ -39,7 +39,7 @@ jobs:
       with:
         repository: vim/vim
         path: vim
-        ref: v9.1.1115
+        ref: v9.1.1198
         submodules: recursive
  
     - name: Login to GitHub Container Registry

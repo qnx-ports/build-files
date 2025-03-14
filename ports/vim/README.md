@@ -24,7 +24,7 @@ source ~/qnx800/qnxsdp-env.sh
 # Clone vim
 cd ~/qnx_workspace
 git clone https://github.com/vim/vim.git && cd vim
-git checkout v9.1.1115
+git checkout v9.1.1198
 
 # Build vim
 cd ~/qnx_workspace
@@ -47,7 +47,7 @@ sudo apt install automake pkg-config
 # Clone vim
 cd ~/qnx_workspace
 git clone https://github.com/vim/vim.git && cd vim
-git checkout v9.1.1115
+git checkout v9.1.1198
 
 # Build vim
 cd ~/qnx_workspace
