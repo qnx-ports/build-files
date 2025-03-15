@@ -1,0 +1,25 @@
+diff --git a/Makefile b/Makefile
+index 1e51287..ac29efd 100644
+--- a/Makefile
++++ b/Makefile
+@@ -714,7 +714,7 @@ CXXFLAGS += $(CFLAGS) $(INCFLAGS) -Wall -pedantic $(fpic)
+ ifneq ($(LIBSDL2),)
+    CXXFLAGS += -std=c++11
+ else
+-   CXXFLAGS += -std=c++98
++   CXXFLAGS += -std=c++11
+ endif
+ 
+ ifneq ($(SCREENSHOTS),)
+@@ -742,9 +742,9 @@ endif
+ CFLAGS += $(INCFLAGS) -Wall -pedantic $(fpic)
+ 
+ ifneq (,$(findstring qnx,$(platform)))
+-   CFLAGS += -Wc,-std=c99
++   CFLAGS += -Wc,-std=c++11
+ else
+-   CFLAGS += -std=gnu99
++   CFLAGS += -std=c++11
+ endif
+ 
+ all: $(TARGET)
