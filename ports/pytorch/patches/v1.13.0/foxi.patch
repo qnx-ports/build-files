@@ -1,0 +1,24 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b406d0f..d71a0ca 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -55,11 +55,14 @@ target_include_directories(foxi_loader PUBLIC
+   $<INSTALL_INTERFACE:include>)
+ # Users of ONNX backend API would compile it with their toolchain, so it is
+ # implemented in standard C89 for maximum compatibility
+-set_target_properties(foxi_loader
+-                      PROPERTIES C_STANDARD
+-                                 90
+-                                 C_EXTENSIONS
+-                                 NO)
++if(NOT QNX)
++  set_target_properties(foxi_loader
++                        PROPERTIES C_STANDARD
++                                   90
++                                   C_EXTENSIONS
++                                   NO)
++endif()
++
+ target_link_libraries(foxi_loader PUBLIC foxi ${CMAKE_DL_LIBS})
+ if(MSVC)
+   add_msvc_runtime_flag(foxi_loader)
