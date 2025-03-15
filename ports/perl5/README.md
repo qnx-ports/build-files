@@ -91,10 +91,13 @@ cd /data/home/qnxuser/perl5_tests/t && ln -sf ../perl . && LD_LIBRARY_PATH=$(pwd
 
 **Note**: Some tests are failed, less then 3% out of all.
 
-### aarch64le ????:
+### aarch64le:
 #TODO run tests on aarch64
 ```bash
-# put here aarch64 tests summary
+Failed 62 tests out of 2376, 97.39% okay.
+...
+Elapsed: 2284 sec
+u=29.22  s=0.16  cu=1719.97  cs=14.78  scripts=2376  tests=953987
 ```
 
 ### x86_64:
