@@ -33,7 +33,8 @@ PROJECT_INSTALL_DIR=$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)
 MESON := meson
 MESON_FLAGS :=  --buildtype=$(MESON_BUILD_TYPE) \
                 --prefix=$(PREFIX) \
-				--cross-file=../qnx_cross.cfg
+                --cross-file=../qnx_cross.cfg \
+                -DPISTACHE_BUILD_TESTS=true
 
 NINJA_ARGS := -j $(firstword $(JLEVEL) 1)
 

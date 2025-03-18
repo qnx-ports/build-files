@@ -32,3 +32,4 @@ objcopy = qnx_host_dir + '/usr/bin/' + target + '-objcopy'
 # Using the host pkg-config
 pkg-config = 'pkg-config'
 windres = ''
+cmake = 'cmake'
