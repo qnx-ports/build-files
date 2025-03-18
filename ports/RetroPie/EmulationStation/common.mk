@@ -101,12 +101,12 @@ EmulationStation_all:
 install check: EmulationStation_all
 	@echo Installing...
 	@cd build && $(MAKE_PREARGS) make VERBOSE=1 install $(MAKE_ARGS)
-	@mkdir -p $(PRODUCT_ROOT)/staging/$(CPUDIR)/emulationstation/
+	@mkdir -p $(PRODUCT_ROOT)/staging/$(CPUDIR)/
 	@mkdir -p $(PRODUCT_ROOT)/staging/$(CPUDIR)/lib/
-	@cp build/output/emulationstation $(PRODUCT_ROOT)/staging/$(CPUDIR)/emulationstation/
+	@cp build/output/emulationstation $(PRODUCT_ROOT)/staging/$(CPUDIR)/
 	@cp build/output/*.a $(PRODUCT_ROOT)/staging/$(CPUDIR)/lib/
-	@cp ../start-es.sh $(PRODUCT_ROOT)/staging/$(CPUDIR)/emulationstation/
-	@cp -r $(DIST_BASE)/resources $(PRODUCT_ROOT)/staging/$(CPUDIR)/emulationstation/
+	@cp ../startup.sh $(PRODUCT_ROOT)/staging/$(CPUDIR)/
+	@cp -r $(DIST_BASE)/resources $(PRODUCT_ROOT)/staging/$(CPUDIR)/
 	@echo Done.
 
 clean iclean spotless:

@@ -31,4 +31,5 @@ ssh ${TARGET_USER}@${TARGET_IP} "mkdir -p ~/.emulationstation"
 #ssh ${TARGET_USER}@${TARGET_IP} "cd $TARGET_DIR && mkdir -p tmp"
 
 scp -pr ${TOP_LEVEL_BUILD_DIR}/staging/${TARGET_ARCH}/* ${TARGET_USER}@${TARGET_IP}:$TARGET_DIR
-scp ${TOP_LEVEL_BUILD_DIR}/es_systems.cfg ${TARGET_USER}@${TARGET_IP}:~/.emulationstation/
+scp ${TOP_LEVEL_BUILD_DIR}/configs/es_systems.cfg ${TARGET_USER}@${TARGET_IP}:~/.emulationstation/
+scp ${TOP_LEVEL_BUILD_DIR}/configs/es_input.cfg ${TARGET_USER}@${TARGET_IP}:~/.emulationstation/

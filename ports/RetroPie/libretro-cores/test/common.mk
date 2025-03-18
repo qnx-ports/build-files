@@ -65,14 +65,14 @@ libretrotest_all:
 
 #Should go to staging/cpudir/cores
 install: libretrotest_all
-	@mkdir -p ../../../staging/$(CPUDIR)/retroarch/data/cores/tests
-	@cp build/test_1/*libretro*.so ../../../staging/$(CPUDIR)/retroarch/data/cores/tests/test_libretro.so
-	@cp build/test_2/*libretro*.so ../../../staging/$(CPUDIR)/retroarch/data/cores/tests/advanced_tests_libretro.so
-	@cp build/test_3/*libretro*.so ../../../staging/$(CPUDIR)/retroarch/data/cores/tests/button_test_libretro.so
-#	@cp build/test_4/*libretro*.so ../../../staging/$(CPUDIR)/retroarch/data/cores/tests/
-#	@cp build/test_5/*libretro*.so ../../../staging/$(CPUDIR)/retroarch/data/cores/tests/
-#	@cp build/test_6/*libretro*.so ../../../staging/$(CPUDIR)/retroarch/data/cores/tests/
-	@cp build/test_7/*libretro*.so ../../../staging/$(CPUDIR)/retroarch/data/cores/tests/midi_test_libretro.so
+	@mkdir -p ../../../staging/$(CPUDIR)/data/cores/tests
+	@cp build/test_1/*libretro*.so ../../../staging/$(CPUDIR)/data/cores/tests/test_libretro.so
+	@cp build/test_2/*libretro*.so ../../../staging/$(CPUDIR)/data/cores/tests/advanced_tests_libretro.so
+	@cp build/test_3/*libretro*.so ../../../staging/$(CPUDIR)/data/cores/tests/button_test_libretro.so
+#	@cp build/test_4/*libretro*.so ../../../staging/$(CPUDIR)/data/cores/tests/
+#	@cp build/test_5/*libretro*.so ../../../staging/$(CPUDIR)/data/cores/tests/
+#	@cp build/test_6/*libretro*.so ../../../staging/$(CPUDIR)/data/cores/tests/
+	@cp build/test_7/*libretro*.so ../../../staging/$(CPUDIR)/data/cores/tests/midi_test_libretro.so
 
 clean:
 	rm -rf build

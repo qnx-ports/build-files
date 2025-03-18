@@ -38,6 +38,10 @@ echo "[INFO]: Cleaning RetroArch retro8 core..."
 cd ${TOP_LEVEL_BUILD_DIR}/libretro-cores/retro8
 make clean
 
+echo "[INFO]: Cleaning RetroArch fake-08 core..."
+cd ${TOP_LEVEL_BUILD_DIR}/libretro-cores/fake-08
+make clean
+
 echo "[INFO]: Cleaning RetroArch mrboom core..."
 cd ${TOP_LEVEL_BUILD_DIR}/libretro-cores/mrboom
 make clean

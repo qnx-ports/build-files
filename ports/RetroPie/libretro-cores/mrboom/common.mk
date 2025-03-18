@@ -49,8 +49,8 @@ mrboom_all:
 #Should go to staging/cpudir/data/cores
 install: mrboom_all
 	@echo "Installing..."
-	mkdir -p $(PRODUCT_ROOT)/../staging/$(CPUDIR)/retroarch/data/cores/
-	cd build && cp *libretro*.so $(PRODUCT_ROOT)/../staging/$(CPUDIR)/retroarch/data/cores/
+	mkdir -p $(PRODUCT_ROOT)/../staging/$(CPUDIR)/data/cores/
+	cd build && cp *libretro*.so $(PRODUCT_ROOT)/../staging/$(CPUDIR)/data/cores/
 
 clean:
 	rm -rf build

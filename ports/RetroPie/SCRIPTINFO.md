@@ -67,10 +67,14 @@ Last Updated 2/27/2025 M/D/Y
 |*Programs*      |[RetroArch](RetroArch/README.md)               |[GPLv3](https://docs.libretro.com/development/licenses/) |A emulator (libretro) frontend, which serves as the host for many of RetroPie's emulators.|
 |                |[Emulation Station](EmulationStation/README.md)|[MIT](https://github.com/Aloshi/EmulationStation/blob/master/LICENSE.md)| A controller-based menu that can start various programs and emulators.|
 |*Libretro Cores*|[*mrboom](libretro-cores/mrboom/README.md)      |[MIT](https://github.com/Javanaise/mrboom-libretro/blob/master/LICENSE)| A modernized 'Bomberman' clone with many new features.|
-|                |[*retro8](libretro-cores/retro8/README.md)      |[GPLv3](https://github.com/Jakz/retro8/blob/master/LICENSE)|A PICO-8 open source implementation for libretro.|
+|                |[*retro8](libretro-cores/retro8/README.md)      |[GPLv3](https://github.com/Jakz/retro8/blob/master/LICENSE)|An older PICO-8 open source implementation for libretro.|
+|                |[*fake-08](libretro-cores/fake-08/README.md)      |[MIT](https://github.com/jtothebell/fake-08/blob/master/LICENSE.MD)|A modern PICO-8 open source implementation for libretro.|
 |                |[*2048](libretro-cores/2048/README.md)          |[Public Domain](https://github.com/libretro/libretro-2048/blob/master/COPYING)|A 2048 implementation for libretro.|
 |                |[*samples](libretro-cores/test/)                |[MIT](https://github.com/libretro/libretro-samples/blob/master/license)|A series of tests and samples for libretro.|
-|*Content*       |[*retro8: cmy platonic solids](https://www.lexaloffle.com/bbs/?pid=cmyplatonicsolids-0)|UNKNOWN|We do not distribute - this is pulled from its source. We may want to find a more "official" demo though.|
+|*Content*       |[*fake-08/retro8: cmy platonic solids](https://www.lexaloffle.com/bbs/?pid=cmyplatonicsolids-0)|None, N/A|We do not distribute - this is pulled from its source via CURL.|
+|                |[*fake-08/retro8: Celeste Classic](https://www.lexaloffle.com/bbs/?pid=11722)|None, N/A|We do not distribute - this is pulled from its source via CURL.|
+|                |[*fake-08/retro8: Celeste Classic 2](https://www.lexaloffle.com/bbs/?pid=86783)|CC4-BY-NC-SA|We do not distribute - this is pulled from its source via CURL.|
+|                |[*fake-08/retro8: Just One Boss](https://www.lexaloffle.com/bbs/?pid=49234)|CC4-BY-NC-SA|We do not distribute - this is pulled from its source via CURL.|
 |                |[*RetroArch: Assets](https://github.com/libretro/retroarch-assets)  |[CC-BY-4.0](https://github.com/libretro/retroarch-assets/blob/master/COPYING)|RetroArch's assets for its various GUIs.|
 |                |[*RetroArch: Info](https://github.com/libretro/libretro-core-info)                          |[MIT](https://github.com/libretro/libretro-core-info/blob/master/COPYING)|RetroArch's core info files for menu display purposes.|
 |*Dependencies*  |[VLC](../vlc/README.md)                        |[GPLv2](https://www.videolan.org/legal.html)|VLC Media Player and Engine, needed for Emulation Station.|

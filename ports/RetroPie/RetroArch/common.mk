@@ -82,53 +82,53 @@ RetroArch_all:
 install check: RetroArch_all assets info
 	@echo Installing...
 	@cd build && make VERBOSE=1 install $(MAKE_ARGS)
-	@mkdir -p $(PRODUCT_ROOT)/staging/$(CPUDIR)/retroarch/data/
-	@mkdir -p $(PRODUCT_ROOT)/staging/$(CPUDIR)/retroarch/rarch-shared/content/
+	@mkdir -p $(PRODUCT_ROOT)/staging/$(CPUDIR)/data/
+	@mkdir -p $(PRODUCT_ROOT)/staging/$(CPUDIR)/rarch-shared/content/
 	@mkdir -p $(PRODUCT_ROOT)/staging/$(CPUDIR)/lib/
 	-cp $(QNX_TARGET)/$(CPUVARDIR)/usr/lib/libxkbcommon* $(PRODUCT_ROOT)/staging/$(CPUDIR)/lib/
-	@cp build/retroarch $(PRODUCT_ROOT)/staging/$(CPUDIR)/retroarch/ 
-	@cp ../startup.sh $(PRODUCT_ROOT)/staging/$(CPUDIR)/retroarch/
-	-chmod 764 $(PRODUCT_ROOT)/staging/$(CPUDIR)/retroarch/startup.sh
+	@cp build/retroarch $(PRODUCT_ROOT)/staging/$(CPUDIR)/
+	@cp ../start-ra.sh $(PRODUCT_ROOT)/staging/$(CPUDIR)/
+	-chmod 764 $(PRODUCT_ROOT)/staging/$(CPUDIR)/start-ra.sh
 	@echo Done.
 
 info:
 	@echo Checking for folder...
 	@if [ -d "$(DIST_BASE)/../libretro-core-info" ]; then echo "Found!"; else echo "libretro-core-info not found. Exiting"; exit 1; fi 
-	@mkdir -p $(PRODUCT_ROOT)/staging/$(CPUDIR)/retroarch/data/info/
-	@echo "Copying core info over..." && cp $(DIST_BASE)/../libretro-core-info/* $(PRODUCT_ROOT)/staging/$(CPUDIR)/retroarch/data/info/
+	@mkdir -p $(PRODUCT_ROOT)/staging/$(CPUDIR)/data/info/
+	@echo "Copying core info over..." && cp $(DIST_BASE)/../libretro-core-info/* $(PRODUCT_ROOT)/staging/$(CPUDIR)/data/info/
 	@echo "Copied info files!"
 
 assets:
 	@echo Checking for folder...
 	@if [ -d "$(DIST_BASE)/../retroarch-assets" ]; then echo "Found!"; else echo "retroarch-assets not found. Exiting"; exit 1; fi 
 	@echo "Installing Assets..."
-	@mkdir -p $(PRODUCT_ROOT)/staging/$(CPUDIR)/retroarch/data/assets/
+	@mkdir -p $(PRODUCT_ROOT)/staging/$(CPUDIR)/data/assets/
 #Assets from multiple sources, in /src
-	@echo "Assorted Core Assets..." && cp -r $(DIST_BASE)/../retroarch-assets/src $(PRODUCT_ROOT)/staging/$(CPUDIR)/retroarch/data/assets/
+	@echo "Assorted Core Assets..." && cp -r $(DIST_BASE)/../retroarch-assets/src $(PRODUCT_ROOT)/staging/$(CPUDIR)/data/assets/
 #Default supported menus
-	@echo "Ozone Menu" && cp -r $(DIST_BASE)/../retroarch-assets/ozone $(PRODUCT_ROOT)/staging/$(CPUDIR)/retroarch/data/assets/
-	@echo "GLUI Menu..." && cp -r $(DIST_BASE)/../retroarch-assets/glui $(PRODUCT_ROOT)/staging/$(CPUDIR)/retroarch/data/assets/
-	@echo "RGUI Menu..." && cp -r $(DIST_BASE)/../retroarch-assets/rgui $(PRODUCT_ROOT)/staging/$(CPUDIR)/retroarch/data/assets/
-	@echo "XMB Menu..." && cp -r $(DIST_BASE)/../retroarch-assets/xmb $(PRODUCT_ROOT)/staging/$(CPUDIR)/retroarch/data/assets/
-	@echo "XMB Support Scripts" && cp -r $(DIST_BASE)/../retroarch-assets/scripts $(PRODUCT_ROOT)/staging/$(CPUDIR)/retroarch/data/assets/
+	@echo "Ozone Menu" && cp -r $(DIST_BASE)/../retroarch-assets/ozone $(PRODUCT_ROOT)/staging/$(CPUDIR)/data/assets/
+	@echo "GLUI Menu..." && cp -r $(DIST_BASE)/../retroarch-assets/glui $(PRODUCT_ROOT)/staging/$(CPUDIR)/data/assets/
+	@echo "RGUI Menu..." && cp -r $(DIST_BASE)/../retroarch-assets/rgui $(PRODUCT_ROOT)/staging/$(CPUDIR)/data/assets/
+	@echo "XMB Menu..." && cp -r $(DIST_BASE)/../retroarch-assets/xmb $(PRODUCT_ROOT)/staging/$(CPUDIR)/data/assets/
+	@echo "XMB Support Scripts" && cp -r $(DIST_BASE)/../retroarch-assets/scripts $(PRODUCT_ROOT)/staging/$(CPUDIR)/data/assets/
 #Additional Menu Themes
-	@echo "'Automatic' Menu Theme..." && cp -r $(DIST_BASE)/../retroarch-assets/Automatic $(PRODUCT_ROOT)/staging/$(CPUDIR)/retroarch/data/assets/
-	@echo "'FlatUX' Menu Theme..." && cp -r $(DIST_BASE)/../retroarch-assets/FlatUX $(PRODUCT_ROOT)/staging/$(CPUDIR)/retroarch/data/assets/
-	@echo "'FlatUX' Config..." && cp -r $(DIST_BASE)/../retroarch-assets/cfg $(PRODUCT_ROOT)/staging/$(CPUDIR)/retroarch/data/assets/
-	@echo "'Systematic' Menu Theme" && cp -r $(DIST_BASE)/../retroarch-assets/Systematic $(PRODUCT_ROOT)/staging/$(CPUDIR)/retroarch/data/assets/
+	@echo "'Automatic' Menu Theme..." && cp -r $(DIST_BASE)/../retroarch-assets/Automatic $(PRODUCT_ROOT)/staging/$(CPUDIR)/data/assets/
+	@echo "'FlatUX' Menu Theme..." && cp -r $(DIST_BASE)/../retroarch-assets/FlatUX $(PRODUCT_ROOT)/staging/$(CPUDIR)/data/assets/
+	@echo "'FlatUX' Config..." && cp -r $(DIST_BASE)/../retroarch-assets/cfg $(PRODUCT_ROOT)/staging/$(CPUDIR)/data/assets/
+	@echo "'Systematic' Menu Theme" && cp -r $(DIST_BASE)/../retroarch-assets/Systematic $(PRODUCT_ROOT)/staging/$(CPUDIR)/data/assets/
 #Assorted General Assets
-	@echo "RetroArch Brand Assets..." && cp -r $(DIST_BASE)/../retroarch-assets/branding $(PRODUCT_ROOT)/staging/$(CPUDIR)/retroarch/data/assets/
-	@echo "Image Devtools..." && cp -r $(DIST_BASE)/../retroarch-assets/devtools $(PRODUCT_ROOT)/staging/$(CPUDIR)/retroarch/data/assets/
-	@echo "Fonts..." && cp -r $(DIST_BASE)/../retroarch-assets/fonts $(PRODUCT_ROOT)/staging/$(CPUDIR)/retroarch/data/assets/
-	@echo "Fallback Fonts..." && cp -r $(DIST_BASE)/../retroarch-assets/pkg $(PRODUCT_ROOT)/staging/$(CPUDIR)/retroarch/data/assets/
+	@echo "RetroArch Brand Assets..." && cp -r $(DIST_BASE)/../retroarch-assets/branding $(PRODUCT_ROOT)/staging/$(CPUDIR)/data/assets/
+	@echo "Image Devtools..." && cp -r $(DIST_BASE)/../retroarch-assets/devtools $(PRODUCT_ROOT)/staging/$(CPUDIR)/data/assets/
+	@echo "Fonts..." && cp -r $(DIST_BASE)/../retroarch-assets/fonts $(PRODUCT_ROOT)/staging/$(CPUDIR)/data/assets/
+	@echo "Fallback Fonts..." && cp -r $(DIST_BASE)/../retroarch-assets/pkg $(PRODUCT_ROOT)/staging/$(CPUDIR)/data/assets/
 #Backgrounds/Wallpapers
-	@echo "Wallpapers..." && cp -r $(DIST_BASE)/../retroarch-assets/wallpapers $(PRODUCT_ROOT)/staging/$(CPUDIR)/retroarch/data/assets/
-	@echo "3DS/DualScreen Backgrounds..." && cp -r $(DIST_BASE)/../retroarch-assets/ctr $(PRODUCT_ROOT)/staging/$(CPUDIR)/retroarch/data/assets/
+	@echo "Wallpapers..." && cp -r $(DIST_BASE)/../retroarch-assets/wallpapers $(PRODUCT_ROOT)/staging/$(CPUDIR)/data/assets/
+	@echo "3DS/DualScreen Backgrounds..." && cp -r $(DIST_BASE)/../retroarch-assets/ctr $(PRODUCT_ROOT)/staging/$(CPUDIR)/data/assets/
 #Platform Specifics
-	@echo "'nxrgui' Platform Assets" && cp -r $(DIST_BASE)/../retroarch-assets/nxrgui $(PRODUCT_ROOT)/staging/$(CPUDIR)/retroarch/data/assets/
-	@echo "Switch Icons..." && cp -r $(DIST_BASE)/../retroarch-assets/switch $(PRODUCT_ROOT)/staging/$(CPUDIR)/retroarch/data/assets/
+	@echo "'nxrgui' Platform Assets" && cp -r $(DIST_BASE)/../retroarch-assets/nxrgui $(PRODUCT_ROOT)/staging/$(CPUDIR)/data/assets/
+	@echo "Switch Icons..." && cp -r $(DIST_BASE)/../retroarch-assets/switch $(PRODUCT_ROOT)/staging/$(CPUDIR)/data/assets/
 #Audio
-	@echo "Audio..." && cp -r $(DIST_BASE)/../retroarch-assets/sounds $(PRODUCT_ROOT)/staging/$(CPUDIR)/retroarch/data/assets/
+	@echo "Audio..." && cp -r $(DIST_BASE)/../retroarch-assets/sounds $(PRODUCT_ROOT)/staging/$(CPUDIR)/data/assets/
 	
 	@echo "Copied required assets!"
 

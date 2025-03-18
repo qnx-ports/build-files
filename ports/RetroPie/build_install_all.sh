@@ -29,6 +29,7 @@ LIBRETRO_2048_SRC=${PWD}/../../../libretro-2048
 LIBRETRO_SAMPLES_SRC=${PWD}/../../../libretro-samples
 LIBRETRO_MRBOOM_SRC=${PWD}/../../../mrboom-libretro
 LIBRETRO_RETRO8_SRC=${PWD}/../../../retro8
+LIBRETRO_FAKE08_SRC=${PWD}/../../../fake-08
 
 RARCH_CORE_INFO_SRC=${PWD}/../../../libretro-core-info
 RARCH_ASSETS_SRC=${PWD}/../../../retroarch-assets
@@ -146,6 +147,12 @@ if [ ! -d "$LIBRETRO_RETRO8_SRC" ]; then
     echo "[INFO]: Missing RetroArch retro8 core source. Cloning..."
     git clone https://github.com/Jakz/retro8.git $LIBRETRO_RETRO8_SRC
 fi
+if [ ! -d "$LIBRETRO_FAKE08_SRC" ]; then
+    echo "[INFO]: Missing RetroArch fake-08 core source. Cloning..."
+    git clone https://github.com/jtothebell/fake-08.git $LIBRETRO_FAKE08_SRC
+    git submodule init
+    git submodule update --recursive
+fi
 
 ########### Emulation Station & Deps ###########
 if [ ! -d "$EMULATIONSTATION_SRC" ]; then
@@ -252,6 +259,17 @@ if [ ! -e "${TOP_LEVEL_BUILD_DIR}/libretro-cores/retro8/nto-${_CHECK_BUILD_ARCH}
 else 
     echo "[SKIP]: Skipping RetroArch retro8 Core - build detected."
 fi
+if [ ! -e "${TOP_LEVEL_BUILD_DIR}/libretro-cores/fake-08/nto-${_CHECK_BUILD_ARCH}/build/fake08_libretro_qnx.so" -o ! "${DO_NOT_REBUILD}" = "TRUE" ]; then
+    echo "[INFO]: Building RetroArch fake-08 core..."
+    cd ${TOP_LEVEL_BUILD_DIR}/libretro-cores/fake-08
+    rm nto-${_CHECK_BUILD_ARCH}/Makefile.dnm
+    if [ "$DO_NOT_BUILD_UNUSED" = "TRUE" ]; then
+        touch nto-${_OPPOSITE_ARCH}/Makefile.dnm
+    fi
+    make install
+else 
+    echo "[SKIP]: Skipping RetroArch fake-08 Core - build detected."
+fi
 if [ ! -d "${TOP_LEVEL_BUILD_DIR}/libretro-cores/mrboom/nto-${_CHECK_BUILD_ARCH}/build/" -o ! "${DO_NOT_REBUILD}" = "TRUE" ]; then
     echo "[INFO]: Building RetroArch mrboom core..."
     cd ${TOP_LEVEL_BUILD_DIR}/libretro-cores/mrboom
@@ -264,11 +282,37 @@ else
     echo "[SKIP]: Skipping RetroArch mrboom Core - build detected."
 fi
 
-#PICO-8 Example !! Maybe swap this for an official one
-cd $TOP_LEVEL_BUILD_DIR/staging/aarch64le/retroarch/rarch-shared/content/
+#PICO-8 Example Carts!
+
+## CMY platonic solids (test for lua)
+cd $TOP_LEVEL_BUILD_DIR/staging/aarch64le/rarch-shared/content/
 curl https://www.lexaloffle.com/bbs/thumbs/pico8_cmyplatonicsolids-0.png --output pico8_cmyplatonicsolids-0.png 
-cd $TOP_LEVEL_BUILD_DIR/staging/x86_64/retroarch/rarch-shared/content/
+cd $TOP_LEVEL_BUILD_DIR/staging/x86_64/rarch-shared/content/
 curl https://www.lexaloffle.com/bbs/thumbs/pico8_cmyplatonicsolids-0.png --output pico8_cmyplatonicsolids-0.png 
+
+## Celeste Classic
+cd $TOP_LEVEL_BUILD_DIR/staging/aarch64le/rarch-shared/content/
+curl https://www.lexaloffle.com/bbs/cposts/1/15133.p8.png --output celeste.p8.png 
+cd $TOP_LEVEL_BUILD_DIR/staging/x86_64/rarch-shared/content/
+curl https://www.lexaloffle.com/bbs/cposts/1/15133.p8.png --output celeste.p8.png 
+
+## Celeste Classic 2
+cd $TOP_LEVEL_BUILD_DIR/staging/aarch64le/rarch-shared/content/
+curl https://www.lexaloffle.com/bbs/cposts/ce/celeste_classic_2-5.p8.png --output celeste_2.p8.png 
+cd $TOP_LEVEL_BUILD_DIR/staging/x86_64/rarch-shared/content/
+curl https://www.lexaloffle.com/bbs/cposts/ce/celeste_classic_2-5.p8.png --output celeste_2.p8.png 
+
+## Just One Boss
+cd $TOP_LEVEL_BUILD_DIR/staging/aarch64le/rarch-shared/content/
+curl https://www.lexaloffle.com/bbs/cposts/4/49232.p8.png --output just_one_boss.p8.png 
+cd $TOP_LEVEL_BUILD_DIR/staging/x86_64/rarch-shared/content/
+curl https://www.lexaloffle.com/bbs/cposts/4/49232.p8.png --output just_one_boss.p8.png 
+
+
+#RARCH Configs!
+cd $TOP_LEVEL_BUILD_DIR
+cp configs/retroarch.cfg staging/aarch64le/rarch-shared/
+cp configs/retroarch.cfg staging/x86_64/rarch-shared/
 
 ##########################################################################################
 ### Build Emulation Station
