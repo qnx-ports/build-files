@@ -48,6 +48,10 @@ cd harfbuzz
 git checkout 10.2.0
 cd ..
 
+cd meson
+git checkout 1.7.0
+cd ..
+
 # Optionally Build the Docker image and create a container
 cd build-files/docker
 ./docker-build-qnx-image.sh
