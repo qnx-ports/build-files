@@ -13,7 +13,7 @@ endian = 'little'
 
 [built-in options]
 c_link_args = ['-lm', '-lsocket', '-lgcc_s']
-c_args = ['-DHAVE_CTIME_R', '-D_QNX_SOURCE']
+c_args = ['-D_QNX_SOURCE', '-g']
 cpp_link_args = c_link_args
 cpp_args = c_args
 
@@ -32,3 +32,4 @@ objcopy = qnx_host_dir + '/usr/bin/' + target + '-objcopy'
 # Using the host pkg-config
 pkg-config = 'pkg-config'
 windres = ''
+cmake = 'cmake'

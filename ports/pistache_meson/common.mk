@@ -31,11 +31,12 @@ include $(MKFILES_ROOT)/qtargets.mk
 
 PROJECT_INSTALL_DIR=$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)
 MESON := meson
-MESON_FLAGS :=  --buildtype=$(MESON_BUILD_TYPE) \
-                --prefix=$(PREFIX) \
-				--cross-file=../qnx_cross.cfg
+MESON_SETUP_FLAGS := --buildtype=$(MESON_BUILD_TYPE) \
+                     --prefix=$(PREFIX) \
+                     --cross-file=../qnx_cross.cfg \
+                     -DPISTACHE_BUILD_TESTS=true
 
-NINJA_ARGS := -j $(firstword $(JLEVEL) 1)
+MESON_COMPILE_FLAGS := -v -j $(firstword $(JLEVEL) 1)
 
 # Set cross file
 qnx_cross.cfg: $(PROJECT_ROOT)/qnx_cross.cfg.in
@@ -45,19 +46,12 @@ qnx_cross.cfg: $(PROJECT_ROOT)/qnx_cross.cfg.in
 	sed -i "s|INSTALL_DIR|$(PROJECT_INSTALL_DIR)|" $@
 	sed -i "s|QNX_TARGET_DIR|$(QNX_TARGET)/$(CPUVARDIR)/usr|" $@
 
-#Headers from INSTALL_ROOT need to be made available by default
-#because CMake and pkg-config do not necessary add it automatically
-#if the include path is "default"
-CFLAGS += -I$(INSTALL_ROOT)/$(PREFIX)/include
-
-CFLAGS += -D_QNX_SOURCE
-
 ifndef NO_TARGET_OVERRIDE
 
 $(NAME)_all: qnx_cross.cfg
 	@mkdir -p build
-	@cd build && $(MESON) setup $(MESON_FLAGS) $(QNX_PROJECT_ROOT)
-	@cd build && ninja $(NINJA_ARGS)
+	@cd build && $(MESON) setup $(MESON_SETUP_FLAGS) $(QNX_PROJECT_ROOT)
+	@cd build && $(MESON) compile $(MESON_COMPILE_FLAGS)
 
 install: $(NAME)_all
 	@echo Installing...
