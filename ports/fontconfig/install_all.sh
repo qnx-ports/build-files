@@ -2,7 +2,7 @@ DEP_NAME=(libexpat libiconv freetype)
 DEP_NAME_SRC=(libexpat/expat libiconv-1.18 freetype)
 DEP_CLONE_CMD=("git clone -b R_2_6_4 https://github.com/libexpat/libexpat.git"
                "echo"
-               "git clone -b VER-2-13-3 https://gitlab.freedesktop.org/freetype/freetype.git")
+               "git clone https://github.com/qnx-ports/freetype.git")
 
 wget https://ftp.gnu.org/pub/gnu/libiconv/libiconv-1.18.tar.gz && tar -xf libiconv-1.18.tar.gz
 DEP_COUNT=${#DEP_NAME[@]}
