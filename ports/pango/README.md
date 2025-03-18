@@ -41,6 +41,10 @@ git checkout 1.56.1
 # or version 1.54.0 for gtk support
 cd ..
 
+cd meson
+git checkout 1.7.0
+cd ..
+
 # Optionally Build the Docker image and create a container
 cd build-files/docker
 ./docker-build-qnx-image.sh
