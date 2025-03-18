@@ -22,7 +22,7 @@ INSTALL_ROOT ?= $(INSTALL_ROOT_$(OS))
 PREFIX ?= /usr/local
 
 #choose Release or Debug
-CMAKE_BUILD_TYPE ?= Release
+CMAKE_BUILD_TYPE ?= Debug
 
 #override 'all' target to bypass the default QNX build system
 ALL_DEPENDENCIES = $(NAME)_all
@@ -35,7 +35,7 @@ include $(MKFILES_ROOT)/qtargets.mk
 #if the include path is "default"
 CFLAGS += -I$(INSTALL_ROOT)/$(PREFIX)/include
 
-CFLAGS += -D_QNX_SOURCE -vv
+CFLAGS += -D_QNX_SOURCE -vv -DPISTACHE_FORCE_LIBEVENT
 
 CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DCMAKE_INSTALL_PREFIX=$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX) \
