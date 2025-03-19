@@ -49,6 +49,7 @@ MESON_FLAGS :=  -Dtiff=disabled \
                 --reconfigure \
 				--buildtype=$(MESON_BUILD_TYPE) \
                 --prefix=$(GDK_PIXBUF_INSTALL_DIR) \
+				--includedir=$(INSTALL_ROOT)/$(PREFIX) \
 				--cross-file=../qnx_cross.cfg
 
 NINJA_ARGS := -j $(firstword $(JLEVEL) 1)

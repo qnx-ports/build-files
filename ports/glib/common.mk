@@ -49,6 +49,7 @@ MESON_FLAGS :=  -Dxattr=false \
                 --reconfigure \
 				--buildtype=$(MESON_BUILD_TYPE) \
                 --prefix=$(GLIB_INSTALL_DIR) \
+				--includedir=$(INSTALL_ROOT)/$(PREFIX) \
 				--cross-file=../qnx_cross.cfg
 
 NINJA_ARGS := -j $(firstword $(JLEVEL) 1)
