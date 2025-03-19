@@ -48,7 +48,7 @@ MESON_FLAGS :=  -Dtests=$(BUILD_TESTS)\
                 --reconfigure \
 				--buildtype=$(MESON_BUILD_TYPE) \
                 --prefix=$(PIXMAN_INSTALL_DIR) \
-				--includedir=$(INSTALL_ROOT)/$(PREFIX) \
+				--includedir=$(INSTALL_ROOT)/$(PREFIX)/include \
 				--cross-file=../qnx_cross.cfg
 
 

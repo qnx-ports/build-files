@@ -46,7 +46,7 @@ MESON_FLAGS :=  -Dtests=disabled \
                 --reconfigure \
 				--buildtype=$(MESON_BUILD_TYPE) \
                 --prefix=$(FT2_INSTALL_DIR) \
-				--includedir=$(INSTALL_ROOT)/$(PREFIX) \
+				--includedir=$(INSTALL_ROOT)/$(PREFIX)/include \
 				--cross-file=../qnx_cross.cfg
 
 NINJA_ARGS := -j $(firstword $(JLEVEL) 1)
