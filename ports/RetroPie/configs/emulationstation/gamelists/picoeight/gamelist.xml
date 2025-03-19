@@ -1,0 +1,34 @@
+<gameList>
+	<game>
+		<path>./celeste.p8</path>
+		<image>./celeste.p8.png</image>
+		<name>CELESTE Classic</name>
+		<desc>CELESTE Classic is the first entry in the Celeste series, made for a 2015 game jam. Its success spurred the launch of the series.</desc>
+		<players>1</players>
+		<rating>1</rating>
+	</game>
+	<game>
+		<path>./celeste_2.p8</path>
+		<image>./celeste_2.p8.png</image>
+		<name>CELESTE Classic 2</name>
+		<desc>CELESTE Classic 2 is a promotional sequel to CELESTE Classic, released on its third anniversary.</desc>
+		<players>1</players>
+		<rating>1</rating>
+	</game>
+	<game>
+		<path>./just_one_boss.p8</path>
+		<image>./just_one_boss.p8.png</image>
+		<name>Just One Boss</name>
+		<desc>Just One Boss is a fun and challenging game, consisting of one (charming?) boss for you to face off against!</desc>
+		<players>1</players>
+		<rating>1</rating>
+	</game>
+	<game>
+		<path>./pico8_cmyplatonicsolids-0.p8</path>
+		<image>./pico8_cmyplatonicsolids-0.p8.png</image>
+		<name>CMY Platonic Solids</name>
+		<desc>CMY Platonic Solids is a fun demo of the rendering capabilities that PICO-8 can offer.</desc>
+		<players>1</players>
+		<rating>1</rating>
+	</game>
+</gameList>

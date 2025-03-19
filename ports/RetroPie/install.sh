@@ -18,18 +18,9 @@ fi
 
 TOP_LEVEL_BUILD_DIR=${PWD}
 
-
 ssh ${TARGET_USER}@${TARGET_IP} "mkdir -p $TARGET_DIR"
 ssh ${TARGET_USER}@${TARGET_IP} "mkdir -p ~/.emulationstation"
 
-#ssh ${TARGET_USER}@${TARGET_IP} "cd $TARGET_DIR && mkdir -p data/cores"
-#ssh ${TARGET_USER}@${TARGET_IP} "cd $TARGET_DIR && mkdir -p data/assets"
-#ssh ${TARGET_USER}@${TARGET_IP} "cd $TARGET_DIR && mkdir -p data/info"
-
-#ssh ${TARGET_USER}@${TARGET_IP} "cd $TARGET_DIR && mkdir -p lib"
-#ssh ${TARGET_USER}@${TARGET_IP} "cd $TARGET_DIR && mkdir -p rarch-shared"
-#ssh ${TARGET_USER}@${TARGET_IP} "cd $TARGET_DIR && mkdir -p tmp"
-
 scp -pr ${TOP_LEVEL_BUILD_DIR}/staging/${TARGET_ARCH}/* ${TARGET_USER}@${TARGET_IP}:$TARGET_DIR
-scp ${TOP_LEVEL_BUILD_DIR}/configs/es_systems.cfg ${TARGET_USER}@${TARGET_IP}:~/.emulationstation/
-scp ${TOP_LEVEL_BUILD_DIR}/configs/es_input.cfg ${TARGET_USER}@${TARGET_IP}:~/.emulationstation/
+scp ${TOP_LEVEL_BUILD_DIR}/target_scripts/uninstall.sh ${TARGET_USER}@${TARGET_IP}:$TARGET_DIR
+scp -pr ${TOP_LEVEL_BUILD_DIR}/configs/emulationstation/* ${TARGET_USER}@${TARGET_IP}:~/.emulationstation/

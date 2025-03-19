@@ -286,27 +286,36 @@ fi
 
 ## CMY platonic solids (test for lua)
 cd $TOP_LEVEL_BUILD_DIR/staging/aarch64le/rarch-shared/content/
-curl https://www.lexaloffle.com/bbs/thumbs/pico8_cmyplatonicsolids-0.png --output pico8_cmyplatonicsolids-0.png 
+curl https://www.lexaloffle.com/bbs/cposts/cm/cmyplatonicsolids-0.p8.png --output pico8_cmyplatonicsolids-0.p8.png 
+curl https://www.lexaloffle.com/bbs/cposts/cm/cmyplatonicsolids-0.p8.png --output pico8_cmyplatonicsolids-0.p8
 cd $TOP_LEVEL_BUILD_DIR/staging/x86_64/rarch-shared/content/
-curl https://www.lexaloffle.com/bbs/thumbs/pico8_cmyplatonicsolids-0.png --output pico8_cmyplatonicsolids-0.png 
+curl https://www.lexaloffle.com/bbs/cposts/cm/cmyplatonicsolids-0.p8.png --output pico8_cmyplatonicsolids-0.p8.png 
+curl https://www.lexaloffle.com/bbs/cposts/cm/cmyplatonicsolids-0.p8.png --output pico8_cmyplatonicsolids-0.p8
+
 
 ## Celeste Classic
 cd $TOP_LEVEL_BUILD_DIR/staging/aarch64le/rarch-shared/content/
 curl https://www.lexaloffle.com/bbs/cposts/1/15133.p8.png --output celeste.p8.png 
+curl https://www.lexaloffle.com/bbs/cposts/1/15133.p8.png --output celeste.p8
 cd $TOP_LEVEL_BUILD_DIR/staging/x86_64/rarch-shared/content/
 curl https://www.lexaloffle.com/bbs/cposts/1/15133.p8.png --output celeste.p8.png 
+curl https://www.lexaloffle.com/bbs/cposts/1/15133.p8.png --output celeste.p8
 
 ## Celeste Classic 2
 cd $TOP_LEVEL_BUILD_DIR/staging/aarch64le/rarch-shared/content/
 curl https://www.lexaloffle.com/bbs/cposts/ce/celeste_classic_2-5.p8.png --output celeste_2.p8.png 
+curl https://www.lexaloffle.com/bbs/cposts/ce/celeste_classic_2-5.p8.png --output celeste_2.p8
 cd $TOP_LEVEL_BUILD_DIR/staging/x86_64/rarch-shared/content/
 curl https://www.lexaloffle.com/bbs/cposts/ce/celeste_classic_2-5.p8.png --output celeste_2.p8.png 
+curl https://www.lexaloffle.com/bbs/cposts/ce/celeste_classic_2-5.p8.png --output celeste_2.p8
 
 ## Just One Boss
 cd $TOP_LEVEL_BUILD_DIR/staging/aarch64le/rarch-shared/content/
 curl https://www.lexaloffle.com/bbs/cposts/4/49232.p8.png --output just_one_boss.p8.png 
+curl https://www.lexaloffle.com/bbs/cposts/4/49232.p8.png --output just_one_boss.p8
 cd $TOP_LEVEL_BUILD_DIR/staging/x86_64/rarch-shared/content/
 curl https://www.lexaloffle.com/bbs/cposts/4/49232.p8.png --output just_one_boss.p8.png 
+curl https://www.lexaloffle.com/bbs/cposts/4/49232.p8.png --output just_one_boss.p8
 
 
 #RARCH Configs!

@@ -1,0 +1,16 @@
+<gameList>
+	<game>
+		<path>./2048_libretro_qnx.so</path>
+		<name>2048</name>
+		<desc>Combine numbers by smashing them together to win in this classic mobile hit!</desc>
+		<players>1</players>
+		<rating>1</rating>
+	</game>
+	<game>
+		<path>./mrboom_libretro_qnx.so</path>
+		<name>Mr. BOOM</name>
+		<desc>Based on the classic Bomberman series, Mr. Boom is blastingly fun time for 1-8 Players. </desc>
+		<players>8</players>
+		<rating>1</rating>
+	</game>
+</gameList>
