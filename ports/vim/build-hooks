@@ -3,7 +3,7 @@
 # Control installation
 DIST_BASE=${QNX_PROJECT_ROOT:-"${PWD}/../../../../vim"}
 INSTALL_ROOT=$(eval "echo \${INSTALL_ROOT_${TARGET_SYSNAME}}")
-PREFIX="/usr/local"
+INSTALL_PREFIX=${PREFIX:-"/usr/local"}
 
 function hook_preconfigure
 {
@@ -18,8 +18,8 @@ function hook_preconfigure
 
   # Installation locations
   configure_opts="${configure_opts} --srcdir=${SRCDIR}"
-  configure_opts="${configure_opts} --prefix=${INSTALL_ROOT}/${PREFIX}"
-  configure_opts="${configure_opts} --exec-prefix=${INSTALL_ROOT}/${cpudir}/${PREFIX}"
+  configure_opts="${configure_opts} --prefix=${INSTALL_ROOT}/${INSTALL_PREFIX}"
+  configure_opts="${configure_opts} --exec-prefix=${INSTALL_ROOT}/${cpudir}/${INSTALL_PREFIX}"
 
   # Set up options
   configure_opts="${configure_opts} --with-tlib=ncurses"
