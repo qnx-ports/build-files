@@ -49,6 +49,7 @@ MESON_FLAGS :=  -Dtests=$(BUILD_TEST) \
                 -Dgraphite2=enabled \
                 -Dfreetype=enabled \
                 -Dicu=enabled \
+		--includedir=$(INSTALL_ROOT)/$(PREFIX)/include \
                 --reconfigure \
 				--buildtype=$(MESON_BUILD_TYPE) \
                 --prefix=$(HB_INSTALL_DIR) \
