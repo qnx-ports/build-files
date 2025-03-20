@@ -24,7 +24,7 @@ INSTALL_ROOT ?= $(INSTALL_ROOT_$(OS))
 PREFIX ?= /usr/local
 
 #choose Release or Debug
-MESON_BUILD_TYPE ?= plain
+MESON_BUILD_TYPE ?= release
 
 ALL_DEPENDENCIES = $(NAME)_all
 .PHONY: $(NAME)_all install check clean
@@ -32,18 +32,18 @@ ALL_DEPENDENCIES = $(NAME)_all
 CFLAGS += $(FLAGS)
 
 #Define _QNX_SOURCE 
-CFLAGS += -D_QNX_SOURCE -g -fPIC
+CFLAGS += -D_QNX_SOURCE -O2 -fPIC
 LDFLAGS += -Wl,--build-id=md5
 
 include $(MKFILES_ROOT)/qtargets.mk
 
 GSTREAMER_INSTALL_DIR=$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)
 
-BUILD_TESTING = OFF
+BUILD_TESTING = disabled
 
 # Use submoduled Meson
 MESON := $(QNX_PROJECT_ROOT)/../meson/meson.py
-MESON_FLAGS :=  -Dtests=enabled \
+MESON_FLAGS :=  -Dtests=$(BUILD_TESTING) \
                 -Dauto_features=enabled \
                 -Dexamples=disabled \
                 -Dbenchmarks=disabled \
@@ -51,8 +51,6 @@ MESON_FLAGS :=  -Dtests=enabled \
                 -Dlibunwind=disabled \
                 -Dlibdw=disabled \
                 -Ddbghelp=disabled \
-                -Dgst_debug=true \
-                -Dgst_parse=true \
                 -Dbash-completion=disabled \
                 -Dintrospection=disabled \
                 -Dptp-helper=disabled \
@@ -60,6 +58,7 @@ MESON_FLAGS :=  -Dtests=enabled \
                 --wrap-mode=nofallback \
 				--buildtype=$(MESON_BUILD_TYPE) \
                 --prefix=$(GSTREAMER_INSTALL_DIR) \
+                --includedir=$(INSTALL_ROOT)/$(PREFIX) \
 				--cross-file=../qnx_cross.cfg
 
 NINJA_ARGS := -j $(firstword $(JLEVEL) 1)
