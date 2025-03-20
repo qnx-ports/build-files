@@ -43,6 +43,8 @@ NANOSVG_SRC=${PWD}/../../../nanosvg
 LUA_SRC=${PWD}/../../../lua
 MUSLFLT_SRC=${PWD}/../../../muslflt
 
+ES_THEME_DIR=${PWD}/staging/emulationstation/themes
+
 # DO NOT TOUCH BELOW HERE
 if [[ -z "$TARGET_IP" ]]; then
     TARGET_IP="<example-ip>"
@@ -405,6 +407,19 @@ else
     echo "[SKIP]: Skipping Emulation Station - build detected."
 fi
 
+## Themes & config
+# Stage Configs
+cp -r configs/emulationstation/* staging/emulationstation/
+# Make Theme Dir
+if [ ! -d "$ES_THEME_DIR" ]; then
+    mkdir -p $ES_THEME_DIR
+fi
+# Clone Themes
+if [ ! -d "$ES_THEME_DIR/es-theme-qnx" ]; then
+    echo "Cloning es-theme-qnx"
+    cd $ES_THEME_DIR
+    git clone https://github.com/qnx-ports/es-theme-qnx es-theme-qnx
+fi
 
 ##########################################################################################
 

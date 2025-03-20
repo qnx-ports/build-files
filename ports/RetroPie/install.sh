@@ -23,4 +23,4 @@ ssh ${TARGET_USER}@${TARGET_IP} "mkdir -p ~/.emulationstation"
 
 scp -pr ${TOP_LEVEL_BUILD_DIR}/staging/${TARGET_ARCH}/* ${TARGET_USER}@${TARGET_IP}:$TARGET_DIR
 scp ${TOP_LEVEL_BUILD_DIR}/target_scripts/uninstall.sh ${TARGET_USER}@${TARGET_IP}:$TARGET_DIR
-scp -pr ${TOP_LEVEL_BUILD_DIR}/configs/emulationstation/* ${TARGET_USER}@${TARGET_IP}:~/.emulationstation/
+scp -pr ${TOP_LEVEL_BUILD_DIR}/staging/emulationstation/* ${TARGET_USER}@${TARGET_IP}:~/.emulationstation/
