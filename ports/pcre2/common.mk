@@ -85,6 +85,8 @@ $(NAME)_all:
 install check: $(NAME)_all
 	@echo Installing...
 	@cd build && make VERBOSE=1 install $(MAKE_ARGS)
+	@mkdir -p "$(INSTALL_ROOT)/$(PREFIX)"/include
+	@cp "$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)"/include/pcre2* "$(INSTALL_ROOT)/$(PREFIX)"/include
 	@echo Done.
 
 clean iclean spotless:
