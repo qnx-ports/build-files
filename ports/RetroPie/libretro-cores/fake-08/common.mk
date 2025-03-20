@@ -29,6 +29,7 @@ endif
 fake08_all:
 	@mkdir -p build
 	@cd $(QNX_PROJECT_ROOT)/platform/libretro && make clean
+#@cd $(QNX_PROJECT_ROOT) && make -Clibs/z8lua HOST=$(PLATFORM)-nto CC="$(QNX_HOST)/usr/bin/qcc -V$(V_OPT)" CXX="$(QNX_HOST)/usr/bin/q++ -V$(V_OPT)_cxx" platform=qnx 
 	@cd $(QNX_PROJECT_ROOT) && make -Cplatform/libretro HOST=$(PLATFORM)-nto CC="$(QNX_HOST)/usr/bin/qcc -V$(V_OPT)" CXX="$(QNX_HOST)/usr/bin/q++ -V$(V_OPT)_cxx" platform=qnx 
 	@cd build && cp $(QNX_PROJECT_ROOT)/platform/libretro/*libretro*.so .
 

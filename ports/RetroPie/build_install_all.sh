@@ -152,6 +152,7 @@ fi
 if [ ! -d "$LIBRETRO_FAKE08_SRC" ]; then
     echo "[INFO]: Missing RetroArch fake-08 core source. Cloning..."
     git clone https://github.com/jtothebell/fake-08.git $LIBRETRO_FAKE08_SRC
+    cd $LIBRETRO_FAKE08_SRC
     git submodule init
     git submodule update --recursive
 fi
@@ -409,7 +410,8 @@ fi
 
 ## Themes & config
 # Stage Configs
-cp -r configs/emulationstation/* staging/emulationstation/
+cd ${TOP_LEVEL_BUILD_DIR}
+cp -pr configs/emulationstation/* staging/emulationstation/
 # Make Theme Dir
 if [ ! -d "$ES_THEME_DIR" ]; then
     mkdir -p $ES_THEME_DIR
