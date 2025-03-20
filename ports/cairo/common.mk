@@ -52,6 +52,7 @@ MESON_FLAGS :=  -Dtests=$(BUILD_TEST) \
                 --reconfigure \
 				--buildtype=$(MESON_BUILD_TYPE) \
                 --prefix=$(CAIRO_INSTALL_DIR) \
+				--includedir=$(INSTALL_ROOT)/$(PREFIX)/include \
 				--cross-file=../qnx_cross.cfg
 
 NINJA_ARGS := -j $(firstword $(JLEVEL) 1)

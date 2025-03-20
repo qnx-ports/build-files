@@ -49,6 +49,7 @@ BUILD_TESTING ?= true
 MESON_FLAGS := \
   --buildtype=$(MESON_BUILD_TYPE) \
   --prefix=$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX) \
+  --includedir=$(INSTALL_ROOT)/$(PREFIX)/include \
   -Dtests=$(BUILD_TESTING) \
   -Ddocs=false
   

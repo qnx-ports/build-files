@@ -46,7 +46,8 @@ export PKG_CONFIG_LIBDIR = $(PKG_CONFIG_LIBDIR_IN):$(PKG_CONFIG_TARGET_IN)
 #Config toolchain for qnx
 CONFIGURE_CMD = $(QNX_PROJECT_ROOT)/configure
 CONFIGURE_ARGS = --host=$(CPU)-*-$(OS) \
-                 --prefix=$($(NAME)_INSTALL_DIR) \
+                 --prefix=$(INSTALL_ROOT)/$(PREFIX)\
+                 --exec-prefix=$($(NAME)_INSTALL_DIR) \
                  --srcdir=$(QNX_PROJECT_ROOT)
 CONFIGURE_ENVS = CFLAGS="$(CFLAGS)" \
                  CXXFLAGS="$(CXXFLAGS)" \
