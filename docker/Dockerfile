@@ -128,7 +128,7 @@ ENV QNX_SDP_VERSION=$QNX_SDP_VERSION
 
 ENV PS1='[QNX] (\u) \w$ '
 
-RUN groupadd --gid ${GROUP_ID} ${GROUP_NAME} && \
+RUN getent group ${GROUP_NAME} || groupadd --gid ${GROUP_ID} ${GROUP_NAME} && \
 	useradd --uid ${USER_ID} --gid ${GROUP_ID} --groups sudo --no-log-init --create-home ${USER_NAME} && \
 	echo "${USER_NAME}:password" | chpasswd
 
