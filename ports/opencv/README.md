@@ -181,7 +181,7 @@ export OPENCV_SAMPLES_DATA_PATH=/data/home/qnxuser/opencv/sampledata
 # Copy the package to the target
 scp -r $QNX_TARGET/aarch64le/usr/local/lib/python3.11/site-packages/cv2 qnxuser@$TARGET_HOST:/data/home/qnxuser/opencv
 
-# Copy cv2 dependencies to the target
+# Copy cv2.ctypes dependencies to the target
 scp $QNX_TARGET/aarch64le/lib/libjpeg.so qnxuser@$TARGET_HOST:/data/home/qnxuser/opencv/libs
 scp $QNX_TARGET/aarch64le/lib/libjpeg.so.9 qnxuser@$TARGET_HOST:/data/home/qnxuser/opencv/libs
 scp $QNX_TARGET/aarch64le/lib/libstdc++.so.6 qnxuser@$TARGET_HOST:/data/home/qnxuser/opencv/libs
