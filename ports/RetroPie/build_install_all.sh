@@ -411,7 +411,7 @@ fi
 ## Themes & config
 # Stage Configs
 cd ${TOP_LEVEL_BUILD_DIR}
-cp -pr configs/emulationstation/* staging/emulationstation/
+cp -pr ${TOP_LEVEL_BUILD_DIR}/configs/emulationstation/* ${TOP_LEVEL_BUILD_DIR}/staging/emulationstation/
 # Make Theme Dir
 if [ ! -d "$ES_THEME_DIR" ]; then
     mkdir -p $ES_THEME_DIR
