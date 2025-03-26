@@ -45,6 +45,8 @@ MUSLFLT_SRC=${PWD}/../../../muslflt
 
 ES_THEME_DIR=${PWD}/staging/emulationstation/themes
 
+HID_INPUT_PROCESSOR=${PWD}/../../../qnx-xinput-screen
+
 # DO NOT TOUCH BELOW HERE
 if [[ -z "$TARGET_IP" ]]; then
     TARGET_IP="<example-ip>"
@@ -193,6 +195,13 @@ if [ ! -d "$MUSLFLT_SRC" ]; then
     echo "[INFO]: Missing lua source. Cloning..."
     git clone https://github.com/qnx-ports/muslflt.git $MUSLFLT_SRC
 fi
+
+########### Other ###########
+if [ ! -d "$HID_INPUT_PROCESSOR" ]; then
+    echo "[INFO]: Missing hid input to screen. Cloning..."
+    git clone https://github.com/JaiXJM-BB/qnx-xinput-screen.git $HID_INPUT_PROCESSOR
+fi
+
 ##########################################################################################
 ### Build Muslflt
 echo "[INFO]: Building muslflt..."
@@ -411,7 +420,8 @@ fi
 ## Themes & config
 # Stage Configs
 cd ${TOP_LEVEL_BUILD_DIR}
-cp -pr ${TOP_LEVEL_BUILD_DIR}/configs/emulationstation/* ${TOP_LEVEL_BUILD_DIR}/staging/emulationstation/
+mkdir -p ${TOP_LEVEL_BUILD_DIR}/staging
+cp -r ${TOP_LEVEL_BUILD_DIR}/configs/emulationstation ${TOP_LEVEL_BUILD_DIR}/staging/
 # Make Theme Dir
 if [ ! -d "$ES_THEME_DIR" ]; then
     mkdir -p $ES_THEME_DIR
@@ -422,6 +432,17 @@ if [ ! -d "$ES_THEME_DIR/es-theme-qnx" ]; then
     cd $ES_THEME_DIR
     git clone https://github.com/qnx-ports/es-theme-qnx es-theme-qnx
 fi
+
+##########################################################################################
+#xinput
+cd $HID_INPUT_PROCESSOR
+make
+
+cd ${TOP_LEVEL_BUILD_DIR}
+mkdir -p ${TOP_LEVEL_BUILD_DIR}/staging/aarch64le
+mkdir -p ${TOP_LEVEL_BUILD_DIR}/staging/x86_64
+cp $HID_INPUT_PROCESSOR/aarch64/le/hid_xinput_to_screen ${TOP_LEVEL_BUILD_DIR}/staging/aarch64le/input_provider
+cp $HID_INPUT_PROCESSOR/x86_64/o/hid_xinput_to_screen ${TOP_LEVEL_BUILD_DIR}/staging/x86_64/input_provider
 
 ##########################################################################################
 
