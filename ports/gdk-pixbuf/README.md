@@ -14,7 +14,7 @@ You should compile and install its dependencies to your QNX SDP before proceed.
 Please ensure that you install `zlib` before `libpng`, otherwise you might compile `zlib` twice
 + [`zlib`](https://github.com/qnx-ports/build-files/tree/main/ports/zlib)
 + [`glib`](https://github.com/qnx-ports/build-files/tree/main/ports/glib) (glib/main is prefered)
-+ [`libjpeg-turbo`](https://github.com/qnx-ports/build-files/tree/main/ports/jpeg-turbo)
++ [`libjpeg-turbo`](https://github.com/qnx-ports/build-files/tree/main/ports/libjpeg-turbo)
 + [`libpng`](https://github.com/qnx-ports/build-files/tree/main/ports/libpng)
 
 A convinience script `install_all.sh` is provided for easy installation of all required dependencies, execute it just like a regular installation and set INSTALL_ROOT and JLEVEL.
