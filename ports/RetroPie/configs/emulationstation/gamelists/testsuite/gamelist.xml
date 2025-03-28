@@ -1,0 +1,54 @@
+<gameList>
+	<game>
+		<path>./advanced_tests_libretro.so</path>
+		<!--in-house recreation using draw.io, no attribution needed.-->
+		<image>~/.emulationstation/gamecovers/advanced_graphical.png</image>
+		<name>Advanced Graphical Tests</name>
+		<desc>A collection of graphical and graphics API tests available to flick though (like TV Channels). </desc>
+		<players>1</players>
+		<rating>0.5</rating>
+		<genre>Tests</genre>
+		<publisher>The libretro Team.</publisher>
+		<developer>The libretro Team.</developer>
+		<releasedate>20100510T000000</releasedate>
+	</game>
+	<game>
+		<path>./button_test_libretro.so</path>
+		<!--in-house recreation using draw.io, no attribution needed.-->
+		<image>~/.emulationstation/gamecovers/button_mapping.png</image>
+		<name>Button Mapping Tests</name>
+		<desc>A visual display used for testing button input mappings in RetroArch. </desc>
+		<players>1</players>
+		<rating>0.5</rating>
+		<genre>Tests</genre>
+		<publisher>The libretro Team.</publisher>
+		<developer>The libretro Team.</developer>
+		<releasedate>20100510T000000</releasedate>
+	</game>
+	<game>
+		<path>./midi_test_libretro.so</path>
+		<!--in-house recreation using draw.io, no attribution needed.-->
+		<image>~/.emulationstation/gamecovers/midi_sound.png</image>
+		<name>Midi Sound Tests</name>
+		<desc>A quick test for sound output from Libretro. </desc>
+		<players>1</players>
+		<rating>0.5</rating>
+		<genre>Tests</genre>
+		<publisher>The libretro Team.</publisher>
+		<developer>The libretro Team.</developer>
+		<releasedate>20100510T000000</releasedate>
+	</game>
+	<game>
+		<path>./test_libretro.so</path>
+		<!--in-house recreation using draw.io, no attribution needed.-->
+		<image>~/.emulationstation/gamecovers/basic_graphical.png</image>
+		<name>Basic Graphical Tests</name>
+		<desc>A basic controllable graphics test. </desc>
+		<players>1</players>
+		<rating>0.5</rating>
+		<genre>Tests</genre>
+		<publisher>The libretro Team.</publisher>
+		<developer>The libretro Team.</developer>
+		<releasedate>20100510T000000</releasedate>
+	</game>
+</gameList>

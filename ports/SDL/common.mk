@@ -123,7 +123,7 @@ SDL_all:
 	@echo "Building for $(HOST_DETECT)"
 	@mkdir -p build
 	@cd $(QNX_PROJECT_ROOT) && sh autogen.sh
-	@cd build && $(QNX_PROJECT_ROOT)/configure --host=$(HOST_DETECT) --disable-pulseaudio --enable-wayland-shared=no --enable-video-wayland=no --enable-audio=no --prefix=$(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)
+	@cd build && $(QNX_PROJECT_ROOT)/configure --host=$(HOST_DETECT) --disable-pulseaudio --enable-wayland-shared=no --enable-video-wayland=no --enable-joystick=no --enable-audio=no --prefix=$(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)
 	@cd build && make $(MAKE_ARGS)
 	@cd build && cp $(QNX_PROJECT_ROOT)/include/* include/
 
@@ -138,7 +138,7 @@ SDL_all:
 #	@cp build/*.cmake $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/cmake/
 install: SDL_all
 	@echo Installing...
-	@cd build && $(QNX_PROJECT_ROOT)/configure --host=$(HOST_DETECT) --disable-pulseaudio --enable-wayland-shared=no --enable-video-wayland=no --enable-audio=no --prefix=$(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)
+	@cd build && $(QNX_PROJECT_ROOT)/configure --host=$(HOST_DETECT) --disable-pulseaudio --enable-wayland-shared=no --enable-video-wayland=no --enable-joystick=yes --enable-audio=no --prefix=$(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)
 	@cd build && make $(MAKE_ARGS) install
 	@mkdir -p $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/pkgconfig/
 	@mkdir -p $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/cmake/
@@ -160,7 +160,7 @@ install_rpie: install
 
 SDL_test check: install
 	@mkdir -p build/test 
-	@cd build/test && $(TEST_CONFIGURE_PREOPTS) $(QNX_PROJECT_ROOT)/test/configure --host=$(HOST_DETECT) --disable-pulseaudio --enable-wayland-shared=no --enable-video-wayland=no --enable-audio=no --prefix=$(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)
+	@cd build/test && $(TEST_CONFIGURE_PREOPTS) $(QNX_PROJECT_ROOT)/test/configure --host=$(HOST_DETECT) --disable-pulseaudio --enable-wayland-shared=no --enable-video-wayland=no --enable-joystick=yes --enable-audio=no --prefix=$(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)
 	@make -i $(TEST_CONFIGURE_PREOPTS) $(MAKE_ARGS) -C build/test
 	@mkdir -p staging
 	@mkdir -p staging/lib
