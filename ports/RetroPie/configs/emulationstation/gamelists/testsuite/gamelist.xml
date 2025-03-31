@@ -51,4 +51,17 @@
 		<developer>The libretro Team.</developer>
 		<releasedate>20100510T000000</releasedate>
 	</game>
+		<game>
+		<path></path>
+		<!--in-house recreation using draw.io, no attribution needed.-->
+		<image>~/.emulationstation/gamecovers/empty_core.png</image>
+		<name>Empty Core Bootup</name>
+		<desc>Boot retroarch with an empty core. </desc>
+		<players>1</players>
+		<rating>0.5</rating>
+		<genre>Tests</genre>
+		<publisher>The libretro Team.</publisher>
+		<developer>The libretro Team.</developer>
+		<releasedate>20100510T000000</releasedate>
+	</game>
 </gameList>
