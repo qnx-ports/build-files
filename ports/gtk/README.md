@@ -91,6 +91,27 @@ export GSK_RENDERER=gl
 gtk4-demo
 ```
 
+# How to build and run qnx examples
+After building gtk4 for qnx, you can additionally build [example applications](https://github.com/qnx-ports/gtk/tree/qnx_4.8.3/qnx_examples).
+
+```bash
+# QNX_STAGE should point to where gtk was previously installed (/tmp/staging/ in this case)
+cd ~/qnx_workspace
+QNX_STAGE=/tmp/staging make -C $(pwd)/gtk/qnx_examples install
+
+# executables will be installed in their respective project directories in /qnx_examples
+
+# copy the executables to your target
+# for example, gtk4_thermostat_A4
+scp $(pwd)/gtk/qnx_examples/gtk4_thermostat_A4/nto-aarch64-le/gtk4_thermostat_A4 qnxuser@$TARGET_HOST:/data/home/qnxuser/bin
+
+# copy images required by these example applications to the target
+scp -r $(pwd)/gtk/qnx_examples/images qnxuser@$TARGET_HOST:/data/home/qnxuser/share/
+
+# run the examples
+gtk4_thermostat_A4
+```
+
 # Caveats
 - This is only an **experimental port of GTK4** itself. Dependency libraries, such as `glib`, are not fully ported and are not guaranteed to be fully functional outside of those functionalities used by GTK4.
   - As a result, the test suite of GTK4 is also not expected to work correctly.
