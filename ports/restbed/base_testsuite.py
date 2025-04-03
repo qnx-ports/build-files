@@ -19,7 +19,7 @@ GRN = "\033[0;32m"
 BLU = "\033[1;34m"
 CLS = "\033[0m"
 
-def adjust_pathes(cmd, prefix, patterns):
+def adjust_paths(cmd, prefix, patterns):
     """
     TODO
     """
@@ -56,7 +56,7 @@ def run_tests(ctest_pathfilename, skip_re_match):
     # adjust all pathes to relative deployment on tagret
     for v in ut_tests:
         #adjust to local path
-        v["cmd"] = adjust_pathes(
+        v["cmd"] = adjust_paths(
             v["cmd"],
             dirname(ctest_pathfilename),
             [
