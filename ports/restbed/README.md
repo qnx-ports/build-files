@@ -5,9 +5,8 @@
 # Create a workspace
 ```bash
 mkdir -p ~/qnx_workspace && cd ~/qnx_workspace
-#TODO
-#git clone https://github.com/qnx-ports/build-files.git
-#git clone https://github.com/qnx-ports/restbed.git
+git clone https://github.com/qnx-ports/build-files.git
+git clone https://github.com/qnx-ports/restbed.git
 ```
 
 # Update 3rdParty dependencies
