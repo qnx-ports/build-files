@@ -117,6 +117,29 @@ RUN cd /opt && sudo wget https://cmake.org/files/v3.22/cmake-3.22.0-linux-x86_64
 	yes | sudo sh cmake-3.22.0-linux-x86_64.sh --prefix=/opt/cmake-3.22.0-linux-x86_64 --skip-license && \
 	sudo ln -s /opt/cmake-3.22.0-linux-x86_64/bin/cmake /usr/local/bin/cmake
 
+# Install APK dependencies
+RUN apt-get install -y \
+  busybox \
+  pax-utils \
+  libzstd-dev \
+  meson \
+  scdoc
+
+# Install apk-tools
+RUN cd ~ && \
+  git clone -b v3.0.0_rc4 https://github.com/alpinelinux/apk-tools.git && cd apk-tools && \
+  meson setup ~/apk-tools/build ~/apk-tools -Dprefix=/usr/local -Dtests=disabled && \
+  meson compile -C build && \
+  sudo meson install -C build
+
+# Install and patch abuild
+COPY "abuild_qnx.patch" "/root"
+RUN cd ~ && \
+  git clone https://github.com/alpinelinux/abuild.git && cd abuild && \
+  git checkout fb2543ffb9db77d0fb9e85c420fdbde9673481bb && \
+  git apply ~/abuild_qnx.patch && \
+  make && sudo make install
+
 # Adding user
 ARG USER_NAME
 ARG GROUP_NAME
