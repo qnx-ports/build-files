@@ -123,7 +123,7 @@ SDL_all:
 	@echo "Building for $(HOST_DETECT)"
 	@mkdir -p build
 	@cd $(QNX_PROJECT_ROOT) && sh autogen.sh
-	@cd build && $(QNX_PROJECT_ROOT)/configure --host=$(HOST_DETECT) --disable-pulseaudio --enable-wayland-shared=no --enable-video-wayland=no --enable-joystick=no --enable-audio=no --prefix=$(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)
+	@cd build && $(QNX_PROJECT_ROOT)/configure --host=$(HOST_DETECT) --disable-pulseaudio --enable-wayland-shared=no --enable-video-wayland=no --enable-joystick=yes --enable-audio=no --prefix=$(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)
 	@cd build && make $(MAKE_ARGS)
 	@cd build && cp $(QNX_PROJECT_ROOT)/include/* include/
 
