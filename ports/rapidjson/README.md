@@ -45,8 +45,9 @@ BUILD_TESTS=true GTEST_SRC="your/gtest/install/path" make -C build-files/ports/r
 Make sure you have built rapidjson with tests.
 1. Copy tests to target
 ```bash
+#replace aarch64le with x86_64 if running on an x86 machine
 cd $QNX_TARGET/aarch64le/usr/local/bin/rapidjson_tests
-scp -r * <username>@<target-ip>:/data/home/<username>/rapidjson
+scp -r * <username>@<target-ip>:~/rapidjson
 ```
 2. Run tests on target
 ```bash
