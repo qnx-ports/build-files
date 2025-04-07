@@ -44,7 +44,7 @@ sudo apt update
 sudo apt-get install sassc libglib2.0-bin ninja-build libglib2.0-dev pkg-config
 
 # Clone the repos
-mkdir -p ~/qnx_workspace && cd qnx_workspace
+mkdir -p ~/qnx_workspace && cd ~/qnx_workspace
 git clone https://github.com/qnx-ports/build-files.git
 git clone https://github.com/qnx-ports/gtk.git
 # Clone meson for building gtk
@@ -99,16 +99,26 @@ After building gtk4 for qnx, you can additionally build [example applications](h
 cd ~/qnx_workspace
 QNX_STAGE=/tmp/staging make -C $(pwd)/gtk/qnx_examples install
 
-# executables will be installed in their respective project directories in /qnx_examples
+# Executables will be installed in their respective project directories in /qnx_examples
 
-# copy the executables to your target
-# for example, gtk4_thermostat_A4
+# Copy the executables to your target
+# For example, gtk4_thermostat_A4
 scp $(pwd)/gtk/qnx_examples/gtk4_thermostat_A4/nto-aarch64-le/gtk4_thermostat_A4 qnxuser@$TARGET_HOST:/data/home/qnxuser/bin
 
-# copy images required by these example applications to the target
-scp -r $(pwd)/gtk/qnx_examples/images qnxuser@$TARGET_HOST:/data/home/qnxuser/share/
+# Copy dependencies if you haven't already
+scp -r /tmp/staging/aarch64le/usr/local/lib qnxuser@$TARGET_HOST:/data/home/qnxuser
 
-# run the examples
+# Copy images required by these example applications to the target
+scp -r $(pwd)/gtk/qnx_examples/images qnxuser@$TARGET_HOST:/data/home/qnxuser/share/images
+
+# ssh into your QNX target
+ssh qnxuser@$TARGET_HOST
+
+# Set environment variables
+export XDG_DATA_DIRS=/data/home/qnxuser/share
+export GSK_RENDERER=gl
+
+# Run the examples
 gtk4_thermostat_A4
 ```
 
