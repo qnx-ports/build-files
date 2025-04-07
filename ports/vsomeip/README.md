@@ -23,9 +23,9 @@ cd build-files/docker
 
 # Now you are in the Docker container
 
-# source qnxsdp-env.sh
+# For SDP 8.0:
 source ~/qnx800/qnxsdp-env.sh
-
+# For SDP 7.1:
 #source ~/qnx710/qnxsdp-env.sh
 
 cd ~/qnx_workspace
@@ -45,8 +45,10 @@ cd -
 cd tools/build && git apply $WORKSPACE/build-files/ports/boost/tools_qnx.patch
 cd $WORKSPACE
 
-# Build and install boost
+# SDP 8.0: build and install boost
 BOOST_CPP_VERSION_FLAG="-std=c++17" QNX_PROJECT_ROOT="$(pwd)/boost" make -C build-files/ports/boost install -j4
+# SDP 7.1: build and install boost
+#QNX_PROJECT_ROOT="$(pwd)/boost" make -C build-files/ports/boost install -j4
 
 # Build vsomeip
 # TEST_IP_MASTER should be your QNX target's ip address while TEST_IP_SLAVE should be your Ubuntu PC. It could be vice versa, but
@@ -65,7 +67,9 @@ git clone https://github.com/qnx-ports/vsomeip.git -b qnx_3.4.10
 git clone https://github.com/qnx-ports/googletest.git -b qnx_v1.13.0
 GTEST_ROOT=$WORKSPACE/googletest
 
-# source qnxsdp-env.sh
+# For SDP 8.0:
+source ~/qnx800/qnxsdp-env.sh
+# For SDP 7.1:
 source ~/qnx710/qnxsdp-env.sh
 
 # Clone boost
@@ -82,8 +86,10 @@ cd -
 cd tools/build && git apply $WORKSPACE/build-files/ports/boost/tools_qnx.patch
 cd $WORKSPACE
 
-# Build and install boost
+# SDP 8.0: build and install boost
 BOOST_CPP_VERSION_FLAG="-std=c++17" QNX_PROJECT_ROOT="$(pwd)/boost" make -C build-files/ports/boost install -j4
+# SDP 7.1: build and install boost
+#QNX_PROJECT_ROOT="$(pwd)/boost" make -C build-files/ports/boost install -j4
 
 # Build vsomeip
 # TEST_IP_MASTER should be your QNX target's ip address while TEST_IP_SLAVE should be your Ubuntu PC. It could be vice versa, but
