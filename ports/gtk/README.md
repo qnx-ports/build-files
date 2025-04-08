@@ -93,7 +93,7 @@ gtk4-demo
 
 # How to build and run qnx examples
 After building gtk4 for qnx, you can additionally build [example applications](https://github.com/qnx-ports/gtk/tree/qnx_4.8.3/qnx_examples).
-
+Run these build instructions either on the host or in the docker, depending on where gtk was built.
 ```bash
 # QNX_STAGE should point to where gtk was previously installed (/tmp/staging/ in this case)
 cd ~/qnx_workspace
