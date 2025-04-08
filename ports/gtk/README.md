@@ -103,12 +103,15 @@ QNX_STAGE=/tmp/staging make -C $(pwd)/gtk/qnx_examples install
 
 # Copy the executables to your target
 # For example, gtk4_thermostat_A4
+TARGET_HOST=<target-ip-address-or-hostname>
 scp $(pwd)/gtk/qnx_examples/gtk4_thermostat_A4/nto-aarch64-le/gtk4_thermostat_A4 qnxuser@$TARGET_HOST:/data/home/qnxuser/bin
 
 # Copy dependencies if you haven't already
 scp -r /tmp/staging/aarch64le/usr/local/lib qnxuser@$TARGET_HOST:/data/home/qnxuser
 
 # Copy images required by these example applications to the target
+# The following command expects that /data/home/qnxuser/share/ exists on the target
+# If it doesn't, please create it first (ssh qnxuser@$TARGET_HOST "mkdir -p ~/share")
 scp -r $(pwd)/gtk/qnx_examples/images qnxuser@$TARGET_HOST:/data/home/qnxuser/share/images
 
 # ssh into your QNX target
