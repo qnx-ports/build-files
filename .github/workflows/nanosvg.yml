@@ -16,6 +16,11 @@ on:
 
 jobs:
   build:
+    strategy:
+      matrix:
+        qnx_env:
+          - ghcr.io/qnx-ports/sdp800-build-env:latest
+          - ghcr.io/qnx-ports/sdp-build-env:latest
     runs-on: self-hosted
     if: |
       (github.event_name == 'workflow_dispatch') ||
@@ -42,7 +47,7 @@ jobs:
 
     - name: Pull build environment
       run: |
-        docker pull ghcr.io/qnx-ports/sdp800-build-env:latest
+        docker pull ${{ matrix.qnx_env }}
 
     - name: Build nanosvg
       uses: addnab/docker-run-action@v3
@@ -51,6 +56,10 @@ jobs:
         options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
         shell: bash
         run: |
-          source ~/qnx/800/qnxsdp-env.sh
+          if [[ "${{ matrix.qnx_env}}" == "ghcr.io/qnx-ports/sdp800-build-env:latest" ]]; then
+             source ~/qnx/800/qnxsdp-env.sh
+           else 
+             source ~/qnx/710/qnxsdp-env.sh
+           fi
           cd ~/workspace
           QNX_PROJECT_ROOT="$(pwd)/nanosvg" make -C build-files/ports/nanosvg install 
