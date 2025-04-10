@@ -1,0 +1,46 @@
+From 021461b61306ee3854c2f0d6db277d590cbdf853 Mon Sep 17 00:00:00 2001
+From: Leo Shen <i@szclsya.me>
+Date: Thu, 10 Apr 2025 10:17:17 -0400
+Subject: [PATCH 3/3] qnx: busybox location for ubuntu/debian, used by cross
+ environment
+
+---
+ Makefile  | 2 +-
+ abuild.in | 4 +++-
+ 2 files changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/Makefile b/Makefile
+index cbe97f8..7a73a5d 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1,7 +1,7 @@
+ PACKAGE		:= abuild
+ VERSION		:= 3.15.0_rc2
+ 
+-prefix		?= /usr
++prefix		?= /usr/local
+ bindir		?= $(prefix)/bin
+ sysconfdir	?= /etc
+ sharedir		?= $(prefix)/share/$(PACKAGE)
+diff --git a/abuild.in b/abuild.in
+index 11dc37f..9b32cfd 100644
+--- a/abuild.in
++++ b/abuild.in
+@@ -1,4 +1,4 @@
+-#!/bin/ash -e
++#!/usr/bin/busybox ash
+ # vim: set filetype=sh:
+ 
+ # abuild - build apk packages (light version of makepkg)
+@@ -8,6 +8,8 @@
+ # Distributed under GPL-2.0-only
+ #
+ 
++set -e
++
+ program_version=@VERSION@
+ sharedir=${ABUILD_SHAREDIR:-@sharedir@}
+ 
+-- 
+2.34.1
+
