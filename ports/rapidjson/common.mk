@@ -7,7 +7,7 @@ include $(QCONFIG)
 
 #### Project Options
 NAME = rapidjson
-QNX_PROJECT_ROOT ?= $(PROJECT_ROOT)/../../../rapidjson
+QNX_PROJECT_ROOT ?= $(PRODUCT_ROOT)/../../rapidjson
 PREFIX ?= /usr/local
 CMAKE_BUILD_TYPE ?= Release
 
@@ -44,7 +44,7 @@ CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
 			 -DRAPIDJSON_BUILD_DOC=OFF \
 
 ifdef BUILD_TESTS
-GTEST_SRC?=$(PROJECT_ROOT)/../../../googletest
+GTEST_SRC?=$(PRODUCT_ROOT)/../../googletest
 
 CMAKE_ARGS+= -DGTEST_SOURCE_DIR=$(GTEST_SRC) \
 			 -DRAPIDJSON_BUILD_CXX17=ON \
