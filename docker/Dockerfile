@@ -144,6 +144,7 @@ RUN cd ~ && \
   git clone -b 3.15.0_rc2 https://github.com/alpinelinux/abuild.git && cd abuild && \
   git apply ~/0001-qnx-disable-features-not-used-by-QNX.patch && \
   git apply ~/0002-qnx-add-Standardized-Layout-for-QNX-System-suport.patch && \
+  git apply ~/0003-qnx-busybox-location-for-ubuntu-debian-used-by-cross.patch && \
   make && sudo make install
 
 # Adding user
