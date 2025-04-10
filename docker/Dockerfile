@@ -125,19 +125,25 @@ RUN apt-get install -y \
   meson \
   scdoc
 
+# Copy apk patches
+COPY "patches/apk-tools/*" "patches/abuild/*" /root/
+
 # Install apk-tools
 RUN cd ~ && \
-  git clone -b v3.0.0_rc4 https://github.com/alpinelinux/apk-tools.git && cd apk-tools && \
+  git clone https://github.com/alpinelinux/apk-tools.git && cd apk-tools && \
+  git checkout 5ce64d14ead8ca1f2ee688c095390c8db0e5945c && \
+  git apply ~/0001-qnx-POSIX-API-compat.patch && \
+  git apply ~/0002-qnx-make-apk-s-internal-folders-SLQS-compatible.patch && \
+  git apply ~/0003-qnx-7xx-doesn-t-have-memmem-add-one-from-git.patch && \
   meson setup ~/apk-tools/build ~/apk-tools -Dprefix=/usr/local -Dtests=disabled && \
   meson compile -C build && \
   sudo meson install -C build
 
 # Install and patch abuild
-COPY "abuild_qnx.patch" "/root"
 RUN cd ~ && \
-  git clone https://github.com/alpinelinux/abuild.git && cd abuild && \
-  git checkout fb2543ffb9db77d0fb9e85c420fdbde9673481bb && \
-  git apply ~/abuild_qnx.patch && \
+  git clone -b 3.15.0_rc2 https://github.com/alpinelinux/abuild.git && cd abuild && \
+  git apply ~/0001-qnx-disable-features-not-used-by-QNX.patch && \
+  git apply ~/0002-qnx-add-Standardized-Layout-for-QNX-System-suport.patch && \
   make && sudo make install
 
 # Adding user
