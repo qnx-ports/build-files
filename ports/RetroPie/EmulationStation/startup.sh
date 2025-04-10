@@ -1,11 +1,14 @@
 #! /bin/sh
 
 # Set up input provider process
-./input_provider &
-inp_prov=$!
+./hid_input_provider &
+hid_inp_prov=$!
+./usb_input_provider &
+usb_inp_prov=$!
 
 # Run ES
 LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PWD/lib ./emulationstation
 
 # Kill input provider on cleanup
-kill $inp_prov
+kill $hid_inp_prov
+kill $usb_inp_prov

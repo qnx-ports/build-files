@@ -46,6 +46,7 @@ MUSLFLT_SRC=${PWD}/../../../muslflt
 ES_THEME_DIR=${PWD}/staging/emulationstation/themes
 
 HID_INPUT_PROCESSOR=${PWD}/../../../qnx-xinput-screen
+USB_INPUT_PROCESSOR=${PWD}/../../../usb-to-screen
 
 # DO NOT TOUCH BELOW HERE
 if [[ -z "$TARGET_IP" ]]; then
@@ -200,6 +201,10 @@ fi
 if [ ! -d "$HID_INPUT_PROCESSOR" ]; then
     echo "[INFO]: Missing hid input to screen. Cloning..."
     git clone https://github.com/JaiXJM-BB/qnx-xinput-screen.git $HID_INPUT_PROCESSOR
+fi
+if [ ! -d "$USB_INPUT_PROCESSOR" ]; then
+    echo "[INFO]: Missing hid input to screen. Cloning..."
+    git clone https://github.com/JaiXJM-BB/usb-to-screen.git $USB_INPUT_PROCESSOR
 fi
 
 ##########################################################################################
@@ -437,12 +442,18 @@ fi
 #xinput
 cd $HID_INPUT_PROCESSOR
 make
+cd $USB_INPUT_PROCESSOR
+make
 
 cd ${TOP_LEVEL_BUILD_DIR}
 mkdir -p ${TOP_LEVEL_BUILD_DIR}/staging/aarch64le
 mkdir -p ${TOP_LEVEL_BUILD_DIR}/staging/x86_64
-cp $HID_INPUT_PROCESSOR/aarch64/le/hid_xinput_to_screen ${TOP_LEVEL_BUILD_DIR}/staging/aarch64le/input_provider
-cp $HID_INPUT_PROCESSOR/x86_64/o/hid_xinput_to_screen ${TOP_LEVEL_BUILD_DIR}/staging/x86_64/input_provider
+
+cp $HID_INPUT_PROCESSOR/aarch64/le/hid_xinput_to_screen ${TOP_LEVEL_BUILD_DIR}/staging/aarch64le/hid_input_provider
+cp $HID_INPUT_PROCESSOR/x86_64/o/hid_xinput_to_screen ${TOP_LEVEL_BUILD_DIR}/staging/x86_64/hid_input_provider
+
+cp $USB_INPUT_PROCESSOR/nto-aarch64-le/usb-to-screen ${TOP_LEVEL_BUILD_DIR}/staging/aarch64le/usb_input_provider
+cp $USB_INPUT_PROCESSOR/nto-x86_64-o/usb-to-screen ${TOP_LEVEL_BUILD_DIR}/staging/x86_64/usb_input_provider
 
 ##########################################################################################
 
