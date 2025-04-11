@@ -70,7 +70,7 @@ CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DEXTRA_CMAKE_CXX_FLAGS="$(FLAGS)" \
              -DEXTRA_CMAKE_LINKER_FLAGS="$(LDFLAGS)" \
              -DCMAKE_NO_SYSTEM_FROM_IMPORTED=ON \
-			 -DSDL_THREADS_ENABLED_BY_DEFAULT=ON
+             -DSDL_THREADS_ENABLED_BY_DEFAULT=ON
 
 
 #### Flags for g++/gcc C/CPP 
