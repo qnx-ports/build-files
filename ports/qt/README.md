@@ -1,4 +1,4 @@
-# QT [![Build](https://github.com/qnx-ports/build-files/actions/workflows/qt.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/qt.yml)
+# Qt [![Build](https://github.com/qnx-ports/build-files/actions/workflows/qt.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/qt.yml)
 
 **NOTE**: QNX ports are only supported from a Linux host operating system
 
@@ -20,10 +20,10 @@ cd build-files/docker
 
 # Now you are in the Docker container
 
-# source qnxsdp-env.sh to buld for qnx710
-source ~/qnx710/qnxsdp-env.sh
+# source qnxsdp-env.sh to build for qnx710
+# source ~/qnx710/qnxsdp-env.sh
 
-# source qnxsdp-env.sh to buld for qnx800
+# source qnxsdp-env.sh to build for qnx800
 source ~/qnx800/qnxsdp-env.sh
 
 # Build QT for host machine
@@ -108,10 +108,10 @@ sudo apt-get install -y \
   libxslt1-dev \
   freeglut3-dev
 
-# source qnxsdp-env.sh to buld for qnx710
-source ~/qnx710/qnxsdp-env.sh
+# source qnxsdp-env.sh to build for qnx710
+# source ~/qnx710/qnxsdp-env.sh
 
-# source qnxsdp-env.sh to buld for qnx800
+# source qnxsdp-env.sh to build for qnx800
 source ~/qnx800/qnxsdp-env.sh
 
 # Build QT for host machine
@@ -134,9 +134,15 @@ cmake -GNinja \
 cmake --build . --parallel
 cmake --install .
 cd ~/qnx_workspace
+
+# Build QT
+BUILD_TESTING=OFF make -C build-files/ports/qt JLEVEL=4 install
 ```
 
 # How to run example
+There are 2 ways to build Qt example.
+
+## Option 1: use qt-cmake
 ```bash
 # Build QT example using qt-cmake
 
@@ -147,7 +153,7 @@ export PATH=$QNX_TARGET/aarch64le/usr/local/bin:$PATH
 cd ~/qnx_workspace/build-files/ports/qt/example
 
 # Run qt-cmake
-qt-cmake -DCMAKE_PREFIX_PATH=$QNX_TARGET/aarch64le/usr/ .
+qt-cmake -DCMAKE_PREFIX_PATH=$QNX_TARGET/aarch64le/usr/ -DCMAKE_SYSTEM_PROCESSOR=aarch64le .
 
 # Build the example
 cmake --build .
@@ -158,6 +164,7 @@ TARGET_HOST=<target-ip-address-or-hostname>
 # Transfer particles3d example to the target
 scp particles3d qnxuser@$TARGET_HOST:/data/home/qnxuser/
 ```
+## Option 2: use qmake
 ```bash
 # Build QT example using qmake
 
@@ -179,6 +186,7 @@ TARGET_HOST=<target-ip-address-or-hostname>
 # Transfer particles3d example to the target
 scp particles3d qnxuser@$TARGET_HOST:/data/home/qnxuser/
 ```
+## Finally run the example on the target
 ```bash
 # Specify target ip address
 TARGET_HOST=<target-ip-address-or-hostname>
