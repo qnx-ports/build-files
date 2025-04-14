@@ -264,19 +264,3 @@ sh run_tests.sh <subdirectory>
 # Summary of the result is stored in test_result.txt
 cat qt-test/<subdirectory>/test_results.txt
 ```
-### Known issues with QT testing
-```bash
-# Some test in qtbase, qtdeclarative, qtcharts is incompatible with window manager
-# Currently under investigation
-# Temporary solution is to slay fullscreen-winmgr
-
-# Login as root
-su
-# when prompted with password the password is root
-
-# Slay fullscreen-winmgr
-slay fullscreen-winmgr
-exit
-
-# Continue with testing
-```
