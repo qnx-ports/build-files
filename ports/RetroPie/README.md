@@ -27,7 +27,20 @@ To successfully build/install RetroPie on a QNX device, follow these steps:
 
 2. **Acquire a suitable Target.** If you have a QNXE license and a Raspberry Pi 4, it is recommended you follow the [instructions for setting up our quickstart image](https://gitlab.com/qnx/quick-start-images/raspberry-pi-qnx-8.0-quick-start-image/-/wikis/home). Your target should have aarch64 or x86_64 architecture and be running QNX 8.0 or newer.
 
-3. **Run build_install_all.sh with your target's ip and username.** Example seen below. More information on the build_install_all script can be found in SCRIPTINFO.md. You must have ssh set up for installation to target. 
+3. **Install Software Centre dependencies.** Some dependencies are not installed into your QNX host materials by default. You will need to run qnxsoftwarecentre.
+```bash
+# Boot up softwarecentre
+cd ~/qnx/qnxsoftwarecentre
+./qnxsoftwarecentre
+```
+Install these packages:
+- com.qnx.qnx800.target.screen.fonts.engine (Font Support via FreeType and more)
+- com.qnx.qnx800.target.screen.screen_utils (Utilities for screen/graphics applications)
+- com.qnx.qnx800.target.screen.base.wfd_server (More screen utilities)
+- com.qnx.qnx800.target.screen.vulkansc (Vulkan-based rendering support)
+- com.qnx.qnx800.target.screen.vulkansc.sdk (Vulkan-based rendering support)
+
+4. **Run build_install_all.sh with your target's ip and username.** Example seen below. More information on the build_install_all script can be found in SCRIPTINFO.md. You must have ssh set up for installation to target. 
 ```bash
 source ~/qnx800/qnxsdp-env.sh
 TARGET_IP="###.###.###.###" TARGET_USER="qnxuser" ./build_install_all
