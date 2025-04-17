@@ -26,12 +26,12 @@ source ~/qnx800/qnxsdp-env.sh
 cd ~/qnx_workspace
 
 # Clone zstd
-git clone https://github.com/facebook/zstd.git
-cd zstd
-git checkout v1.5.6
+git clone -b v1.5.6 https://github.com/facebook/zstd.git
 
 # Build zstd
-SOURCE_ROOT="$(pwd)/zstd" OSLIST=nto make -C build-files/ports/zstd install -j4
+make -C build-files/ports/zstd install JLEVEL=4
+# If zstd source is present at a different location
+QNX_PROJECT_ROOT=<path-to-source> make -C build-files/ports/zstd install JLEVEL=4
 ```
 
 # Compile the port for QNX on Ubuntu host
@@ -40,61 +40,60 @@ SOURCE_ROOT="$(pwd)/zstd" OSLIST=nto make -C build-files/ports/zstd install -j4
 # Clone the repos
 mkdir -p ~/qnx_workspace && cd qnx_workspace
 git clone https://github.com/qnx-ports/build-files.git
-git clone https://github.com/facebook/zstd.git
-cd zstd
-git checkout v1.5.6
+git clone -b v1.5.6 https://github.com/facebook/zstd.git
 
 # Source SDP environment
 source ~/qnx800/qnxsdp-env.sh
 cd ~/qnx_workspace
 
 # Build zstd
-SOURCE_ROOT="$(pwd)/zstd" OSLIST=nto make -C build-files/ports/zstd install -j4
+make -C build-files/ports/zstd install JLEVEL=4
+# If zstd source is present at a different location
+QNX_PROJECT_ROOT=<path-to-source> make -C build-files/ports/zstd install JLEVEL=4
 ```
 
-Zstandard library : usage examples
-==================================
+# Zstandard library : usage examples
 
-- [Simple compression](simple_compression.c) :
+- Simple compression :
   Compress a single file.
   Introduces usage of : `ZSTD_compress()`
 
-- [Simple decompression](simple_decompression.c) :
+- Simple decompression :
   Decompress a single file.
   Only compatible with simple compression.
   Result remains in memory.
   Introduces usage of : `ZSTD_decompress()`
 
-- [Multiple simple compression](multiple_simple_compression.c) :
+- Multiple simple compression :
   Compress multiple files (in simple mode) in a single command line.
   Demonstrates memory preservation technique that
   minimizes malloc()/free() calls by re-using existing resources.
   Introduces usage of : `ZSTD_compressCCtx()`
 
-- [Streaming memory usage](streaming_memory_usage.c) :
+- Streaming memory usage :
   Provides amount of memory used by streaming context.
   Introduces usage of : `ZSTD_sizeof_CStream()`
 
-- [Streaming compression](streaming_compression.c) :
+- Streaming compression :
   Compress a single file.
   Introduces usage of : `ZSTD_compressStream()`
 
-- [Multiple Streaming compression](multiple_streaming_compression.c) :
+- Multiple Streaming compression :
   Compress multiple files (in streaming mode) in a single command line.
   Introduces memory usage preservation technique,
   reducing impact of malloc()/free() and memset() by re-using existing resources.
 
-- [Streaming decompression](streaming_decompression.c) :
+- Streaming decompression :
   Decompress a single file compressed by zstd.
   Compatible with both simple and streaming compression.
   Result is sent to stdout.
   Introduces usage of : `ZSTD_decompressStream()`
 
-- [Dictionary compression](dictionary_compression.c) :
+- Dictionary compression :
   Compress multiple files using the same dictionary.
   Introduces usage of : `ZSTD_createCDict()` and `ZSTD_compress_usingCDict()`
 
-- [Dictionary decompression](dictionary_decompression.c) :
+- Dictionary decompression :
   Decompress multiple files using the same dictionary.
   Result remains in memory.
   Introduces usage of : `ZSTD_createDDict()` and `ZSTD_decompress_usingDDict()`
