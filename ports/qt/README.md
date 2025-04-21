@@ -54,7 +54,7 @@ BUILD_TESTING=OFF make -C build-files/ports/qt JLEVEL=4 install
 # Compile the port for QNX on Ubuntu host
 ```bash
 # Clone the repos
-mkdir -p ~/qnx_workspace && cd qnx_workspace
+mkdir -p ~/qnx_workspace && cd ~/qnx_workspace
 git clone https://github.com/qnx-ports/build-files.git
 
 # Install dependancies
@@ -271,4 +271,20 @@ sh run_tests.sh <subdirectory>
 
 # Summary of the result is stored in test_result.txt
 cat qt-test/<subdirectory>/test_results.txt
+```
+# Troubleshooting
+## Mismatched library versions
+
+When running a Qt example on your QNX target, you might encounter symbol resolution errors due to mismatched libraries between the host and the target due to version differences. For example:
+
+```bash
+qnxuser@qnxpi:~$ ./particles3d
+unknown symbol: _ZNSt3__218condition_variable15__do_timed_waitERNS_11unique_lockINS_5mutexEEENS_6chrono10time_pointINS5_12steady_clockENS5_8durationIxNS_5ratioILl1ELl1000000000EEEEEEE referenced from libQt6Core.so.6
+unknown symbol: _ZNSt3__212basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE9__grow_byEmmmmmm referenced from libQt6Network.so.6
+ldd:FATAL: Could not resolve all symbols
+```
+
+To solve this you can transfer your QNX host libraries to the target:
+```bash
+scp $QNX_TARGET/aarch64le/usr/lib/lib* qnxuser@$TARGET_HOST:/data/home/qnxuser/lib
 ```
