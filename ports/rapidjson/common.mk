@@ -8,7 +8,7 @@ include $(QCONFIG)
 #### Project Options
 NAME = rapidjson
 QNX_PROJECT_ROOT ?= $(PRODUCT_ROOT)/../../rapidjson
-PREFIX ?= /usr/local
+PREFIX ?= usr/local
 CMAKE_BUILD_TYPE ?= Release
 
 #### Set up default target (QNX-specific) 
