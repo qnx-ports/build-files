@@ -6,7 +6,7 @@ include $(QCONFIG) #  ##\# #  # #  #  # https://github.com/zeux/pugixml
 ####################==================##################################
 
 ## Set up user-overridden variables
-PREFIX 			    ?= /usr/local
+PREFIX 			    ?= usr/local
 QNX_PROJECT_ROOT    ?= $(PRODUCT_ROOT)/../../pugixml
 PUGIXML_BUILD_TESTS ?= "OFF"
 
@@ -35,9 +35,9 @@ CMAKE_MODULE_PATH    := $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/cmake;$(INSTALL
 CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DCMAKE_PROJECT_INCLUDE=$(PROJECT_ROOT)/project_hooks.cmake \
              -DCMAKE_INSTALL_PREFIX="$(INSTALL_ROOT)" \
-             -DCMAKE_INSTALL_LIBDIR="$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/lib" \
-             -DCMAKE_INSTALL_BINDIR="$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/bin" \
-             -DCMAKE_INSTALL_INCLUDEDIR="$(INSTALL_ROOT)/$(PREFIX)/include" \
+             -DCMAKE_INSTALL_LIBDIR="$(CPUVARDIR)/$(PREFIX)/lib" \
+             -DCMAKE_INSTALL_BINDIR="$(CPUVARDIR)/$(PREFIX)/bin" \
+             -DCMAKE_INSTALL_INCLUDEDIR="$(PREFIX)/include" \
              -DCMAKE_FIND_ROOT_PATH="$(CMAKE_FIND_ROOT_PATH)" \
              -DCMAKE_MODULE_PATH="$(CMAKE_MODULE_PATH)" \
              -DCMAKE_SYSTEM_PROCESSOR=$(CPUVARDIR) \
