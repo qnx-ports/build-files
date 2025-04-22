@@ -7,7 +7,7 @@ include $(QCONFIG)
 #### Project Options
 NAME = SDL
 QNX_PROJECT_ROOT ?= $(PROJECT_ROOT)/../../../SDL
-PREFIX ?= /usr/local
+PREFIX ?= usr/local
 CMAKE_BUILD_TYPE ?= Release
 
 #### Set up default target (QNX-specific) 
@@ -61,9 +61,9 @@ CMAKE_MODULE_PATH := $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/cmake;$(INSTALL_RO
 #### cmake Arguments
 CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DCMAKE_INSTALL_PREFIX="$(INSTALL_ROOT)" \
-             -DCMAKE_INSTALL_LIBDIR="$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/lib" \
-             -DCMAKE_INSTALL_BINDIR="$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/bin" \
-             -DCMAKE_INSTALL_INCLUDEDIR="$(INSTALL_ROOT)/$(PREFIX)/include" \
+             -DCMAKE_INSTALL_LIBDIR="$(CPUVARDIR)/$(PREFIX)/lib" \
+             -DCMAKE_INSTALL_BINDIR="$(CPUVARDIR)/$(PREFIX)/bin" \
+             -DCMAKE_INSTALL_INCLUDEDIR="$(PREFIX)/include" \
              -DCMAKE_FIND_ROOT_PATH="$(CMAKE_FIND_ROOT_PATH)" \
              -DCMAKE_MODULE_PATH="$(CMAKE_MODULE_PATH)" \
              -DCMAKE_SYSTEM_PROCESSOR=$(CPUVARDIR) \
