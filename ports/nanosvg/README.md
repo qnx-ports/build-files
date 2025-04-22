@@ -4,6 +4,7 @@ A simple header-file based SVG parser.
 
 **Repository:** https://github.com/memononen/nanosvg \
 **Supports:** QNX 8.0, 7.1 on aarch64le and x86_64
+**WARNING** Built as a dependency of Retropie. Not yet tested in isolation.
 
 # Build
 Make sure you have a QNX installation and license before beginning. You can get a [free non-commercial license here](https://www.qnx.com/products/everywhere/).
