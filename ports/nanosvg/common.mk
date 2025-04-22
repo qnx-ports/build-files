@@ -6,7 +6,7 @@ include $(QCONFIG) #  ##\# #  # #  #  # https://github.com/memononen/nanosvg
 ####################==================#######################################
 
 ## Set up user-overridden variables
-PREFIX 			 ?= /usr/local						# part of the install path in $QNX_TARGET
+PREFIX 			 ?= usr/local						# part of the install path in $QNX_TARGET
 QNX_PROJECT_ROOT ?=	$(PRODUCT_ROOT)/../../nanosvg	# path to the nanosvg source code
 
 ## Set up QNX recursive makefile specifics.
