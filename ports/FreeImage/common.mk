@@ -15,7 +15,7 @@ ALL_DEPENDENCIES = freeimage_all
 INSTALL_ROOT ?= $(INSTALL_ROOT_$(OS))
 
 QNX_PROJECT_ROOT?=$(PRODUCT_ROOT)/../../FreeImage
-PREFIX?="/usr/local"
+PREFIX?="usr/local"
 
 include $(MKFILES_ROOT)/qtargets.mk
 FLAGS   += -g -D_QNX_SOURCE
@@ -43,8 +43,10 @@ CFLAGS +=   -I$(INSTALL_ROOT)/$(PREFIX)/include -I$(QNX_TARGET)/$(PREFIX)/includ
 
 # Add the line below
 CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
-             -DCMAKE_INSTALL_PREFIX="$(PREFIX)" \
-             -DCMAKE_STAGING_PREFIX="$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)" \
+             -DCMAKE_INSTALL_PREFIX="$(INSTALL_ROOT)" \
+             -DCMAKE_INSTALL_LIBDIR="$(CPUVARDIR)/$(PREFIX)/lib" \
+             -DCMAKE_INSTALL_BINDIR="$(CPUVARDIR)/$(PREFIX)/bin" \
+             -DCMAKE_INSTALL_INCLUDEDIR="$(PREFIX)/include" \
              -DCMAKE_FIND_ROOT_PATH="$(CMAKE_FIND_ROOT_PATH)" \
              -DCMAKE_MODULE_PATH="$(CMAKE_MODULE_PATH)" \
              -DCMAKE_SYSTEM_PROCESSOR=$(CPUVARDIR) \

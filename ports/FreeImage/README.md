@@ -27,7 +27,4 @@ cd -
 source ~/qnx800/qnxsdp-env.sh
 make -C build-files/ports/FreeImage/
 ```
-TODO: COMFIGURATION OPTIONS
 
-## Testing
-TODO

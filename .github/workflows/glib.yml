@@ -17,7 +17,7 @@ on:
 
 jobs:
 
-  build:
+  build-qnx-ports:
     runs-on: self-hosted
     if: |
       (github.event_name == 'workflow_dispatch') ||
@@ -55,11 +55,71 @@ jobs:
         shell: bash
         run: |
           source ~/qnx/800/qnxsdp-env.sh
-          cd ~/workspace
           export QNX_VERSION=800
+          export CROSS_FILE=../build-files/resources/meson/aarch64le/workflows/qnx800.ini
+          cd ~/workspace
           export QNX_ARCH=aarch64le
           mkdir -p output
           cd glib
-          /usr/local/qnx/env/bin/meson setup build-qnx$QNX_VERSION --cross-file ../build-files/resources/meson/aarch64le/workflows/qnx800.ini -Dprefix=/usr -Dxattr=false
+          /usr/local/qnx/env/bin/meson setup build-qnx$QNX_VERSION --cross-file $CROSS_FILE -Dprefix=/usr -Dxattr=false
           /usr/local/qnx/env/bin/meson compile -C build-qnx$QNX_VERSION
           DESTDIR=/home/runner/workspace/output /usr/local/qnx/env/bin/meson install --no-rebuild -C build-qnx$QNX_VERSION
+
+  build-glib-main:
+    strategy:
+      matrix:
+        qnx_env:
+          - ghcr.io/qnx-ports/sdp800-build-env:latest
+          - ghcr.io/qnx-ports/sdp-build-env:latest
+    runs-on: self-hosted
+    if: |
+      (github.event_name == 'workflow_dispatch') ||
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'glib'))
+    steps:
+    - name: Checkout build-files
+      uses: actions/checkout@v4
+      with:
+        path: build-files
+
+    - name: Checkout glib
+      uses: actions/checkout@v4
+      with:
+        repository: GNOME/glib
+        path: glib
+        ref: 2.83.5
+
+    - name: Checkout meson
+      uses: actions/checkout@v4
+      with:
+        repository: mesonbuild/meson
+        path: meson
+        ref: 1.7.0
+
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v3
+      with:
+        registry: ghcr.io
+        username: ${{github.actor}}
+        password: ${{secrets.GITHUB_TOKEN}}
+
+    - name: Pull build environment
+      run: |
+        docker pull ${{ matrix.qnx_env }}
+
+    - name: Build glib
+      uses: addnab/docker-run-action@v3
+      with:
+        image: ${{ matrix.qnx_env }}
+        options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
+        shell: bash
+        run: |
+          if [[ "${{ matrix.qnx_env}}" == "ghcr.io/qnx-ports/sdp800-build-env:latest" ]]; then
+            source ~/qnx/800/qnxsdp-env.sh
+          else 
+            source ~/qnx/710/qnxsdp-env.sh
+          fi
+          cd ~/workspace
+          chmod +x ./build-files/ports/glib/install_all.sh 
+          JLEVEL=$(nproc) ./build-files/ports/glib/install_all.sh
+          JLEVEL=$(nproc) QNX_PROJECT_ROOT="$(pwd)/glib" make -C build-files/ports/glib install

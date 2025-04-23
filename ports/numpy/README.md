@@ -2,6 +2,33 @@
 
 **NOTE**: QNX ports are only supported from a Linux host operating system
 
+**NOTE**: The numpy build system first tests for compiler flag support by doing a test compilation and checking for warnings or errors. This does not fail the build and can safely be ignored.
+i.e.
+```
+INFO: compile options: '-Inumpy/core/src/common -Inumpy/core/src -Inumpy/core -Inumpy/core/src/npymath -Inumpy/core/src/multiarray -Inumpy/core/src/umath -Inumpy/core/src/npysort -Inumpy/core/src/_simd -Iqnx800/target/qnx/usr/include -Iqnx800/target/qnx/usr/include/python3.11 -Iqnx800/target/qnx/aarch64le/usr/include -Iqnx800/target/qnx/aarch64le/usr/include/python3.11 -Iqnx800/target/qnx/usr/include/aarch64le/python3.11 -I/usr/local/qnx/env/include -I/usr/include/python3.11 -Ibuild/src.linux-x86_64-3.11/numpy/core/src/common -Ibuild/src.linux-x86_64-3.11/numpy/core/src/npymath -c'
+extra options: '-march=native'
+WARN: CCompilerOpt.dist_test[636] : CCompilerOpt._dist_test_spawn[770] : Command (qcc ... -march=native) failed with exit status 1 output -> 
+cc1: error: unknown value 'native' for '-march'
+cc1: note: valid arguments are: armv8-a armv8.1-a armv8.2-a armv8.3-a armv8.4-a armv8.5-a armv8.6-a armv8.7-a armv8.8-a armv8-r armv9-a
+
+WARN: CCompilerOpt.cc_test_flags[1089] : testing failed
+```
+or...
+```
+INFO: CCompilerOpt.feature_test[1559] : testing feature 'FMA3' with flags ()
+INFO: C compiler: qcc ...
+
+INFO: compile options: '-Inumpy/core/src/common -Inumpy/core/src -Inumpy/core -Inumpy/core/src/npymath -Inumpy/core/src/multiarray -Inumpy/core/src/umath -Inumpy/core/src/npysort -Inumpy/core/src/_simd -Iqnx800/target/qnx/usr/include -Iqnx800/target/qnx/usr/include/python3.11 -Iqnx800/target/qnx/aarch64le/usr/include -Iqnx800/target/qnx/aarch64le/usr/include/python3.11 -Iqnx800/target/qnx/usr/include/aarch64le/python3.11 -I/usr/local/qnx/env/include -I/usr/include/python3.11 -Ibuild/src.linux-x86_64-3.11/numpy/core/src/common -Ibuild/src.linux-x86_64-3.11/numpy/core/src/npymath -c'
+extra options: '-Werror'
+WARN: CCompilerOpt.dist_test[636] : CCompilerOpt._dist_test_spawn[770] : Command (qcc ... numpy/numpy/distutils/checks/cpu_fma3.o -Werror) failed with exit status 1 output -> 
+numpy/numpy/distutils/checks/cpu_fma3.c:14:10: fatal error: xmmintrin.h: No such file or directory
+   14 | #include <xmmintrin.h>
+      |          ^~~~~~~~~~~~~
+compilation terminated.
+
+WARN: CCompilerOpt.feature_test[1575] : testing failed
+```
+
 Use `$(nproc)` instead of `4` after `JLEVEL=` and `-j` if you want to use the maximum number of cores to build this project.
 32GB of RAM is recommended for using `JLEVEL=$(nproc)` or `-j$(nproc)`.
 

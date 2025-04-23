@@ -6,7 +6,7 @@ include $(QCONFIG) #  ##\# #  # #  #  # https://github.com/zeux/pugixml
 ####################==================##################################
 
 ## Set up user-overridden variables
-PREFIX 			    ?= /usr/local
+PREFIX 			    ?= usr/local
 QNX_PROJECT_ROOT    ?= $(PRODUCT_ROOT)/../../pugixml
 PUGIXML_BUILD_TESTS ?= "OFF"
 
@@ -25,8 +25,8 @@ include $(MKFILES_ROOT)/qtargets.mk
 
 ## Setup paths for CMAKE find_*
 CMAKE_FIND_ROOT_PATH := $(QNX_TARGET);$(QNX_TARGET)/$(CPUVARDIR);$(INSTALL_ROOT)/$(CPUVARDIR)
-CMAKE_MODULE_PATH 	 := $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/cmake;$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/lib/cmake
-CFLAGS 				 += -I$(INSTALL_ROOT)/$(PREFIX)/include -I$(QNX_TARGET)/$(PREFIX)/include
+CMAKE_MODULE_PATH    := $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/cmake;$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/lib/cmake
+
 # $(QNX_TARGET) contains architecture-agnostics (i.e. headers, non-compiled) from SDP
 # $(QNX_TARGET)/$(CPUVARDIR) contains architecture specific from SDP
 # $(INSTALL_ROOT)/$(CPUVARDIR) contains built and installed packages
@@ -35,8 +35,10 @@ CFLAGS 				 += -I$(INSTALL_ROOT)/$(PREFIX)/include -I$(QNX_TARGET)/$(PREFIX)/inc
 ## CMAKE Arguments
 CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DCMAKE_PROJECT_INCLUDE=$(PROJECT_ROOT)/project_hooks.cmake \
-             -DCMAKE_INSTALL_PREFIX="$(PREFIX)" \
-             -DCMAKE_STAGING_PREFIX="$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)" \
+             -DCMAKE_INSTALL_PREFIX="$(INSTALL_ROOT)" \
+             -DCMAKE_INSTALL_LIBDIR="$(CPUVARDIR)/$(PREFIX)/lib" \
+             -DCMAKE_INSTALL_BINDIR="$(CPUVARDIR)/$(PREFIX)/bin" \
+             -DCMAKE_INSTALL_INCLUDEDIR="$(PREFIX)/include" \
              -DCMAKE_FIND_ROOT_PATH="$(CMAKE_FIND_ROOT_PATH)" \
              -DCMAKE_MODULE_PATH="$(CMAKE_MODULE_PATH)" \
              -DCMAKE_SYSTEM_PROCESSOR=$(CPUVARDIR) \
@@ -45,7 +47,7 @@ CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DEXTRA_CMAKE_CXX_FLAGS="$(FLAGS)" \
              -DEXTRA_CMAKE_LINKER_FLAGS="$(LDFLAGS)" \
              -DCPU=$(CPU) \
-			 -DBUILD_SHARED_LIBS=ON \
+             -DBUILD_SHARED_LIBS=ON \
              -DPUGIXML_BUILD_TESTS=$(PUGIXML_BUILD_TESTS) \
 
 pugixml_all:

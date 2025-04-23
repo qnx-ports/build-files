@@ -53,21 +53,26 @@ CMAKE_MODULE_PATH := $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/cmake;$(INSTALL_RO
 #because CMake and pkg-config do not necessary add it automatically
 #if the include path is "default"
 CFLAGS += $(FLAGS) -I$(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/include \
-                   -I$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/include
-
-LDFLAGS += -Wl,--build-id=md5 -Wl,--allow-shlib-undefined
-
+                   -I$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/include \
+                   -fPIC
+                    
+LDFLAGS += -Wl,--build-id=md5 -Wl,--allow-shlib-undefined -fPIC
 
 CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
-             -DCMAKE_SYSTEM_PROCESSOR=$(CPUVARDIR) \
-             -DCMAKE_EXE_LINKER_FLAGS="$(LDFLAGS)" \
+             -DCMAKE_SYSTEM_PROCESSOR_ENDIAN=$(CPUVARDIR) \
+             -DCMAKE_SYSTEM_PROCESSOR=$(CPU) \
+             -DEXTRA_CMAKE_ASM_FLAGS="$(FLAGS)" \
+             -DCMAKE_INSTALL_INCLUDEDIR="$(INSTALL_ROOT)/$(PREFIX)/include" \
+             -DEXTRA_CMAKE_C_FLAGS="$(CFLAGS)" \
+             -DEXTRA_CMAKE_CXX_FLAGS="$(CFLAGS)" \
+             -DEXTRA_CMAKE_LINKER_FLAGS="$(LDFLAGS)" \
              -DCMAKE_CXX_COMPILER_TARGET=gcc_nto$(CPUVARDIR) \
              -DCMAKE_C_COMPILER_TARGET=gcc_nto$(CPUVARDIR) \
-             -DCMAKE_INSTALL_PREFIX="$(PREFIX)" \
+             -DCMAKE_INSTALL_PREFIX="$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)" \
              -DCMAKE_STAGING_PREFIX="$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)" \
              -DCMAKE_MODULE_PATH="$(CMAKE_MODULE_PATH)" \
              -DCMAKE_FIND_ROOT_PATH="$(CMAKE_FIND_ROOT_PATH)" \
-             -DCMAKE_BUILD_TYPE=$(CMAKE_BUILD_TYPE) \
+             -DCMAKE_BUILD_TYPE=$(CMAKE_BUILD_TYPE)
 
 MAKE_ARGS ?= -j $(firstword $(JLEVEL) 1)
 

@@ -42,7 +42,7 @@ mkdir -p <staging-install-folder>
 # Clone muslflt
 git clone https://github.com/qnx-ports/muslflt.git
 # Build muslflt
-QNX_PROJECT_ROOT="$(pwd)/muslflt" INSTALL_ROOT_nto=<staging-install-folder> USE_INSTALL_ROOT=true make -C build-files/ports/muslflt/ install -j4
+QNX_PROJECT_ROOT="$(pwd)/muslflt" make -C build-files/ports/muslflt/ INSTALL_ROOT_nto=<staging-install-folder> USE_INSTALL_ROOT=true install -j4
 
 # Clone eigen
 git clone https://github.com/qnx-ports/eigen.git
@@ -66,7 +66,7 @@ mkdir -p <staging-install-folder>
 # source qnxsdp-env.sh
 source ~/qnx800/qnxsdp-env.sh
 # Prerequisite: Install muslflt
-QNX_PROJECT_ROOT="$(pwd)/muslflt" INSTALL_ROOT_nto=<staging-install-folder> USE_INSTALL_ROOT=true make -C build-files/ports/muslflt/ install -j4
+QNX_PROJECT_ROOT="$(pwd)/muslflt" make -C build-files/ports/muslflt/ INSTALL_ROOT_nto=<staging-install-folder> USE_INSTALL_ROOT=true install -j4
 # Build
 QNX_PROJECT_ROOT="$(pwd)/eigen" make -C build-files/ports/eigen INSTALL_ROOT_nto=<staging-install-folder> USE_INSTALL_ROOT=true JLEVEL=4 install
 ```

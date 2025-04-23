@@ -39,14 +39,17 @@ make -C build-files/ports/rapidjson/ install
 BUILD_TESTS=true make -C build-files/ports/rapidjson install
 # With tests & specify Googletest Installation
 BUILD_TESTS=true GTEST_SRC="your/gtest/install/path" make -C build-files/ports/rapidjson install
+# You can also get your rapidjson path, as well as specify the path to these makefiles if you need to run from a script or other directory
+QNX_PROJECT_ROOT=/path/to/rapidjson make -C /path/to/build-files/ports/rapidjson install
 ```
 
 ## Testing
 Make sure you have built rapidjson with tests.
 1. Copy tests to target
 ```bash
+#replace aarch64le with x86_64 if running on an x86 machine
 cd $QNX_TARGET/aarch64le/usr/local/bin/rapidjson_tests
-scp -r * <username>@<target-ip>:/data/home/<username>/rapidjson
+scp -r * <username>@<target-ip>:~/rapidjson
 ```
 2. Run tests on target
 ```bash

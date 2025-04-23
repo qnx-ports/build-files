@@ -44,9 +44,9 @@ sudo apt update
 sudo apt-get install sassc libglib2.0-bin ninja-build libglib2.0-dev pkg-config
 
 # Clone the repos
-mkdir -p ~/qnx_workspace && cd qnx_workspace
-git clone https://gitlab.com/qnx/ports/build-files.git
-git clone https://gitlab.com/qnx/ports/gtk.git
+mkdir -p ~/qnx_workspace && cd ~/qnx_workspace
+git clone https://github.com/qnx-ports/build-files.git
+git clone https://github.com/qnx-ports/gtk.git
 # Clone meson for building gtk
 git clone https://github.com/mesonbuild/meson && cd meson
 git checkout 110642dd7
@@ -89,6 +89,40 @@ export GSK_RENDERER=gl
 
 # Run the demo
 gtk4-demo
+```
+
+# How to build and run qnx examples
+After building gtk4 for qnx, you can additionally build [example applications](https://github.com/qnx-ports/gtk/tree/qnx_4.8.3/qnx_examples).
+Run these build instructions either on the host or in the docker, depending on where gtk was built.
+```bash
+# QNX_STAGE should point to where gtk was previously installed (/tmp/staging/ in this case)
+cd ~/qnx_workspace
+QNX_STAGE=/tmp/staging make -C $(pwd)/gtk/qnx_examples install
+
+# Executables will be installed in their respective project directories in /qnx_examples
+
+# Copy the executables to your target
+# For example, gtk4_thermostat_A4
+TARGET_HOST=<target-ip-address-or-hostname>
+scp $(pwd)/gtk/qnx_examples/gtk4_thermostat_A4/nto-aarch64-le/gtk4_thermostat_A4 qnxuser@$TARGET_HOST:/data/home/qnxuser/bin
+
+# Copy dependencies if you haven't already
+scp -r /tmp/staging/aarch64le/usr/local/lib qnxuser@$TARGET_HOST:/data/home/qnxuser
+
+# Copy images required by these example applications to the target
+# The following command expects that /data/home/qnxuser/share/ exists on the target
+# If it doesn't, please create it first (ssh qnxuser@$TARGET_HOST "mkdir -p ~/share")
+scp -r $(pwd)/gtk/qnx_examples/images qnxuser@$TARGET_HOST:/data/home/qnxuser/share/images
+
+# ssh into your QNX target
+ssh qnxuser@$TARGET_HOST
+
+# Set environment variables
+export XDG_DATA_DIRS=/data/home/qnxuser/share
+export GSK_RENDERER=gl
+
+# Run the examples
+gtk4_thermostat_A4
 ```
 
 # Caveats
