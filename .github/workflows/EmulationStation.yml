@@ -83,11 +83,11 @@ jobs:
         shell: bash
         run: |
           source ~/qnx/800/qnxsdp-env.sh
+          cd ~/qnx/800 && ../qnxsoftwarecentre/qnxsoftwarecenter_clt -i com.qnx.qnx800.target.screen.fonts.engine/0.0.1.00020T202311191218L 
           cd ~/workspace
           PREFIX="/usr/local" QNX_PROJECT_ROOT="$(pwd)/SDL" make -C build-files/ports/SDL/nto-aarch64-le install -j$(nproc)
           PREFIX="/usr/local" QNX_PROJECT_ROOT="$(pwd)/pugixml" make -C build-files/ports/pugixml/nto-aarch64-le install -j$(nproc)
           PREFIX="/usr/local" QNX_PROJECT_ROOT="$(pwd)/nanosvg" make -C build-files/ports/nanosvg/nto-aarch64-le install -j$(nproc)
           PREFIX="/usr/local" QNX_PROJECT_ROOT="$(pwd)/FreeImage" make -C build-files/ports/FreeImage/nto-aarch64-le install -j$(nproc)
           PREFIX="/usr/local" QNX_PROJECT_ROOT="$(pwd)/rapidjson" make -C build-files/ports/rapidjson/nto-aarch64-le install -j$(nproc)
-          ~/qnx/qnxsoftwarecenter/qnxsoftwarecenter_clt -i com.qnx.qnx800.target.screen.fonts.engine/0.0.1.00020T202311191218L 
           PREFIX="/usr/local" QNX_PROJECT_ROOT="$(pwd)/EmulationStation" make -C build-files/ports/RetroPie/EmulationStation/nto-aarch64-le install -j$(nproc)
