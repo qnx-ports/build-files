@@ -22,7 +22,7 @@ jobs:
     if: |
       (github.event_name == 'workflow_dispatch') ||
       (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
-      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'EmulationStation'))
+      (github.event_name == 'pull_request' && (contains(github.event.pull_request.title, 'EmulationStation')||contains(github.event.pull_request.title, 'Emulation Station')))
     steps:
     - name: Checkout build-files
       uses: actions/checkout@v4
@@ -58,7 +58,7 @@ jobs:
       with:
         repository: zeux/pugixml
         path: pugixml
-        
+
     - name: Checkout nanosvg
       uses: actions/checkout@v4
       with:
