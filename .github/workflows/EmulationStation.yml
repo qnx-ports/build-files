@@ -89,5 +89,5 @@ jobs:
           PREFIX="/usr/local" QNX_PROJECT_ROOT="$(pwd)/nanosvg" make -C build-files/ports/nanosvg/nto-aarch64-le install -j$(nproc)
           PREFIX="/usr/local" QNX_PROJECT_ROOT="$(pwd)/FreeImage" make -C build-files/ports/FreeImage/nto-aarch64-le install -j$(nproc)
           PREFIX="/usr/local" QNX_PROJECT_ROOT="$(pwd)/rapidjson" make -C build-files/ports/rapidjson/nto-aarch64-le install -j$(nproc)
-          ~/qnx/qnxsoftwarecenter/qnxsoftwarecenter_clt -i com.qnx.qnx800.target.screen.fonts.engine/0.0.1.00020T202311191218L -destination ~/qnx/800
+          ~/qnx/qnxsoftwarecenter/qnxsoftwarecenter_clt -destination ~/qnx/800/ -i com.qnx.qnx800.target.screen.fonts.engine/0.0.1.00020T202311191218L 
           PREFIX="/usr/local" QNX_PROJECT_ROOT="$(pwd)/EmulationStation" make -C build-files/ports/RetroPie/EmulationStation/nto-aarch64-le install -j$(nproc)
