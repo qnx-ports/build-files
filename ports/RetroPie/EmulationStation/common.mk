@@ -23,7 +23,7 @@ INSTALL_ROOT ?= $(INSTALL_ROOT_$(OS))
 #This prefix path may be exposed to the source code,
 #the linker, or package discovery config files (.pc,
 #CMake config modules, etc.). Default is /usr/local
-PREFIX ?= /usr/local
+PREFIX ?= usr/local
 
 #choose Release or Debug
 CMAKE_BUILD_TYPE ?= Release
@@ -59,8 +59,10 @@ CFLAGS +=   -I$(INSTALL_ROOT)/$(PREFIX)/include -I$(QNX_TARGET)/$(PREFIX)/includ
 
 # Add the line below
 CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
-             -DCMAKE_INSTALL_PREFIX="$(PREFIX)" \
-             -DCMAKE_STAGING_PREFIX="$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)" \
+             -DCMAKE_INSTALL_PREFIX="$(INSTALL_ROOT)" \
+             -DCMAKE_INSTALL_LIBDIR="$(CPUVARDIR)/$(PREFIX)/lib" \
+             -DCMAKE_INSTALL_BINDIR="$(CPUVARDIR)/$(PREFIX)/bin" \
+             -DCMAKE_INSTALL_INCLUDEDIR="$(PREFIX)/include" \
              -DCMAKE_FIND_ROOT_PATH="$(CMAKE_FIND_ROOT_PATH)" \
              -DCMAKE_MODULE_PATH="$(CMAKE_MODULE_PATH)" \
              -DCMAKE_SYSTEM_PROCESSOR=$(CPUVARDIR) \
