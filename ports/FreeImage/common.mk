@@ -80,6 +80,7 @@ install check:
 	@cp ../FreeImage.pc build/
 	@sed -i 's,%CPU%,$(CPUVARDIR),' build/FreeImage.pc
 	@cp build/FreeImage.pc $(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/lib/pkgconfig/
+	@cp build/FreeImage.pc $(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/lib/pkgconfig/freeimage.pc
 	@echo Done! Installed.
 
 # Shortcut for RetroPie's build/install all script
