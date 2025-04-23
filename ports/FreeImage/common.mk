@@ -77,6 +77,7 @@ install check:
 	@echo Installing...
 	@cd build && make install $(MAKE_ARGS)
 	@cd build && cp libfreeimage.so $(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/lib/libFreeImage.so
+	@cd build && cp libfreeimage.so $(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/lib/libfreeimage-3.18.0.so
 	@cp ../FreeImage.pc build/
 	@sed -i 's,%CPU%,$(CPUVARDIR),' build/FreeImage.pc
 	@cp build/FreeImage.pc $(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/lib/pkgconfig/
