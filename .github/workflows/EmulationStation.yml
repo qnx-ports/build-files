@@ -84,9 +84,9 @@ jobs:
         run: |
           source ~/qnx/800/qnxsdp-env.sh
           cd ~/workspace
-          PREFIX="/usr/local" QNX_PROJECT_ROOT="$(pwd)/SDL" make -C build-files/ports/SDL install -j$(nproc)
-          PREFIX="/usr/local" QNX_PROJECT_ROOT="$(pwd)/pugixml" make -C build-files/ports/pugixml install -j$(nproc)
-          PREFIX="/usr/local" QNX_PROJECT_ROOT="$(pwd)/nanosvg" make -C build-files/ports/nanosvg install -j$(nproc)
-          PREFIX="/usr/local" QNX_PROJECT_ROOT="$(pwd)/FreeImage" make -C build-files/ports/FreeImage install -j$(nproc)
-          PREFIX="/usr/local" QNX_PROJECT_ROOT="$(pwd)/rapidjson" make -C build-files/ports/rapidjson install -j$(nproc)
-          PREFIX="/usr/local" QNX_PROJECT_ROOT="$(pwd)/EmulationStation" make -C build-files/ports/RetroPie/EmulationStation install -j$(nproc)
+          PREFIX="/usr/local" QNX_PROJECT_ROOT="$(pwd)/SDL" make -C build-files/ports/SDL/nto-aarch64-le install -j$(nproc)
+          PREFIX="/usr/local" QNX_PROJECT_ROOT="$(pwd)/pugixml" make -C build-files/ports/pugixml/nto-aarch64-le install -j$(nproc)
+          PREFIX="/usr/local" QNX_PROJECT_ROOT="$(pwd)/nanosvg" make -C build-files/ports/nanosvg/nto-aarch64-le install -j$(nproc)
+          PREFIX="/usr/local" QNX_PROJECT_ROOT="$(pwd)/FreeImage" make -C build-files/ports/FreeImage/nto-aarch64-le install -j$(nproc)
+          PREFIX="/usr/local" QNX_PROJECT_ROOT="$(pwd)/rapidjson" make -C build-files/ports/rapidjson/nto-aarch64-le install -j$(nproc)
+          PREFIX="/usr/local" QNX_PROJECT_ROOT="$(pwd)/EmulationStation" make -C build-files/ports/RetroPie/EmulationStation/nto-aarch64-le install -j$(nproc)
