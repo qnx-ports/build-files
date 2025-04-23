@@ -71,8 +71,8 @@ CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DCPU=$(CPU) \
              -DOPTION_TOOLS_ONLY=OFF \
              -DCMAKE_BUILD_TYPE=RelWithdebInfo \
-             -DHOST_BINARY_DIR=../build_native  \
-             -DOPTION_DEDICATED=ON
+             -DHOST_BINARY_DIR=../build_native  
+ #            -DOPTION_DEDICATED=ON
 
 CMAKE_ARGS_TOOLS = -DCMAKE_INSTALL_PREFIX="$(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)" \
                    -DCMAKE_FIND_ROOT_PATH="$(CMAKE_FIND_ROOT_PATH)" \
