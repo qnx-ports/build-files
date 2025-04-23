@@ -1,7 +1,7 @@
 prefix=/home/jaixjm/qnx800/target/qnx//usr/local
 exec_prefix=/home/jaixjm/qnx800/target/qnx/%CPU%//usr/local
 libdir="{exec_prefix}/lib"
-includedir="{prefix}/include"
+includedir="{prefix}/include/FreeImage"
 
 Name: FreeImage
 Version: 3.18.0
