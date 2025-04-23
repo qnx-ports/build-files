@@ -81,7 +81,7 @@ install check:
 	@sed -i 's,%CPU%,$(CPUVARDIR),' build/FreeImage.pc
 	@cp build/FreeImage.pc $(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/lib/pkgconfig/
 	@cp build/FreeImage.pc $(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/lib/pkgconfig/freeimage.pc
-	@cp mkdir -p $(INSTALL_ROOT)/$(PREFIX)/FreeImage/
+	@mkdir -p $(INSTALL_ROOT)/$(PREFIX)/FreeImage/
 	@cp $(INSTALL_ROOT)/$(PREFIX)/freeimage/* $(INSTALL_ROOT)/$(PREFIX)/FreeImage/
 	@echo Done! Installed.
 
