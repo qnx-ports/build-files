@@ -76,6 +76,10 @@ freeimage_all:
 install check:
 	@echo Installing...
 	@cd build && make install $(MAKE_ARGS)
+	@cd build && cp libfreeimage.so $(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/lib/libFreeImage.so
+	@cp ../FreeImage.pc build/
+	@sed -i 's,%CPU%,$(CPUVARDIR),' build/FreeImage.pc
+	@cp build/FreeImage.pc $(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/lib/pkgconfig/
 	@echo Done! Installed.
 
 # Shortcut for RetroPie's build/install all script
