@@ -58,7 +58,7 @@ jobs:
       with:
         repository: zeux/pugixml
         path: pugixml
-	
+        
     - name: Checkout nanosvg
       uses: actions/checkout@v4
       with:
