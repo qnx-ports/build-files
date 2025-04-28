@@ -78,6 +78,8 @@ git apply $WORKSPACE/build-files/ports/Fast-DDS/qnx_patches/googletest_qnx.patch
 
 # Build
 cd $WORKSPACE
+
+# You should always do a clean rebuild when possible. Execute `make clean` before any before is always recommanded
 JLEVEL=4 make -C $WORKSPACE/build-files/ports/Fast-DDS INSTALL_ROOT_nto=<staging-install-folder> USE_INSTALL_ROOT=true install
 ```
 
@@ -86,7 +88,7 @@ JLEVEL=4 make -C $WORKSPACE/build-files/ports/Fast-DDS INSTALL_ROOT_nto=<staging
 **NOTE**: Before running the tests make sure you have libsqlite3.so.1 from
 com.qnx.qnx800.osr.sqlite3 installed in LD_LIBRARY_PATH on the target.
 
-You must also set environment variable `TESTING=ON` to built tests for Fast-DDS.
+You must also set environment variable `TESTING=ON` to built tests for Fast-DDS. On top of that, you must build binries of only one of the two architectures at the time. i.e. To avoid building for X86_64, create a file name `Makefile.dnm` in `build-files/ports/Fast-DDS/nto/aarch64`. 
 
 Copy host files to the target (note, mDNS is configured from
 /boot/qnx_config.txt and uses qnxpi.local by default).
@@ -137,6 +139,3 @@ for test in $(find ./unittest -type f | grep Tests | grep -v "SystemInfoTests") 
 done
 cd $TESTROOT
 ```
-
-### Possible solution to compilation failure.
-Since Fast-DDS is a big project hence 
