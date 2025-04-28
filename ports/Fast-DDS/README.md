@@ -17,7 +17,7 @@ Use `$(nproc)` instead of `4` after `JLEVEL=` and `-j` if you want to use the ma
 
 ```bash
 # Install required build tools
-sudo apt install cmake python3-pip git dos2unix automake
+sudo apt install ninja cmake python3-pip git dos2unix automake
 ```
 
 Optional: Build in Docker container
