@@ -86,6 +86,8 @@ JLEVEL=4 make -C $WORKSPACE/build-files/ports/Fast-DDS INSTALL_ROOT_nto=<staging
 **NOTE**: Before running the tests make sure you have libsqlite3.so.1 from
 com.qnx.qnx800.osr.sqlite3 installed in LD_LIBRARY_PATH on the target.
 
+You must also set environment variable `TESTING=ON` to built tests for Fast-DDS.
+
 Copy host files to the target (note, mDNS is configured from
 /boot/qnx_config.txt and uses qnxpi.local by default).
 ```bash
@@ -135,3 +137,6 @@ for test in $(find ./unittest -type f | grep Tests | grep -v "SystemInfoTests") 
 done
 cd $TESTROOT
 ```
+
+### Possible solution to compilation failure.
+Since Fast-DDS is a big project hence 
