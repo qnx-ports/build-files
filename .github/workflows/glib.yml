@@ -87,7 +87,7 @@ jobs:
       with:
         repository: GNOME/glib
         path: glib
-        ref: 2.84.1
+        ref: 2.83.5
 
     - name: Checkout meson
       uses: actions/checkout@v4
