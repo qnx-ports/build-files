@@ -13,7 +13,7 @@ glib currently has 2 different building profiles and only one of them should be 
 **NOTE**: currently both x86_64 and aarch64le are supported
 
 Current these versions are tested:
-+ 2.83.5 
++ 2.84.1 
 
 See test reports in `tests/`. They remain the same as the other version
 
@@ -58,7 +58,7 @@ QNX_PROJECT_ROOT="$(pwd)/glib" JLEVEL=4 make -C build-files/ports/glib install
 **NOTE**: currently only aarch64le is supported.
 
 Current these versions are tested:
-+ 2.82.0
++ 2.84.1
 
 See test reports in `tests/`.
 
@@ -79,7 +79,7 @@ cd ~/workspace
 git clone https://github.com/qnx-ports/glib.git
 cd glib/
 # For QNX 7.1.0+, use the generic branch
-git checkout qnx-2.82.2
+git checkout qnx-2.84.1
 # Generate build script
 meson setup build-qnx$QNX_VERSION --cross-file ~/workspace/build-files/resources/$QNX_ARCH/qnx$QNX_VERSION.ini -Dprefix=/usr -Dxattr=false
 meson compile -C build-qnx$QNX_VERSION

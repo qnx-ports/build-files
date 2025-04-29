@@ -32,7 +32,7 @@ ALL_DEPENDENCIES = $(NAME)_all
 CFLAGS += $(FLAGS)
 
 #Define _QNX_SOURCE 
-CFLAGS += -D_QNX_SOURCE -O3 -fPIC
+CFLAGS += -D_QNX_SOURCE -O2 -fPIC
 LDFLAGS += -Wl,--build-id=md5
 
 include $(MKFILES_ROOT)/qtargets.mk
@@ -45,7 +45,9 @@ BUILD_TESTING = OFF
 # Use submoduled Meson
 MESON := $(QNX_PROJECT_ROOT)/../meson/meson.py
 MESON_FLAGS :=  -Dxattr=false \
-                -Dtests=false\
+                -Dtests=true \
+                -Dinstalled_tests=true \
+                -Dcpp_std=c++11 \
                 --reconfigure \
 				--buildtype=$(MESON_BUILD_TYPE) \
                 --prefix=$(GLIB_INSTALL_DIR) \
