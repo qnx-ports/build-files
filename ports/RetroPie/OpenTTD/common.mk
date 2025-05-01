@@ -90,10 +90,40 @@ OpenTTD_all:
 	@mkdir -p $(QNX_PROJECT_ROOT)/build
 	@cd $(QNX_PROJECT_ROOT)/build && PKG_CONFIG_PATH=${INSTALL_ROOT_nto}/${cpudir}/usr/lib/pkgconfig:${INSTALL_ROOT_nto}/${cpudir}/usr/local/lib/pkgconfig cmake $(CMAKE_ARGS) $(QNX_PROJECT_ROOT)
 	@cd $(QNX_PROJECT_ROOT)/build && PKG_CONFIG_PATH=${INSTALL_ROOT_nto}/${cpudir}/usr/lib/pkgconfig:${INSTALL_ROOT_nto}/${cpudir}/usr/local/lib/pkgconfig make VERBOSE=1 $(MAKE_ARGS)
-	@cp -r $(QNX_PROJECT_ROOT)/build build
-	@cp -r $(QNX_PROJECT_ROOT)/build_native build_native
+	@mkdir -p build
+	@mkdir -p build_native
+	@cp -r $(QNX_PROJECT_ROOT)/build/* build/
+	@cp -r $(QNX_PROJECT_ROOT)/build_native/* build_native/
+
+staged: OpenTTD_all
+	@mkdir -p staging/lib
+	@cp -r build/ai staging/
+	@cp -r build/baseset staging/
+	@cp -r build/game staging/
+	@cp -r build/generated staging/
+	@cp -r build/lang staging/
+	@cp -r build/media staging/
+	@cp -r build/regression staging/
+	@cp  build/openttd staging/openttd
+	@cp  build/openttd staging/openttd.ttd
+	@cp  build/openttd_test staging/
+	@cp  ../startopenttd.sh staging/
+	@cp  ../startserver.sh staging/
+	@cp  $(QNX_TARGET)/$(CPUVARDIR)/usr/lib/libc++* staging/lib
+# Yes, this is needed for the quick start image. Unfortunately it seems to have a slightly outdated std::chrono implementation.
+# Users will need to set their LD_LIBRARY_PATH accordingly or use the provided startopenttd.sh script
+#Optionally: Grab Graphics
+#	@curl https://cdn.openttd.org/opengfx-releases/7.1/opengfx-7.1-all.zip --output opengfx-7.1-all.zip
+# 	@unzip opengfx-7.1-all.zip
+# 	@cp opengfx-7.1.tar staging/baseset/
+
+install_rpie: staged
+	@mkdir -p $(PRODUCT_ROOT)/staging/$(CPUDIR)/OpenTTD
+	@cp -r staging/* $(PRODUCT_ROOT)/staging/$(CPUDIR)/OpenTTD
+
 clean:
 	@rm -rf $(QNX_PROJECT_ROOT)/build
 	@rm -rf $(QNX_PROJECT_ROOT)/build_native
 	@rm -rf build
 	@rm -rf build_native
+	@rm -rf staging

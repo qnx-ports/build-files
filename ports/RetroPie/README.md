@@ -23,6 +23,13 @@ For more specifics on RetroArch and supported Cores, as well as Emulation Statio
 
 ### Via Script
 To successfully build/install RetroPie on a QNX device, follow these steps:
+0. **Make sure you have the following installed on your linux host**: 
+- bash
+- curl
+- unzip
+- git
+- gcc and g++
+
 1. **Ensure you have a QNX License.** If not, see how to get one here: [QNXE Free Non-Commercial License](https://www.qnx.com/products/everywhere/). You must also install the Wayland/Weston, Base Graphics, Vulkan SDK, and any board-specific (i.e. Quickstart Image or Raspberry Pi Board Support) packages from [QNX Software Centre](https://www.qnx.com/download/group.html?programid=29178).
 
 2. **Acquire a suitable Target.** If you have a QNXE license and a Raspberry Pi 4, it is recommended you follow the [instructions for setting up our quickstart image](https://gitlab.com/qnx/quick-start-images/raspberry-pi-qnx-8.0-quick-start-image/-/wikis/home). Your target should have aarch64 or x86_64 architecture and be running QNX 8.0 or newer.

@@ -19,6 +19,7 @@ TARGET_ARCH=aarch64le
 #DO_NOT_REBUILD=TRUE
 #DO_NOT_INSTALL=TRUE
 #DO_NOT_BUILD_UNUSED=TRUE
+#SKIP_OPENTTD=TRUE
 
 
 ### Directory Paths
@@ -42,6 +43,8 @@ NANOSVG_SRC=${PWD}/../../../nanosvg
 
 LUA_SRC=${PWD}/../../../lua
 MUSLFLT_SRC=${PWD}/../../../muslflt
+
+OPENTTD_SRC=${PWD}/../../../OpenTTD
 
 ES_THEME_DIR=${PWD}/staging/emulationstation/themes
 
@@ -83,6 +86,11 @@ fi
 if [ "$DO_NOT_INSTALL" = "TRUE" ]; then 
     echo "[WARNING]: \$DO_NOT_INSTALL is set to \"TRUE\"." 
     echo "           Script will NOT attempt to install liraries from staging/$TARGET_ARCH."
+fi
+
+if [ ! "$SKIP_OPENTTD" = "TRUE" ]; then
+    echo "[WARNING] \$SKIP_OPENTTD is not set to \"TRUE\"."
+    echo "          This is not yet ready for release and takes a long time to build!"
 fi
 
 echo "========================="
@@ -205,6 +213,12 @@ fi
 if [ ! -d "$USB_INPUT_PROCESSOR" ]; then
     echo "[INFO]: Missing hid input to screen. Cloning..."
     git clone https://github.com/JaiXJM-BB/usb-to-screen.git $USB_INPUT_PROCESSOR
+fi
+
+if [ ! -d "$OPENTTD_SRC" -a ! "${SKIP_OPENTTD}" = "TRUE" ]; then
+    echo "[INFO]: Missing OpenTTD. Cloning..."
+    echo "HEY! WE HAVENT SET UP AN OPENTTD PATH YET! SET SKIP_OPENTTD=TRUE"
+    exit 1
 fi
 
 ##########################################################################################
@@ -432,10 +446,27 @@ if [ ! -d "$ES_THEME_DIR" ]; then
     mkdir -p $ES_THEME_DIR
 fi
 # Clone Themes
-if [ ! -d "$ES_THEME_DIR/es-theme-qnx" ]; then
+if [ ! -d "$ES_THEME_DIR/es-theme-qnx/_inc" ]; then
     echo "Cloning es-theme-qnx"
     cd $ES_THEME_DIR
     git clone https://github.com/qnx-ports/es-theme-qnx es-theme-qnx
+fi
+##########################################################################################
+#OpenTTD
+if [ ! "${SKIP_OPENTTD}" = "TRUE" ]; then
+    if [ ! -d "${TOP_LEVEL_BUILD_DIR}/staging/${_STAGING_ARCH}/OpenTTD" -o ! "${DO_NOT_REBUILD}" = "TRUE" ]; then
+        echo "[INFO]: Building OpenTTD..."
+        cd ${TOP_LEVEL_BUILD_DIR}/OpenTTD
+        rm nto-${_CHECK_BUILD_ARCH}/Makefile.dnm
+        if [ "$DO_NOT_BUILD_UNUSED" = "TRUE" ]; then
+            touch nto-${_OPPOSITE_ARCH}/Makefile.dnm
+        fi
+        make install_rpie
+    fi
+    cd ${TOP_LEVEL_BUILD_DIR}/staging
+    curl https://cdn.openttd.org/opengfx-releases/7.1/opengfx-7.1-all.zip --output opengfx-7.1-all.zip
+    unzip opengfx-7.1-all.zip
+    cp opengfx-7.1.tar ${_STAGING_ARCH}/OpenTTD/baseset/
 fi
 
 ##########################################################################################

@@ -81,5 +81,10 @@ echo "[INFO]: Cleaning Emulation Station..."
 cd ${TOP_LEVEL_BUILD_DIR}/EmulationStation
 make clean
 
+# OpenTTD
+echo "[INFO]: Cleaning OpenTTD..."
+cd ${TOP_LEVEL_BUILD_DIR}/OpenTTD
+make clean
+
 cd ${TOP_LEVEL_BUILD_DIR}
 rm -r staging

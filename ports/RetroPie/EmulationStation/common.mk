@@ -78,10 +78,13 @@ CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DSDL2_LIBRARY="$(QNX_TARGET)/$(CPUDIR)/$(PREFIX)/lib/libSDL2.so" \
              -DSDL2_PATH="$(QNX_TARGET)/$(CPUDIR)/$(PREFIX)/lib/libSDL2.so" \
              -DSDL2_INCLUDE_DIR="$(QNX_TARGET)/$(CPUDIR)/$(PREFIX)/include/SDL" \
+             -DFreeImage_LIBRARY="$(QNX_TARGET)/$(CPUDIR)/$(PREFIX)/lib/libfreeimage.so" \
+             -DFreeImage_PATH="$(QNX_TARGET)/$(CPUDIR)/$(PREFIX)/lib/libfreeimage.so" \
+             -DFreeImage_INCLUDE_DIR="$(QNX_TARGET)/$(CPUDIR)/$(PREFIX)/include/freeimage" \
              -DSDL2MAIN_LIBRARY="$(QNX_TARGET)/$(CPUDIR)/$(PREFIX)/lib/libSDL2main.a" \
              -DSDL2_NO_DEFAULT_PATH:BOOL=ON \
-             -DPKG_CONFIG_EXECUTABLE="/usr/bin/pkgconf"
-             
+             -DPKG_CONFIG_EXECUTABLE="/usr/bin/pkgconf" \
+      
 
 MAKE_ARGS ?= -j $(firstword $(JLEVEL) 1)
 

@@ -92,7 +92,11 @@ You can start RetroArch by navigating to this directory and running `./startup.s
 ```
 retroarch
 |startup.sh
+|start-ra.sh
 |retroarch
+|emulationstation
+|hid-input-provider
+|usb-input-provider
 |-data
 | |-cores
 | | |*libretro*.so (retroarch cores here)
@@ -109,4 +113,15 @@ retroarch
 |-rarch-shared
 | |-content
 | | |(core-specific content, e.g. retro8 carts)
+|
+|-resources
+| | (Emulation Station textures, etc)
+|
+|-lua
+| |lua
+|
+|-OpenTTD
+
+.emulationstation
+| | (Emulation Station configuration files)
 ```
