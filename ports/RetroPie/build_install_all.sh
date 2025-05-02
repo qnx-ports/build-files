@@ -171,19 +171,19 @@ fi
 ########### Emulation Station & Deps ###########
 if [ ! -d "$EMULATIONSTATION_SRC" ]; then
     echo "[INFO]: Missing EmulationStation source. Cloning..."
-    git clone git@github.com:qnx-ports/EmulationStation.git $EMULATIONSTATION_SRC
+    git clone https://github.com/qnx-ports/EmulationStation.git $EMULATIONSTATION_SRC
 fi
 if [ ! -d "$SDL_SRC" ]; then
     echo "[INFO]: Missing SDL source. Cloning..."
-    git clone git@github.com:qnx-ports/SDL.git $SDL_SRC
+    git clone https://github.com/qnx-ports/SDL.git $SDL_SRC
 fi
 if [ ! -d "$RAPIDJSON_SRC" ]; then
     echo "[INFO]: Missing rapidjson source. Cloning..."
-    git clone git@github.com:qnx-ports/rapidjson.git $RAPIDJSON_SRC
+    git clone https://github.com/qnx-ports/rapidjson.git $RAPIDJSON_SRC
 fi
 if [ ! -d "$FREEIMAGE_SRC" ]; then
     echo "[INFO]: Missing FreeImage source. Cloning..."
-    git clone git@github.com:qnx-ports/FreeImage.git $FREEIMAGE_SRC
+    git clone https://github.com/qnx-ports/FreeImage.git $FREEIMAGE_SRC
 fi
 if [ ! -d "$PUGIXML_SRC" ]; then
     echo "[INFO]: Missing pugixml source. Cloning..."
