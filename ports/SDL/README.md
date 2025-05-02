@@ -58,8 +58,10 @@ source ~/qnx800/qnxsdp-env.sh
 
 6. Build the project in your workspace from Step 1
 ```bash
-# Do not set QNX_BUILD_TESTS to anything if you do not want tests built.
 QNX_PROJECT_ROOT="$(pwd)/SDL" make -C build-files/ports/SDL2 install -j4
+
+# Or Build and compile tests into a staging directory:
+make -C build-files/ports/SDL2 SDL_test -j4
 ```
 
 **NOTE**: Clean your build files before rebuilding.
@@ -67,8 +69,3 @@ QNX_PROJECT_ROOT="$(pwd)/SDL" make -C build-files/ports/SDL2 install -j4
 #From your workspace:
 make -C build-files/ports/SDl2 clean
 ```
-
-build/build/libSDL2*.a
-build/build/.libs/libSDL*
-
-build_test/test*
