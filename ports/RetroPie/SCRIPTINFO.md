@@ -56,7 +56,7 @@ Sets the installation target's architecture, either aarch64le or x86_64.
 `TARGET_DIR=/path/to/install/loc/` \
 Sets the installation directory on the target. Defaults to ~/retroarch (~ evaluated on target).
 
-## Build/Install Manifest
+## Build/Install Manifest & Licenses
 
 The following projects are built and installed by build_install_all.sh. They are linked here alongside their license. \
 An * before a project's name indicates it being installed from upstream, i.e. a source not under QNX. \
@@ -77,6 +77,8 @@ Last Updated 2/27/2025 M/D/Y
 |                |[*fake-08/retro8: Just One Boss](https://www.lexaloffle.com/bbs/?pid=49234)|CC4-BY-NC-SA|We do not distribute - this is pulled from its source via CURL.|
 |                |[*RetroArch: Assets](https://github.com/libretro/retroarch-assets)  |[CC-BY-4.0](https://github.com/libretro/retroarch-assets/blob/master/COPYING)|RetroArch's assets for its various GUIs.|
 |                |[*RetroArch: Info](https://github.com/libretro/libretro-core-info)                          |[MIT](https://github.com/libretro/libretro-core-info/blob/master/COPYING)|RetroArch's core info files for menu display purposes.|
+|                |[OpenTTD](OpenTTD/README.md)            |[GPLv2](https://wiki.openttd.org/License)|Transport Tycoon Game.|
+|                |[OpenGFX](OpenTTD/README.md)            |[GPLv2](https://github.com/OpenTTD/OpenGFX/blob/master/README.md#50-license)|Graphics for above.|
 |*Dependencies*  |[VLC](../vlc/README.md)                        |[GPLv2](https://www.videolan.org/legal.html)|VLC Media Player and Engine, needed for Emulation Station.|
 |                |[SDL2](../SDL/README.md)                       |[zlib](https://www.libsdl.org/license.php)|SDL library for display purposes. Needed by Emulation Station.|
 |                |[pugixml](../pugixml/README.md)                |[MIT](https://pugixml.org/license.html)|.xml parser, needed by Emulation Station.|
