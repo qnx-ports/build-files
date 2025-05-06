@@ -101,8 +101,8 @@ sh test.sh
 There are a total of 199 tests. Known test skips and failures include:
 
 - All MQTT IoT related tests are untested for now (117 tests)
-- Few HTTP (3 pass and 3 failed) tests are skipped from running in test script since they cause Segmentation fault and stop complete test run
-  1. Tests which pass and cause Segmentation fault (are supposed to):
+- Few HTTP (3 pass and 3 failed) tests are skipped from running in test script since halt test script run due to segmentation/memory faults
+  1. Tests which pass and cause memory fault (are supposed to):
   - HttpDownloadNoBackPressureHTTP1_1
   - HttpDownloadNoBackPressureHTTP2
   - HttpStreamUnActivated
