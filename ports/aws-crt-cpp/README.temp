@@ -1,5 +1,0 @@
-build instructions for internal eyes:
-- git clone build files and aws-crt-cpp from qnx-ports
-- cd to aws-crt-cpp repo and do submodule update (recursive)
-- install com.qnx.qnx800.target.notify_fd from Anvil for `libepoll.so`
-- cd - and build using `make -C build-files/ports/aws-crt-cpp -j24`. for arch specific use `OSLIST=<arch> make ...`
