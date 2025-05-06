@@ -12,3 +12,4 @@ LDFLAGS += -Wl,--exclude-libs,ALL -Wl,--unresolved-symbols=report-all
 USEFILE :=
 
 EXTRA_SRCVPATH = $(QNX_PROJECT_ROOT)
+PUBLIC_INCVPATH = $(QNX_PROJECT_ROOT)/public
