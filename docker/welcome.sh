@@ -14,4 +14,5 @@ echo "
 echo "QNX Environment variables are set to:"
 source /usr/local/qnx/env/bin/activate
 source $HOME/qnx800/qnxsdp-env.sh
+cd $HOME/qnx_workspace
 echo ""
