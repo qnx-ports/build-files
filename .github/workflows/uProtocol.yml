@@ -66,6 +66,7 @@ jobs:
           pip install conan
           export PATH=$PATH:/home/runner/.local/bin
           conan profile detect
+          conan list
           cd up-conan-recipes
           conan create --version=3.21.12 --build=missing protobuf
           conan config install tools/qnx-8.0-extension/settings_user.yml
@@ -75,7 +76,8 @@ jobs:
           conan create -pr:h=tools/profiles/nto-8.0-x86_64 --version=1.13.0 spdlog/all
           conan create -pr:h=tools/profiles/nto-8.0-x86_64 --version=1.13.0 gtest
           conan create -pr:h=tools/profiles/nto-8.0-x86_64 --version 1.0.1-qnx up-cpp/release
-          cd up-cpp
+          cd ../up-cpp
+          conan list
           conan install -pr:h=../up-conan-recipes/tools/profiles/nto-8.0-x86_64 --version 1.0.1 .
           cmake --preset conan-release
           cmake --build build/Release -- -j
