@@ -78,6 +78,9 @@ jobs:
           conan create -pr:h=tools/profiles/nto-8.0-x86_64 --version 1.0.1-qnx up-cpp/release
           cd ../up-cpp
           conan list
+          cmake --version
           conan install -pr:h=../up-conan-recipes/tools/profiles/nto-8.0-x86_64 --version 1.0.1 .
+          cmake --version
           cmake --preset conan-release
+          cmake --version
           cmake --build build/Release -- -j
