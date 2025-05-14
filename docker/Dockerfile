@@ -145,6 +145,7 @@ RUN cd ~ && \
   git apply ~/0001-qnx-disable-features-not-used-by-QNX.patch && \
   git apply ~/0002-qnx-add-Standardized-Layout-for-QNX-System-suport.patch && \
   git apply ~/0003-qnx-busybox-location-for-ubuntu-debian-used-by-cross.patch && \
+  git apply ~/0004-abuild-remove-ash-specific-chdir.patch && \
   make && sudo make install
 
 # Adding user
