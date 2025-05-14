@@ -18,6 +18,7 @@ Before starting:
 First, clone this repo and build the Docker image:
 
 ```bash
+$ mkdir -p ~/qnx_workspace && cd ~/qnx_workspace
 $ git clone https://github.com/qnx-ports/build-files.git && cd build-files/docker
 $ ./docker-build-qnx-image.sh
 ```
