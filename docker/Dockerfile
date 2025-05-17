@@ -111,11 +111,11 @@ RUN add-apt-repository ppa:deadsnakes/ppa -y && \
 	python3.11-distutils \
 	rename
 
-# Install CMake 3.22
-RUN cd /opt && sudo wget https://cmake.org/files/v3.22/cmake-3.22.0-linux-x86_64.sh && \
-	sudo mkdir /opt/cmake-3.22.0-linux-x86_64 && \
-	yes | sudo sh cmake-3.22.0-linux-x86_64.sh --prefix=/opt/cmake-3.22.0-linux-x86_64 --skip-license && \
-	sudo ln -s /opt/cmake-3.22.0-linux-x86_64/bin/cmake /usr/local/bin/cmake
+# Install CMake 3.31.7
+RUN cd /opt && sudo wget https://cmake.org/files/v3.31/cmake-3.31.7-linux-x86_64.sh && \
+	sudo mkdir /opt/cmake-3.31.7-linux-x86_64 && \
+	yes | sudo sh cmake-3.31.7-linux-x86_64.sh --prefix=/opt/cmake-3.31.7-linux-x86_64 --skip-license && \
+	sudo ln -s /opt/cmake-3.31.7-linux-x86_64/bin/cmake /usr/local/bin/cmake
 
 # Install APK dependencies
 RUN apt-get install -y \

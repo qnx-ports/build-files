@@ -1,6 +1,8 @@
 #!/bin/bash
 
-QNX_SDP_VERSION=qnx800
+QNX_SDP_VERSION=${QNX_SDP_VERSION:-qnx800}
+
+echo "Use SDP from ${HOME}/${QNX_SDP_VERSION}"
 
 docker run -it \
   --net=host \
