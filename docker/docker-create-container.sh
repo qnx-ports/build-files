@@ -1,6 +1,13 @@
 #!/bin/bash
 
-QNX_SDP_VERSION=qnx800
+QNX_SDP_VERSION=${QNX_SDP_VERSION:-qnx800}
+
+if [ ! -d ${HOME}/${QNX_SDP_VERSION} ]; then
+    echo "ERROR: The SDP's path ${HOME}/${QNX_SDP_VERSION} is not available."
+    exit 1
+fi
+
+echo "Using SDP from ${HOME}/${QNX_SDP_VERSION}"
 
 docker run -it \
   --net=host \

@@ -1,6 +1,8 @@
 #!/bin/bash
 
-QNX_SDP_VERSION=qnx800
+QNX_SDP_VERSION=${QNX_SDP_VERSION:-qnx800}
+
+echo "Using SDP from ${HOME}/${QNX_SDP_VERSION}"
 
 docker build -t $QNX_SDP_VERSION \
   --build-arg USER_NAME="$(id --user --name | awk '{print $1;}')" \
