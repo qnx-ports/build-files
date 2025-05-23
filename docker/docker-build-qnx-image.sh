@@ -2,7 +2,12 @@
 
 QNX_SDP_VERSION=${QNX_SDP_VERSION:-qnx800}
 
-echo "Use SDP from ${HOME}/${QNX_SDP_VERSION}"
+if [ ! -d ${HOME}/${QNX_SDP_VERSION} ]; then
+    echo "ERROR: The SDP's path ${HOME}/${QNX_SDP_VERSION} is not available."
+    exit 1
+fi
+
+echo "Using SDP from ${HOME}/${QNX_SDP_VERSION}"
 
 docker build -t $QNX_SDP_VERSION \
   --build-arg USER_NAME="$(id --user --name | awk '{print $1;}')" \
