@@ -110,7 +110,8 @@ staged: OpenTTD_all
 	@cp  ../startopenttd.sh staging/
 	@cp  ../startserver.sh staging/
 	@cp  $(QNX_TARGET)/$(CPUVARDIR)/usr/lib/libc++* staging/lib
-	@cp $(QNX_TARGET)/$(CPUVARDIR)/usr/lib/*SDL* staging/lib
+	-cp $(QNX_TARGET)/$(CPUVARDIR)/usr/lib/*SDL* staging/lib
+	-cp $(QNX_TARGET)/$(CPUVARDIR)/usr/local/lib/*SDL* staging/lib
 # Yes, this is needed for the quick start image. Unfortunately it seems to have a slightly outdated std::chrono implementation.
 # Users will need to set their LD_LIBRARY_PATH accordingly or use the provided startopenttd.sh script
 #Optionally: Grab Graphics

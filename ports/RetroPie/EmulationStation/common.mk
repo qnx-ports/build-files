@@ -43,7 +43,7 @@ include $(MKFILES_ROOT)/qtargets.mk
 #$(QNX_TARGET): for architecture-agnostic files shipped with SDP (e.g. headers)
 #$(QNX_TARGET)/$(CPUVARDIR): for architecture-specific files in SDP
 #$(INSTALL_ROOT)/$(CPUVARDIR): any packages that may have been installed in the staging area
-CMAKE_FIND_ROOT_PATH := $(QNX_TARGET);$(QNX_TARGET)/$(CPUVARDIR);$(INSTALL_ROOT)/$(CPUVARDIR)
+CMAKE_FIND_ROOT_PATH := $(PRODUCT_ROOT)/../../../vlc_2/qnx/nto-aarch64-le/install;$(QNX_TARGET);$(QNX_TARGET)/$(CPUVARDIR);$(INSTALL_ROOT)/$(CPUVARDIR)
 
 #Path to CMake modules; These are CMake files installed by other packages
 #for downstreams to discover them automatically. We support discovering
@@ -55,7 +55,7 @@ CMAKE_MODULE_PATH := $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/cmake;$(INSTALL_RO
 #Headers from INSTALL_ROOT need to be made available by default
 #because CMake and pkg-config do not necessary add it automatically
 #if the include path is "default"
-CFLAGS +=   -I$(INSTALL_ROOT)/$(PREFIX)/include -I$(QNX_TARGET)/$(PREFIX)/include
+CFLAGS +=  -I$(INSTALL_ROOT)/$(PREFIX)/include -I$(QNX_TARGET)/$(PREFIX)/include
 
 # Add the line below
 CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
@@ -84,7 +84,8 @@ CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DSDL2MAIN_LIBRARY="$(QNX_TARGET)/$(CPUDIR)/$(PREFIX)/lib/libSDL2main.a" \
              -DSDL2_NO_DEFAULT_PATH:BOOL=ON \
              -DPKG_CONFIG_EXECUTABLE="/usr/bin/pkgconf" \
-      
+
+            #  -DPKG_CONFIG_PATH=$(QNX_TARGET)/$(CPUDIR)/$(PREFIX)/lib/pkgconfig
 
 MAKE_ARGS ?= -j $(firstword $(JLEVEL) 1)
 

@@ -357,11 +357,6 @@ cp configs/retroarch.cfg staging/x86_64/rarch-shared/
 ##########################################################################################
 ### Build Emulation Station
 ## Dependencies:
-#==============VLC=================
-echo "VLC! (temp)"
-cd $TOP_LEVEL_BUILD_DIR
-cp $QNX_TARGET/$TARGET_ARCH/usr/local/lib/*libvlc* $PWD/staging/$TARGET_ARCH/lib
-
 
 # SDL
 if [ ! -d "${TOP_LEVEL_BUILD_DIR}/../SDL/nto-${_CHECK_BUILD_ARCH}/build/" -o ! "${DO_NOT_REBUILD}" = "TRUE" ]; then
@@ -423,6 +418,16 @@ if [ ! -d "${TOP_LEVEL_BUILD_DIR}/../nanosvg/nto-${_CHECK_BUILD_ARCH}/build/" -o
 else 
     echo "[SKIP]: Skipping nanosvg - build detected."
 fi
+
+# VLC
+    echo "[INFO]: Building VLC..."
+    cd ${TOP_LEVEL_BUILD_DIR}/../vlc
+    rm nto-${_CHECK_BUILD_ARCH}/Makefile.dnm
+    if [ "$DO_NOT_BUILD_UNUSED" = "TRUE" ]; then
+        touch nto-${_OPPOSITE_ARCH}/Makefile.dnm
+    fi
+    make install_rpie
+
 
 # Main Build
 if [ ! -d "${TOP_LEVEL_BUILD_DIR}/EmulationStation/nto-${_CHECK_BUILD_ARCH}/build/" -o ! "${DO_NOT_REBUILD}" = "TRUE" ]; then

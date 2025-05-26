@@ -3,7 +3,7 @@
 TOP_LEVEL_BUILD_DIR=${PWD} 
 WKSP=${PWD}/../../../
 
-VERSION=0.1
+VERSION=0.2
 echo "========================="
 echo "[INFO]: Running build_install_all.sh v$VERSION"
 echo "        QUIT WITHIN 5 SECONDS BEFORE ALL BUILDS ARE WIPED."
@@ -74,6 +74,11 @@ make clean
 # nanosvg
 echo "[INFO]: Cleaning nanosvg..."
 cd ${TOP_LEVEL_BUILD_DIR}/../nanosvg
+make clean
+
+# vlc
+echo "[INFO]: Cleaning vlc..."
+cd ${TOP_LEVEL_BUILD_DIR}/../vlc
 make clean
 
 # Main Build
