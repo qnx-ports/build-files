@@ -34,7 +34,7 @@ cd tools/build && git apply ../../../build-files/ports/boost/tools_qnx.patch
 cd ~/qnx_workspace
 
 # Apply SA_RESTART patch to asio
-cd libs/asio && git apply ../../../build-files/ports/boost/asio_1.82.0_qnx.patch
+cd boost/libs/asio && git apply ../../../build-files/ports/boost/asio_1.82.0_qnx.patch
 cd ~/qnx_workspace
 
 # Build boost

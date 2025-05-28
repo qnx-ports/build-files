@@ -37,7 +37,7 @@ QNX_PROJECT_ROOT="$(pwd)/fribidi" JLEVEL=4 make -C build-files/ports/fribidi ins
 mkdir -p ~/qnx_workspace && cd qnx_workspace
 git clone https://github.com/qnx-ports/build-files.git
 git clone https://github.com/qnx-ports/fribidi.git
-git clone https://github.com/mesonbuild/meson.git
+git clone -b 1.7.0 https://github.com/mesonbuild/meson.git
 
 # source qnxsdp-env.sh
 source ~/qnx800/qnxsdp-env.sh

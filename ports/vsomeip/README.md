@@ -23,9 +23,9 @@ cd build-files/docker
 
 # Now you are in the Docker container
 
-# source qnxsdp-env.sh
+# For SDP 8.0:
 source ~/qnx800/qnxsdp-env.sh
-
+# For SDP 7.1:
 #source ~/qnx710/qnxsdp-env.sh
 
 cd ~/qnx_workspace
@@ -34,19 +34,28 @@ export GTEST_ROOT=$WORKSPACE/googletest
 
 # Clone boost
 git clone https://github.com/boostorg/boost.git && cd boost
+# For boost 1.78.0
 git checkout boost-1.78.0
+# For boost 1.82.0
+#git checkout boost-1.82.0
 git submodule update --init --recursive
 
-# Apply an interprocess boost lib patch
+# For boost 1.78.0: apply an interprocess boost lib patch
 cd libs/interprocess && git apply $WORKSPACE/build-files/ports/boost/interprocess_1.78.0_qnx_7.1.patch
 cd -
+
+# For boost 1.82.0: apply an asio patch
+#cd libs/asio && git apply ../../../build-files/ports/boost/asio_1.82.0_qnx.patch
+#cd -
 
 # Apply a tools patch for boost
 cd tools/build && git apply $WORKSPACE/build-files/ports/boost/tools_qnx.patch
 cd $WORKSPACE
 
-# Build and install boost
+# SDP 8.0: build and install boost
 BOOST_CPP_VERSION_FLAG="-std=c++17" QNX_PROJECT_ROOT="$(pwd)/boost" make -C build-files/ports/boost install -j4
+# SDP 7.1: build and install boost
+#QNX_PROJECT_ROOT="$(pwd)/boost" make -C build-files/ports/boost install -j4
 
 # Build vsomeip
 # TEST_IP_MASTER should be your QNX target's ip address while TEST_IP_SLAVE should be your Ubuntu PC. It could be vice versa, but
@@ -65,25 +74,36 @@ git clone https://github.com/qnx-ports/vsomeip.git -b qnx_3.4.10
 git clone https://github.com/qnx-ports/googletest.git -b qnx_v1.13.0
 GTEST_ROOT=$WORKSPACE/googletest
 
-# source qnxsdp-env.sh
+# For SDP 8.0:
+source ~/qnx800/qnxsdp-env.sh
+# For SDP 7.1:
 source ~/qnx710/qnxsdp-env.sh
 
 # Clone boost
 cd ~/qnx_workspace
 git clone https://github.com/boostorg/boost.git && cd boost
+# For boost 1.78.0
 git checkout boost-1.78.0
+# For boost 1.82.0
+#git checkout boost-1.82.0
 git submodule update --init --recursive
 
-# Apply an interprocess boost lib patch
+# For boost 1.78.0: apply an interprocess boost lib patch
 cd libs/interprocess && git apply $WORKSPACE/build-files/ports/boost/interprocess_1.78.0_qnx_7.1.patch
 cd -
+
+# For boost 1.82.0: apply an asio patch
+#cd libs/asio && git apply ../../../build-files/ports/boost/asio_1.82.0_qnx.patch
+#cd -
 
 # Apply a tools patch for boost
 cd tools/build && git apply $WORKSPACE/build-files/ports/boost/tools_qnx.patch
 cd $WORKSPACE
 
-# Build and install boost
+# SDP 8.0: build and install boost
 BOOST_CPP_VERSION_FLAG="-std=c++17" QNX_PROJECT_ROOT="$(pwd)/boost" make -C build-files/ports/boost install -j4
+# SDP 7.1: build and install boost
+#QNX_PROJECT_ROOT="$(pwd)/boost" make -C build-files/ports/boost install -j4
 
 # Build vsomeip
 # TEST_IP_MASTER should be your QNX target's ip address while TEST_IP_SLAVE should be your Ubuntu PC. It could be vice versa, but

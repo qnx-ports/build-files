@@ -1,0 +1,83 @@
+#!/bin/sh
+
+#
+#    Default basic prefix is /usr
+#
+BASIC_PREFIX="/usr"
+
+#
+#    QNX specific build configuration nested level
+#
+PERL_BUILD=${PERL_BUILD:-perl5}
+echo "perl build folder is '${PERL_BUILD}'"
+NESTED_LEVEL="../../../../${PERL_BUILD}"
+
+#
+#    Setup of essential configuration parameters
+#
+function hook_preconfigure {
+#
+#    Add needed libraries
+#
+    if [ ${__NTO_VERSION} -ge 800 ]; then
+        echo "QNX version ${__NTO_VERSION} detected."
+        #placeholder for specific settings corespondent to QNX version
+    fi
+
+#
+#    QNX specific changes are covered by prediefined '__QNX__'
+#
+    #C/C++ flags
+    CPPFLAGS="$CPPFLAGS -D_POSIX_C_SOURCE -D_XOPEN_SOURCE -D_GNU_SOURCE"
+
+    #C++ flags
+    #CXXFLAGS="$CXXFLAGS -Wno-error=uninitialized -Wno-error=deprecated-declarations"
+#
+#    Add qnx libraries
+#
+    LDFLAGS="$LDFLAGS -lsocket -llogin"
+
+#
+#    Setup correct pathes for install and build make commands
+#
+    configure_opts="--host=${ac_host}"
+    configure_opts="${configure_opts} --target=${ac_host}"
+    configure_opts="${configure_opts} --sysroot=${QNX_TARGET}"
+    configure_opts="${configure_opts} --prefix=${BASIC_PREFIX}"
+}
+
+#
+#    Adjust relative path to ./configure tool
+#
+function hook_configure {
+    ${NESTED_LEVEL}/configure \
+        ${configure_opts} \
+        || Error 'configure failed';
+
+    # the regular AUTOCONF creates a config.status when it's done.
+    # Perl's "metaconfig" equivalent is Makefile.config.
+    # the recursive make checks for it to see if it needs to run
+    # the configure stages (hook_preconfig, hook_configure,
+    # hook_postconfigure). We only need to configure once.
+    if [ -f Makefile.config ]; then
+        touch config.status
+    fi
+}
+
+function hook_postconfigure {
+    # the cross-configure seems to leave these out for the target.
+    # and using the --with-libs option breaks in strange places.
+    #echo "-lsocket -llogin" >ext.libs
+    # moved to LDFLAGS
+}
+
+function hook_premake {
+    # DESTDIR is the base path to the SDP installation or staging
+    # directory where build files will be located.
+    # The --prefix value above will be appended to it as well.
+    echo "INSTALL_ROOT_nto=${INSTALL_ROOT_nto} cpudir=${cpudir}"
+    #exit 1
+    if [ "${TARGET_SYSNAME}" = "nto" ]; then
+        export DESTDIR="${INSTALL_ROOT_nto}/${cpudir}/"
+    fi
+}

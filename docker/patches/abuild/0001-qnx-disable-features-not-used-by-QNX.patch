@@ -1,0 +1,159 @@
+From 78c87b8113ad8f9dc0e52f06b777f82d8aebe2f1 Mon Sep 17 00:00:00 2001
+From: Leo Shen <i@szclsya.me>
+Date: Tue, 8 Apr 2025 11:04:34 -0400
+Subject: [PATCH 1/4] qnx: disable features not used by QNX
+
+- dependency tracing, as we trace shared library dependencies manually
+  ... as QNX's compiler/ld doesn't work with these features that well
+- remove nftables auto split function
+---
+ abuild.in | 105 ------------------------------------------------------
+ 1 file changed, 105 deletions(-)
+
+diff --git a/abuild.in b/abuild.in
+index 2738e7e..587ef33 100644
+--- a/abuild.in
++++ b/abuild.in
+@@ -825,17 +825,6 @@ postcheck() {
+ 		find "$dir" -name '*.la' -type f -delete
+ 	fi
+ 
+-	# look for /usr/lib/charset.alias
+-	if [ -e "$dir"/usr/lib/charset.alias ] \
+-			&& ! options_has "charset.alias"; then
+-		error "Found /usr/lib/charset.alias"
+-		e=1
+-	fi
+-	# look for /etc/init.d and /etc/conf.d
+-	if [ -e "$dir"/etc/init.d -o -e "$dir"/etc/conf.d ] \
+-			&& ! is_openrc_pkg "$name"; then
+-		warning "Found OpenRC directory (/etc/conf.d or /etc/init.d) but name doesn't end with -openrc"
+-	fi
+ 	# look for /usr/share/doc
+ 	if [ -e "$dir"/usr/share/doc ] \
+ 			&& ! is_doc_pkg "$name"; then
+@@ -898,20 +887,6 @@ postcheck() {
+ 			e=1
+ 		fi
+ 	fi
+-	# test capabilities on executables
+-	# see: https://gitlab.alpinelinux.org/alpine/tsc/-/issues/45
+-	getcap -r "$dir" | (local r=true execothers; while read -r line; do
+-		local filename="${line% *}"
+-		if ! options_has "setcap"; then
+-			error "Found binary with extra capabilities: $filename"
+-			r=false
+-		fi
+-
+-		execothers="$(find "$filename" -perm -o+x)"
+-		if [ -n "$execothers" ]; then
+-			warning "Found setcap binary executable by others: $filename"
+-		fi
+-	done; $r) || e=1
+ 
+ 	# test for textrels
+ 	if ! options_has "textrels"; then
+@@ -1508,38 +1483,6 @@ trace_apk_deps() {
+ 		autodeps="$autodeps pkgconfig"
+ 	fi
+ 
+-	[ -f "$dir"/.needs-so ] && for i in $(cat "$dir"/.needs-so); do
+-		# first check if its provided by same apkbuild
+-		grep -q -w "^$sonameprefix$i" "$dir"/.provides-so 2>/dev/null && continue
+-
+-		if subpkg_provides_prefixed_so "$i"; then
+-			autodeps="$autodeps so:$sonameprefix$i"
+-		elif subpkg_provides_so "$i" \
+-				|| $APK $apkroot info --quiet -e "so:$i"; then
+-			autodeps="$autodeps so:$i"
+-		else
+-			missing="$missing $i"
+-		fi
+-	done
+-
+-	# find all packages that holds the so files
+-	if [ -f "$dir"/.rpaths ]; then
+-		local so_files
+-		so_files=$(find_so_files "$dir"/.rpaths $missing) \
+-			|| return 1
+-		if [ -n "$so_files" ]; then
+-			deppkgs=$($APK $apkroot info --quiet --who-owns $so_files) || return 1
+-		fi
+-	fi
+-
+-	for found in $deppkgs; do
+-		if grep -w "^depend = ${found}$" "$dir"/.PKGINFO >/dev/null ; then
+-			warning "You can remove '$found' from depends"
+-			continue
+-		fi
+-		autodeps="$autodeps $found"
+-	done
+-
+ 	# symlink targets
+ 	for i in $(sort -u "$dir"/.symlinks-needs 2>/dev/null); do
+ 		autodeps="$autodeps $i"
+@@ -1556,41 +1499,6 @@ trace_apk_deps() {
+ 		autodeps="$autodeps !$i<$ver !$i>$ver"
+ 	done
+ 
+-	# pkg-config depends
+-	local provider owner
+-	for i in $(sort -u "$dir"/.needs-pc 2>/dev/null); do
+-		# first check if its provided by same apkbuild
+-		grep -q -w "^$pcprefix$i" "$dir"/.provides-pc 2>/dev/null && continue
+-
+-		if subpkg_provides_prefixed_pc "$i"; then
+-			autodeps="$autodeps pc:$pcprefix$i"
+-		elif subpkg_provides_pc "$i" \
+-				|| $APK $apkroot info --quiet -e "pc:$i"; then
+-			provider=$($APK $apkroot search --quiet --exact "pc:$i")
+-			if list_has "$provider" $depends_dev; then
+-				warning "$provider should be removed from depends_dev"
+-			fi
+-			autodeps="$autodeps pc:$i"
+-		else
+-			warning "Could not find any provider for pc:$i"
+-		fi
+-	done
+-
+-	echo "# automatically detected:" >> "$dir"/.PKGINFO
+-	if [ -f "$dir"/.provides-so ]; then
+-		sed 's/^\(.*\) \([0-9].*\)/provides = so:\1=\2/' \
+-			"$dir"/.provides-so | sort -u \
+-			>> "$dir"/.PKGINFO
+-	fi
+-	if [ -f "$dir"/.provides-pc ]; then
+-		sed 's/^/provides = pc:/' "$dir"/.provides-pc | sort -u \
+-			>> "$dir"/.PKGINFO
+-	fi
+-	if [ -f "$dir"/.provides-command ]; then
+-		sed -e 's/^/provides = cmd:/' -e "s/\$/=$pkgver-r$pkgrel/" \
+-			 "$dir"/.provides-command | sort -u \
+-			>> "$dir"/.PKGINFO
+-	fi
+ 	if [ -f "$dir"/.provides-py ]; then
+ 		sed 's/^/provides = /' "$dir"/.provides-py | sort -u \
+ 			>> "$dir"/.PKGINFO
+@@ -2223,19 +2131,6 @@ pyc() {
+ 	default_pyc
+ }
+ 
+-default_nftrules() {
+-	pkgdesc="$pkgdesc (nftables ruleset)"
+-	install_if="nftables-rulesets ${subpkgname%-nftrules}=$pkgver-r$pkgrel"
+-
+-	if [ -d "$pkgdir"/usr/share/nftables.avail ]; then
+-		amove 'usr/share/nftables.avail/*.nft'
+-	fi
+-}
+-
+-nftrules() {
+-	default_nftrules
+-}
+-
+ is_function() {
+ 	type "$1" 2>&1 | head -n 1 | grep -E -q "is a (shell )?function"
+ }
+-- 
+2.34.1
+

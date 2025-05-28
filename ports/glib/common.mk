@@ -32,7 +32,7 @@ ALL_DEPENDENCIES = $(NAME)_all
 CFLAGS += $(FLAGS)
 
 #Define _QNX_SOURCE 
-CFLAGS += -D_QNX_SOURCE -O3 -fPIC
+CFLAGS += -D_QNX_SOURCE -O2 -fPIC
 LDFLAGS += -Wl,--build-id=md5
 
 include $(MKFILES_ROOT)/qtargets.mk
@@ -49,6 +49,7 @@ MESON_FLAGS :=  -Dxattr=false \
                 --reconfigure \
 				--buildtype=$(MESON_BUILD_TYPE) \
                 --prefix=$(GLIB_INSTALL_DIR) \
+				--includedir=$(INSTALL_ROOT)/$(PREFIX)/include \
 				--cross-file=../qnx_cross.cfg
 
 NINJA_ARGS := -j $(firstword $(JLEVEL) 1)

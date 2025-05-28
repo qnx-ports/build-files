@@ -4,3 +4,4 @@ endif
 include $(QCONFIG)
 
 include $(MKFILES_ROOT)/qmake-cfg.mk
+

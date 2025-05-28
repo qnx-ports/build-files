@@ -215,4 +215,4 @@ Please refer to https://docs.ros.org/en/humble/Tutorials/Demos/dummy-robot-demo.
 
 # How to build your own node
 
-Please refer to the README.md inside the qnx-ros2-workspace folder.
+Please refer to the README.md inside the cloned [qnx-ros2-workspace](https://github.com/qnx-ports/qnx-ros2-workspace/tree/main) repository.

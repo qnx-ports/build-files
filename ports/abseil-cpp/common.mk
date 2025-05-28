@@ -19,8 +19,8 @@ INSTALL_ROOT ?= $(INSTALL_ROOT_$(OS))
 #installation destination **on the host machine**.
 #This prefix path may be exposed to the source code,
 #the linker, or package discovery config files (.pc,
-#CMake config modules, etc.). Default is /usr/local
-PREFIX ?= /usr/local
+#CMake config modules, etc.). Default is usr/local
+PREFIX ?= usr/local
 
 #choose Release or Debug
 CMAKE_BUILD_TYPE ?= Release
@@ -63,11 +63,12 @@ CFLAGS += -I$(INSTALL_ROOT)/$(PREFIX)/include -I$(QNX_TARGET)/$(PREFIX)/include
 
 CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DCMAKE_PROJECT_INCLUDE=$(PROJECT_ROOT)/project_hooks.cmake \
-             -DCMAKE_INSTALL_PREFIX="$(PREFIX)" \
-             -DCMAKE_STAGING_PREFIX="$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)" \
+             -DCMAKE_INSTALL_PREFIX="$(INSTALL_ROOT)" \
+             -DCMAKE_INSTALL_LIBDIR="$(CPUVARDIR)/$(PREFIX)/lib" \
+             -DCMAKE_INSTALL_BINDIR="$(CPUVARDIR)/$(PREFIX)/bin" \
+             -DCMAKE_INSTALL_INCLUDEDIR="$(PREFIX)/include" \
              -DCMAKE_FIND_ROOT_PATH="$(CMAKE_FIND_ROOT_PATH)" \
              -DCMAKE_MODULE_PATH="$(CMAKE_MODULE_PATH)" \
-             -DCMAKE_INSTALL_INCLUDEDIR="$(INSTALL_ROOT)/$(PREFIX)/include" \
              -DCMAKE_BUILD_TYPE=$(CMAKE_BUILD_TYPE) \
              -DCMAKE_SYSTEM_PROCESSOR=$(CPUVARDIR) \
              -DEXTRA_CMAKE_C_FLAGS="$(CFLAGS)" \

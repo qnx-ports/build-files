@@ -9,7 +9,7 @@ It is very likely that another version of these binaries are shipped with the QN
 # Dependency warning
 
 You should compile and install its dependencies before proceeding (in order).
-+ [`freetype2`](https://github.com/qnx-ports/build-files/tree/main/ports/freetype2)
++ [`freetype`](https://github.com/qnx-ports/build-files/tree/main/ports/freetype)
 + [`fontconfig`](https://github.com/qnx-ports/build-files/tree/main/ports/fontconfig)
 + [`glib`](https://github.com/qnx-ports/build-files/tree/main/ports/glib)
 + [`pixman`](https://github.com/qnx-ports/build-files/tree/main/ports/pixman)
@@ -54,7 +54,7 @@ mkdir -p ~/qnx_workspace && cd ~/qnx_workspace
 
 # Obtain build tools and sources
 git clone https://github.com/qnx-ports/build-files.git
-git clone https://github.com/mesonbuild/meson.git
+git clone -b 1.7.0 https://github.com/mesonbuild/meson.git
 git clone https://gitlab.freedesktop.org/cairo/cairo.git
 
 #checkout to the latest stable 

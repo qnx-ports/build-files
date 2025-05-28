@@ -44,7 +44,7 @@ sudo apt update
 sudo apt-get install sassc libglib2.0-bin ninja-build libglib2.0-dev pkg-config
 
 # Clone the repos
-mkdir -p ~/qnx_workspace && cd qnx_workspace
+mkdir -p ~/qnx_workspace && cd ~/qnx_workspace
 git clone https://github.com/qnx-ports/build-files.git
 git clone https://github.com/qnx-ports/gtk.git
 # Clone meson for building gtk
@@ -91,9 +91,47 @@ export GSK_RENDERER=gl
 gtk4-demo
 ```
 
+# How to build and run qnx examples
+After building gtk4 for qnx, you can additionally build [example applications](https://github.com/qnx-ports/gtk/tree/qnx_4.8.3/qnx_examples).
+Run these build instructions either on the host or in the docker, depending on where gtk was built.
+```bash
+# QNX_STAGE should point to where gtk was previously installed (/tmp/staging/ in this case)
+cd ~/qnx_workspace
+QNX_STAGE=/tmp/staging make -C $(pwd)/gtk/qnx_examples install
+
+# Executables will be installed in their respective project directories in /qnx_examples
+
+# Copy the executables to your target
+# For example, gtk4_thermostat_A4
+TARGET_HOST=<target-ip-address-or-hostname>
+scp $(pwd)/gtk/qnx_examples/gtk4_thermostat_A4/nto-aarch64-le/gtk4_thermostat_A4 qnxuser@$TARGET_HOST:/data/home/qnxuser/bin
+
+# Copy dependencies if you haven't already
+scp -r /tmp/staging/aarch64le/usr/local/lib qnxuser@$TARGET_HOST:/data/home/qnxuser
+
+# Copy images required by these example applications to the target
+# The following command expects that /data/home/qnxuser/share/ exists on the target
+# If it doesn't, please create it first (ssh qnxuser@$TARGET_HOST "mkdir -p ~/share")
+scp -r $(pwd)/gtk/qnx_examples/images qnxuser@$TARGET_HOST:/data/home/qnxuser/share/images
+
+# ssh into your QNX target
+ssh qnxuser@$TARGET_HOST
+
+# Set environment variables
+export XDG_DATA_DIRS=/data/home/qnxuser/share
+export GSK_RENDERER=gl
+
+# Run the examples
+gtk4_thermostat_A4
+```
+
 # Caveats
 - This is only an **experimental port of GTK4** itself. Dependency libraries, such as `glib`, are not fully ported and are not guaranteed to be fully functional outside of those functionalities used by GTK4.
   - As a result, the test suite of GTK4 is also not expected to work correctly.
   - Do not depend on functionalities exposed directly via dependencies such as `glib`.
 - Hardware accelerated rendering is supported with OpenGL ES 2/3 on QNX 8. However, on the Raspberry Pi 4 target, the latest `ngl` renderer is known to be broken due to an upstream bug #6498. Set `GSK_RENDERER=gl` to use the legacy renderer in this case.
 - All functionalities that rely on `dbus` will not work on QNX.
+- Applications are expected to use client-side decorations (CSD) as `qnx-screen` does not provide them. Refer to GTK's documentation on [`GtkHeaderBar`](https://docs.gtk.org/gtk4/class.HeaderBar.html) widget for more information regarding CSD, or take a look at `demos/qnx-demo/` source in this repository that has been modified to use CSD on QNX.
+- GTK features that depend on window resizing (`GtkConstraintLayout` for example) and the drag-and-drop action do not work. 
+- Media formats `svg` and `webm` are not supported.
+- Clipboard is not supported.

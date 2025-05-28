@@ -4,14 +4,16 @@ Supports QNX7.1 and QNX8.0
 
 ## Version notice
 
+**!!!** Please ensure that you are not using Meson from its master branch, it is currently causing issues right now.
+
 glib currently has 2 different building profiles and only one of them should be installed on both the target and host system.
 
-# glib (main) for QNX (Recommanded)
+# glib (2.84.1) for QNX
 
 **NOTE**: currently both x86_64 and aarch64le are supported
 
 Current these versions are tested:
-+ 2.83.5 
++ 2.84.1 
 
 See test reports in `tests/`. They remain the same as the other version
 
@@ -36,7 +38,7 @@ Optional pre-requisite: Install Docker on Ubuntu https://docs.docker.com/engine/
 # Create a workspace
 mkdir -p ~/qnx_workspace && cd ~/qnx_workspace
 git clone https://github.com/qnx-ports/build-files.git
-git clone -b 2.83.5 https://gitlab.gnome.org/GNOME/glib.git
+git clone -b 2.84.1 https://gitlab.gnome.org/GNOME/glib.git
 
 # Optionally build the Docker image and create a container
 cd build-files/docker
@@ -51,7 +53,7 @@ source ~/qnx800/qnxsdp-env.sh
 QNX_PROJECT_ROOT="$(pwd)/glib" JLEVEL=4 make -C build-files/ports/glib install
 ```
 
-# glib for QNX
+# glib for QNX (Recommanded)
 
 **NOTE**: currently only aarch64le is supported.
 

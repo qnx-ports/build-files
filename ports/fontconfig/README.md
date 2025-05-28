@@ -31,7 +31,7 @@ mkdir -p ~/qnx_workspace && cd ~/qnx_workspace
 
 # Obtain build tools and sources
 git clone https://github.com/qnx-ports/build-files.git
-git clone https://github.com/mesonbuild/meson.git
+git clone -b 1.7.0 https://github.com/mesonbuild/meson.git
 git clone https://gitlab.freedesktop.org/fontconfig/fontconfig.git
 
 #checkout to the latest stable 

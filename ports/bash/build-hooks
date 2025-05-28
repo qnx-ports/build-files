@@ -2,7 +2,7 @@
 
 function hook_configure {
     ${QNX_PROJECT_ROOT}/configure \
-    --prefix=${INSTALL_ROOT_nto}/${cpudir}/usr/local \
-    --includedir=${INSTALL_ROOT_HDR} \
+    --prefix=${INSTALL_ROOT}/${cpudir}/usr/local \
+    --includedir=${INSTALL_ROOT}/usr/local/include \
     --host=${machine}
 }
