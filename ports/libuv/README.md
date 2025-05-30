@@ -29,8 +29,8 @@ cd ~/qnx_workspace
 # Clone libuv
 git clone https://github.com/qnx-ports/libuv.git
 
-# Build libev
-make -C build-files/ports/libev install -j4
+# Build libuv
+make -C build-files/ports/libuv install -j4
 ```
 
 # Compile the port for QNX on Ubuntu host
@@ -44,8 +44,8 @@ git clone https://github.com/qnx-ports/libuv.git
 # source qnxsdp-env.sh
 source ~/qnx800/qnxsdp-env.sh
 
-# Build libev
-make -C build-files/ports/libev install -j4
+# Build libuv
+make -C build-files/ports/libuv install -j4
 ```
 
 # How to Run Tests and Applications
