@@ -212,7 +212,7 @@ if [ ! -d "$HID_INPUT_PROCESSOR" ]; then
 fi
 if [ ! -d "$USB_INPUT_PROCESSOR" ]; then
     echo "[INFO]: Missing hid input to screen. Cloning..."
-    git clone https://github.com/JaiXJM-BB/usb-to-screen.git $USB_INPUT_PROCESSOR
+    git clone https://gitlab.com/qnx/projects/usb-to-screen.git $USB_INPUT_PROCESSOR
 fi
 
 if [ ! -d "$OPENTTD_SRC" -a ! "${SKIP_OPENTTD}" = "TRUE" ]; then
