@@ -1,0 +1,10 @@
+sources:
+  "1.14.0":
+    url: "https://github.com/qnx-ports/googletest/archive/d32d2d47741ec30777fe475df1aa37ef92a441b9.tar.gz"
+    sha256: "7f146e3cde0f555aba313c5f0afa59936f9e32e9ebfaa234d463a64e5a6569a6"
+  "1.13.0":
+    url: "https://github.com/qnx-ports/googletest/archive/989d25b8dbeefe942aef4560575c461ec95bec70.tar.gz"
+    sha256: "4ab38dc650f265bbf4c52926b4f9b28b7126088474985b3e9594c7d68c2537bd"
+  "1.10.0":
+    url: "https://github.com/qnx-ports/googletest/archive/d47c0a6852b182183dc952271cc46be0ac1343fe.tar.gz"
+    sha256: "8518b148bd8854d1f29e3d87175d93d6cfb05fed6a4bccdf5cf443146fcf70e0"
