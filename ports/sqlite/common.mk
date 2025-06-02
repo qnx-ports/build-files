@@ -38,6 +38,18 @@ include $(MKFILES_ROOT)/qtargets.mk
 
 $(NAME)_INSTALL_DIR=$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)
 
+# additional CFLAGS to set
+_amalgamation=-DSQLITE_ENABLE_FTS3_PARENTHESIS \
+	-DSQLITE_ENABLE_COLUMN_METADATA \
+	-DSQLITE_SECURE_DELETE \
+	-DSQLITE_ENABLE_UNLOCK_NOTIFY \
+	-DSQLITE_ENABLE_RTREE \
+	-DSQLITE_ENABLE_GEOPOLY \
+	-DSQLITE_USE_URI \
+	-DSQLITE_ENABLE_DBSTAT_VTAB \
+	-DSQLITE_SOUNDEX \
+	-DSQLITE_MAX_VARIABLE_NUMBER=250000
+
 #Config toolchain for qnx
 CONFIGURE_CMD = $(QNX_PROJECT_ROOT)/configure
 CONFIGURE_ARGS = --host=$(CPU)-*-$(OS) \
@@ -48,9 +60,10 @@ CONFIGURE_ARGS = --host=$(CPU)-*-$(OS) \
                  --enable-static \
                  --enable-fts3 \
                  --enable-fts4 \
-                 --enable-fts5
+                 --enable-fts5 \
+                 --soname=legacy
 
-CONFIGURE_ENVS = CFLAGS="$(CFLAGS)" \
+CONFIGURE_ENVS = CFLAGS="$(CFLAGS) $(_amalgamation)" \
                  CXXFLAGS="$(CXXFLAGS)" \
                  LDFLAGS="$(LDFLAGS)" \
                  CC="${QNX_HOST}/usr/bin/qcc -Vgcc_$(OS)$(CPUVARDIR)" \
