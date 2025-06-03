@@ -57,7 +57,7 @@ class ProtobufConan(ConanFile):
 
     def export_sources(self):
         export_conandata_patches(self)
-        #copy(self, "protobuf-conan-protoc-target.cmake", self.recipe_folder, os.path.join(self.export_sources_folder, "src"))
+        copy(self, "protobuf-conan-protoc-target.cmake", self.recipe_folder, os.path.join(self.export_sources_folder, "src"))
 
     def config_options(self):
         if self.settings.os == "Windows":
@@ -219,7 +219,7 @@ class ProtobufConan(ConanFile):
         cmake_config_folder = os.path.join(self.package_folder, self._cmake_install_base_path)
         rm(self, "protobuf-config*.cmake", folder=cmake_config_folder)
         rm(self, "protobuf-targets*.cmake", folder=cmake_config_folder)
-        #copy(self, "protobuf-conan-protoc-target.cmake", src=self.source_folder, dst=cmake_config_folder)
+        copy(self, "protobuf-conan-protoc-target.cmake", src=self.source_folder, dst=cmake_config_folder)
 
         if not self.options.lite:
             rm(self, "libprotobuf-lite*", os.path.join(self.package_folder, "lib"))
@@ -235,7 +235,7 @@ class ProtobufConan(ConanFile):
             os.path.join(self._cmake_install_base_path, "protobuf-generate.cmake"),
             os.path.join(self._cmake_install_base_path, "protobuf-module.cmake"),
             os.path.join(self._cmake_install_base_path, "protobuf-options.cmake"),
-            #os.path.join(self._cmake_install_base_path, "protobuf-conan-protoc-target.cmake"),
+            os.path.join(self._cmake_install_base_path, "protobuf-conan-protoc-target.cmake"),
         ]
         self.cpp_info.set_property("cmake_build_modules", build_modules)
 
