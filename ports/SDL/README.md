@@ -4,7 +4,7 @@ Simple DirectMedia Layer (SDL for short) is a cross-platform library designed to
 You can find the latest release and additional information at: https://www.libsdl.org/
 
 QNX supports the following versions, hosted at https://www.github.com/qnx-ports/SDL:
-2.0.5: on branch qnx_oldest
+2.0.5: on branch qnx_2.0.5
 
 ### Tested for QNX 7.1 and 8.0 SDPs
 Cross-compiled on Ubuntu 24.04 for:
@@ -15,7 +15,8 @@ Instructions for compiling are listed below.
 
 # Compile SDL2 for SDP 7.1/8.0 on an Ubuntu Host or in a Docker container
 ### *Dependencies:*
-WIP - Depends on version
+2.0.5: 
+- screen, OpenGLES2
 
 ### *Steps:*
 1. Create a new workspace or navigate to a desired one
@@ -38,7 +39,7 @@ git clone git@github.com:qnx-ports/SDL.git
 3. *[Optional]* Check out ideal branch.
 ```
 # Currently, we only support SDL 2.0.5
-# SDL 2.30 Support is planned soon!
+# SDL 2.30 support is planned soon!
 ```
 
 4. *[Optional]* Build the Docker image and create a container
@@ -49,7 +50,7 @@ cd build-files/docker
 cd ~/sdl_wksp
 ```
 
-5. Source your SDP (Installed from QNX Software Center)
+5. Source your SDP (installed from QNX Software Center)
 ```bash
 #QNX 8.0 will be in the directory ~/qnx800/
 #QNX 7.1 will be in the directory ~/qnx710/
