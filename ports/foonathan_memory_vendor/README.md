@@ -51,4 +51,4 @@ QNX_PROJECT_ROOT="$(pwd)/foonathan_memory_vendor" make -C build-files/ports/foon
 ```
 
 # Tests
-Tests not available.
+Tests are not available.

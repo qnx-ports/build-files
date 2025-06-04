@@ -10,7 +10,7 @@ You can optionally set up a staging area folder (e.g. `/tmp/staging`) for `<stag
 
 # Dependency warning
 
-You should compile and install its dependencies before proceeding (in order). If you specify `INSTALL_ROOT` or `INSTALL_ROOT_nto` for any of the dependencies below, make sure you set `INSTALL_ROOT` for Fast-DDS to the same directory as well.
+You should compile and install its dependencies before proceeding (in order). If you specify `INSTALL_ROOT` or `INSTALL_ROOT_nto` for any of the dependencies below, make sure you set the same `INSTALL_ROOT` across the board.
 + [`asio`](https://github.com/qnx-ports/build-files/tree/main/ports/asio)
 + [`tinyxml2`](https://github.com/qnx-ports/build-files/tree/main/ports/tinyxml2)
 + [`Fast-CDR`](https://github.com/qnx-ports/build-files/tree/main/ports/Fast-CDR)
@@ -48,7 +48,7 @@ QNX_PROJECT_ROOT="$(pwd)/Fast-DDS" make -C build-files/ports/Fast-DDS/ INSTALL_R
 # Clone the repos
 mkdir -p ~/qnx_workspace && cd qnx_workspace
 git clone https://github.com/qnx-ports/build-files.git
-git clone -b vqnx_v2.14.4 https://github.com/qnx-ports/Fast-DDS.git
+git clone -b qnx_v2.14.4 https://github.com/qnx-ports/Fast-DDS.git
 
 # Source SDP environment
 source ~/qnx800/qnxsdp-env.sh
@@ -59,4 +59,4 @@ QNX_PROJECT_ROOT="$(pwd)/Fast-DDS" make -C build-files/ports/Fast-DDS/ INSTALL_R
 ```
 
 # Tests
-See test results in fdds.test.result; NOT all tests are passed.
+See test results in `fdds.test.result`; NOT all tests are passed.

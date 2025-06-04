@@ -51,4 +51,4 @@ QNX_PROJECT_ROOT="$(pwd)/Fast-CDR" make -C build-files/ports/Fast-CDR/ INSTALL_R
 ```
 
 # Tests
-See test results in fcdr.test.result; all tests are passed.
+See test results in `fcdr.test.result`; all tests are passed.
