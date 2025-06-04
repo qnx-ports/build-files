@@ -131,7 +131,7 @@ jobs:
           cd asio/asio
           ./autogen.sh
           cd -
-          make -C build-files/ports/asio install
+          make -C build-files/ports/asio install -j$(nproc)
 
     - name: Build Fast-DDS
       uses: addnab/docker-run-action@v3
