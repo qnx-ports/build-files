@@ -1,8 +1,0 @@
-127.0.0.1		localhost localhost.test
-::1			localhost localhost.test
-154.56.134.194		www.eprosima.com www.eprosima.com.test
-216.58.215.164		www.acme.com www.acme.com.test
-2a00:1450:400e:803::2004		www.acme.com www.acme.com.test
-140.82.121.4		www.foo.com www.foo.com.test
-140.82.121.3		www.foo.com www.foo.com.test
-ff1e::ffff:efff:1		acme.org acme.org.test

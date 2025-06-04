@@ -1,5 +1,5 @@
 name: Fast-DDS
-
+ 
 on:
   workflow_dispatch:
   push:
@@ -16,7 +16,7 @@ on:
       - 'ports/Fast-DDS/**'
 
 jobs:
-
+ 
   build:
     strategy:
       matrix:
@@ -37,33 +37,101 @@ jobs:
     - name: Checkout Fast-DDS
       uses: actions/checkout@v4
       with:
-        repository: qnx-ports/Fast-DDS
+        repository: eProsima/Fast-DDS
         path: Fast-DDS
-        submodules: recursive
+        ref: v2.14.4
+    
+    - name: Checkout tinyxml2
+      uses: actions/checkout@v4
+      with:
+        repository: qnx-ports/tinyxml2
+        path: tinyxml2
+
+    - name: Checkout Fast-CDR
+      uses: actions/checkout@v4
+      with:
+        repository: eProsima/Fast-DDS
+        path: Fast-DDS
+        ref: v2.14.4
 
     - name: Checkout foonathan_memory_vendor
       uses: actions/checkout@v4
       with:
         repository: eProsima/foonathan_memory_vendor
-        path: Fast-DDS/foonathan_memory_vendor
-
-    - name: Checkout googletest
+        path: foonathan_memory_vendor
+        ref: v1.3.1
+        
+    - name: Checkout asio
       uses: actions/checkout@v4
       with:
-        repository: google/googletest
-        path: Fast-DDS/googletest
-        ref: v1.13.0
-
+        repository: qnx-ports/asio
+        path: asio
+ 
     - name: Login to GitHub Container Registry
       uses: docker/login-action@v3
       with:
         registry: ghcr.io
         username: ${{github.actor}}
         password: ${{secrets.GITHUB_TOKEN}}
-
+ 
     - name: Pull build environment
       run: |
         docker pull ${{ matrix.qnx_env }}
+
+    - name: Build tinyxml2
+      uses: addnab/docker-run-action@v3
+      with:
+        image: ghcr.io/qnx-ports/sdp800-build-env:latest
+        options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
+        shell: bash
+        run: |
+          source ~/qnx/800/qnxsdp-env.sh
+          cd ~/workspace
+          BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/tinyxml2" make -C build-files/ports/tinyxml2 install 
+
+    - name: Build foonathan_memory_vendor
+      uses: addnab/docker-run-action@v3
+      with:
+        image: ${{ matrix.qnx_env }}
+        options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
+        shell: bash
+        run: |
+          if [[ "${{ matrix.qnx_env}}" == "ghcr.io/qnx-ports/sdp800-build-env:latest" ]]; then
+            source ~/qnx/800/qnxsdp-env.sh
+          else 
+            source ~/qnx/710/qnxsdp-env.sh
+          fi
+          cd ~/workspace
+          QNX_PROJECT_ROOT="$(pwd)/foonathan_memory_vendor" JLEVEL=$(nproc) make -C build-files/ports/foonathan_memory_vendor clean install
+
+    - name: Build Fast-CDR
+      uses: addnab/docker-run-action@v3
+      with:
+        image: ${{ matrix.qnx_env }}
+        options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
+        shell: bash
+        run: |
+          if [[ "${{ matrix.qnx_env}}" == "ghcr.io/qnx-ports/sdp800-build-env:latest" ]]; then
+            source ~/qnx/800/qnxsdp-env.sh
+          else 
+            source ~/qnx/710/qnxsdp-env.sh
+          fi
+          cd ~/workspace
+          QNX_PROJECT_ROOT="$(pwd)/Fast-CDR" JLEVEL=$(nproc) make -C build-files/ports/Fast-CDR clean install
+
+    - name: Build asio
+      uses: addnab/docker-run-action@v3
+      with:
+        image: ghcr.io/qnx-ports/sdp-build-env:latest
+        options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
+        shell: bash
+        run: |
+          source ~/qnx/800/qnxsdp-env.sh
+          cd ~/workspace
+          cd asio/asio
+          ./autogen.sh
+          cd -
+          make -C build-files/ports/asio install
 
     - name: Build Fast-DDS
       uses: addnab/docker-run-action@v3
@@ -78,14 +146,4 @@ jobs:
             source ~/qnx/710/qnxsdp-env.sh
           fi
           cd ~/workspace
-          WORKSPACE=$PWD
-          cd $WORKSPACE/Fast-DDS/thirdparty/asio
-          git apply $WORKSPACE/build-files/ports/Fast-DDS/qnx_patches/asio_qnx.patch
-          cd $WORKSPACE/Fast-DDS/thirdparty/fastcdr
-          git apply $WORKSPACE/build-files/ports/Fast-DDS/qnx_patches/fastcdr_qnx.patch
-          cd $WORKSPACE/Fast-DDS/thirdparty/tinyxml2
-          unix2dos $WORKSPACE/build-files/ports/Fast-DDS/qnx_patches/tinyxml2_qnx.patch
-          git apply $WORKSPACE/build-files/ports/Fast-DDS/qnx_patches/tinyxml2_qnx.patch
-          cd $WORKSPACE/Fast-DDS/googletest
-          git apply $WORKSPACE/build-files/ports/Fast-DDS/qnx_patches/googletest_qnx.patch
-          JLEVEL=$(nproc) make -C $WORKSPACE/build-files/ports/Fast-DDS/ install 
+          QNX_PROJECT_ROOT="$(pwd)/Fast-DDS" JLEVEL=$(nproc) make -C build-files/ports/Fast-DDS clean install
