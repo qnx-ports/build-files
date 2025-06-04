@@ -1,0 +1,411 @@
+From c860b5d3fc537d35678b66694c593e7834f8a187 Mon Sep 17 00:00:00 2001
+From: Yongxin Dai <yodai@blackberry.com>
+Date: Fri, 14 Apr 2023 15:49:06 -0400
+Subject: [PATCH] changes for QNX in rtc_base
+
+---
+ rtc_base/BUILD.gn                  |   3 +
+ rtc_base/async_resolver.cc         | 242 +++++++++++++++++++++++++++++
+ rtc_base/byte_order.h              |   2 +
+ rtc_base/cpu_time.cc               |  14 ++
+ rtc_base/memory_usage.cc           |  15 ++
+ rtc_base/physical_socket_server.cc |   4 +-
+ rtc_base/platform_thread_types.cc  |   2 +
+ rtc_base/string_utils.h            |   4 +
+ 8 files changed, 285 insertions(+), 1 deletion(-)
+ create mode 100644 rtc_base/async_resolver.cc
+
+diff --git a/rtc_base/BUILD.gn b/rtc_base/BUILD.gn
+index e772028b9a..55642b564c 100644
+--- a/rtc_base/BUILD.gn
++++ b/rtc_base/BUILD.gn
+@@ -1080,6 +1080,9 @@ rtc_library("socket") {
+   if (is_win) {
+     deps += [ ":win32" ]
+   }
++  if (is_qnx) {
++    libs = [ "socket" ]
++  }
+ }
+ 
+ rtc_source_set("network_constants") {
+diff --git a/rtc_base/async_resolver.cc b/rtc_base/async_resolver.cc
+new file mode 100644
+index 0000000000..6471a89ce6
+--- /dev/null
++++ b/rtc_base/async_resolver.cc
+@@ -0,0 +1,242 @@
++/*
++ *  Copyright 2008 The WebRTC Project Authors. All rights reserved.
++ *
++ *  Use of this source code is governed by a BSD-style license
++ *  that can be found in the LICENSE file in the root of the source
++ *  tree. An additional intellectual property rights grant can be found
++ *  in the file PATENTS.  All contributing project authors may
++ *  be found in the AUTHORS file in the root of the source tree.
++ */
++
++#include "rtc_base/async_resolver.h"
++
++#include <memory>
++#include <string>
++#include <utility>
++
++#include "absl/strings/string_view.h"
++#include "api/ref_counted_base.h"
++#include "rtc_base/synchronization/mutex.h"
++#include "rtc_base/thread_annotations.h"
++
++#if defined(WEBRTC_WIN)
++#include <ws2spi.h>
++#include <ws2tcpip.h>
++
++#include "rtc_base/win32.h"
++#endif
++#if defined(WEBRTC_POSIX) && !defined(__native_client__)
++#if defined(WEBRTC_ANDROID)
++#include "rtc_base/ifaddrs_android.h"
++#else
++#include <ifaddrs.h>
++#endif
++#endif  // defined(WEBRTC_POSIX) && !defined(__native_client__)
++
++#include "api/task_queue/task_queue_base.h"
++#include "rtc_base/ip_address.h"
++#include "rtc_base/logging.h"
++#include "rtc_base/platform_thread.h"
++#include "rtc_base/task_queue.h"
++#include "rtc_base/third_party/sigslot/sigslot.h"  // for signal_with_thread...
++
++#if defined(WEBRTC_MAC) || defined(WEBRTC_IOS)
++#include <dispatch/dispatch.h>
++#endif
++
++namespace rtc {
++
++#if defined(WEBRTC_MAC) || defined(WEBRTC_IOS)
++namespace {
++
++void GlobalGcdRunTask(void* context) {
++  std::unique_ptr<absl::AnyInvocable<void() &&>> task(
++      static_cast<absl::AnyInvocable<void() &&>*>(context));
++  std::move (*task)();
++}
++
++// Post a task into the system-defined global concurrent queue.
++void PostTaskToGlobalQueue(
++    std::unique_ptr<absl::AnyInvocable<void() &&>> task) {
++  dispatch_queue_global_t global_queue =
++      dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
++  dispatch_async_f(global_queue, task.release(), &GlobalGcdRunTask);
++}
++
++}  // namespace
++#endif
++
++int ResolveHostname(absl::string_view hostname,
++                    int family,
++                    std::vector<IPAddress>* addresses) {
++#ifdef __native_client__
++  RTC_DCHECK_NOTREACHED();
++  RTC_LOG(LS_WARNING) << "ResolveHostname() is not implemented for NaCl";
++  return -1;
++#else   // __native_client__
++  if (!addresses) {
++    return -1;
++  }
++  addresses->clear();
++  struct addrinfo* result = nullptr;
++  struct addrinfo hints = {0};
++  hints.ai_family = family;
++  // `family` here will almost always be AF_UNSPEC, because `family` comes from
++  // AsyncResolver::addr_.family(), which comes from a SocketAddress constructed
++  // with a hostname. When a SocketAddress is constructed with a hostname, its
++  // family is AF_UNSPEC. However, if someday in the future we construct
++  // a SocketAddress with both a hostname and a family other than AF_UNSPEC,
++  // then it would be possible to get a specific family value here.
++
++  // The behavior of AF_UNSPEC is roughly "get both ipv4 and ipv6", as
++  // documented by the various operating systems:
++  // Linux: http://man7.org/linux/man-pages/man3/getaddrinfo.3.html
++  // Windows: https://msdn.microsoft.com/en-us/library/windows/desktop/
++  // ms738520(v=vs.85).aspx
++  // Mac: https://developer.apple.com/legacy/library/documentation/Darwin/
++  // Reference/ManPages/man3/getaddrinfo.3.html
++  // Android (source code, not documentation):
++  // https://android.googlesource.com/platform/bionic/+/
++  // 7e0bfb511e85834d7c6cb9631206b62f82701d60/libc/netbsd/net/getaddrinfo.c#1657
++  #if !defined(__QNXNTO__)
++  // 'return configured address families only' flag is not supported by QNX
++  hints.ai_flags = AI_ADDRCONFIG;
++  #endif
++  int ret =
++      getaddrinfo(std::string(hostname).c_str(), nullptr, &hints, &result);
++  if (ret != 0) {
++    return ret;
++  }
++  struct addrinfo* cursor = result;
++  for (; cursor; cursor = cursor->ai_next) {
++    if (family == AF_UNSPEC || cursor->ai_family == family) {
++      IPAddress ip;
++      if (IPFromAddrInfo(cursor, &ip)) {
++        addresses->push_back(ip);
++      }
++    }
++  }
++  freeaddrinfo(result);
++  return 0;
++#endif  // !__native_client__
++}
++
++struct AsyncResolver::State : public RefCountedBase {
++  webrtc::Mutex mutex;
++  enum class Status {
++    kLive,
++    kDead
++  } status RTC_GUARDED_BY(mutex) = Status::kLive;
++};
++
++AsyncResolver::AsyncResolver() : error_(-1), state_(new State) {}
++
++AsyncResolver::~AsyncResolver() {
++  RTC_DCHECK_RUN_ON(&sequence_checker_);
++
++  // Ensure the thread isn't using a stale reference to the current task queue,
++  // or calling into ResolveDone post destruction.
++  webrtc::MutexLock lock(&state_->mutex);
++  state_->status = State::Status::kDead;
++}
++
++void RunResolution(void* obj) {
++  std::function<void()>* function_ptr =
++      static_cast<std::function<void()>*>(obj);
++  (*function_ptr)();
++  delete function_ptr;
++}
++
++void AsyncResolver::Start(const SocketAddress& addr) {
++  Start(addr, addr.family());
++}
++
++void AsyncResolver::Start(const SocketAddress& addr, int family) {
++  RTC_DCHECK_RUN_ON(&sequence_checker_);
++  RTC_DCHECK(!destroy_called_);
++  addr_ = addr;
++  auto thread_function =
++      [this, addr, family, caller_task_queue = webrtc::TaskQueueBase::Current(),
++       state = state_] {
++        std::vector<IPAddress> addresses;
++        int error = ResolveHostname(addr.hostname(), family, &addresses);
++        webrtc::MutexLock lock(&state->mutex);
++        if (state->status == State::Status::kLive) {
++          caller_task_queue->PostTask(
++              [this, error, addresses = std::move(addresses), state] {
++                bool live;
++                {
++                  // ResolveDone can lead to instance destruction, so make sure
++                  // we don't deadlock.
++                  webrtc::MutexLock lock(&state->mutex);
++                  live = state->status == State::Status::kLive;
++                }
++                if (live) {
++                  RTC_DCHECK_RUN_ON(&sequence_checker_);
++                  ResolveDone(std::move(addresses), error);
++                }
++              });
++        }
++      };
++#if defined(WEBRTC_MAC) || defined(WEBRTC_IOS)
++  PostTaskToGlobalQueue(
++      std::make_unique<absl::AnyInvocable<void() &&>>(thread_function));
++#else
++  PlatformThread::SpawnDetached(std::move(thread_function), "AsyncResolver");
++#endif
++}
++
++bool AsyncResolver::GetResolvedAddress(int family, SocketAddress* addr) const {
++  RTC_DCHECK_RUN_ON(&sequence_checker_);
++  RTC_DCHECK(!destroy_called_);
++  if (error_ != 0 || addresses_.empty())
++    return false;
++
++  *addr = addr_;
++  for (size_t i = 0; i < addresses_.size(); ++i) {
++    if (family == addresses_[i].family()) {
++      addr->SetResolvedIP(addresses_[i]);
++      return true;
++    }
++  }
++  return false;
++}
++
++int AsyncResolver::GetError() const {
++  RTC_DCHECK_RUN_ON(&sequence_checker_);
++  RTC_DCHECK(!destroy_called_);
++  return error_;
++}
++
++void AsyncResolver::Destroy(bool wait) {
++  // Some callers have trouble guaranteeing that Destroy is called on the
++  // sequence guarded by `sequence_checker_`.
++  // RTC_DCHECK_RUN_ON(&sequence_checker_);
++  RTC_DCHECK(!destroy_called_);
++  destroy_called_ = true;
++  MaybeSelfDestruct();
++}
++
++const std::vector<IPAddress>& AsyncResolver::addresses() const {
++  RTC_DCHECK_RUN_ON(&sequence_checker_);
++  RTC_DCHECK(!destroy_called_);
++  return addresses_;
++}
++
++void AsyncResolver::ResolveDone(std::vector<IPAddress> addresses, int error) {
++  addresses_ = addresses;
++  error_ = error;
++  recursion_check_ = true;
++  SignalDone(this);
++  MaybeSelfDestruct();
++}
++
++void AsyncResolver::MaybeSelfDestruct() {
++  if (!recursion_check_) {
++    delete this;
++  } else {
++    recursion_check_ = false;
++  }
++}
++
++}  // namespace rtc
+diff --git a/rtc_base/byte_order.h b/rtc_base/byte_order.h
+index ed7c75996f..d4ee6fb307 100644
+--- a/rtc_base/byte_order.h
++++ b/rtc_base/byte_order.h
+@@ -90,6 +90,8 @@
+ #error WEBRTC_ARCH_BIG_ENDIAN or WEBRTC_ARCH_LITTLE_ENDIAN must be defined.
+ #endif  // defined(WEBRTC_ARCH_LITTLE_ENDIAN)
+ 
++#elif defined(WEBRTC_QNX)
++#include <net/netbyte.h>
+ #elif defined(WEBRTC_POSIX)
+ #include <endian.h>
+ #else
+diff --git a/rtc_base/cpu_time.cc b/rtc_base/cpu_time.cc
+index d3fee50c49..980c4e0a23 100644
+--- a/rtc_base/cpu_time.cc
++++ b/rtc_base/cpu_time.cc
+@@ -81,6 +81,13 @@ int64_t GetProcessCpuTimeNanos() {
+   } else {
+     RTC_LOG_ERR(LS_ERROR) << "GetProcessTimes() failed.";
+   }
++#elif defined(WEBRTC_QNX)
++  struct timespec ts;
++  if (clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &ts) == 0) {
++    return ts.tv_sec * kNumNanosecsPerSec + ts.tv_nsec;
++  } else {
++    RTC_LOG_ERR(LS_ERROR) << "clock_gettime() failed.";
++  }
+ #else
+   // Not implemented yet.
+   static_assert(
+@@ -134,6 +141,13 @@ int64_t GetThreadCpuTimeNanos() {
+   } else {
+     RTC_LOG_ERR(LS_ERROR) << "GetThreadTimes() failed.";
+   }
++#elif defined(WEBRTC_QNX)
++  struct timespec ts;
++  if (clock_gettime(CLOCK_THREAD_CPUTIME_ID, &ts) == 0) {
++    return ts.tv_sec * kNumNanosecsPerSec + ts.tv_nsec;
++  } else {
++    RTC_LOG_ERR(LS_ERROR) << "clock_gettime() failed.";
++  }
+ #else
+   // Not implemented yet.
+   static_assert(
+diff --git a/rtc_base/memory_usage.cc b/rtc_base/memory_usage.cc
+index 2d33d98eed..282bfb5932 100644
+--- a/rtc_base/memory_usage.cc
++++ b/rtc_base/memory_usage.cc
+@@ -25,6 +25,8 @@
+ #elif defined(WEBRTC_FUCHSIA)
+ #include <lib/zx/process.h>
+ #include <zircon/status.h>
++#elif defined(WEBRTC_QNX)
++#include <fstream>
+ #endif
+ 
+ #include "rtc_base/logging.h"
+@@ -74,6 +76,19 @@ int64_t GetProcessResidentSizeBytes() {
+                           << zx_status_get_string(status);
+     return -1;
+   }
++#elif defined(WEBRTC_QNX)
++  int result = -1;
++  std::ifstream infile(std::string{"/proc/self/vmstat"});
++  std::string line;
++  while (std::getline(infile, line)) {
++    auto pos = line.find("as_stats.flt_miss=");
++    if (std::string::npos)
++      continue;
++    std::stoi(line.substr(++pos));
++    break;
++  }
++  infile.close();
++  return result == -1 ? -1 : static_cast<int64_t>(result * 1048576);
+ #else
+   // Not implemented yet.
+   static_assert(false,
+diff --git a/rtc_base/physical_socket_server.cc b/rtc_base/physical_socket_server.cc
+index 5f9959a8df..042dc15b4a 100644
+--- a/rtc_base/physical_socket_server.cc
++++ b/rtc_base/physical_socket_server.cc
+@@ -75,7 +75,7 @@ typedef void* SockOptArg;
+ 
+ #endif  // WEBRTC_POSIX
+ 
+-#if defined(WEBRTC_POSIX) && !defined(WEBRTC_MAC) && !defined(__native_client__)
++#if defined(WEBRTC_POSIX) && !defined(WEBRTC_MAC) && !defined(__native_client__) && !defined(WEBRTC_QNX)
+ 
+ int64_t GetSocketRecvTimestamp(int socket) {
+   struct timeval tv_ioctl;
+@@ -704,7 +704,9 @@ int PhysicalSocket::TranslateOption(Option opt, int* slevel, int* sopt) {
+       return -1;
+ #elif defined(WEBRTC_POSIX)
+       *slevel = IPPROTO_IP;
++#if !defined(WEBRTC_QNX)
+       *sopt = IP_MTU_DISCOVER;
++#endif
+       break;
+ #endif
+     case OPT_RCVBUF:
+diff --git a/rtc_base/platform_thread_types.cc b/rtc_base/platform_thread_types.cc
+index d64ea689bb..a3d7a48fc7 100644
+--- a/rtc_base/platform_thread_types.cc
++++ b/rtc_base/platform_thread_types.cc
+@@ -46,6 +46,8 @@ PlatformThreadId CurrentThreadId() {
+   return zx_thread_self();
+ #elif defined(WEBRTC_LINUX)
+   return syscall(__NR_gettid);
++#elif defined(WEBRTC_QNX)
++  return gettid();
+ #elif defined(__EMSCRIPTEN__)
+   return static_cast<PlatformThreadId>(pthread_self());
+ #else
+diff --git a/rtc_base/string_utils.h b/rtc_base/string_utils.h
+index 9534d59e04..d4fd0ccdf7 100644
+--- a/rtc_base/string_utils.h
++++ b/rtc_base/string_utils.h
+@@ -28,6 +28,10 @@
+ #include <strings.h>
+ #endif  // WEBRTC_POSIX
+ 
++#if defined(__QNXNTO__)
++#include <alloca.h>
++#endif
++
+ #include <string>
+ 
+ #include "absl/strings/string_view.h"
+-- 
+2.34.1
+

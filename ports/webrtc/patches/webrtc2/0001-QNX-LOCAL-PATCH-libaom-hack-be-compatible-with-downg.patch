@@ -1,0 +1,38 @@
+From 5b3a51f9a3dd52639c0e2d19b7fb31c118a36943 Mon Sep 17 00:00:00 2001
+From: Yongxin Dai <yodai@blackberry.com>
+Date: Sun, 9 Feb 2025 16:49:10 -0500
+Subject: [QNX LOCAL PATCH] libaom hack: be compatible with downgraded libaom
+ m112
+
+Compiled with SDP8 without tests
+---
+ modules/video_coding/codecs/av1/libaom_av1_encoder.cc | 6 ------
+ 1 file changed, 6 deletions(-)
+
+diff --git a/modules/video_coding/codecs/av1/libaom_av1_encoder.cc b/modules/video_coding/codecs/av1/libaom_av1_encoder.cc
+index a183704caa..bf63c625b6 100644
+--- a/modules/video_coding/codecs/av1/libaom_av1_encoder.cc
++++ b/modules/video_coding/codecs/av1/libaom_av1_encoder.cc
+@@ -299,7 +299,6 @@ int LibaomAv1Encoder::InitEncode(const VideoCodec* codec_settings,
+     SET_ENCODER_PARAM_OR_RETURN_ERROR(AV1E_SET_ENABLE_PALETTE, 0);
+   }
+ 
+-  SET_ENCODER_PARAM_OR_RETURN_ERROR(AV1E_SET_AUTO_TILES, 1);
+   SET_ENCODER_PARAM_OR_RETURN_ERROR(AV1E_SET_ROW_MT, 1);
+   SET_ENCODER_PARAM_OR_RETURN_ERROR(AV1E_SET_ENABLE_OBMC, 0);
+   SET_ENCODER_PARAM_OR_RETURN_ERROR(AV1E_SET_NOISE_SENSITIVITY, 0);
+@@ -331,11 +330,6 @@ int LibaomAv1Encoder::InitEncode(const VideoCodec* codec_settings,
+   SET_ENCODER_PARAM_OR_RETURN_ERROR(AV1E_SET_ENABLE_TX64, 0);
+   SET_ENCODER_PARAM_OR_RETURN_ERROR(AV1E_SET_MAX_REFERENCE_FRAMES, 3);
+ 
+-  if (adaptive_max_consec_drops_) {
+-    SET_ENCODER_PARAM_OR_RETURN_ERROR(AV1E_SET_MAX_CONSEC_FRAME_DROP_MS_CBR,
+-                                      250);
+-  }
+-
+   return WEBRTC_VIDEO_CODEC_OK;
+ }
+ 
+-- 
+2.34.1
+
