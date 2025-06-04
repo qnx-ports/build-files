@@ -78,61 +78,6 @@ jobs:
       run: |
         docker pull ${{ matrix.qnx_env }}
 
-    - name: Build tinyxml2
-      uses: addnab/docker-run-action@v3
-      with:
-        image: ghcr.io/qnx-ports/sdp800-build-env:latest
-        options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
-        shell: bash
-        run: |
-          source ~/qnx/800/qnxsdp-env.sh
-          cd ~/workspace
-          BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/tinyxml2" make -C build-files/ports/tinyxml2 install 
-
-    - name: Build foonathan_memory_vendor
-      uses: addnab/docker-run-action@v3
-      with:
-        image: ${{ matrix.qnx_env }}
-        options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
-        shell: bash
-        run: |
-          if [[ "${{ matrix.qnx_env}}" == "ghcr.io/qnx-ports/sdp800-build-env:latest" ]]; then
-            source ~/qnx/800/qnxsdp-env.sh
-          else 
-            source ~/qnx/710/qnxsdp-env.sh
-          fi
-          cd ~/workspace
-          QNX_PROJECT_ROOT="$(pwd)/foonathan_memory_vendor" JLEVEL=$(nproc) make -C build-files/ports/foonathan_memory_vendor clean install
-
-    - name: Build Fast-CDR
-      uses: addnab/docker-run-action@v3
-      with:
-        image: ${{ matrix.qnx_env }}
-        options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
-        shell: bash
-        run: |
-          if [[ "${{ matrix.qnx_env}}" == "ghcr.io/qnx-ports/sdp800-build-env:latest" ]]; then
-            source ~/qnx/800/qnxsdp-env.sh
-          else 
-            source ~/qnx/710/qnxsdp-env.sh
-          fi
-          cd ~/workspace
-          QNX_PROJECT_ROOT="$(pwd)/Fast-CDR" JLEVEL=$(nproc) make -C build-files/ports/Fast-CDR clean install
-
-    - name: Build asio
-      uses: addnab/docker-run-action@v3
-      with:
-        image: ghcr.io/qnx-ports/sdp-build-env:latest
-        options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
-        shell: bash
-        run: |
-          source ~/qnx/800/qnxsdp-env.sh
-          cd ~/workspace
-          cd asio/asio
-          ./autogen.sh
-          cd -
-          make -C build-files/ports/asio install -j$(nproc)
-
     - name: Build Fast-DDS
       uses: addnab/docker-run-action@v3
       with:
@@ -146,4 +91,9 @@ jobs:
             source ~/qnx/710/qnxsdp-env.sh
           fi
           cd ~/workspace
+          
+          make -C build-files/ports/asio install -j$(nproc)
+          QNX_PROJECT_ROOT="$(pwd)/Fast-CDR" JLEVEL=$(nproc) make -C build-files/ports/Fast-CDR clean install
+          QNX_PROJECT_ROOT="$(pwd)/foonathan_memory_vendor" JLEVEL=$(nproc) make -C build-files/ports/foonathan_memory_vendor clean install
+          JLEVEL=$(nproc) BUILD_TESTING="OFF" QNX_PROJECT_ROOT="$(pwd)/tinyxml2" make -C build-files/ports/tinyxml2 install 
           QNX_PROJECT_ROOT="$(pwd)/Fast-DDS" JLEVEL=$(nproc) make -C build-files/ports/Fast-DDS clean install
