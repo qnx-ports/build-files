@@ -91,8 +91,12 @@ jobs:
             source ~/qnx/710/qnxsdp-env.sh
           fi
           cd ~/workspace
-          
+
+          cd asio/asio
+          ./autogen.sh
+          cd ~/workspace
           make -C build-files/ports/asio install -j$(nproc)
+          
           QNX_PROJECT_ROOT="$(pwd)/Fast-CDR" JLEVEL=$(nproc) make -C build-files/ports/Fast-CDR clean install
           QNX_PROJECT_ROOT="$(pwd)/foonathan_memory_vendor" JLEVEL=$(nproc) make -C build-files/ports/foonathan_memory_vendor clean install
           JLEVEL=$(nproc) BUILD_TESTING="OFF" QNX_PROJECT_ROOT="$(pwd)/tinyxml2" make -C build-files/ports/tinyxml2 install 
