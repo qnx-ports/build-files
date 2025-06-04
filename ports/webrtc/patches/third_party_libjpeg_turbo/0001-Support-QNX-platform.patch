@@ -1,0 +1,25 @@
+From 1ea18fb5f1b6bd40079510288239147658fafb7d Mon Sep 17 00:00:00 2001
+From: Yongxin Dai <yodai@blackberry.com>
+Date: Mon, 27 Sep 2021 11:45:07 -0400
+Subject: [PATCH] Support QNX platform
+
+---
+ BUILD.gn | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/BUILD.gn b/BUILD.gn
+index a17f9e0..b1c82a3 100644
+--- a/BUILD.gn
++++ b/BUILD.gn
+@@ -162,7 +162,7 @@ if (current_cpu == "x86" || current_cpu == "x64") {
+       }
+     } else if (is_mac || is_ios) {
+       defines += [ "MACHO" ]
+-    } else if (is_linux || is_android || is_fuchsia || is_chromeos) {
++    } else if (is_linux || is_android || is_fuchsia || is_chromeos || is_qnx) {
+       defines += [ "ELF" ]
+     }
+   }
+-- 
+2.34.1
+
