@@ -36,7 +36,7 @@ source ~/qnx800/qnxsdp-env.sh
 cd ~/qnx_workspace
 
 # Clone Fast-DDS
-git clone -b v2.14.4 https://github.com/eProsima/Fast-DDS.git
+git clone -b qnx_v2.14.4 https://github.com/qnx-ports/Fast-DDS.git
 
 # Build Fast-DDS, set INSTALL_ROOT to choose the installation destination
 QNX_PROJECT_ROOT="$(pwd)/Fast-DDS" make -C build-files/ports/Fast-DDS/ INSTALL_ROOT=<staging-install-folder> install -j4
@@ -48,7 +48,7 @@ QNX_PROJECT_ROOT="$(pwd)/Fast-DDS" make -C build-files/ports/Fast-DDS/ INSTALL_R
 # Clone the repos
 mkdir -p ~/qnx_workspace && cd qnx_workspace
 git clone https://github.com/qnx-ports/build-files.git
-git clone -b v2.14.4 https://github.com/eProsima/Fast-DDS.git
+git clone -b vqnx_v2.14.4 https://github.com/qnx-ports/Fast-DDS.git
 
 # Source SDP environment
 source ~/qnx800/qnxsdp-env.sh

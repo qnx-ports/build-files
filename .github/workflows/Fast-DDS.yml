@@ -37,9 +37,9 @@ jobs:
     - name: Checkout Fast-DDS
       uses: actions/checkout@v4
       with:
-        repository: eProsima/Fast-DDS
+        repository: qnx-ports/Fast-DDS
         path: Fast-DDS
-        ref: v2.14.4
+        ref: qnx_v2.14.4
     
     - name: Checkout tinyxml2
       uses: actions/checkout@v4
@@ -52,7 +52,7 @@ jobs:
       with:
         repository: eProsima/Fast-CDR
         path: Fast-CDR
-        ref: v2.14.4
+        ref: v2.2.5
 
     - name: Checkout foonathan_memory_vendor
       uses: actions/checkout@v4
