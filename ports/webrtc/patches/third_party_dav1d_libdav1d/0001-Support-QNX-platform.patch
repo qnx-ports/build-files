@@ -1,0 +1,28 @@
+From 2e3cae490befcaadb22bda02a29c0a4932d38821 Mon Sep 17 00:00:00 2001
+From: Yongxin Dai <yodai@qnx.com>
+Date: Thu, 22 May 2025 12:57:13 -0400
+Subject: [PATCH] Support QNX platform
+
+---
+ src/arm/asm.S | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/src/arm/asm.S b/src/arm/asm.S
+index e3731fe..9a9dcf6 100644
+--- a/src/arm/asm.S
++++ b/src/arm/asm.S
+@@ -73,9 +73,11 @@
+  * from an unintended extension set; we only allow assmbling such instructions
+  * within regions where we explicitly enable those extensions. */
+ DISABLE_DOTPROD
++#if !defined(__QNX__) || __QNX__ >= 800
+ DISABLE_I8MM
+ DISABLE_SVE
+ DISABLE_SVE2
++#endif
+ 
+ 
+ /* Support macros for
+-- 
+2.34.1
+
