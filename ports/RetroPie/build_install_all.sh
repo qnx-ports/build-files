@@ -218,7 +218,6 @@ fi
 if [ ! -d "$OPENTTD_SRC" -a ! "${SKIP_OPENTTD}" = "TRUE" ]; then
     echo "[INFO]: Missing OpenTTD. Cloning..."
     git clone https://github.com/qnx-ports/OpenTTD.git $OPENTTD_SRC
-    exit 1
 fi
 
 ##########################################################################################
