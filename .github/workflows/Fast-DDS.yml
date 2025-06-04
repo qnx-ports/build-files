@@ -50,8 +50,8 @@ jobs:
     - name: Checkout Fast-CDR
       uses: actions/checkout@v4
       with:
-        repository: eProsima/Fast-DDS
-        path: Fast-DDS
+        repository: eProsima/Fast-CDR
+        path: Fast-CDR
         ref: v2.14.4
 
     - name: Checkout foonathan_memory_vendor
