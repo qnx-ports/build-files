@@ -60,3 +60,6 @@ QNX_PROJECT_ROOT="$(pwd)/Fast-DDS" make -C build-files/ports/Fast-DDS/ INSTALL_R
 
 # Tests
 See test results in `fdds.test.result`; NOT all tests are passed.
+
+### Test summary
+97% tests passed, 445 tests failed out of 17191
