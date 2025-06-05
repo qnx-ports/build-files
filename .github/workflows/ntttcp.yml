@@ -63,4 +63,4 @@ jobs:
               source ~/qnx/800/qnxsdp-env.sh
             fi
             cd ~/workspace
-            make -C build-files/ports/ntttcp install
+            BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/ntttcp-for-linux/src" make -C build-files/ports/ntttcp install
