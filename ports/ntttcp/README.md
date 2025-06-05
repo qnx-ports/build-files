@@ -26,6 +26,11 @@ git clone https://github.com/qnx-ports/ntttcp-for-linux.git
 
 # Build ntttcp-for-linux
 BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/ntttcp-for-linux/src" make -C build-files/ports/ntttcp install -j4
+
+**NOTE**: for building 710 use io-sock library for socket.
+download io-sock from http://anvil-server-n1.bts.rim.net/client/index.html#/packageDetails/com.qnx.qnx710.target.net.iosock/0.0.2.00622T202102120033S
+build:
+BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/ntttcp-for-linux/src" make -C build-files/ports/ntttcp USE_IOSOCK=true install
 ```
 
 # Compile the port for QNX on Ubuntu host
@@ -40,4 +45,9 @@ source ~/qnx800/qnxsdp-env.sh
 
 # Build ntttcp-for-linux
 BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/ntttcp-for-linux/src" make -C build-files/ports/ntttcp install -j4
+
+**NOTE**: for building 710 use io-sock library for socket.
+download io-sock from http://anvil-server-n1.bts.rim.net/client/index.html#/packageDetails/com.qnx.qnx710.target.net.iosock/0.0.2.00622T202102120033S
+build:
+BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/ntttcp-for-linux/src" make -C build-files/ports/ntttcp USE_IOSOCK=true install
 ```
