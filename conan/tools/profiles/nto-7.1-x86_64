@@ -12,14 +12,14 @@ compiler.cppstd=gnu14
 compiler.libcxx=cxx
 
 #8.3   --> QNX7.1
-#12.2  --> QNX8.0 - IMPORTANT: support for Canon2 in progress!
+#12.2  --> QNX8.0
 compiler.version=8.3
 
 #For all QNX os name is Neutrino
 os=Neutrino
 
 #7.1 --> QNX7.1
-#8.0 --> QNX8.0 - IMPORTANT: support for Canon2 in progress!
+#8.0 --> QNX8.0
 os.version=7.1
 
 [buildenv]

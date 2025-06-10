@@ -24,5 +24,5 @@ class TestPackageConan(ConanFile):
         if self.settings.os == "Neutrino":
             tc.cache_variables["CMAKE_EXE_LINKER_FLAGS_INIT"] = "-lregex"
             #for share object option "shared=true"
-            #tc.cache_variables["CMAKE_SHARED_LINKER_FLAGS_INIT"] = "-lregex"
+            tc.cache_variables["CMAKE_SHARED_LINKER_FLAGS_INIT"] = "-lregex"
         tc.generate()

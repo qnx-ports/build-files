@@ -29,7 +29,7 @@ class GTestConan(ConanFile):
         "disable_pthreads": [True, False],
     }
     default_options = {
-        "shared": False,
+        "shared": True,
         "fPIC": True,
         "build_gmock": True,
         "no_main": False,
