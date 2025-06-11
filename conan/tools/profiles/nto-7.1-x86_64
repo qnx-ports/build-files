@@ -1,0 +1,29 @@
+[settings]
+arch=x86_64
+build_type=Release
+compiler=qcc
+
+#gnu14 is default for QNX7.1 but also support gnu17
+#gnu17 is default for QNX8.0
+compiler.cppstd=gnu14
+
+#cxx coresponds to: -stdlib=libc++    or -Y _cxx Library=LLVM C++
+#gpp coresponds to: -stdlib=libstdc++ or -Y _cpp Library=GNU C++
+compiler.libcxx=cxx
+
+#8.3   --> QNX7.1
+#12.2  --> QNX8.0
+compiler.version=8.3
+
+#For all QNX os name is Neutrino
+os=Neutrino
+
+#7.1 --> QNX7.1
+#8.0 --> QNX8.0
+os.version=7.1
+
+[buildenv]
+CC=qcc -Vgcc_ntox86_64
+CXX=q++ -Vgcc_ntox86_64
+CFLAGS=-D_XOPEN_SOURCE=700 -D_QNX_SOURCE
+CXXFLAGS=-D_XOPEN_SOURCE=700 -D_QNX_SOURCE
