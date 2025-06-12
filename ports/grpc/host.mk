@@ -7,7 +7,7 @@ include $(MKFILES_ROOT)/qmacros.mk
 
 NAME=grpc
 
-DIST_BASE ?= $(PRODUCT_ROOT)/../
+QNX_PROJECT_ROOT ?= $(PRODUCT_ROOT)/../
 
 # choose Release or Debug
 CMAKE_BUILD_TYPE ?= Release
