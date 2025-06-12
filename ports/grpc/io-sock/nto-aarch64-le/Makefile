@@ -1,5 +1,5 @@
 ## Only build if there are the special io-sock folders (SPECIAL_IO_SOCK_FOLDERS)
-include ../../../sdp-finder.mk
+include ../../sdp-finder.mk
 ifeq ("$(SPECIAL_IO_SOCK_FOLDERS)", "no")
 # Don't do anything for install
 install:
