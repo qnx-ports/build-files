@@ -133,18 +133,6 @@ jobs:
       with:
         repository: qnx-ports/abseil-cpp
         path: abseil-cpp
-
-    - name: Checkout benchmark
-      uses: actions/checkout@v4
-      with:
-        repository: qnx-ports/benchmark
-        path: benchmark
-
-    - name: Checkout protobuf
-      uses: actions/checkout@v4
-      with:
-        repository: qnx-ports/protobuf
-        path: protobuf
     
     - name: Checkout grpc
       uses: actions/checkout@v4
@@ -172,13 +160,8 @@ jobs:
           source ~/qnx/800/qnxsdp-env.sh
           cd ~/workspace
           QNX_PROJECT_ROOT="$(pwd)/muslflt" make -C build-files/ports/muslflt/ install
-          BUILD_TESTING="OFF" QNX_PROJECT_ROOT="$(pwd)/googletest" make -C build-files/ports/googletest/ install
           QNX_SEVEN_COMPAT="true" QNX_PROJECT_ROOT="$(pwd)/abseil-cpp" make -C build-files/ports/abseil-cpp/ install
           QNX_PROJECT_ROOT="$(pwd)/benchmark" make -C build-files/ports/benchmark install
-          cd protobuf
-          git submodule update --init
-          cd -
-          CONFIG_CMAKE_ARGS="-G Ninja" GENERATOR_ARGS="-j$(nproc) --verbose" QNX_PROJECT_ROOT="$(pwd)/protobuf" make -C build-files/ports/protobuf install
           cd grpc
           git submodule update --init
           cd third_party/googletest
@@ -186,6 +169,16 @@ jobs:
           git fetch --all
           git switch qnx_v1.13.0 
           git pull
+          cd ~/workspace/grpc/third_party/protobuf
+          git remote add qnx https://github.com/qnx-ports/protobuf.git
+          git fetch --all
+          git switch qnx-v27.2
+          git pull
+          cd ~/workspace/grpc/third_party/benchmark
+          git remote add qnx https://github.com/qnx-ports/benchmark.git
+          git fetch --all
+          git switch qnx-v1.8.3
+          git pull
           cd ~/workspace
           touch build-files/ports/grpc/nto-aarch64-le/Makefile.dnm
-          CONFIG_CMAKE_ARGS="-G Ninja" GENERATOR_ARGS="-j$(nproc) --verbose" QNX_PROJECT_ROOT="$(pwd)/grpc" HOST_PROTOC_PATH="$(pwd)/build-files/ports/protobuf/host_protoc" make -C build-files/ports/grpc/ install
+          CONFIG_CMAKE_ARGS="-G Ninja" GENERATOR_ARGS="-j$(nproc) --verbose" QNX_PROJECT_ROOT="$(pwd)/grpc" make -C build-files/ports/grpc/ install

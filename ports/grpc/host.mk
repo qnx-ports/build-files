@@ -27,8 +27,7 @@ HOST_CMAKE_ARGS = -DCMAKE_BUILD_TYPE=$(CMAKE_BUILD_TYPE) \
                   -DgRPC_BUILD_GRPC_CPP_PLUGIN=ON \
                   -DgRPC_DOWNLOAD_ARCHIVES=OFF \
                   -DCMAKE_NO_SYSTEM_FROM_IMPORTED=ON \
-                  -DCMAKE_VERBOSE_MAKEFILE=ON \
-                  -DHOST=ON
+                  -DCMAKE_VERBOSE_MAKEFILE=ON
 
 include $(MKFILES_ROOT)/qtargets.mk
 

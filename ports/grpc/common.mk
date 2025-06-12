@@ -12,7 +12,7 @@ GRPC_CORE_VERSION = 42.0.0
 
 DIST_BASE ?= $(PRODUCT_ROOT)/../
 
-BUILD_TESTING ?= OFF
+BUILD_TESTING ?= ON
 
 # $(INSTALL_ROOT_$(OS)) is pointing to $QNX_TARGET
 # by default, unless it was manually re-routed to
@@ -98,7 +98,7 @@ CMAKE_ARGS += -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
               -DOPENSSL_CRYPTO_LIBRARY="$(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX_EXT)/lib/libcrypto.so" \
               -DOPENSSL_SSL_LIBRARY="$(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX_EXT)/lib/libssl.so" \
               -DgRPC_PROTOBUF_PROVIDER=module \
-              -DgRPC_ABSL_PROVIDER=module \
+              -DgRPC_ABSL_PROVIDER=package \
               -DgRPC_RE2_PROVIDER=module \
               -DgRPC_BENCHMARK_PROVIDER=module \
               -D_gRPC_CPP_PLUGIN=${HOST_GRPC_PATH}/grpc_cpp_plugin \
