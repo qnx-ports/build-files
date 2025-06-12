@@ -7,7 +7,7 @@ endif()
 
 if(CMAKE_HOST_WIN32)
     set(HOST_EXECUTABLE_SUFFIX ".exe")
-    #convert windows paths to cmake paths
+    # convert windows paths to cmake paths
     file(TO_CMAKE_PATH "$ENV{QNX_HOST}" QNX_HOST)
     file(TO_CMAKE_PATH "$ENV{QNX_TARGET}" QNX_TARGET)
 else()
@@ -21,10 +21,10 @@ message(STATUS "using QNX_TARGET ${QNX_TARGET}")
 set(QNX TRUE)
 set(CMAKE_SYSTEM_NAME QNX)
 set(CMAKE_C_COMPILER ${QNX_HOST}/usr/bin/qcc)
-set(CMAKE_CXX_COMPILER ${QNX_HOST}/usr/bin/q++)
+set(CMAKE_CXX_COMPILER ${QNX_HOST}/usr/bin/qcc)
 set(CMAKE_ASM_COMPILER ${QNX_HOST}/usr/bin/qcc)
-set(CMAKE_AR "${QNX_HOST}/usr/bin/nto${CPU}-ar${HOST_EXECUTABLE_SUFFIX}" CACHE PATH "archiver")
-set(CMAKE_RANLIB "${QNX_HOST}/usr/bin/nto${CPU}-ranlib${HOST_EXECUTABLE_SUFFIX}" CACHE PATH "ranlib")
+set(CMAKE_AR "${QNX_HOST}/usr/bin/nto${CPU}${EXT}-ar${HOST_EXECUTABLE_SUFFIX}" CACHE PATH "archiver")
+set(CMAKE_RANLIB "${QNX_HOST}/usr/bin/nto${CPU}${EXT}-ranlib${HOST_EXECUTABLE_SUFFIX}" CACHE PATH "ranlib")
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Vgcc_nto${CMAKE_SYSTEM_PROCESSOR} ${EXTRA_CMAKE_C_FLAGS}" CACHE STRING "c_flags")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Vgcc_nto${CMAKE_SYSTEM_PROCESSOR} -std=gnu++17 ${EXTRA_CMAKE_CXX_FLAGS}" CACHE STRING "cxx_flags")
@@ -32,3 +32,9 @@ set(CMAKE_ASM_FLAGS "${CMAKE_ASM_FLAGS} -Vgcc_nto${CMAKE_SYSTEM_PROCESSOR} ${EXT
 
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${EXTRA_CMAKE_LINKER_FLAGS}" CACHE STRING "exe_linker_flags")
 set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} ${EXTRA_CMAKE_LINKER_FLAGS}" CACHE STRING "so_linker_flags")
+
+set(NO_SYSTEM_FROM_IMPORTED 1)
+set(CMAKE_SKIP_RPATH TRUE CACHE BOOL "If set, runtime paths are not added when using shared libraries.")
+set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
+set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
+set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
