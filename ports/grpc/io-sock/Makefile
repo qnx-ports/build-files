@@ -13,8 +13,8 @@ include $(QRDIR)$(QRECURSE)
 # This prefix path may be exposed to the source code,
 # the linker, or package discovery config files (.pc,
 # CMake config modules, etc.). Default is usr
-PREFIX = usr
-PREFIX_EXT = io-sock/$(PREFIX)
+PREFIX = usr/local
+PREFIX_EXT = io-sock/usr
 
 CMAKE_ARGS += -D_gRPC_CARES_INCLUDE_DIR=$(QNX_TARGET)/usr/include/io-sock
 CPPFLAGS += -I $(QNX_TARGET)/usr/include/io-sock

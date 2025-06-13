@@ -102,7 +102,7 @@ jobs:
           cd ~/workspace
           touch build-files/ports/grpc/default/nto-x86_64-o/Makefile.dnm
           touch build-files/ports/grpc/io-sock/nto-x86_64-o/Makefile.dnm
-          CONFIG_CMAKE_ARGS="-G Ninja" GENERATOR_ARGS="-j$(nproc) --verbose" QNX_PROJECT_ROOT="$(pwd)/grpc" HOST_PROTOC_PATH="$(pwd)/build-files/ports/protobuf/host_protoc" make -C build-files/ports/grpc/ install
+          CONFIG_CMAKE_ARGS="-G Ninja" GENERATOR_ARGS="-j$(nproc) --verbose" QNX_PROJECT_ROOT="$(pwd)/grpc" make -C build-files/ports/grpc/ install
   
   build-x86_64o:
     runs-on: self-hosted
