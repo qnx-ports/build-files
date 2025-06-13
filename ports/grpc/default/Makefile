@@ -14,6 +14,7 @@ include $(QRDIR)$(QRECURSE)
 # the linker, or package discovery config files (.pc,
 # CMake config modules, etc.). Default is usr
 PREFIX = usr/local
-PREFIX_EXT = usr
+PREFIX_EXT = $(PREFIX)
+PREFIX_NET = 
 
 CMAKE_ARGS += -D_gRPC_CARES_INCLUDE_DIR=$(QNX_TARGET)/usr/include

@@ -95,8 +95,8 @@ CMAKE_ARGS += -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
               -DgRPC_SSL_PROVIDER=package \
               -DOPENSSL_ROOT_DIR=$(QNX_TARGET) \
               -DOPENSSL_INCLUDE_DIR="$(QNX_TARGET)/usr/include/openssl" \
-              -DOPENSSL_CRYPTO_LIBRARY="$(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX_EXT)/lib/libcrypto.so" \
-              -DOPENSSL_SSL_LIBRARY="$(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX_EXT)/lib/libssl.so" \
+              -DOPENSSL_CRYPTO_LIBRARY="$(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX_NET)/usr/lib/libcrypto.so" \
+              -DOPENSSL_SSL_LIBRARY="$(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX_NET)/usr/lib/libssl.so" \
               -DgRPC_PROTOBUF_PROVIDER=module \
               -DgRPC_ABSL_PROVIDER=package \
               -DgRPC_RE2_PROVIDER=module \
@@ -113,7 +113,8 @@ CMAKE_ARGS += -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
               -D_gRPC_PROTOBUF_PROTOC_EXECUTABLE=$(HOST_PROTOC_PATH) \
               -DRE2_BUILD_TESTING=OFF \
               -DBENCHMARK_ENABLE_TESTING=OFF \
-              -DEXT=$(EXT)
+              -DCARES_LIBRARY=$(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX_NET)/usr/lib/libcares.so \
+              -DSOCKET_LIBRARY=$(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX_NET)/lib/libsocket.so
 
 # -DEXT is a carryover for supporting armv7le
 
