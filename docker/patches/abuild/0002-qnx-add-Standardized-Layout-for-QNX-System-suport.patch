@@ -1,7 +1,7 @@
 From c5fe1b7f0846f9ae4898bd275c1b133ca310c9f4 Mon Sep 17 00:00:00 2001
 From: Leo Shen <i@szclsya.me>
 Date: Wed, 9 Apr 2025 11:07:24 -0400
-Subject: [PATCH 2/3] qnx: add Standardized Layout for QNX System suport
+Subject: [PATCH 2/4] qnx: add Standardized Layout for QNX System suport
 
 - add $PREFIX and $FORBIDDEN_PREFIX, which is usually set as:
   - $PREFIX: /system

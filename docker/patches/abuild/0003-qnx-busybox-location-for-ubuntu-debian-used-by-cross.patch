@@ -1,7 +1,7 @@
 From 021461b61306ee3854c2f0d6db277d590cbdf853 Mon Sep 17 00:00:00 2001
 From: Leo Shen <i@szclsya.me>
 Date: Thu, 10 Apr 2025 10:17:17 -0400
-Subject: [PATCH 3/3] qnx: busybox location for ubuntu/debian, used by cross
+Subject: [PATCH 3/4] qnx: busybox location for ubuntu/debian, used by cross
  environment
 
 ---

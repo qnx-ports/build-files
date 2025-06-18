@@ -4,7 +4,11 @@ Simple DirectMedia Layer (SDL for short) is a cross-platform library designed to
 You can find the latest release and additional information at: https://www.libsdl.org/
 
 QNX supports the following versions, hosted at https://www.github.com/qnx-ports/SDL:
+<<<<<<< HEAD
 2.0.5: on branch qnx_oldest
+=======
+2.0.5: on branch qnx_2.0.5
+>>>>>>> main
 
 ### Tested for QNX 7.1 and 8.0 SDPs
 Cross-compiled on Ubuntu 24.04 for:
@@ -13,9 +17,16 @@ Cross-compiled on Ubuntu 24.04 for:
 
 Instructions for compiling are listed below.
 
+<<<<<<< HEAD
 # Compile re2 for SDP 7.1/8.0 on an Ubuntu Host or in a Docker container
 ### *Dependencies:*
 WIP - Depends on version
+=======
+# Compile SDL2 for SDP 7.1/8.0 on an Ubuntu Host or in a Docker container
+### *Dependencies:*
+2.0.5: 
+- screen, OpenGLES2
+>>>>>>> main
 
 ### *Steps:*
 1. Create a new workspace or navigate to a desired one
@@ -36,7 +47,10 @@ git clone git@github.com:qnx-ports/SDL.git
 ```
 
 3. *[Optional]* Check out ideal branch.
-TODO
+```
+# Currently, we only support SDL 2.0.5
+# SDL 2.30 support is planned soon!
+```
 
 4. *[Optional]* Build the Docker image and create a container
 ```bash
@@ -46,7 +60,7 @@ cd build-files/docker
 cd ~/sdl_wksp
 ```
 
-5. Source your SDP (Installed from QNX Software Center)
+5. Source your SDP (installed from QNX Software Center)
 ```bash
 #QNX 8.0 will be in the directory ~/qnx800/
 #QNX 7.1 will be in the directory ~/qnx710/
@@ -55,8 +69,10 @@ source ~/qnx800/qnxsdp-env.sh
 
 6. Build the project in your workspace from Step 1
 ```bash
-# Do not set QNX_BUILD_TESTS to anything if you do not want tests built.
 QNX_PROJECT_ROOT="$(pwd)/SDL" make -C build-files/ports/SDL2 install -j4
+
+# Or Build and compile tests into a staging directory:
+make -C build-files/ports/SDL2 SDL_test -j4
 ```
 
 **NOTE**: Clean your build files before rebuilding.
@@ -64,8 +80,3 @@ QNX_PROJECT_ROOT="$(pwd)/SDL" make -C build-files/ports/SDL2 install -j4
 #From your workspace:
 make -C build-files/ports/SDl2 clean
 ```
-
-build/build/libSDL2*.a
-build/build/.libs/libSDL*
-
-build_test/test*

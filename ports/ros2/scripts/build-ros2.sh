@@ -33,6 +33,10 @@ build(){
     rm -rf build/${CPUVARDIR}/opencv_vendor/
     rm -rf build/${CPUVARDIR}/yaml_cpp_vendor/
 
+    # Workaround for building ros2 for the first time so that modules can find this path before
+    # numpy is installed into the SDP
+    mkdir -p ${QNX_TARGET}/${CPUVARDIR}/opt/ros/humble/usr/lib/python3.11/site-packages/numpy/core/include
+
     colcon build --merge-install --cmake-force-configure \
         --build-base=build/${CPUVARDIR} \
         --install-base=install/${CPUVARDIR} \

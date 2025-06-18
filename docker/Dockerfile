@@ -111,11 +111,11 @@ RUN add-apt-repository ppa:deadsnakes/ppa -y && \
 	python3.11-distutils \
 	rename
 
-# Install CMake 3.22
-RUN cd /opt && sudo wget https://cmake.org/files/v3.22/cmake-3.22.0-linux-x86_64.sh && \
-	sudo mkdir /opt/cmake-3.22.0-linux-x86_64 && \
-	yes | sudo sh cmake-3.22.0-linux-x86_64.sh --prefix=/opt/cmake-3.22.0-linux-x86_64 --skip-license && \
-	sudo ln -s /opt/cmake-3.22.0-linux-x86_64/bin/cmake /usr/local/bin/cmake
+# Install CMake 3.31.7
+RUN cd /opt && sudo wget https://cmake.org/files/v3.31/cmake-3.31.7-linux-x86_64.sh && \
+	sudo mkdir /opt/cmake-3.31.7-linux-x86_64 && \
+	yes | sudo sh cmake-3.31.7-linux-x86_64.sh --prefix=/opt/cmake-3.31.7-linux-x86_64 --skip-license && \
+	sudo ln -s /opt/cmake-3.31.7-linux-x86_64/bin/cmake /usr/local/bin/cmake
 
 # Install APK dependencies
 RUN apt-get install -y \
@@ -145,6 +145,7 @@ RUN cd ~ && \
   git apply ~/0001-qnx-disable-features-not-used-by-QNX.patch && \
   git apply ~/0002-qnx-add-Standardized-Layout-for-QNX-System-suport.patch && \
   git apply ~/0003-qnx-busybox-location-for-ubuntu-debian-used-by-cross.patch && \
+  git apply ~/0004-abuild-remove-ash-specific-chdir.patch && \
   make && sudo make install
 
 # Adding user

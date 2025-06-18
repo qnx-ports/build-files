@@ -5,10 +5,6 @@ include $(QCONFIG)
 
 include $(MKFILES_ROOT)/qmacros.mk
 
-NAME=fast-cdr
-
-FAST_CDR_VERSION = 2.2.3
-
 QNX_PROJECT_ROOT ?= $(PRODUCT_ROOT)/../../
 
 #$(INSTALL_ROOT_$(OS)) is pointing to $QNX_TARGET
@@ -26,13 +22,13 @@ INSTALL_ROOT ?= $(INSTALL_ROOT_$(OS))
 PREFIX ?= /usr/local
 
 #choose Release or Debug
-CMAKE_BUILD_TYPE ?= Release
+CMAKE_BUILD_TYPE ?= release
 
 #override 'all' target to bypass the default QNX build system
-ALL_DEPENDENCIES = fast-cdr_all
-.PHONY: fast-cdr_all install check clean
+ALL_DEPENDENCIES = $(NAME)_all
+.PHONY: $(NAME)_all install check clean
 
-CFLAGS += $(FLAGS)
+CFLAGS += $(FLAGS) -fPIC -O2
 LDFLAGS += -Wl,--build-id=md5 -Wl,--allow-shlib-undefined
 
 include $(MKFILES_ROOT)/qtargets.mk
@@ -58,36 +54,37 @@ CMAKE_MODULE_PATH := $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/cmake;$(INSTALL_RO
 CFLAGS += -I$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/include
 
 # Add choice to build and install tests
-BUILD_TESTING ?= ON
-INSTALL_TESTS ?= ON
-
+BUILD_TESTING ?= OFF
+INSTALL_TESTS ?= OFF
 
 CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DCMAKE_SYSTEM_PROCESSOR=$(CPUVARDIR) \
              -DCMAKE_C_FLAGS="$(CFLAGS)" \
              -DCMAKE_CXX_FLAGS="$(CFLAGS)" \
+             -DBUILD_TESTING="$(BUILD_TESTING)" \
              -DCMAKE_EXE_LINKER_FLAGS="$(LDFLAGS)" \
+             -DCMAKE_PROJECT_INCLUDE="$(PROJECT_ROOT)/project_hooks.cmake" \
              -DCMAKE_CXX_COMPILER_TARGET=gcc_nto$(CPUVARDIR) \
              -DCMAKE_C_COMPILER_TARGET=gcc_nto$(CPUVARDIR) \
-             -DCMAKE_INSTALL_PREFIX="$(PREFIX)" \
+             -DCMAKE_INSTALL_PREFIX="$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)" \
              -DCMAKE_STAGING_PREFIX="$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)" \
+             -DCMAKE_INSTALL_INCLUDEDIR=$(INSTALL_ROOT)/$(PREFIX)/include \
+             -DCMAKE_INSTALL_DATAROOTDIR=$(INSTALL_ROOT)/$(PREFIX)/share \
              -DCMAKE_MODULE_PATH="$(CMAKE_MODULE_PATH)" \
              -DCMAKE_FIND_ROOT_PATH="$(CMAKE_FIND_ROOT_PATH)" \
-             -DCMAKE_BUILD_TYPE=$(CMAKE_BUILD_TYPE) \
-             -DBUILD_TESTING=$(BUILD_TESTING) \
-             -DINSTALL_TESTS=$(INSTALL_TESTS)
+             -DCMAKE_BUILD_TYPE=$(CMAKE_BUILD_TYPE)
 
 MAKE_ARGS ?= -j $(firstword $(JLEVEL) 1)
 
 ifndef NO_TARGET_OVERRIDE
-fast-cdr_all:
+$(NAME)_all:
 	@mkdir -p build
-	cd build && cmake $(CMAKE_ARGS) $(QNX_PROJECT_ROOT)
-	@cd build && make VERBOSE=1 all $(MAKE_ARGS)
+	@cd build && cmake -G Ninja $(CMAKE_ARGS) $(QNX_PROJECT_ROOT)
+	@cd build && VERBOSE=1 ninja $(MAKE_ARGS)
 
-install check: fast-cdr_all
+install check: $(NAME)_all
 	@echo Installing...
-	@cd build && make VERBOSE=1 install $(MAKE_ARGS)
+	@cd build && VERBOSE=1 ninja install $(MAKE_ARGS)
 	@echo Done.
 
 clean iclean spotless:

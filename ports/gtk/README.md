@@ -131,3 +131,7 @@ gtk4_thermostat_A4
   - Do not depend on functionalities exposed directly via dependencies such as `glib`.
 - Hardware accelerated rendering is supported with OpenGL ES 2/3 on QNX 8. However, on the Raspberry Pi 4 target, the latest `ngl` renderer is known to be broken due to an upstream bug #6498. Set `GSK_RENDERER=gl` to use the legacy renderer in this case.
 - All functionalities that rely on `dbus` will not work on QNX.
+- Applications are expected to use client-side decorations (CSD) as `qnx-screen` does not provide them. Refer to GTK's documentation on [`GtkHeaderBar`](https://docs.gtk.org/gtk4/class.HeaderBar.html) widget for more information regarding CSD, or take a look at `demos/qnx-demo/` source in this repository that has been modified to use CSD on QNX.
+- GTK features that depend on window resizing (`GtkConstraintLayout` for example) and the drag-and-drop action do not work. 
+- Media formats `svg` and `webm` are not supported.
+- Clipboard is not supported.
