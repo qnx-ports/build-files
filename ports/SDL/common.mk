@@ -49,30 +49,26 @@ V_OPT=gcc_ntox86_64
 endif
 endif
 ##################################################
-
-#v Stuff that may need to override target or depend on its definitions
-
-
-#####NEEDED FOR HIGHER VERSIONS OF SDL
+# Note: CMAKE is here for SDL v2.30, which is still unstable and in development.
 #### cmake Package Configuration
-CMAKE_FIND_ROOT_PATH := $(QNX_TARGET);$(QNX_TARGET)/$(CPUVARDIR);$(INSTALL_ROOT)/$(CPUVARDIR)
-CMAKE_MODULE_PATH := $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/cmake;$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/lib/cmake
+# CMAKE_FIND_ROOT_PATH := $(QNX_TARGET);$(QNX_TARGET)/$(CPUVARDIR);$(INSTALL_ROOT)/$(CPUVARDIR)
+# CMAKE_MODULE_PATH := $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/cmake;$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/lib/cmake
 
-#### cmake Arguments
-CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
-             -DCMAKE_INSTALL_PREFIX="$(INSTALL_ROOT)" \
-             -DCMAKE_INSTALL_LIBDIR="$(CPUVARDIR)/$(PREFIX)/lib" \
-             -DCMAKE_INSTALL_BINDIR="$(CPUVARDIR)/$(PREFIX)/bin" \
-             -DCMAKE_INSTALL_INCLUDEDIR="$(PREFIX)/include" \
-             -DCMAKE_FIND_ROOT_PATH="$(CMAKE_FIND_ROOT_PATH)" \
-             -DCMAKE_MODULE_PATH="$(CMAKE_MODULE_PATH)" \
-             -DCMAKE_SYSTEM_PROCESSOR=$(CPUVARDIR) \
-             -DCMAKE_BUILD_TYPE=$(CMAKE_BUILD_TYPE) \
-             -DEXTRA_CMAKE_C_FLAGS="$(FLAGS)" \
-             -DEXTRA_CMAKE_CXX_FLAGS="$(FLAGS)" \
-             -DEXTRA_CMAKE_LINKER_FLAGS="$(LDFLAGS)" \
-             -DCMAKE_NO_SYSTEM_FROM_IMPORTED=ON \
-             -DSDL_THREADS_ENABLED_BY_DEFAULT=ON
+# #### cmake Arguments
+# CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
+#              -DCMAKE_INSTALL_PREFIX="$(INSTALL_ROOT)" \
+#              -DCMAKE_INSTALL_LIBDIR="$(CPUVARDIR)/$(PREFIX)/lib" \
+#              -DCMAKE_INSTALL_BINDIR="$(CPUVARDIR)/$(PREFIX)/bin" \
+#              -DCMAKE_INSTALL_INCLUDEDIR="$(PREFIX)/include" \
+#              -DCMAKE_FIND_ROOT_PATH="$(CMAKE_FIND_ROOT_PATH)" \
+#              -DCMAKE_MODULE_PATH="$(CMAKE_MODULE_PATH)" \
+#              -DCMAKE_SYSTEM_PROCESSOR=$(CPUVARDIR) \
+#              -DCMAKE_BUILD_TYPE=$(CMAKE_BUILD_TYPE) \
+#              -DEXTRA_CMAKE_C_FLAGS="$(FLAGS)" \
+#              -DEXTRA_CMAKE_CXX_FLAGS="$(FLAGS)" \
+#              -DEXTRA_CMAKE_LINKER_FLAGS="$(LDFLAGS)" \
+#              -DCMAKE_NO_SYSTEM_FROM_IMPORTED=ON \
+#              -DSDL_THREADS_ENABLED_BY_DEFAULT=ON
 
 
 #### Flags for g++/gcc C/CPP 
