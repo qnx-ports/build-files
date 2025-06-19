@@ -7,7 +7,7 @@ include $(QCONFIG)
 ######### Settable Env. Vars ##################
 # Project Settings
 NAME=OpenTTD
-QNX_PROJECT_ROOT ?= $(PRODUCT_ROOT)/../../../OpenTTD
+QNX_PROJECT_ROOT ?= $(PRODUCT_ROOT)/../../../openttd
 
 # Installation Locations
 INSTALL_ROOT ?= $(INSTALL_ROOT_$(OS))
