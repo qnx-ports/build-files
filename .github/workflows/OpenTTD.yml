@@ -33,7 +33,7 @@ jobs:
       uses: actions/checkout@v4
       with:
         repository: qnx-ports/OpenTTD
-        path: OpenTTD
+        path: openttd
     
     - name: Checkout SDL
       uses: actions/checkout@v4
