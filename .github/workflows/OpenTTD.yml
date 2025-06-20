@@ -59,7 +59,7 @@ jobs:
         shell: bash
         run: |
           source ~/qnx/800/qnxsdp-env.sh
-           ~/qnx/qnxsoftwarecenter/qnxsoftwarecenter_clt -profile com.qnx.qnx800_1 -installPackage com.qnx.qnx800.target.screen.fonts.engine/0.0.1.00020T202311191218L  
+          ~/qnx/qnxsoftwarecenter/qnxsoftwarecenter_clt -profile com.qnx.qnx800_1 -installPackage com.qnx.qnx800.target.screen.fonts.engine/0.0.1.00020T202311191218L  
           cd ~/workspace
           PREFIX="/usr/local" QNX_PROJECT_ROOT="$(pwd)/SDL" make -C build-files/ports/SDL install -j$(nproc)
           PREFIX="/usr/local" QNX_PROJECT_ROOT="$(pwd)/OpenTTD" make -C build-files/ports/RetroPie/openttd install -j$(nproc)
