@@ -1,0 +1,22 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 09803ffa..de92d728 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -101,7 +101,7 @@ else ()
+ 
+         if (NOT ANDROID AND NOT CMAKE_THREAD_LIBS_INIT)
+             check_symbol_exists(pthread_mutexattr_init "<pthread.h>" HAVE_PTHREAD_MUTEXATTR_INIT)
+-            if (NOT HAVE_PTHREAD_MUTEXATTR_INIT)
++            if (NOT HAVE_PTHREAD_MUTEXATTR_INIT AND NOT QNX)
+                 # fsanitize=... results in GLIBC library to provide some pthread APIs but not all
+                 list(APPEND PLATFORM_LIBS pthread)
+             endif()
+@@ -195,7 +195,7 @@ aws_check_headers(${PROJECT_NAME} ${AWS_COMMON_HEADERS})
+ 
+ #apple source already includes the definitions we want, and setting this posix source
+ #version causes it to revert to an older version. So don't turn it on there, we don't need it.
+-if (UNIX AND NOT APPLE AND NOT ${CMAKE_SYSTEM_NAME} MATCHES FreeBSD|OpenBSD)
++if (UNIX AND NOT APPLE AND NOT ${CMAKE_SYSTEM_NAME} MATCHES FreeBSD|OpenBSD AND NOT QNX)
+     #this only gets applied to aws-c-common (not its consumers).
+     target_compile_definitions(${PROJECT_NAME} PRIVATE -D_POSIX_C_SOURCE=200809L -D_XOPEN_SOURCE=500)
+ endif()
