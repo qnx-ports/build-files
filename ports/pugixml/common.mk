@@ -26,6 +26,7 @@ include $(MKFILES_ROOT)/qtargets.mk
 ## Setup paths for CMAKE find_*
 CMAKE_FIND_ROOT_PATH := $(QNX_TARGET);$(QNX_TARGET)/$(CPUVARDIR);$(INSTALL_ROOT)/$(CPUVARDIR)
 CMAKE_MODULE_PATH    := $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/cmake;$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/lib/cmake
+
 # $(QNX_TARGET) contains architecture-agnostics (i.e. headers, non-compiled) from SDP
 # $(QNX_TARGET)/$(CPUVARDIR) contains architecture specific from SDP
 # $(INSTALL_ROOT)/$(CPUVARDIR) contains built and installed packages
