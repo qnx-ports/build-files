@@ -27,7 +27,7 @@ cd build-files/docker
 source ~/qnx800/qnxsdp-env.sh
 cd ~/qnx_workspace
 
-# Clone aws-crt-cpp amd dependency
+# Clone aws-crt-cpp and dependency
 git clone https://github.com/qnx-ports/aws-crt-cpp.git
 cd aws-crt-cpp
 git submodule update --init --recursive
@@ -38,7 +38,7 @@ git clone https://github.com/qnx-ports/epoll.git
 make -C build-files/ports/epoll install JLEVEL=4
 
 # Build aws-crt-cpp
-make -C build-files/ports/aws-crt-cpp JLEVEL=4
+make -C build-files/ports/aws-crt-cpp install JLEVEL=4
 ```
 
 # Compile the port for QNX on Ubuntu host
@@ -62,7 +62,7 @@ source ~/qnx800/qnxsdp-env.sh
 make -C build-files/ports/epoll install JLEVEL=4
 
 # Build aws-crt-cpp
-make -C build-files/ports/aws-crt-cpp JLEVEL=4
+make -C build-files/ports/aws-crt-cpp install JLEVEL=4
 ```
 
 # How to run tests
@@ -84,7 +84,7 @@ scp -r $QNX_TARGET/aarch64le/usr/local/lib/libs2n* qnxuser@$TARGET_HOST:/data/ho
 scp -r $QNX_TARGET/aarch64le/usr/local/lib/libepoll* qnxuser@$TARGET_HOST:/data/home/qnxuser/lib
 
 # Move test script to the target
-cd ~/qnx_workspace/build-files/ports/aws-crt-cpp/test.sh qnxuser@$TARGET_HOST:/data/home/qnxuser/bin
+scp ~/qnx_workspace/build-files/ports/aws-crt-cpp/test.sh qnxuser@$TARGET_HOST:/data/home/qnxuser/bin
 ```
 
 # Run the tests
