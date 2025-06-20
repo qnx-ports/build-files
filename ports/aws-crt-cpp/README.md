@@ -29,6 +29,7 @@ cd ~/qnx_workspace
 
 # Clone aws-crt-cpp amd dependency
 git clone https://github.com/qnx-ports/aws-crt-cpp.git
+cd aws-crt-cpp
 git submodule update --init --recursive
 cd -
 git clone https://github.com/qnx-ports/epoll.git
