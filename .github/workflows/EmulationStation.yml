@@ -83,7 +83,7 @@ jobs:
         shell: bash
         run: |
           source ~/qnx/800/qnxsdp-env.sh
-          ~/qnx/800/qnxsoftwarecentre_clt -i com.qnx.qnx800.target.screen.fonts.engine/0.0.1.00020T202311191218L 
+          ~/qnx/qnxsoftwarecenter/qnxsoftwarecenter_clt -profile com.qnx.qnx800_1 -installPackage com.qnx.qnx800.target.screen.fonts.engine/0.0.1.00020T202311191218L 
           echo "post qnxsoftwarecentre_clt call"
           cd ~/workspace
           PREFIX="/usr/local" QNX_PROJECT_ROOT="$(pwd)/SDL" make -C build-files/ports/SDL/nto-aarch64-le install -j$(nproc)

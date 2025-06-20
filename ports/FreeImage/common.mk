@@ -75,15 +75,15 @@ freeimage_all:
 #assume its due to ALL_DEPENDENCIES
 install check:
 	@echo Installing...
-	@cd build && make install $(MAKE_ARGS)
-	@cd build && cp libfreeimage.so $(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/lib/libFreeImage.so
-	@cd build && cp libfreeimage.so $(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/lib/libfreeimage-3.18.0.so
-	@cp ../FreeImage.pc build/
-	@sed -i 's,%CPU%,$(CPUVARDIR),' build/FreeImage.pc
-	@cp build/FreeImage.pc $(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/lib/pkgconfig/
-	@cp build/FreeImage.pc $(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/lib/pkgconfig/freeimage.pc
-	@mkdir -p $(INSTALL_ROOT)/$(PREFIX)/include/FreeImage/
-	@cp $(INSTALL_ROOT)/$(PREFIX)/include/freeimage/* $(INSTALL_ROOT)/$(PREFIX)/include/FreeImage/
+	-cd build && make install $(MAKE_ARGS)
+	-cd build && cp libfreeimage.so $(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/lib/libFreeImage.so
+	-cd build && cp libfreeimage.so $(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/lib/libfreeimage-3.18.0.so
+	-cp ../FreeImage.pc build/
+	-sed -i 's,%CPU%,$(CPUVARDIR),' build/FreeImage.pc
+	-cp build/FreeImage.pc $(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/lib/pkgconfig/
+	-cp build/FreeImage.pc $(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/lib/pkgconfig/freeimage.pc
+	-mkdir -p $(INSTALL_ROOT)/$(PREFIX)/include/FreeImage/
+	-cp $(INSTALL_ROOT)/$(PREFIX)/include/freeimage/* $(INSTALL_ROOT)/$(PREFIX)/include/FreeImage/
 	@echo Done! Installed.
 
 # Shortcut for RetroPie's build/install all script

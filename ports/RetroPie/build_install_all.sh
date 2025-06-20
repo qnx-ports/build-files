@@ -44,7 +44,7 @@ NANOSVG_SRC=${PWD}/../../../nanosvg
 LUA_SRC=${PWD}/../../../lua
 MUSLFLT_SRC=${PWD}/../../../muslflt
 
-OPENTTD_SRC=${PWD}/../../../OpenTTD
+OPENTTD_SRC=${PWD}/../../../openttd
 
 ES_THEME_DIR=${PWD}/staging/emulationstation/themes
 
