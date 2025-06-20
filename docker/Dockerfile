@@ -490,6 +490,11 @@ RUN apt install -qq --assume-yes \
 	zip \
 	zstd
 
+# Install CMake 3.22.0 for ROS2 Humble
+RUN cd /opt && sudo wget https://cmake.org/files/v3.22/cmake-3.22.0-linux-x86_64.sh && \
+	sudo mkdir /opt/cmake-3.22.0-linux-x86_64 && \
+	yes | sudo sh cmake-3.22.0-linux-x86_64.sh --prefix=/opt/cmake-3.22.0-linux-x86_64 --skip-license
+
 # Install CMake 3.31.7
 RUN cd /opt && sudo wget https://cmake.org/files/v3.31/cmake-3.31.7-linux-x86_64.sh && \
 	sudo mkdir /opt/cmake-3.31.7-linux-x86_64 && \

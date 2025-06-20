@@ -10,6 +10,8 @@ Currently the port is supported for QNX SDP 7.1 and 8.0.
 
 We recommend that you use Docker to build ros2 for QNX to ensure the build environment consistency.
 
+CMake version of 3.22.0 is recommended.
+
 If python3 on the target is located at `/usr/bin/python3` instead of `/system/xbin/python3`, uncomment the following line in `build-ros2.sh`.
 
 ```code
@@ -34,6 +36,9 @@ cd build-files/docker
 ./docker-create-container.sh
 
 # Now you are in the Docker container
+
+# Use CMake version of 3.22.0
+sudo ln -sf /opt/cmake-3.22.0-linux-x86_64/bin/cmake /usr/local/bin/cmake
 
 # Set QNX_SDP_VERSION to be qnx800 for SDP 8.0 or qnx710 for SDP 7.1
 export QNX_SDP_VERSION=qnx800
