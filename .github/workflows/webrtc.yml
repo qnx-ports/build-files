@@ -51,7 +51,7 @@ jobs:
           source ~/qnx/710/qnxsdp-env.sh
           export PATH=/usr/local/qnx/depot_tools:$PATH
           cd workspace
-          gclient config --name=src --unmanaged --custom-var checkout_qnx=True --custom-var qnx_build_files_branch=${{ steps.parse.outputs.branch }} https://github.com/build-files/webrtc.git
+          gclient config --name=src --unmanaged --custom-var checkout_qnx=True --custom-var qnx_build_files_branch=${{ steps.parse.outputs.branch }} https://github.com/yxdai/webrtc.git
           echo "target_os = [\"qnx\"]" >> .gclient
           gclient sync
           # Make
