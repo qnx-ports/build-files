@@ -1,0 +1,131 @@
+From 031fcd85688185f44a0d7470a5b13befe1d9a59e Mon Sep 17 00:00:00 2001
+From: Yongxin Dai <yodai@blackberry.com>
+Date: Thu, 30 Jan 2025 12:05:36 -0500
+Subject: [PATCH] changes in perfetto for QNX
+
+---
+ include/perfetto/base/build_config.h | 16 ++++++++++++++++
+ include/perfetto/base/time.h         |  9 ++++++++-
+ src/base/file_utils.cc               | 10 ++++++++++
+ src/base/paged_memory.cc             |  6 ++++++
+ 4 files changed, 40 insertions(+), 1 deletion(-)
+
+diff --git a/include/perfetto/base/build_config.h b/include/perfetto/base/build_config.h
+index c416adcf27..d127161e12 100644
+--- a/include/perfetto/base/build_config.h
++++ b/include/perfetto/base/build_config.h
+@@ -60,6 +60,7 @@
+ #define PERFETTO_BUILDFLAG_DEFINE_PERFETTO_OS_IOS() 0
+ #define PERFETTO_BUILDFLAG_DEFINE_PERFETTO_OS_WASM() 0
+ #define PERFETTO_BUILDFLAG_DEFINE_PERFETTO_OS_FUCHSIA() 0
++#define PERFETTO_BUILDFLAG_DEFINE_PERFETTO_OS_QNX() 0
+ #define PERFETTO_BUILDFLAG_DEFINE_PERFETTO_OS_NACL() 0
+ #elif defined(_WIN32)
+ #define PERFETTO_BUILDFLAG_DEFINE_PERFETTO_OS_ANDROID() 0
+@@ -70,6 +71,7 @@
+ #define PERFETTO_BUILDFLAG_DEFINE_PERFETTO_OS_IOS() 0
+ #define PERFETTO_BUILDFLAG_DEFINE_PERFETTO_OS_WASM() 0
+ #define PERFETTO_BUILDFLAG_DEFINE_PERFETTO_OS_FUCHSIA() 0
++#define PERFETTO_BUILDFLAG_DEFINE_PERFETTO_OS_QNX() 0
+ #define PERFETTO_BUILDFLAG_DEFINE_PERFETTO_OS_NACL() 0
+ #elif defined(__EMSCRIPTEN__)
+ #define PERFETTO_BUILDFLAG_DEFINE_PERFETTO_OS_ANDROID() 0
+@@ -80,6 +82,7 @@
+ #define PERFETTO_BUILDFLAG_DEFINE_PERFETTO_OS_IOS() 0
+ #define PERFETTO_BUILDFLAG_DEFINE_PERFETTO_OS_WASM() 1
+ #define PERFETTO_BUILDFLAG_DEFINE_PERFETTO_OS_FUCHSIA() 0
++#define PERFETTO_BUILDFLAG_DEFINE_PERFETTO_OS_QNX() 0
+ #define PERFETTO_BUILDFLAG_DEFINE_PERFETTO_OS_NACL() 0
+ #elif defined(__Fuchsia__)
+ #define PERFETTO_BUILDFLAG_DEFINE_PERFETTO_OS_ANDROID() 0
+@@ -90,6 +93,18 @@
+ #define PERFETTO_BUILDFLAG_DEFINE_PERFETTO_OS_WIN() 0
+ #define PERFETTO_BUILDFLAG_DEFINE_PERFETTO_OS_WASM() 0
+ #define PERFETTO_BUILDFLAG_DEFINE_PERFETTO_OS_FUCHSIA() 1
++#define PERFETTO_BUILDFLAG_DEFINE_PERFETTO_OS_QNX() 0
++#define PERFETTO_BUILDFLAG_DEFINE_PERFETTO_OS_NACL() 0
++#elif defined(__QNX__)
++#define PERFETTO_BUILDFLAG_DEFINE_PERFETTO_OS_ANDROID() 0
++#define PERFETTO_BUILDFLAG_DEFINE_PERFETTO_OS_LINUX() 0
++#define PERFETTO_BUILDFLAG_DEFINE_PERFETTO_OS_WIN() 0
++#define PERFETTO_BUILDFLAG_DEFINE_PERFETTO_OS_APPLE() 0
++#define PERFETTO_BUILDFLAG_DEFINE_PERFETTO_OS_MAC() 0
++#define PERFETTO_BUILDFLAG_DEFINE_PERFETTO_OS_IOS() 0
++#define PERFETTO_BUILDFLAG_DEFINE_PERFETTO_OS_WASM() 0
++#define PERFETTO_BUILDFLAG_DEFINE_PERFETTO_OS_FUCHSIA() 0
++#define PERFETTO_BUILDFLAG_DEFINE_PERFETTO_OS_QNX() 1
+ #define PERFETTO_BUILDFLAG_DEFINE_PERFETTO_OS_NACL() 0
+ #elif defined(__native_client__)
+ #define PERFETTO_BUILDFLAG_DEFINE_PERFETTO_OS_ANDROID() 0
+@@ -100,6 +115,7 @@
+ #define PERFETTO_BUILDFLAG_DEFINE_PERFETTO_OS_IOS() 0
+ #define PERFETTO_BUILDFLAG_DEFINE_PERFETTO_OS_WASM() 0
+ #define PERFETTO_BUILDFLAG_DEFINE_PERFETTO_OS_FUCHSIA() 0
++#define PERFETTO_BUILDFLAG_DEFINE_PERFETTO_OS_QNX() 0
+ #define PERFETTO_BUILDFLAG_DEFINE_PERFETTO_OS_NACL() 1
+ #else
+ #error OS not supported (see build_config.h)
+diff --git a/include/perfetto/base/time.h b/include/perfetto/base/time.h
+index 6436503d20..a9b571dbaf 100644
+--- a/include/perfetto/base/time.h
++++ b/include/perfetto/base/time.h
+@@ -18,7 +18,14 @@
+ #define INCLUDE_PERFETTO_BASE_TIME_H_
+ 
+ #include <time.h>
+-
++#if defined(__QNX__)
++#ifndef CLOCK_MONOTONIC_RAW
++#define CLOCK_MONOTONIC_RAW CLOCK_MONOTONIC
++#endif
++#ifndef CLOCK_BOOTTIME
++#define CLOCK_BOOTTIME CLOCK_MONOTONIC
++#endif
++#endif
+ #include <chrono>
+ #include <optional>
+ #include <string>
+diff --git a/src/base/file_utils.cc b/src/base/file_utils.cc
+index a1fa238472..55e80e72ca 100644
+--- a/src/base/file_utils.cc
++++ b/src/base/file_utils.cc
+@@ -339,9 +339,19 @@ base::Status ListFilesRecursive(const std::string& dir_path,
+           strcmp(dirent->d_name, "..") == 0) {
+         continue;
+       }
++#if defined(__QNX__)
++      struct stat st;
++      lstat(dirent->d_name, &st);
++      if (S_ISDIR(st.st_mode)) {
++#else
+       if (dirent->d_type == DT_DIR) {
++#endif
+         dir_queue.push_back(cur_dir + dirent->d_name + '/');
++#if defined(__QNX__)
++      } else if (S_ISREG(st.st_mode)) {
++#else
+       } else if (dirent->d_type == DT_REG) {
++#endif
+         const std::string full_path = cur_dir + dirent->d_name;
+         PERFETTO_CHECK(full_path.length() > root_dir_path.length());
+         output.push_back(full_path.substr(root_dir_path.length()));
+diff --git a/src/base/paged_memory.cc b/src/base/paged_memory.cc
+index c009672c6e..6fb7e7025c 100644
+--- a/src/base/paged_memory.cc
++++ b/src/base/paged_memory.cc
+@@ -24,6 +24,12 @@
+ #include <Windows.h>
+ #else  // PERFETTO_BUILDFLAG(PERFETTO_OS_WIN)
+ #include <sys/mman.h>
++#if defined(__QNX__)
++#define madvise(addr, len, advice) posix_madvise(addr, len, advice)
++#ifndef MADV_DONTNEED
++#define MADV_DONTNEED POSIX_MADV_DONTNEED
++#endif
++#endif
+ #endif  // PERFETTO_BUILDFLAG(PERFETTO_OS_WIN)
+ 
+ #include "perfetto/base/logging.h"
+-- 
+2.34.1
+

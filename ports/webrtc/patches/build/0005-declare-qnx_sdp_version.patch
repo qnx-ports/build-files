@@ -1,0 +1,93 @@
+From df7af564ebf4e0cb1e8eb95b20a4763d49a2a8cf Mon Sep 17 00:00:00 2001
+From: Yongxin Dai <yodai@qnx.com>
+Date: Fri, 11 Apr 2025 12:06:01 -0400
+Subject: [PATCH] declare qnx_sdp_version
+
+---
+ config/qnx/check_iosnd_header.py  |  2 +-
+ config/qnx/check_iosock_header.py |  2 +-
+ config/qnx/config.gni             |  2 ++
+ config/qnx/get_sdp_version.py     | 33 +++++++++++++++++++++++++++++++
+ 4 files changed, 37 insertions(+), 2 deletions(-)
+ create mode 100755 config/qnx/get_sdp_version.py
+
+diff --git a/config/qnx/check_iosnd_header.py b/config/qnx/check_iosnd_header.py
+index 131e3d138..a2d5e16be 100755
+--- a/config/qnx/check_iosnd_header.py
++++ b/config/qnx/check_iosnd_header.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/python
++#!/usr/bin/env python3
+ # Copyright (c) 2024 The Native Client Authors. All rights reserved.
+ # Use of this source code is governed by a BSD-style license that can be
+ # found in the LICENSE file.
+diff --git a/config/qnx/check_iosock_header.py b/config/qnx/check_iosock_header.py
+index 6748de8da..249dde614 100755
+--- a/config/qnx/check_iosock_header.py
++++ b/config/qnx/check_iosock_header.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/python
++#!/usr/bin/env python3
+ # Copyright (c) 2024 The Native Client Authors. All rights reserved.
+ # Use of this source code is governed by a BSD-style license that can be
+ # found in the LICENSE file.
+diff --git a/config/qnx/config.gni b/config/qnx/config.gni
+index 93af40b18..0bb5f9e4f 100644
+--- a/config/qnx/config.gni
++++ b/config/qnx/config.gni
+@@ -1,4 +1,5 @@
+ _qnx_sdp_root = getenv("QNX_TARGET")
++_qnx_sdp_version = exec_script("get_sdp_version.py", [], "trim string")
+ _is_iosnd = exec_script("check_iosnd_header.py", [], "trim string")
+ _is_iosock = exec_script("check_iosock_header.py", [], "trim string")
+ declare_args() {
+@@ -7,6 +8,7 @@ declare_args() {
+   } else {
+     qnx_sdp_root = _qnx_sdp_root
+   }
++  qnx_sdp_version = _qnx_sdp_version
+   if (_is_iosnd == "True") {
+     rtc_qnx_use_io_snd = true
+   } else {
+diff --git a/config/qnx/get_sdp_version.py b/config/qnx/get_sdp_version.py
+new file mode 100755
+index 000000000..d91d93db4
+--- /dev/null
++++ b/config/qnx/get_sdp_version.py
+@@ -0,0 +1,33 @@
++#!/usr/bin/env python3
++# Copyright (c) 2024 The Native Client Authors. All rights reserved.
++# Use of this source code is governed by a BSD-style license that can be
++# found in the LICENSE file.
++
++from __future__ import print_function
++
++import os
++import sys
++
++QNX_SDP_VERSION_FILE = os.path.join(
++    os.environ["QNX_TARGET"], "usr/include/sys/nto_version.h"
++)
++
++
++def version_finder(file):
++    for line in file:
++        if "#define _NTO_VERSION" in line:
++            return line
++
++
++def main():
++    if len(sys.argv) != 1:
++        print("usage: %s" % sys.argv[0])
++        sys.exit(1)
++    with open(QNX_SDP_VERSION_FILE, "r") as file:
++        ver_line = version_finder(file)
++        ver = ver_line.split()[2].strip()
++        print(ver)
++
++
++if __name__ == "__main__":
++    main()
+-- 
+2.34.1
+

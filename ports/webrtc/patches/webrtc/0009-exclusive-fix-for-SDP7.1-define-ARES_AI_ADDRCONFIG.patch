@@ -1,0 +1,28 @@
+From 526a3286ca4e6029a67eb63a46f6416b753f815f Mon Sep 17 00:00:00 2001
+From: Yongxin Dai <yodai@blackberry.com>
+Date: Tue, 18 Feb 2025 14:56:42 -0500
+Subject: [PATCH] exclusive fix for SDP7.1: define ARES_AI_ADDRCONFIG
+
+---
+ rtc_base/async_dns_resolver.cc | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/rtc_base/async_dns_resolver.cc b/rtc_base/async_dns_resolver.cc
+index cf27e23821..0ba2e8634d 100644
+--- a/rtc_base/async_dns_resolver.cc
++++ b/rtc_base/async_dns_resolver.cc
+@@ -23,6 +23,11 @@
+ #include <dispatch/dispatch.h>
+ #endif
+ 
++#if defined(WEBRTC_QNX) && __QNX__ < 800
++#include <ares.h>
++#define AI_ADDRCONFIG ARES_AI_ADDRCONFIG
++#endif
++
+ namespace webrtc {
+ 
+ namespace {
+-- 
+2.34.1
+

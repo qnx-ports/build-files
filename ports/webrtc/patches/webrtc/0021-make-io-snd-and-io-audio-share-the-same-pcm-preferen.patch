@@ -1,0 +1,432 @@
+From ad420bdd747ef62d0eb4b5d96a2a96fb39b58f43 Mon Sep 17 00:00:00 2001
+From: Yongxin Dai <yodai@qnx.com>
+Date: Tue, 25 Mar 2025 14:56:57 -0400
+Subject: [PATCH] make io-snd and io-audio share the same pcm preferences
+ implementatio
+
+---
+ .../qnx/audio_device_alsa_snd_qnx.cc          | 242 +++---------------
+ .../qnx/audio_device_alsa_snd_qnx.h           |  49 +---
+ 2 files changed, 46 insertions(+), 245 deletions(-)
+
+diff --git a/modules/audio_device/qnx/audio_device_alsa_snd_qnx.cc b/modules/audio_device/qnx/audio_device_alsa_snd_qnx.cc
+index 6463fc471c..2454d90823 100644
+--- a/modules/audio_device/qnx/audio_device_alsa_snd_qnx.cc
++++ b/modules/audio_device/qnx/audio_device_alsa_snd_qnx.cc
+@@ -55,19 +55,19 @@ WebRTCAlsaSymbolTable* GetAlsaSymbolTable() {
+   } while (0)
+ 
+ #undef snd_pcm_hw_params_alloca
+-#define snd_pcm_hw_params_alloca(pParams)                                      \
+-  do {                                                                      \
+-    *pParams =                                                              \
+-        (snd_pcm_hw_params_t*)__builtin_alloca(LATE(snd_pcm_hw_params_sizeof)()); \
+-    memset(*pParams, 0, LATE(snd_pcm_hw_params_sizeof)());                     \
++#define snd_pcm_hw_params_alloca(pParams)                  \
++  do {                                                     \
++    *pParams = (snd_pcm_hw_params_t*)__builtin_alloca(     \
++        LATE(snd_pcm_hw_params_sizeof)());                 \
++    memset(*pParams, 0, LATE(snd_pcm_hw_params_sizeof)()); \
+   } while (0)
+ 
+ #undef snd_pcm_sw_params_alloca
+-#define snd_pcm_sw_params_alloca(pParams)                                      \
+-  do {                                                                      \
+-    *pParams =                                                              \
+-        (snd_pcm_sw_params_t*)__builtin_alloca(LATE(snd_pcm_sw_params_sizeof)()); \
+-    memset(*pParams, 0, LATE(snd_pcm_sw_params_sizeof)());                     \
++#define snd_pcm_sw_params_alloca(pParams)                  \
++  do {                                                     \
++    *pParams = (snd_pcm_sw_params_t*)__builtin_alloca(     \
++        LATE(snd_pcm_sw_params_sizeof)());                 \
++    memset(*pParams, 0, LATE(snd_pcm_sw_params_sizeof)()); \
+   } while (0)
+ 
+ // snd_lib_error_handler_t
+@@ -80,45 +80,9 @@ void WebrtcAlsaErrorHandler(const char* file,
+ 
+ namespace webrtc {
+ namespace {
+-constexpr char palyout_pcm_config_path[] = "/etc/webrtc/playout_pcm.cfg";
+-constexpr char capture_pcm_config_path[] = "/etc/webrtc/capture_pcm.cfg";
+-
+ constexpr uint8_t CHAR_BASE = 48;
+-
+-std::unique_ptr<char[]> valueFromEnv(const char* name) {
+-  char* value = getenv(name);
+-  if (!value)
+-    return std::unique_ptr<char[]>{};
+-  std::string raw(value);
+-  size_t pos = raw.find(':');
+-  if (pos == std::string::npos)
+-    return std::unique_ptr<char[]>{};
+-  int card = std::atoi(raw.substr(0, pos).data());
+-  int device = std::atoi(raw.substr(pos + 1).data());
+-  int plugin(0);
+-  pos = raw.find(':', ++pos);
+-  if (pos != std::string::npos)
+-    plugin = std::atoi(raw.substr(pos + 1).data());
+-  std::unique_ptr<char[]> buf(new char[4]);
+-  buf[0] = (char)(card + CHAR_BASE);
+-  buf[1] = (char)(device + CHAR_BASE);
+-  buf[2] = (char)(plugin + CHAR_BASE);
+-  buf[3] = '\0';
+-  return std::move(buf);
+-}
+-
+-const char* targetedPlayDev() {
+-  static std::unique_ptr<char[]> playout =
+-      valueFromEnv("WEBRTC_AUDIO_PLAY_DEVICE");
+-  return playout.get();
+-}
+-
+-const char* targetedRecordDev() {
+-  static std::unique_ptr<char[]> record =
+-      valueFromEnv("WEBRTC_AUDIO_RECORD_DEVICE");
+-  return record.get();
+-}
+ }  // namespace
++
+ static const unsigned int ALSA_PLAYOUT_FREQ = 48000;
+ static const unsigned int ALSA_PLAYOUT_CH = 2;
+ static const unsigned int ALSA_PLAYOUT_LATENCY = 40 * 1000;  // in us
+@@ -131,135 +95,6 @@ static const unsigned int ALSA_CAPTURE_WAIT_TIMEOUT = 5;     // in ms
+ #define FUNC_GET_DEVICE_NAME 1
+ #define FUNC_GET_DEVICE_NAME_FOR_AN_ENUM 2
+ 
+-static std::map<const std::string, AudioDeviceQnxALSA::PcmPara> s_pcm_params = {
+-    {"card", AudioDeviceQnxALSA::SND_CARD},
+-    {"device", AudioDeviceQnxALSA::SND_DEVICE},
+-    {"plugin", AudioDeviceQnxALSA::SND_PLUGIN},
+-    {"format", AudioDeviceQnxALSA::SND_FORMAT},
+-    {"rate", AudioDeviceQnxALSA::SND_RATE},
+-    {"channels", AudioDeviceQnxALSA::SND_CHANNELS},
+-    {"period", AudioDeviceQnxALSA::SND_PERIOD},
+-    {"buffer", AudioDeviceQnxALSA::SND_BUFFER}};
+-
+-template <bool PLAY>
+-AudioDeviceQnxALSA::PcmPreferences<PLAY>::PcmPreferences(uint32_t rate,
+-                                                   uint8_t channels)
+-    : _card(-1),
+-      _device(-1),
+-      _plugin(false),
+-#if defined(WEBRTC_ARCH_BIG_ENDIAN)
+-      _format(SND_PCM_FORMAT_S16_BE),
+-#else
+-      _format(SND_PCM_FORMAT_S16_LE),
+-#endif
+-      _rate(rate),
+-      _channels(channels) {
+-}
+-
+-template <bool PLAY>
+-void AudioDeviceQnxALSA::PcmPreferences<PLAY>::Initialize(const char* path,
+-                                                    const char* env) {
+-  _period = _rate / 100;
+-  _buffer = CalculateBuffer(_period);
+-
+-  std::ifstream file(path);
+-
+-  if (file.is_open()) {
+-    std::string fileContent((std::istreambuf_iterator<char>(file)),
+-                            std::istreambuf_iterator<char>());
+-    file.close();
+-    ParsePcmConfig(fileContent);
+-  }
+-
+-  if (env) {
+-    _card = env[0] - CHAR_BASE;
+-    _device = env[1] - CHAR_BASE;
+-    _plugin = env[2] - CHAR_BASE;
+-  }
+-}
+-
+-template <bool PLAY>
+-void AudioDeviceQnxALSA::PcmPreferences<PLAY>::ParsePcmConfig(
+-    const std::string& config) {
+-  if (config.empty())
+-    return;
+-  size_t begin_of_line = 0;
+-  size_t end_of_line = config.find('\n', begin_of_line);
+-  size_t pos_token = config.find('=', begin_of_line);
+-  size_t begin;
+-  size_t end;
+-  std::string name;
+-  std::string value;
+-  int paras_mask(0);
+-  while (end_of_line != std::string::npos && pos_token != std::string::npos) {
+-    name = config.substr(begin_of_line, pos_token - begin_of_line);
+-    begin = name.find_first_not_of(' ');
+-    end = name.find_last_not_of(' ');
+-    name = name.substr(begin, end - begin + 1);
+-    // std::cout << "yodai " << name << std::endl;
+-    if (auto it{s_pcm_params.find(name)}; it != std::end(s_pcm_params)) {
+-      value = config.substr(pos_token + 1, end_of_line - pos_token - 1);
+-      begin = value.find_first_not_of(' ');
+-      end = value.find_last_not_of(' ');
+-      value = value.substr(begin, end - begin + 1);
+-      paras_mask |= it->second;
+-      UpdatePcmPara(it->second, std::stoi(value));
+-    }
+-    begin_of_line = end_of_line + 1;
+-    end_of_line = config.find('\n', begin_of_line);
+-    pos_token = config.find('=', begin_of_line);
+-  }
+-  if ((paras_mask & SND_RATE) && !(paras_mask & SND_PERIOD))
+-    UpdatePcmPara(SND_PERIOD, rate() / 100);
+-  if (((paras_mask & SND_RATE) || (paras_mask & SND_PERIOD)) &&
+-      !(paras_mask & SND_BUFFER))
+-    UpdatePcmPara(SND_BUFFER, period() * 2);
+-}
+-
+-template <bool PLAY>
+-void AudioDeviceQnxALSA::PcmPreferences<PLAY>::UpdatePcmPara(PcmPara id, int value) {
+-  switch (id) {
+-    case SND_CARD:
+-      _card = value;
+-      break;
+-    case SND_DEVICE:
+-      _device = value;
+-      break;
+-    case SND_PLUGIN:
+-      _plugin = value;
+-      break;
+-    case SND_FORMAT:
+-      _format = static_cast<snd_pcm_format_t>(value);
+-      break;
+-    case SND_RATE:
+-      _rate = value;
+-      break;
+-    case SND_CHANNELS:
+-      _channels = value;
+-      break;
+-    case SND_PERIOD:
+-      _period = value;
+-      break;
+-    case SND_BUFFER:
+-      _buffer = value;
+-      break;
+-    default:
+-      RTC_DCHECK_NOTREACHED();
+-  }
+-}
+-
+-template <>
+-snd_pcm_uframes_t AudioDeviceQnxALSA::PcmPreferences<true>::CalculateBuffer(
+-    snd_pcm_uframes_t perod) {
+-  return 3 * perod;
+-}
+-
+-template <>
+-snd_pcm_uframes_t AudioDeviceQnxALSA::PcmPreferences<false>::CalculateBuffer(
+-    snd_pcm_uframes_t perod) {
+-  return 2 * perod;
+-}
+-
+ AudioDeviceQnxALSA::AudioDeviceQnxALSA()
+     : _ptrAudioBuffer(NULL),
+       _inputDeviceIndex(0),
+@@ -290,12 +125,14 @@ AudioDeviceQnxALSA::AudioDeviceQnxALSA()
+       _recIsInitialized(false),
+       _playIsInitialized(false),
+       _recordingDelay(0),
+-      _playoutDelay(0) {
++      _playoutDelay(0),
++      _playout_prefs(
++          std::make_unique<PcmPreferences>(ALSA_PLAYOUT_FREQ, ALSA_PLAYOUT_CH)),
++      _capture_prefs(std::make_unique<PcmPreferences>(ALSA_CAPTURE_FREQ,
++                                                      ALSA_CAPTURE_CH)) {
+   memset(_oldKeyState, 0, sizeof(_oldKeyState));
+-  _playout_prefs.reset(new PcmPreferences<true>(ALSA_PLAYOUT_FREQ, ALSA_PLAYOUT_CH));
+-  _capture_prefs.reset(new PcmPreferences<false>(ALSA_CAPTURE_FREQ, ALSA_CAPTURE_CH));
+-  _playout_prefs->Initialize(palyout_pcm_config_path, targetedPlayDev());
+-  _capture_prefs->Initialize(capture_pcm_config_path, targetedRecordDev());
++  _playout_prefs->Initialize(true);
++  _capture_prefs->Initialize(false);
+   RTC_DLOG(LS_INFO) << __FUNCTION__ << " created";
+ }
+ 
+@@ -883,7 +720,7 @@ int32_t AudioDeviceQnxALSA::PlayoutIsAvailable(bool& available) {
+     return res;
+   };
+ 
+-  uint8_t ch_num[] = {2, 1, _playout_prefs->channels()};
++  uint8_t ch_num[] = {2, 1, _playout_prefs->Channels()};
+   uint8_t count(3);
+   int32_t res(-1);
+   while (count && res) {
+@@ -908,7 +745,7 @@ int32_t AudioDeviceQnxALSA::RecordingIsAvailable(bool& available) {
+     return res;
+   };
+ 
+-  uint8_t ch_num[] = {2, 1, _capture_prefs->channels()};
++  uint8_t ch_num[] = {2, 1, _capture_prefs->Channels()};
+   uint8_t count(3);
+   int32_t res(-1);
+   while (count && res) {
+@@ -982,11 +819,12 @@ int32_t AudioDeviceQnxALSA::InitPlayoutLocked() {
+     return -1;
+   }
+ 
+-  _playoutFramesIn10MS = _playout_prefs->rate() / 100;
+-  snd_pcm_uframes_t period_size = _playout_prefs->period();
+-  snd_pcm_uframes_t buffer_size = _playout_prefs->buffer();
+-  if (!SetParams(_handlePlayout, true, _playout_prefs->format(),
+-                 _playout_prefs->rate(), _playout_prefs->channels(),
++  _playoutFramesIn10MS = _playout_prefs->Rate() / 100;
++  snd_pcm_uframes_t period_size = _playout_prefs->Period();
++  snd_pcm_uframes_t buffer_size = _playout_prefs->Buffer();
++  if (!SetParams(_handlePlayout, true,
++                 static_cast<snd_pcm_format_t>(_playout_prefs->Format()),
++                 _playout_prefs->Rate(), _playout_prefs->Channels(),
+                  period_size, buffer_size)) {
+     _playoutFramesIn10MS = 0;
+     RTC_LOG(LS_ERROR) << "unable to set playback device: "
+@@ -998,8 +836,8 @@ int32_t AudioDeviceQnxALSA::InitPlayoutLocked() {
+   }
+   _playoutBufferSizeInFrame = buffer_size;
+   _playoutPeriodSizeInFrame = period_size;
+-  _playoutFreq = _playout_prefs->rate();
+-  _playChannels = _playout_prefs->channels();
++  _playoutFreq = _playout_prefs->Rate();
++  _playChannels = _playout_prefs->Channels();
+ 
+   if (_ptrAudioBuffer) {
+     // Update webrtc audio buffer with the selected parameters
+@@ -1088,11 +926,13 @@ int32_t AudioDeviceQnxALSA::InitRecordingLocked() {
+     return -1;
+   }
+ 
+-  _recordingFramesIn10MS = _capture_prefs->rate() / 100;
+-  snd_pcm_uframes_t period_size = _capture_prefs->period();
+-  snd_pcm_uframes_t buffer_size = _capture_prefs->buffer();
+-  if (!SetParams(_handleRecord, false, _capture_prefs->format(),
+-                 _capture_prefs->rate(), _capture_prefs->channels(),
++  _recordingFramesIn10MS = _capture_prefs->Rate() / 100;
++  snd_pcm_uframes_t period_size = _capture_prefs->Period();
++  snd_pcm_uframes_t buffer_size = _capture_prefs->Buffer();
++  if (!SetParams(_handleRecord, false,
++                 static_cast<snd_pcm_format_t>(_capture_prefs->Format()),
++                 _capture_prefs->Rate(),
++                 static_cast<snd_pcm_format_t>(_capture_prefs->Channels()),
+                  period_size, buffer_size)) {
+     _recordingFramesIn10MS = 0;
+     RTC_LOG(LS_ERROR) << "unable to set record settings: "
+@@ -1104,8 +944,8 @@ int32_t AudioDeviceQnxALSA::InitRecordingLocked() {
+   }
+   _recordingBuffersizeInFrame = buffer_size;
+   _recordingPeriodSizeInFrame = period_size;
+-  _recordingFreq = _capture_prefs->rate();
+-  _recChannels = _capture_prefs->channels();
++  _recordingFreq = _capture_prefs->Rate();
++  _recChannels = _capture_prefs->Channels();
+ 
+   if (_ptrAudioBuffer) {
+     // Update webrtc audio buffer with the selected parameters
+@@ -1395,8 +1235,8 @@ int32_t AudioDeviceQnxALSA::GetDevicesInfo(const int32_t function,
+   // dmix and dsnoop are only for playback and capture, respectively, but ALSA
+   // stupidly includes them in both lists.
+   const char* ignorePrefix = playback ? "dsnoop:" : "dmix:";
+-  // (ALSA lists many more "devices" of questionable interest, but we show them
+-  // just in case the weird devices may actually be desirable for some
++  // (ALSA lists many more "devices" of questionable interest, but we show
++  // them just in case the weird devices may actually be desirable for some
+   // users/systems.)
+ 
+   int err;
+@@ -1640,8 +1480,8 @@ int32_t AudioDeviceQnxALSA::ErrorRecovery(int32_t error,
+     if ((error == -EPIPE || error == -ESTRPIPE) &&  // Buf underrun/overrun.
+         _playing.load(std::memory_order_relaxed) &&
+         LATE(snd_pcm_stream)(deviceHandle) == SND_PCM_STREAM_PLAYBACK) {
+-      // For capture streams we also have to repeat the explicit start() to get
+-      // data flowing again.
++      // For capture streams we also have to repeat the explicit start() to
++      // get data flowing again.
+       int err = LATE(snd_pcm_start)(deviceHandle);
+       if (err != 0) {
+         RTC_LOG(LS_ERROR) << "Recovery - snd_pcm_start error: "
+diff --git a/modules/audio_device/qnx/audio_device_alsa_snd_qnx.h b/modules/audio_device/qnx/audio_device_alsa_snd_qnx.h
+index 100d2722c4..7d23f81d9a 100644
+--- a/modules/audio_device/qnx/audio_device_alsa_snd_qnx.h
++++ b/modules/audio_device/qnx/audio_device_alsa_snd_qnx.h
+@@ -11,17 +11,17 @@
+ #ifndef AUDIO_DEVICE_AUDIO_DEVICE_ALSA_QNX_H_
+ #define AUDIO_DEVICE_AUDIO_DEVICE_ALSA_QNX_H_
+ 
++#include <alsa/asoundlib.h>
+ #include <map>
+ #include <memory>
++#include <sys/ioctl.h>
+ 
++#include "config_utils.h"
+ #include "modules/audio_device/audio_device_generic.h"
+ #include "modules/audio_device/qnx/audio_mixer_manager_alsa_snd_qnx.h"
+ #include "rtc_base/platform_thread.h"
+ #include "rtc_base/synchronization/mutex.h"
+ 
+-#include <alsa/asoundlib.h>
+-#include <sys/ioctl.h>
+-
+ typedef webrtc::adm_qnx_alsa::AlsaSymbolTable WebRTCAlsaSymbolTable;
+ WebRTCAlsaSymbolTable* GetAlsaSymbolTable();
+ 
+@@ -29,45 +29,6 @@ namespace webrtc {
+ 
+ class AudioDeviceQnxALSA : public AudioDeviceGeneric {
+  public:
+-  enum PcmPara {
+-    SND_CARD = 1 << 0,
+-    SND_DEVICE = 1 << 1,
+-    SND_PLUGIN = 1 << 2,
+-    SND_FORMAT = 1 << 3,
+-    SND_RATE = 1 << 4,
+-    SND_CHANNELS = 1 << 5,
+-    SND_PERIOD = 1 << 6,
+-    SND_BUFFER = 1 << 7
+-  };
+-  template <bool PLAY>
+-  class PcmPreferences {
+-   public:
+-    PcmPreferences(uint32_t rate, uint8_t channels);
+-    ~PcmPreferences() {}
+-    void Initialize(const char* path, const char* env);
+-    const int16_t& Card() { return _card; }
+-    const int16_t& Device() { return _device; }
+-    const bool& Plugin() { return _plugin; }
+-    const snd_pcm_format_t& format() { return _format; }
+-    const uint32_t& rate() { return _rate; }
+-    const uint8_t& channels() { return _channels; }
+-    const snd_pcm_uframes_t& period() { return _period; }
+-    const snd_pcm_uframes_t& buffer() { return _buffer; }
+-
+-   private:
+-    void ParsePcmConfig(const std::string& config);
+-    void UpdatePcmPara(PcmPara id, int value);
+-    snd_pcm_uframes_t CalculateBuffer(snd_pcm_uframes_t perod);
+-
+-    int16_t _card;
+-    int16_t _device;
+-    bool _plugin;
+-    snd_pcm_format_t _format;
+-    uint32_t _rate;
+-    uint8_t _channels;
+-    snd_pcm_uframes_t _period;
+-    snd_pcm_uframes_t _buffer;
+-  };
+   AudioDeviceQnxALSA();
+   virtual ~AudioDeviceQnxALSA();
+ 
+@@ -243,8 +204,8 @@ class AudioDeviceQnxALSA : public AudioDeviceGeneric {
+ 
+   char _oldKeyState[32];
+ 
+-  std::unique_ptr<AudioDeviceQnxALSA::PcmPreferences<true>> _playout_prefs;
+-  std::unique_ptr<AudioDeviceQnxALSA::PcmPreferences<false>> _capture_prefs;
++  std::unique_ptr<PcmPreferences> _playout_prefs;
++  std::unique_ptr<PcmPreferences> _capture_prefs;
+ };
+ 
+ }  // namespace webrtc
+-- 
+2.34.1
+

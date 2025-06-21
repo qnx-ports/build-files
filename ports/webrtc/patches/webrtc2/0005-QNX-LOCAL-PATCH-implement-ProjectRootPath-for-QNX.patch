@@ -1,0 +1,46 @@
+From a0fe52c64df68ab1152c14725979326c64be6621 Mon Sep 17 00:00:00 2001
+From: Yongxin Dai <yodai@blackberry.com>
+Date: Wed, 5 Mar 2025 11:32:56 -0500
+Subject: [QNX LOCAL PATCH] implement ProjectRootPath() for QNX
+
+---
+ test/testsupport/file_utils_override.cc | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
+
+diff --git a/test/testsupport/file_utils_override.cc b/test/testsupport/file_utils_override.cc
+index fe8cdd60c6..626fb156d9 100644
+--- a/test/testsupport/file_utils_override.cc
++++ b/test/testsupport/file_utils_override.cc
+@@ -40,6 +40,10 @@
+ #include "test/testsupport/mac_file_utils.h"
+ #endif
+ 
++#if defined(WEBRTC_QNX)
++#include <fcntl.h>
++#endif
++
+ #include <optional>
+ 
+ #include "absl/strings/string_view.h"
+@@ -100,7 +104,18 @@ std::optional<std::string> ProjectRootPath() {
+   return std::string(kFuchsiaTestRoot);
+ #else
+   char buf[PATH_MAX];
++#if defined(WEBRTC_QNX)
++  char raw_buf[PATH_MAX];
++  int fd = open("/proc/self/exefile", O_RDONLY);
++  ssize_t count = read(fd, raw_buf, PATH_MAX);
++  close(fd);
++  if (count > 0) {
++    realpath(raw_buf, buf);
++    count = strlen(buf);
++  }
++#else
+   ssize_t count = ::readlink("/proc/self/exe", buf, arraysize(buf));
++#endif
+   if (count <= 0) {
+     RTC_DCHECK_NOTREACHED() << "Unable to resolve /proc/self/exe.";
+     return std::nullopt;
+-- 
+2.34.1
+

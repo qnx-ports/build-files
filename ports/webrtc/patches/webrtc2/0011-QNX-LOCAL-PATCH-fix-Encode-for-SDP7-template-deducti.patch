@@ -1,0 +1,415 @@
+From d46e57c3fcc538069099560248902285192cf786 Mon Sep 17 00:00:00 2001
+From: Yongxin Dai <yodai@blackberry.com>
+Date: Wed, 19 Feb 2025 11:11:04 -0500
+Subject: [QNX LOCAL PATCH] fix Encode for SDP7: template deduction issue
+
+---
+ .../libaom_av1_encoder_factory_test.cc        | 155 +++++++++---------
+ 1 file changed, 81 insertions(+), 74 deletions(-)
+
+diff --git a/api/video_codecs/libaom_av1_encoder_factory_test.cc b/api/video_codecs/libaom_av1_encoder_factory_test.cc
+index a704b289ad..7d566a1da7 100644
+--- a/api/video_codecs/libaom_av1_encoder_factory_test.cc
++++ b/api/video_codecs/libaom_av1_encoder_factory_test.cc
+@@ -45,6 +45,13 @@
+ 
+ namespace webrtc {
+ namespace {
++#if defined(WEBRTC_QNX) && __QNX__ < 800
++#define EXPLICIT_TYPE_TemporalUnitSettings VideoEncoderInterface::TemporalUnitSettings
++#define C_ARRAY_CAST(n) (webrtc::VideoEncoderInterface::FrameEncodeSettings[n])
++#else
++#define EXPLICIT_TYPE_TemporalUnitSettings
++#define C_ARRAY_CAST(n)
++#endif
+ using ::testing::Eq;
+ using ::testing::Gt;
+ using ::testing::IsEmpty;
+@@ -310,16 +317,16 @@ TEST(LibaomAv1Encoder, KeyframeUpdatesSpecifiedBuffer) {
+   auto raw_delta = frame_reader->PullFrame();
+ 
+   EncOut key;
+-  enc->Encode(raw_key, {.presentation_timestamp = Timestamp::Millis(0)},
+-              ToVec({Fb().Rate(kCbr).Res(640, 360).Upd(5).Key().Out(key)}));
++  enc->Encode(raw_key, EXPLICIT_TYPE_TemporalUnitSettings {.presentation_timestamp = Timestamp::Millis(0)},
++              ToVec(C_ARRAY_CAST(1){Fb().Rate(kCbr).Res(640, 360).Upd(5).Key().Out(key)}));
+   ASSERT_THAT(key.bitstream, Not(IsEmpty()));
+   VideoFrame decoded_key = dec.Decode(key.bitstream);
+   EXPECT_THAT(Resolution(decoded_key), ResolutionIs(640, 360));
+   EXPECT_THAT(Psnr(raw_key, decoded_key), Gt(40));
+ 
+   EncOut delta;
+-  enc->Encode(raw_delta, {.presentation_timestamp = Timestamp::Millis(100)},
+-              ToVec({Fb().Rate(kCbr).Res(640, 360).Ref({0}).Out(delta)}));
++  enc->Encode(raw_delta, EXPLICIT_TYPE_TemporalUnitSettings {.presentation_timestamp = Timestamp::Millis(100)},
++              ToVec(C_ARRAY_CAST(1){Fb().Rate(kCbr).Res(640, 360).Ref({0}).Out(delta)}));
+   EXPECT_THAT(delta, Not(HasBitstreamAndMetaData()));
+ }
+ 
+@@ -329,8 +336,8 @@ TEST(LibaomAv1Encoder, MidTemporalUnitKeyframeResetsBuffers) {
+ 
+   EncOut tu0_s2;
+   enc->Encode(frame_reader->PullFrame(),
+-              {.presentation_timestamp = Timestamp::Millis(0)},
+-              ToVec({Fb().Rate(kCbr).Res(160, 90).S(0).Upd(0).Key(),
++              EXPLICIT_TYPE_TemporalUnitSettings {.presentation_timestamp = Timestamp::Millis(0)},
++              ToVec(C_ARRAY_CAST(3){Fb().Rate(kCbr).Res(160, 90).S(0).Upd(0).Key(),
+                      Fb().Rate(kCbr).Res(320, 180).S(1).Ref({0}),
+                      Fb().Rate(kCbr).Res(640, 360).S(2).Ref({0}).Out(tu0_s2)}));
+   EXPECT_THAT(tu0_s2, HasBitstreamAndMetaData());
+@@ -338,8 +345,8 @@ TEST(LibaomAv1Encoder, MidTemporalUnitKeyframeResetsBuffers) {
+   EncOut tu1_s0;
+   enc->Encode(
+       frame_reader->PullFrame(),
+-      {.presentation_timestamp = Timestamp::Millis(100)},
+-      ToVec({Fb().Rate(kCbr).Res(160, 90).S(0).Upd(0).Ref({0}).Out(tu1_s0),
++      EXPLICIT_TYPE_TemporalUnitSettings {.presentation_timestamp = Timestamp::Millis(100)},
++      ToVec(C_ARRAY_CAST(3){Fb().Rate(kCbr).Res(160, 90).S(0).Upd(0).Ref({0}).Out(tu1_s0),
+              Fb().Rate(kCbr).Res(320, 180).S(1).Upd(1).Key(),
+              Fb().Rate(kCbr).Res(640, 360).S(2).Ref({0})}));
+   EXPECT_THAT(tu1_s0, Not(HasBitstreamAndMetaData()));
+@@ -351,18 +358,18 @@ TEST(LibaomAv1Encoder, ResolutionSwitching) {
+ 
+   rtc::scoped_refptr<I420Buffer> in0 = frame_reader->PullFrame();
+   EncOut tu0;
+-  enc->Encode(in0, {.presentation_timestamp = Timestamp::Millis(0)},
+-              ToVec({Fb().Rate(kCbr).Res(320, 180).Upd(0).Key().Out(tu0)}));
++  enc->Encode(in0, EXPLICIT_TYPE_TemporalUnitSettings {.presentation_timestamp = Timestamp::Millis(0)},
++              ToVec(C_ARRAY_CAST(1){Fb().Rate(kCbr).Res(320, 180).Upd(0).Key().Out(tu0)}));
+ 
+   rtc::scoped_refptr<I420Buffer> in1 = frame_reader->PullFrame();
+   EncOut tu1;
+-  enc->Encode(in1, {.presentation_timestamp = Timestamp::Millis(100)},
+-              ToVec({Fb().Rate(kCbr).Res(640, 360).Ref({0}).Out(tu1)}));
++  enc->Encode(in1, EXPLICIT_TYPE_TemporalUnitSettings {.presentation_timestamp = Timestamp::Millis(100)},
++              ToVec(C_ARRAY_CAST(1){Fb().Rate(kCbr).Res(640, 360).Ref({0}).Out(tu1)}));
+ 
+   rtc::scoped_refptr<I420Buffer> in2 = frame_reader->PullFrame();
+   EncOut tu2;
+-  enc->Encode(in2, {.presentation_timestamp = Timestamp::Millis(200)},
+-              ToVec({Fb().Rate(kCbr).Res(160, 90).Ref({0}).Out(tu2)}));
++  enc->Encode(in2, EXPLICIT_TYPE_TemporalUnitSettings {.presentation_timestamp = Timestamp::Millis(200)},
++              ToVec(C_ARRAY_CAST(1){Fb().Rate(kCbr).Res(160, 90).Ref({0}).Out(tu2)}));
+ 
+   Av1Decoder dec;
+   VideoFrame f0 = dec.Decode(tu0.bitstream);
+@@ -386,24 +393,24 @@ TEST(LibaomAv1Encoder, InputResolutionSwitching) {
+ 
+   rtc::scoped_refptr<I420Buffer> in0 = frame_reader->PullFrame();
+   EncOut tu0;
+-  enc->Encode(in0, {.presentation_timestamp = Timestamp::Millis(0)},
+-              ToVec({Fb().Rate(kCbr).Res(160, 90).Upd(0).Key().Out(tu0)}));
++  enc->Encode(in0, EXPLICIT_TYPE_TemporalUnitSettings {.presentation_timestamp = Timestamp::Millis(0)},
++              ToVec(C_ARRAY_CAST(1){Fb().Rate(kCbr).Res(160, 90).Upd(0).Key().Out(tu0)}));
+ 
+   rtc::scoped_refptr<I420Buffer> in1 = frame_reader->PullFrame(
+       /*frame_num=*/nullptr,
+       /*resolution=*/{320, 180},
+       /*framerate_scale=*/{1, 1});
+   EncOut tu1;
+-  enc->Encode(in1, {.presentation_timestamp = Timestamp::Millis(100)},
+-              ToVec({Fb().Rate(kCbr).Res(160, 90).Ref({0}).Out(tu1)}));
++  enc->Encode(in1, EXPLICIT_TYPE_TemporalUnitSettings {.presentation_timestamp = Timestamp::Millis(100)},
++              ToVec(C_ARRAY_CAST(1){Fb().Rate(kCbr).Res(160, 90).Ref({0}).Out(tu1)}));
+ 
+   rtc::scoped_refptr<I420Buffer> in2 = frame_reader->PullFrame(
+       /*frame_num=*/nullptr,
+       /*resolution=*/{160, 90},
+       /*framerate_scale=*/{1, 1});
+   EncOut tu2;
+-  enc->Encode(in2, {.presentation_timestamp = Timestamp::Millis(200)},
+-              ToVec({Fb().Rate(kCbr).Res(160, 90).Ref({0}).Out(tu2)}));
++  enc->Encode(in2, EXPLICIT_TYPE_TemporalUnitSettings {.presentation_timestamp = Timestamp::Millis(200)},
++              ToVec(C_ARRAY_CAST(1){Fb().Rate(kCbr).Res(160, 90).Ref({0}).Out(tu2)}));
+ 
+   Av1Decoder dec;
+   VideoFrame f0 = dec.Decode(tu0.bitstream);
+@@ -435,16 +442,16 @@ TEST(LibaomAv1Encoder, TempoSpatial) {
+   EncOut tu0_s2;
+   enc->Encode(
+       frame_reader->PullFrame(),
+-      {.presentation_timestamp = Timestamp::Millis(0)},
++      EXPLICIT_TYPE_TemporalUnitSettings {.presentation_timestamp = Timestamp::Millis(0)},
+       ToVec(
+-          {Fb().Rate(k10Fps).Res(160, 90).S(0).Upd(0).Key().Out(tu0_s0),
++          C_ARRAY_CAST(3){Fb().Rate(k10Fps).Res(160, 90).S(0).Upd(0).Key().Out(tu0_s0),
+            Fb().Rate(k10Fps).Res(320, 180).S(1).Ref({0}).Upd(1).Out(tu0_s1),
+            Fb().Rate(k20Fps).Res(640, 360).S(2).Ref({1}).Upd(2).Out(tu0_s2)}));
+ 
+   EncOut tu1_s2;
+   enc->Encode(frame_reader->PullFrame(),
+-              {.presentation_timestamp = Timestamp::Millis(50)},
+-              ToVec({Fb().Rate(k20Fps).Res(640, 360).S(2).Ref({2}).Upd(2).Out(
++              EXPLICIT_TYPE_TemporalUnitSettings {.presentation_timestamp = Timestamp::Millis(50)},
++              ToVec(C_ARRAY_CAST(1){Fb().Rate(k20Fps).Res(640, 360).S(2).Ref({2}).Upd(2).Out(
+                   tu1_s2)}));
+ 
+   rtc::scoped_refptr<I420Buffer> frame = frame_reader->PullFrame();
+@@ -452,9 +459,9 @@ TEST(LibaomAv1Encoder, TempoSpatial) {
+   EncOut tu2_s1;
+   EncOut tu2_s2;
+   enc->Encode(
+-      frame, {.presentation_timestamp = Timestamp::Millis(100)},
++      frame, EXPLICIT_TYPE_TemporalUnitSettings {.presentation_timestamp = Timestamp::Millis(100)},
+       ToVec(
+-          {Fb().Rate(k10Fps).Res(160, 90).S(0).Ref({0}).Upd(0).Out(tu2_s0),
++          C_ARRAY_CAST(3){Fb().Rate(k10Fps).Res(160, 90).S(0).Ref({0}).Upd(0).Out(tu2_s0),
+            Fb().Rate(k10Fps).Res(320, 180).S(1).Ref({0, 1}).Upd(1).Out(tu2_s1),
+            Fb().Rate(k20Fps).Res(640, 360).S(2).Ref({1, 2}).Upd(2).Out(
+                tu2_s2)}));
+@@ -480,23 +487,23 @@ TEST(DISABLED_LibaomAv1Encoder, InvertedTempoSpatial) {
+   EncOut tu0_s1;
+   enc->Encode(
+       frame_reader->PullFrame(),
+-      {.presentation_timestamp = Timestamp::Millis(0)},
+-      ToVec({Fb().Rate(kCbr).Res(320, 180).S(0).Upd(0).Key().Out(tu0_s0),
++      EXPLICIT_TYPE_TemporalUnitSettings {.presentation_timestamp = Timestamp::Millis(0)},
++      ToVec(C_ARRAY_CAST(2){Fb().Rate(kCbr).Res(320, 180).S(0).Upd(0).Key().Out(tu0_s0),
+              Fb().Rate(kCbr).Res(640, 360).S(1).Ref({0}).Upd(1).Out(tu0_s1)}));
+ 
+   EncOut tu1_s0;
+   enc->Encode(
+       frame_reader->PullFrame(),
+-      {.presentation_timestamp = Timestamp::Millis(100)},
+-      ToVec({Fb().Rate(kCbr).Res(320, 180).S(0).Ref({0}).Upd(0).Out(tu1_s0)}));
++      EXPLICIT_TYPE_TemporalUnitSettings {.presentation_timestamp = Timestamp::Millis(100)},
++      ToVec(C_ARRAY_CAST(1){Fb().Rate(kCbr).Res(320, 180).S(0).Ref({0}).Upd(0).Out(tu1_s0)}));
+ 
+   EncOut tu2_s0;
+   EncOut tu2_s1;
+   rtc::scoped_refptr<I420Buffer> frame = frame_reader->PullFrame();
+   enc->Encode(
+-      frame, {.presentation_timestamp = Timestamp::Millis(200)},
++      frame, EXPLICIT_TYPE_TemporalUnitSettings {.presentation_timestamp = Timestamp::Millis(200)},
+       ToVec(
+-          {Fb().Rate(kCbr).Res(320, 180).S(0).Ref({0}).Upd(0).Out(tu2_s0),
++          C_ARRAY_CAST(2){Fb().Rate(kCbr).Res(320, 180).S(0).Ref({0}).Upd(0).Out(tu2_s0),
+            Fb().Rate(kCbr).Res(640, 360).S(1).Ref({1, 0}).Upd(1).Out(tu2_s1)}));
+ 
+   Av1Decoder dec;
+@@ -516,8 +523,8 @@ TEST(LibaomAv1Encoder, SkipMidLayer) {
+   EncOut tu0_s2;
+   enc->Encode(
+       frame_reader->PullFrame(),
+-      {.presentation_timestamp = Timestamp::Millis(0)},
+-      ToVec({Fb().Rate(kCbr).Res(160, 90).S(0).Upd(0).Key().Out(tu0_s0),
++      EXPLICIT_TYPE_TemporalUnitSettings {.presentation_timestamp = Timestamp::Millis(0)},
++      ToVec(C_ARRAY_CAST(3){Fb().Rate(kCbr).Res(160, 90).S(0).Upd(0).Key().Out(tu0_s0),
+              Fb().Rate(kCbr).Res(320, 180).S(1).Ref({0}).Upd(1).Out(tu0_s1),
+              Fb().Rate(kCbr).Res(640, 360).S(2).Ref({1}).Upd(2).Out(tu0_s2)}));
+ 
+@@ -525,8 +532,8 @@ TEST(LibaomAv1Encoder, SkipMidLayer) {
+   EncOut tu1_s2;
+   enc->Encode(
+       frame_reader->PullFrame(),
+-      {.presentation_timestamp = Timestamp::Millis(100)},
+-      ToVec({Fb().Rate(kCbr).Res(160, 90).S(0).Ref({0}).Upd(0).Out(tu1_s0),
++      EXPLICIT_TYPE_TemporalUnitSettings {.presentation_timestamp = Timestamp::Millis(100)},
++      ToVec(C_ARRAY_CAST(2){Fb().Rate(kCbr).Res(160, 90).S(0).Ref({0}).Upd(0).Out(tu1_s0),
+              Fb().Rate(kCbr).Res(640, 360).S(2).Ref({2}).Upd(2).Out(tu1_s2)}));
+ 
+   EncOut tu2_s0;
+@@ -534,9 +541,9 @@ TEST(LibaomAv1Encoder, SkipMidLayer) {
+   EncOut tu2_s2;
+   rtc::scoped_refptr<I420Buffer> frame = frame_reader->PullFrame();
+   enc->Encode(
+-      frame, {.presentation_timestamp = Timestamp::Millis(200)},
++      frame, EXPLICIT_TYPE_TemporalUnitSettings {.presentation_timestamp = Timestamp::Millis(200)},
+       ToVec(
+-          {Fb().Rate(kCbr).Res(160, 90).S(0).Ref({0}).Upd(0).Out(tu2_s0),
++          C_ARRAY_CAST(3){Fb().Rate(kCbr).Res(160, 90).S(0).Ref({0}).Upd(0).Out(tu2_s0),
+            Fb().Rate(kCbr).Res(320, 180).S(1).Ref({0, 1}).Upd(1).Out(tu2_s1),
+            Fb().Rate(kCbr).Res(640, 360).S(2).Ref({1, 2}).Upd(2).Out(tu2_s2)}));
+ 
+@@ -564,8 +571,8 @@ TEST(LibaomAv1Encoder, L3T1) {
+   EncOut tu0_s2;
+   enc->Encode(
+       frame_reader->PullFrame(),
+-      {.presentation_timestamp = Timestamp::Millis(0)},
+-      ToVec({Fb().Rate(kCbr).Res(160, 90).S(0).Upd(0).Key().Out(tu0_s0),
++      EXPLICIT_TYPE_TemporalUnitSettings {.presentation_timestamp = Timestamp::Millis(0)},
++      ToVec(C_ARRAY_CAST(3){Fb().Rate(kCbr).Res(160, 90).S(0).Upd(0).Key().Out(tu0_s0),
+              Fb().Rate(kCbr).Res(320, 180).S(1).Ref({0}).Upd(1).Out(tu0_s1),
+              Fb().Rate(kCbr).Res(640, 360).S(2).Ref({1}).Upd(2).Out(tu0_s2)}));
+ 
+@@ -578,9 +585,9 @@ TEST(LibaomAv1Encoder, L3T1) {
+   EncOut tu1_s1;
+   EncOut tu1_s2;
+   enc->Encode(
+-      tu1_frame, {.presentation_timestamp = Timestamp::Millis(100)},
++      tu1_frame, EXPLICIT_TYPE_TemporalUnitSettings {.presentation_timestamp = Timestamp::Millis(100)},
+       ToVec(
+-          {Fb().Rate(kCbr).Res(160, 90).S(0).Ref({0}).Upd(0).Out(tu1_s0),
++          C_ARRAY_CAST(3){Fb().Rate(kCbr).Res(160, 90).S(0).Ref({0}).Upd(0).Out(tu1_s0),
+            Fb().Rate(kCbr).Res(320, 180).S(1).Ref({1, 0}).Upd(1).Out(tu1_s1),
+            Fb().Rate(kCbr).Res(640, 360).S(2).Ref({2, 1}).Upd(2).Out(tu1_s2)}));
+ 
+@@ -596,9 +603,9 @@ TEST(LibaomAv1Encoder, L3T1) {
+   EncOut tu2_s1;
+   EncOut tu2_s2;
+   enc->Encode(
+-      tu2_frame, {.presentation_timestamp = Timestamp::Millis(200)},
++      tu2_frame, EXPLICIT_TYPE_TemporalUnitSettings {.presentation_timestamp = Timestamp::Millis(200)},
+       ToVec(
+-          {Fb().Rate(kCbr).Res(160, 90).S(0).Ref({0}).Upd(0).Out(tu2_s0),
++          C_ARRAY_CAST(3){Fb().Rate(kCbr).Res(160, 90).S(0).Ref({0}).Upd(0).Out(tu2_s0),
+            Fb().Rate(kCbr).Res(320, 180).S(1).Ref({1, 0}).Upd(1).Out(tu2_s1),
+            Fb().Rate(kCbr).Res(640, 360).S(2).Ref({2, 1}).Upd(2).Out(tu2_s2)}));
+ 
+@@ -623,8 +630,8 @@ TEST(LibaomAv1Encoder, L3T1_KEY) {
+   EncOut tu0_s2;
+   enc->Encode(
+       frame_reader->PullFrame(),
+-      {.presentation_timestamp = Timestamp::Millis(0)},
+-      ToVec({Fb().Rate(kCbr).Res(160, 90).S(0).Upd(0).Key().Out(tu0_s0),
++      EXPLICIT_TYPE_TemporalUnitSettings {.presentation_timestamp = Timestamp::Millis(0)},
++      ToVec(C_ARRAY_CAST(3){Fb().Rate(kCbr).Res(160, 90).S(0).Upd(0).Key().Out(tu0_s0),
+              Fb().Rate(kCbr).Res(320, 180).S(1).Ref({0}).Upd(1).Out(tu0_s1),
+              Fb().Rate(kCbr).Res(640, 360).S(2).Ref({1}).Upd(2).Out(tu0_s2)}));
+ 
+@@ -645,8 +652,8 @@ TEST(LibaomAv1Encoder, L3T1_KEY) {
+   EncOut tu1_s2;
+   enc->Encode(
+       frame_reader->PullFrame(),
+-      {.presentation_timestamp = Timestamp::Millis(100)},
+-      ToVec({Fb().Rate(kCbr).Res(160, 90).S(0).Ref({0}).Upd(0).Out(tu1_s0),
++      EXPLICIT_TYPE_TemporalUnitSettings {.presentation_timestamp = Timestamp::Millis(100)},
++      ToVec(C_ARRAY_CAST(3){Fb().Rate(kCbr).Res(160, 90).S(0).Ref({0}).Upd(0).Out(tu1_s0),
+              Fb().Rate(kCbr).Res(320, 180).S(1).Ref({1}).Upd(1).Out(tu1_s1),
+              Fb().Rate(kCbr).Res(640, 360).S(2).Ref({2}).Upd(2).Out(tu1_s2)}));
+ 
+@@ -662,8 +669,8 @@ TEST(LibaomAv1Encoder, L3T1_KEY) {
+   EncOut tu2_s2;
+   enc->Encode(
+       frame_reader->PullFrame(),
+-      {.presentation_timestamp = Timestamp::Millis(200)},
+-      ToVec({Fb().Rate(kCbr).Res(160, 90).S(0).Ref({0}).Upd(0).Out(tu2_s0),
++      EXPLICIT_TYPE_TemporalUnitSettings {.presentation_timestamp = Timestamp::Millis(200)},
++      ToVec(C_ARRAY_CAST(3){Fb().Rate(kCbr).Res(160, 90).S(0).Ref({0}).Upd(0).Out(tu2_s0),
+              Fb().Rate(kCbr).Res(320, 180).S(1).Ref({1}).Upd(1).Out(tu2_s1),
+              Fb().Rate(kCbr).Res(640, 360).S(2).Ref({2}).Upd(2).Out(tu2_s2)}));
+ 
+@@ -688,8 +695,8 @@ TEST(LibaomAv1Encoder, S3T1) {
+   EncOut tu0_s2;
+   enc->Encode(
+       frame_reader->PullFrame(),
+-      {.presentation_timestamp = Timestamp::Millis(0)},
+-      ToVec({Fb().Rate(kCbr).Res(160, 90).S(0).Start().Upd(0).Out(tu0_s0),
++      EXPLICIT_TYPE_TemporalUnitSettings {.presentation_timestamp = Timestamp::Millis(0)},
++      ToVec(C_ARRAY_CAST(3){Fb().Rate(kCbr).Res(160, 90).S(0).Start().Upd(0).Out(tu0_s0),
+              Fb().Rate(kCbr).Res(320, 180).S(1).Start().Upd(1).Out(tu0_s1),
+              Fb().Rate(kCbr).Res(640, 360).S(2).Start().Upd(2).Out(tu0_s2)}));
+   EXPECT_THAT(Resolution(dec_s0.Decode(tu0_s0.bitstream)),
+@@ -704,8 +711,8 @@ TEST(LibaomAv1Encoder, S3T1) {
+   EncOut tu1_s2;
+   enc->Encode(
+       frame_reader->PullFrame(),
+-      {.presentation_timestamp = Timestamp::Millis(100)},
+-      ToVec({Fb().Rate(kCbr).Res(160, 90).S(0).Ref({0}).Upd(0).Out(tu1_s0),
++      EXPLICIT_TYPE_TemporalUnitSettings {.presentation_timestamp = Timestamp::Millis(100)},
++      ToVec(C_ARRAY_CAST(3){Fb().Rate(kCbr).Res(160, 90).S(0).Ref({0}).Upd(0).Out(tu1_s0),
+              Fb().Rate(kCbr).Res(320, 180).S(1).Ref({1}).Upd(1).Out(tu1_s1),
+              Fb().Rate(kCbr).Res(640, 360).S(2).Ref({2}).Upd(2).Out(tu1_s2)}));
+ 
+@@ -721,8 +728,8 @@ TEST(LibaomAv1Encoder, S3T1) {
+   EncOut tu2_s2;
+   enc->Encode(
+       frame_reader->PullFrame(),
+-      {.presentation_timestamp = Timestamp::Millis(200)},
+-      ToVec({Fb().Rate(kCbr).Res(160, 90).S(0).Ref({0}).Upd(0).Out(tu2_s0),
++      EXPLICIT_TYPE_TemporalUnitSettings {.presentation_timestamp = Timestamp::Millis(200)},
++      ToVec(C_ARRAY_CAST(3){Fb().Rate(kCbr).Res(160, 90).S(0).Ref({0}).Upd(0).Out(tu2_s0),
+              Fb().Rate(kCbr).Res(320, 180).S(1).Ref({1}).Upd(1).Out(tu2_s1),
+              Fb().Rate(kCbr).Res(640, 360).S(2).Ref({2}).Upd(2).Out(tu2_s2)}));
+ 
+@@ -748,8 +755,8 @@ TEST(LibaomAv1Encoder, HigherEffortLevelYieldsHigherQualityFrames) {
+     auto enc = LibaomAv1EncoderFactory().CreateEncoder(kCbrEncoderSettings, {});
+     EncOut tu0;
+     enc->Encode(
+-        frame_in, {.presentation_timestamp = Timestamp::Millis(0)},
+-        ToVec({Fb().Rate(kCbr).Res(640, 360).Upd(0).Key().Effort(i).Out(tu0)}));
++        frame_in, EXPLICIT_TYPE_TemporalUnitSettings {.presentation_timestamp = Timestamp::Millis(0)},
++        ToVec(C_ARRAY_CAST(1){Fb().Rate(kCbr).Res(640, 360).Upd(0).Key().Effort(i).Out(tu0)}));
+     double psnr = Psnr(frame_in, dec.Decode(tu0.bitstream));
+     EXPECT_THAT(psnr, Gt(psnr_last));
+     psnr_last = psnr;
+@@ -785,12 +792,12 @@ TEST(LibaomAv1Encoder, KeyframeAndStartrameAreApproximatelyEqual) {
+     EncOut key;
+     EncOut start;
+     enc_key->Encode(
+-        frame_in, {.presentation_timestamp = Timestamp::Millis(0)},
+-        ToVec({Fb().Rate(kRate).Res(640, 360).S(sid).Upd(0).Key().Out(key)}));
++        frame_in, EXPLICIT_TYPE_TemporalUnitSettings {.presentation_timestamp = Timestamp::Millis(0)},
++        ToVec(C_ARRAY_CAST(1){Fb().Rate(kRate).Res(640, 360).S(sid).Upd(0).Key().Out(key)}));
+     enc_start->Encode(
+-        frame_in, {.presentation_timestamp = Timestamp::Millis(0)},
++        frame_in, EXPLICIT_TYPE_TemporalUnitSettings {.presentation_timestamp = Timestamp::Millis(0)},
+         ToVec(
+-            {Fb().Rate(kRate).Res(640, 360).S(sid).Start().Upd(0).Out(start)}));
++            C_ARRAY_CAST(1){Fb().Rate(kRate).Res(640, 360).S(sid).Start().Upd(0).Out(start)}));
+ 
+     total_size_key += DataSize::Bytes(key.bitstream.size());
+     total_size_start += DataSize::Bytes(start.bitstream.size());
+@@ -805,12 +812,12 @@ TEST(LibaomAv1Encoder, KeyframeAndStartrameAreApproximatelyEqual) {
+     for (int f = 1; f < 10; ++f) {
+       frame_in = frame_reader->PullFrame();
+       enc_key->Encode(
+-          frame_in, {.presentation_timestamp = Timestamp::Millis(f * 100)},
+-          ToVec({Fb().Rate(kRate).Res(640, 360).S(sid).Ref({0}).Upd(0).Out(
++          frame_in, EXPLICIT_TYPE_TemporalUnitSettings {.presentation_timestamp = Timestamp::Millis(f * 100)},
++          ToVec(C_ARRAY_CAST(1){Fb().Rate(kRate).Res(640, 360).S(sid).Ref({0}).Upd(0).Out(
+               key)}));
+       enc_start->Encode(
+-          frame_in, {.presentation_timestamp = Timestamp::Millis(f * 100)},
+-          ToVec({Fb().Rate(kRate).Res(640, 360).S(sid).Ref({0}).Upd(0).Out(
++          frame_in, EXPLICIT_TYPE_TemporalUnitSettings {.presentation_timestamp = Timestamp::Millis(f * 100)},
++          ToVec(C_ARRAY_CAST(1){Fb().Rate(kRate).Res(640, 360).S(sid).Ref({0}).Upd(0).Out(
+               start)}));
+       total_size_key += DataSize::Bytes(key.bitstream.size());
+       total_size_start += DataSize::Bytes(start.bitstream.size());
+@@ -846,16 +853,16 @@ TEST(LibaomAv1Encoder, BitrateConsistentAcrossSpatialLayers) {
+     EncOut out;
+     enc->Encode(
+         frame_reader->PullFrame(),
+-        {.presentation_timestamp = Timestamp::Millis(0)},
+-        ToVec({Fb().Rate(kRate).Res(640, 360).S(sid).Upd(0).Key().Out(out)}));
++        EXPLICIT_TYPE_TemporalUnitSettings {.presentation_timestamp = Timestamp::Millis(0)},
++        ToVec(C_ARRAY_CAST(1){Fb().Rate(kRate).Res(640, 360).S(sid).Upd(0).Key().Out(out)}));
+     total_size += DataSize::Bytes(out.bitstream.size());
+     total_duration += kRate.duration;
+ 
+     for (int f = 1; f < 30; ++f) {
+       enc->Encode(
+           frame_reader->PullFrame(),
+-          {.presentation_timestamp = Timestamp::Millis(f * 100)},
+-          ToVec({Fb().Rate(kRate).Res(640, 360).S(sid).Ref({0}).Upd(0).Out(
++          EXPLICIT_TYPE_TemporalUnitSettings {.presentation_timestamp = Timestamp::Millis(f * 100)},
++          ToVec(C_ARRAY_CAST(1){Fb().Rate(kRate).Res(640, 360).S(sid).Ref({0}).Upd(0).Out(
+               out)}));
+       total_size += DataSize::Bytes(out.bitstream.size());
+       total_duration += kRate.duration;
+@@ -881,8 +888,8 @@ TEST(LibaomAv1Encoder, ConstantQp) {
+ 
+     EncOut out;
+     enc->Encode(frame_reader->PullFrame(),
+-                {.presentation_timestamp = Timestamp::Millis(0)},
+-                ToVec({Fb().Rate(Cqp{.target_qp = kQp})
++                EXPLICIT_TYPE_TemporalUnitSettings {.presentation_timestamp = Timestamp::Millis(0)},
++                ToVec(C_ARRAY_CAST(1){Fb().Rate(Cqp{.target_qp = kQp})
+                            .Res(640, 360)
+                            .S(sid)
+                            .Upd(0)
+@@ -892,8 +899,8 @@ TEST(LibaomAv1Encoder, ConstantQp) {
+ 
+     for (int f = 1; f < 10; ++f) {
+       enc->Encode(frame_reader->PullFrame(),
+-                  {.presentation_timestamp = Timestamp::Millis(f * 100)},
+-                  ToVec({Fb().Rate(Cqp{.target_qp = kQp - f})
++                  EXPLICIT_TYPE_TemporalUnitSettings {.presentation_timestamp = Timestamp::Millis(f * 100)},
++                  ToVec(C_ARRAY_CAST(1){Fb().Rate(Cqp{.target_qp = kQp - f})
+                              .Res(640, 360)
+                              .S(sid)
+                              .Ref({0})
+-- 
+2.34.1
+

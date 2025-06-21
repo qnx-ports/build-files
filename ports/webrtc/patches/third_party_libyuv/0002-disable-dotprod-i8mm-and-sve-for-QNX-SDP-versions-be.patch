@@ -1,0 +1,51 @@
+From d7df7ede6d374db8afad28a6c07f5a7a8915654c Mon Sep 17 00:00:00 2001
+From: Yongxin Dai <yodai@qnx.com>
+Date: Fri, 11 Apr 2025 13:49:03 -0400
+Subject: [PATCH] disable dotprod, i8mm and sve for QNX SDP versions below 800
+
+---
+ BUILD.gn   | 2 +-
+ libyuv.gni | 7 +++++++
+ 2 files changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/BUILD.gn b/BUILD.gn
+index 89af31e7..aad7855d 100644
+--- a/BUILD.gn
++++ b/BUILD.gn
+@@ -236,7 +236,7 @@ if (libyuv_use_neon) {
+ 
+     public_configs = [ ":libyuv_config" ]
+ 
+-    if (current_cpu == "arm64") {
++    if (current_cpu == "arm64" && (!is_qnx || (is_qnx && qnx_sdp_version >= 800))) {
+       cflags = [ "-march=armv8-a+dotprod+i8mm" ]
+     } else {
+       configs -= [ "//build/config/compiler:compiler_arm_fpu" ]
+diff --git a/libyuv.gni b/libyuv.gni
+index 07182d14..0a29b14d 100644
+--- a/libyuv.gni
++++ b/libyuv.gni
+@@ -10,6 +10,9 @@ import("//build/config/arm.gni")
+ import("//build/config/loongarch64.gni")
+ import("//build/config/mips.gni")
+ import("//build_overrides/build.gni")
++if (is_qnx) {
++  import("//build/config/qnx/config.gni")
++}
+ 
+ declare_args() {
+   libyuv_include_tests = !build_with_chromium
+@@ -19,6 +22,10 @@ declare_args() {
+       current_cpu == "arm64" ||
+       (current_cpu == "arm" && (arm_use_neon || arm_optionally_use_neon))
+   libyuv_use_sve = current_cpu == "arm64"
++  if (is_qnx && qnx_sdp_version < 800 ) {
++    libyuv_use_neon = false
++    libyuv_use_sve = false
++  }
+ 
+   # Restrict to is_linux to work around undefined symbol linker errors on
+   # Android, Fuchsia, macOS, and compilation errors on Windows.
+-- 
+2.34.1
+

@@ -1,0 +1,596 @@
+From ce76dfdd85a0d443a7faa9aeef755de3d605dc04 Mon Sep 17 00:00:00 2001
+From: Yongxin Dai <yodai@qnx.com>
+Date: Mon, 24 Mar 2025 14:39:00 -0400
+Subject: [PATCH] initialize io-audo pmc parameters obtained from json file
+
+---
+ modules/audio_device/qnx/audio_device_qnx.cc | 224 ++++++++-----------
+ modules/audio_device/qnx/audio_device_qnx.h  |  23 +-
+ 2 files changed, 105 insertions(+), 142 deletions(-)
+
+diff --git a/modules/audio_device/qnx/audio_device_qnx.cc b/modules/audio_device/qnx/audio_device_qnx.cc
+index 360683c66f..ada44086fc 100644
+--- a/modules/audio_device/qnx/audio_device_qnx.cc
++++ b/modules/audio_device/qnx/audio_device_qnx.cc
+@@ -47,42 +47,6 @@ namespace {
+ constexpr uint8_t SINGLE_BUFFER_DURATION_IN_MS = 10;
+ constexpr uint8_t CHAR_BASE = 48;
+ 
+-std::unique_ptr<char[]> valueFromEnv(const char* name) {
+-  char* value = getenv(name);
+-  if (!value)
+-    return std::unique_ptr<char[]>{};
+-  std::string raw(value);
+-  size_t pos = raw.find(':');
+-  if (pos == std::string::npos)
+-    return std::unique_ptr<char[]>{};
+-  int card = std::atoi(raw.substr(0, pos).data());
+-  int device = std::atoi(raw.substr(pos + 1).data());
+-  std::unique_ptr<char[]> buf(new char[3]);
+-  buf[0] = (char)(card + CHAR_BASE);
+-  buf[1] = (char)(device + CHAR_BASE);
+-  buf[2] = '\0';
+-  return std::move(buf);
+-}
+-
+-const char* targetedPlayDev() {
+-  static std::unique_ptr<char[]> playout =
+-      valueFromEnv("WEBRTC_AUDIO_PLAY_DEVICE");
+-  return playout.get();
+-}
+-
+-const char* targetedRecordDev() {
+-  static std::unique_ptr<char[]> record =
+-      valueFromEnv("WEBRTC_AUDIO_RECORD_DEVICE");
+-  return record.get();
+-}
+-
+-#if defined(WEBRTC_ARCH_BIG_ENDIAN)
+-constexpr unsigned QSA_FORMAT = SND_PCM_SFMT_S16_BE;
+-#else
+-constexpr unsigned QSA_FORMAT = SND_PCM_SFMT_S16_LE;
+-#endif
+-constexpr uint8_t FRAME_BYTES = 2;
+-
+ uint32_t toRateFlag(uint32_t rate) {
+   uint32_t flag;
+   switch (rate) {
+@@ -212,15 +176,8 @@ AudioDeviceQnx::AudioDeviceQnx()
+       _recordingBuffersizeInFrame(0),
+       _recordingPeriodSizeInFrame(0),
+       _playoutBufferSizeInFrame(0),
+-      _playoutPeriodSizeInFrame(0),
+       _recordingBufferSizeInNMS(0),
+       _playoutBufferSizeInNMS(0),
+-      _recordingFramesInNMS(0),
+-      _playoutFramesInNMS(0),
+-      _recordingFreq(ALSA_CAPTURE_FREQ),
+-      _playoutFreq(ALSA_PLAYOUT_FREQ),
+-      _recChannels(std::numeric_limits<uint8_t>::max()),
+-      _playChannels(ALSA_PLAYOUT_CH),
+       _recordingBuffer(NULL),
+       _playoutBuffer(NULL),
+       _playoutBytesLeft(0),
+@@ -231,8 +188,6 @@ AudioDeviceQnx::AudioDeviceQnx()
+       _reading(false),
+       _recordingDelay(0),
+       _playoutDelay(0),
+-      _recordingFormat(QSA_FORMAT),
+-      _playoutFormat(QSA_FORMAT),
+       _recordingFD(-1),
+       _playoutFD(-1),
+       _recordingFragSize(0),
+@@ -240,8 +195,14 @@ AudioDeviceQnx::AudioDeviceQnx()
+       _recordingBufferDataSize(0),
+       _playoutFragSize(0),
+       _playoutBufferSize(0),
+-      _playoutBufferDataSize(0) {
++      _playoutBufferDataSize(0),
++      _playout_prefs(
++          std::make_unique<PcmPreferences>(ALSA_PLAYOUT_FREQ, ALSA_PLAYOUT_CH)),
++      _capture_prefs(std::make_unique<PcmPreferences>(ALSA_CAPTURE_FREQ,
++                                                      ALSA_CAPTURE_CH)) {
+   memset(_oldKeyState, 0, sizeof(_oldKeyState));
++  _playout_prefs->Initialize(true);
++  _capture_prefs->Initialize(false);
+   RTC_LOG(LS_INFO) << __FUNCTION__ << " created";
+ }
+ 
+@@ -584,7 +545,8 @@ int32_t AudioDeviceQnx::StereoRecordingIsAvailable(bool& available) {
+   MutexLock lock(&mutex_);
+ 
+   // If we already have initialized in stereo it's obviously available
+-  if (_handleRecord.load(std::memory_order_relaxed) && (2 == _recChannels)) {
++  if (_handleRecord.load(std::memory_order_relaxed) &&
++      (2 == _capture_prefs->Channels())) {
+     available = true;
+     return 0;
+   }
+@@ -600,29 +562,29 @@ int32_t AudioDeviceQnx::StereoRecordingIsAvailable(bool& available) {
+     return -1;
+   }
+ 
+-  auto recChannels = _recChannels;
+-  _recChannels = 2;
++  auto recChannels = _capture_prefs->Channels();
++  _capture_prefs->SetChannels(2);
+   auto res = InitRecordingLocked();
+   available = res ? false : true;
+   if (!res) {
+     close_pcm_dev(_handleRecord.load(std::memory_order_relaxed));
+     _handleRecord.store(nullptr, std::memory_order_relaxed);
+   }
+-  _recChannels = recChannels;
++  _capture_prefs->SetChannels(recChannels);
+   return res;
+ }
+ 
+ int32_t AudioDeviceQnx::SetStereoRecording(bool enable) {
+   if (enable)
+-    _recChannels = 2;
++    _capture_prefs->SetChannels(2);
+   else
+-    _recChannels = 1;
++    _capture_prefs->SetChannels(1);
+ 
+   return 0;
+ }
+ 
+ int32_t AudioDeviceQnx::StereoRecording(bool& enabled) const {
+-  if (_recChannels == 2)
++  if (_capture_prefs->Channels() == 2)
+     enabled = true;
+   else
+     enabled = false;
+@@ -634,7 +596,8 @@ int32_t AudioDeviceQnx::StereoPlayoutIsAvailable(bool& available) {
+   MutexLock lock(&mutex_);
+ 
+   // If we already have initialized in stereo it's obviously available
+-  if (_handlePlayout.load(std::memory_order_relaxed) && (2 == _playChannels)) {
++  if (_handlePlayout.load(std::memory_order_relaxed) &&
++      (2 == _playout_prefs->Channels())) {
+     available = true;
+     return 0;
+   }
+@@ -649,11 +612,11 @@ int32_t AudioDeviceQnx::StereoPlayoutIsAvailable(bool& available) {
+     return -1;
+   }
+ 
+-  auto playChannels = _playChannels;
+-  _playChannels = 2;
++  auto playChannels = _playout_prefs->Channels();
++  _playout_prefs->SetChannels(2);
+   auto res = InitPlayoutLocked();
+   available = res ? false : true;
+-  _playChannels = playChannels;
++  _playout_prefs->SetChannels(playChannels);
+   if (_handlePlayout.load(std::memory_order_relaxed)) {
+     close_pcm_dev(_handlePlayout.load(std::memory_order_relaxed));
+     _handlePlayout.store(nullptr, std::memory_order_relaxed);
+@@ -663,15 +626,15 @@ int32_t AudioDeviceQnx::StereoPlayoutIsAvailable(bool& available) {
+ 
+ int32_t AudioDeviceQnx::SetStereoPlayout(bool enable) {
+   if (enable)
+-    _playChannels = 2;
++    _playout_prefs->SetChannels(2);
+   else
+-    _playChannels = 1;
++    _playout_prefs->SetChannels(1);
+ 
+   return 0;
+ }
+ 
+ int32_t AudioDeviceQnx::StereoPlayout(bool& enabled) const {
+-  if (_playChannels == 2)
++  if (_playout_prefs->Channels() == 2)
+     enabled = true;
+   else
+     enabled = false;
+@@ -853,7 +816,7 @@ int32_t AudioDeviceQnx::PlayoutIsAvailable(bool& available) {
+ 
+   // Try to initialize the playout side with mono
+   // Assumes that user set num channels after calling this function
+-  _playChannels = 1;
++  _playout_prefs->SetChannels(1);
+   int32_t res = InitPlayout();
+ 
+   // Cancel effect of initialization
+@@ -866,7 +829,7 @@ int32_t AudioDeviceQnx::PlayoutIsAvailable(bool& available) {
+     res = StereoPlayoutIsAvailable(available);
+     if (available) {
+       // Then set channels to 2 so InitPlayout doesn't fail
+-      _playChannels = 2;
++      _playout_prefs->SetChannels(2);
+     }
+   }
+ 
+@@ -878,7 +841,7 @@ int32_t AudioDeviceQnx::RecordingIsAvailable(bool& available) {
+ 
+   // Try to initialize the recording side with mono
+   // Assumes that user set num channels after calling this function
+-  _recChannels = 1;
++  _capture_prefs->SetChannels(1);
+   int32_t res = InitRecording();
+ 
+   // Cancel effect of initialization
+@@ -891,7 +854,7 @@ int32_t AudioDeviceQnx::RecordingIsAvailable(bool& available) {
+     res = StereoRecordingIsAvailable(available);
+     if (!res && available) {
+       // Then set channels to 2 so InitPlayout doesn't fail
+-      _recChannels = 2;
++      _capture_prefs->SetChannels(2);
+     }
+   }
+ 
+@@ -943,8 +906,9 @@ int32_t AudioDeviceQnx::InitPlayoutLocked(bool initSpeaker) {
+   }
+ 
+   _playoutFragSize = ParamsToBytes(
+-      _playoutFormat, _playoutFreq * SINGLE_BUFFER_DURATION_IN_MS / 1000,
+-      _playChannels);
++      _playout_prefs->FrameBytes(),
++      _playout_prefs->Rate() * SINGLE_BUFFER_DURATION_IN_MS / 1000,
++      _playout_prefs->Channels());
+ 
+   snd_pcm_channel_params_t params;
+   memset(&params, 0, sizeof(snd_pcm_channel_params_t));
+@@ -952,30 +916,31 @@ int32_t AudioDeviceQnx::InitPlayoutLocked(bool initSpeaker) {
+   params.channel = SND_PCM_CHANNEL_PLAYBACK;
+   params.start_mode = SND_PCM_START_FULL;
+   params.stop_mode = SND_PCM_STOP_ROLLOVER;
+-  if (!(info.formats & (1 << _playoutFormat))) {
+-    RTC_LOG(LS_ERROR) << "Unsupported format: " << _playoutFormat;
++  if (!(info.formats & (1 << _playout_prefs->Format()))) {
++    RTC_LOG(LS_ERROR) << "Unsupported format: " << _playout_prefs->Format();
+     close_pcm_dev(_handlePlayout.load(std::memory_order_relaxed));
+     _handlePlayout.store(nullptr, std::memory_order_relaxed);
+     return -1;
+   }
+-  params.format.format = _playoutFormat;
++  params.format.format = _playout_prefs->Format();
+   params.format.interleave = 1;
+-  if (!(info.rates & toRateFlag(_playoutFreq))) {
+-    RTC_LOG(LS_ERROR) << "Unsupported rate: " << _playoutFreq;
++  if (!(info.rates & toRateFlag(_playout_prefs->Rate()))) {
++    RTC_LOG(LS_ERROR) << "Unsupported rate: " << _playout_prefs->Rate();
+     close_pcm_dev(_handlePlayout.load(std::memory_order_relaxed));
+     _handlePlayout.store(nullptr, std::memory_order_relaxed);
+     return -1;
+   }
+-  params.format.rate = _playoutFreq;
+-  if (_playChannels < info.min_voices || _playChannels > info.max_voices) {
+-    RTC_LOG(LS_ERROR) << "Unsupported voices: " << _playChannels
++  params.format.rate = _playout_prefs->Rate();
++  if (_playout_prefs->Channels() < info.min_voices ||
++      _playout_prefs->Channels() > info.max_voices) {
++    RTC_LOG(LS_ERROR) << "Unsupported voices: " << _playout_prefs->Channels()
+                       << ", min: " << info.min_voices
+                       << ", max: " << info.max_voices;
+     close_pcm_dev(_handlePlayout.load(std::memory_order_relaxed));
+     _handlePlayout.store(nullptr, std::memory_order_relaxed);
+     return -1;
+   }
+-  params.format.voices = _playChannels;
++  params.format.voices = _playout_prefs->Channels();
+   params.buf.block.frag_size = _playoutFragSize;
+   params.buf.block.frags_max = 3;
+   params.buf.block.frags_min = 1;
+@@ -1031,21 +996,19 @@ int32_t AudioDeviceQnx::InitPlayoutLocked(bool initSpeaker) {
+   }
+ 
+   _playoutFragSize = channel_params.buf.block.frag_size;
+-  _playoutFormat = channel_params.format.format;
+-  _playoutFreq = channel_params.format.rate;
+-  _playChannels = channel_params.format.voices;
+-  // Set play buffer size
+-  _playoutFramesInNMS = _playoutFreq * SINGLE_BUFFER_DURATION_IN_MS / 1000;
++  _playout_prefs->SetFormat(channel_params.format.format);
++  _playout_prefs->SetRate(channel_params.format.rate);
++  _playout_prefs->SetChannels(channel_params.format.voices);
+   _playoutBufferSizeInNMS =
+-      ParamsToBytes(_playoutFormat, _playoutFramesInNMS, _playChannels);
++      ParamsToBytes(_playout_prefs->FrameBytes(), _playout_prefs->Period(),
++                    _playout_prefs->Channels());
+   _playoutBufferSize = std::lcm(_playoutFragSize, _playoutBufferSizeInNMS);
+   if (_playoutBufferSize > 5 * _playoutFragSize)
+     _playoutBufferSize = _playoutFragSize + _playoutBufferSizeInNMS;
+ 
+   if (_ptrAudioBuffer) {
+-    // Update webrtc audio buffer with the selected parameters
+-    _ptrAudioBuffer->SetPlayoutSampleRate(_playoutFreq);
+-    _ptrAudioBuffer->SetPlayoutChannels(_playChannels);
++    _ptrAudioBuffer->SetPlayoutSampleRate(_playout_prefs->Rate());
++    _ptrAudioBuffer->SetPlayoutChannels(_playout_prefs->Channels());
+   }
+ 
+   if (initSpeaker) {
+@@ -1103,8 +1066,9 @@ int32_t AudioDeviceQnx::InitRecordingLocked(bool initMicrophone) {
+   }
+ 
+   _recordingFragSize = ParamsToBytes(
+-      _recordingFormat, _recordingFreq * SINGLE_BUFFER_DURATION_IN_MS / 1000,
+-      _recChannels);
++      _capture_prefs->FrameBytes(),
++      _capture_prefs->Rate() * SINGLE_BUFFER_DURATION_IN_MS / 1000,
++      _capture_prefs->Channels());
+ 
+   snd_pcm_channel_params_t params;
+   memset(&params, 0, sizeof(snd_pcm_channel_params_t));
+@@ -1112,39 +1076,40 @@ int32_t AudioDeviceQnx::InitRecordingLocked(bool initMicrophone) {
+   params.channel = SND_PCM_CHANNEL_CAPTURE;
+   params.start_mode = SND_PCM_START_DATA;
+   params.stop_mode = SND_PCM_STOP_ROLLOVER;
+-  if (!(info.formats & (1 << _recordingFormat))) {
+-    RTC_LOG(LS_ERROR) << "Unsupported format: " << _recordingFormat;
++  if (!(info.formats & (1 << _capture_prefs->Format()))) {
++    RTC_LOG(LS_ERROR) << "Unsupported format: " << _capture_prefs->Format();
+     close_pcm_dev(_handleRecord.load(std::memory_order_relaxed));
+     _handleRecord.store(nullptr, std::memory_order_relaxed);
+     return -1;
+   }
+-  params.format.format = _recordingFormat;
++  params.format.format = _capture_prefs->Format();
+   params.format.interleave = 1;
+-  if (!(info.rates & toRateFlag(_recordingFreq))) {
+-    RTC_LOG(LS_ERROR) << "Unsupported rate: " << _recordingFreq;
++  if (!(info.rates & toRateFlag(_capture_prefs->Rate()))) {
++    RTC_LOG(LS_ERROR) << "Unsupported rate: " << _capture_prefs->Rate();
+     close_pcm_dev(_handleRecord.load(std::memory_order_relaxed));
+     _handleRecord.store(nullptr, std::memory_order_relaxed);
+     return -1;
+   }
+-  params.format.rate = _recordingFreq;
+-  if (_recChannels == std::numeric_limits<uint8_t>::max()) {
++  params.format.rate = _capture_prefs->Rate();
++  if (_capture_prefs->Channels() == std::numeric_limits<uint8_t>::max()) {
+     if (ALSA_CAPTURE_CH >= info.min_voices &&
+         ALSA_CAPTURE_CH <= info.max_voices)
+-      _recChannels = ALSA_CAPTURE_CH;
++      _capture_prefs->SetChannels(ALSA_CAPTURE_CH);
+     else if (info.min_voices <= 2 && info.max_voices >= 2)
+-      _recChannels = 2;
++      _capture_prefs->SetChannels(2);
+     else
+-      _recChannels = 1;
++      _capture_prefs->SetChannels(1);
+   }
+-  if (_recChannels < info.min_voices || _recChannels > info.max_voices) {
+-    RTC_LOG(LS_ERROR) << "Unsupported voices: " << _recChannels
++  if (_capture_prefs->Channels() < info.min_voices ||
++      _capture_prefs->Channels() > info.max_voices) {
++    RTC_LOG(LS_ERROR) << "Unsupported voices: " << _capture_prefs->Channels()
+                       << ", min: " << info.min_voices
+                       << ", max: " << info.max_voices;
+     close_pcm_dev(_handleRecord.load(std::memory_order_relaxed));
+     _handleRecord.store(nullptr, std::memory_order_relaxed);
+     return -1;
+   }
+-  params.format.voices = _recChannels;
++  params.format.voices = _capture_prefs->Channels();
+   params.buf.block.frag_size = _recordingFragSize;
+   params.buf.block.frags_max = -1;
+   params.buf.block.frags_min = 1;
+@@ -1162,11 +1127,11 @@ int32_t AudioDeviceQnx::InitRecordingLocked(bool initMicrophone) {
+   errVal = LATE(snd_pcm_plugin_params)(
+       _handleRecord.load(std::memory_order_relaxed), &params);
+   if (errVal != EOK) {
+-    if (_recChannels == 1)
+-      _recChannels = 2;
++    if (_capture_prefs->Channels() == 1)
++      _capture_prefs->SetChannels(2);
+     else
+-      _recChannels = 1;
+-    params.format.voices = _recChannels;
++      _capture_prefs->SetChannels(1);
++    params.format.voices = _capture_prefs->Channels();
+     errVal = LATE(snd_pcm_plugin_params)(
+         _handleRecord.load(std::memory_order_relaxed), &params);
+     if (errVal != EOK) {
+@@ -1208,13 +1173,12 @@ int32_t AudioDeviceQnx::InitRecordingLocked(bool initMicrophone) {
+   }
+ 
+   _recordingFragSize = channel_params.buf.block.frag_size;
+-  _recordingFormat = channel_params.format.format;
+-  _recordingFreq = channel_params.format.rate;
+-  _recChannels = channel_params.format.voices;
+-  // Set play buffer size
+-  _recordingFramesInNMS = _recordingFreq * SINGLE_BUFFER_DURATION_IN_MS / 1000;
++  _capture_prefs->SetFormat(channel_params.format.format);
++  _capture_prefs->SetRate(channel_params.format.rate);
++  _capture_prefs->SetChannels(channel_params.format.voices);
+   _recordingBufferSizeInNMS =
+-      ParamsToBytes(_recordingFormat, _recordingFramesInNMS, _recChannels);
++      ParamsToBytes(_capture_prefs->FrameBytes(), _capture_prefs->Period(),
++                    _capture_prefs->Channels());
+   _recordingBufferSize =
+       std::lcm(_recordingFragSize, _recordingBufferSizeInNMS);
+   if (_recordingBufferSize > 5 * _recordingFragSize)
+@@ -1230,8 +1194,8 @@ int32_t AudioDeviceQnx::InitRecordingLocked(bool initMicrophone) {
+ 
+   if (_ptrAudioBuffer) {
+     // Update webrtc audio buffer with the selected parameters
+-    _ptrAudioBuffer->SetRecordingSampleRate(_recordingFreq);
+-    _ptrAudioBuffer->SetRecordingChannels(_recChannels);
++    _ptrAudioBuffer->SetRecordingSampleRate(_capture_prefs->Rate());
++    _ptrAudioBuffer->SetRecordingChannels(_capture_prefs->Channels());
+   }
+ 
+   RTC_CHECK(_handleRecord.load(std::memory_order_relaxed));
+@@ -1411,8 +1375,8 @@ int32_t AudioDeviceQnx::StopPlayout() {
+ }
+ 
+ int32_t AudioDeviceQnx::PlayoutDelay(uint16_t& delayMS) const {
+-  delayMS = 1.0 * _playoutFragSize / _playChannels / FRAME_BYTES /
+-            _playoutFreq * 1000;
++  delayMS = 1.0 * _playoutFragSize / _playout_prefs->Channels() /
++            _playout_prefs->FrameBytes() / _playout_prefs->Rate() * 1000;
+   return 0;
+ }
+ 
+@@ -1432,9 +1396,9 @@ int32_t AudioDeviceQnx::GetDevicesInfo(const int32_t function,
+   int mode = playback ? SND_PCM_CHANNEL_PLAYBACK : SND_PCM_CHANNEL_CAPTURE;
+   int card, device;
+   int count = 1;
+-  int err =
+-      LATE(snd_pcm_find)((1 << (playback ? _playoutFormat : _recordingFormat)),
+-                         &count, &card, &device, mode);
++  int err = LATE(snd_pcm_find)(
++      (1 << (playback ? _playout_prefs->Format() : _capture_prefs->Format())),
++      &count, &card, &device, mode);
+   if (err < 0) {
+     RTC_LOG(LS_ERROR) << "snd_pcm_find error: " << LATE(snd_strerror)(err);
+     return -1;
+@@ -1445,19 +1409,21 @@ int32_t AudioDeviceQnx::GetDevicesInfo(const int32_t function,
+     RTC_LOG(LS_INFO) << count << " pcm device(s) found";
+ 
+   if (function == FUNC_GET_NUM_OF_DEVICE) {
+-    if (playback && targetedPlayDev()) {
++    if (playback && _playout_prefs->Name()) {
+       return 1;
+-    } else if (!playback && targetedRecordDev()) {
++    } else if (!playback && _capture_prefs->Name()) {
+       return 1;
+     }
+     return count;
+   }
+ 
+-  if (playback && targetedPlayDev()) {
+-    strncpy(enumDeviceName, targetedPlayDev(), strlen(targetedPlayDev()));
++  if (playback && _playout_prefs->Name()) {
++    strncpy(enumDeviceName, _playout_prefs->Name(),
++            strlen(_playout_prefs->Name()));
+     return 0;
+-  } else if (!playback && targetedRecordDev()) {
+-    strncpy(enumDeviceName, targetedRecordDev(), strlen(targetedRecordDev()));
++  } else if (!playback && _capture_prefs->Name()) {
++    strncpy(enumDeviceName, _capture_prefs->Name(),
++            strlen(_capture_prefs->Name()));
+     return 0;
+   }
+ 
+@@ -1486,9 +1452,9 @@ int32_t AudioDeviceQnx::GetDevicesInfo(const int32_t function,
+                                               free);
+   std::unique_ptr<int, void (*)(void*)> devices(
+       (int*)calloc(count, sizeof(int)), free);
+-  err =
+-      LATE(snd_pcm_find)((1 << (playback ? _playoutFormat : _recordingFormat)),
+-                         &count, cards.get(), devices.get(), mode);
++  err = LATE(snd_pcm_find)(
++      (1 << (playback ? _playout_prefs->Format() : _capture_prefs->Format())),
++      &count, cards.get(), devices.get(), mode);
+   if (err < 0) {
+     RTC_LOG(LS_ERROR) << "snd_pcm_find error: " << LATE(snd_strerror)(err);
+     return -1;
+@@ -1558,10 +1524,10 @@ int32_t AudioDeviceQnx::ErrorRecovery(int32_t error,
+   return -1;
+ }
+ 
+-ssize_t AudioDeviceQnx::ParamsToBytes(int32_t format,
++ssize_t AudioDeviceQnx::ParamsToBytes(uint8_t bytes,
+                                       long frames,
+                                       uint8_t channels) {
+-  return FRAME_BYTES * frames * channels;
++  return bytes * frames * channels;
+ }
+ 
+ bool AudioDeviceQnx::PlayThreadProcess() {
+@@ -1607,7 +1573,7 @@ bool AudioDeviceQnx::PlayThreadProcess() {
+     if (!_playing.load(std::memory_order_acquire))
+       return false;
+     auto fetch = _ptrAudioBuffer->GetMoreAudioData(
+-        &_playoutBuffer[_playoutBufferDataSize], _playoutFramesInNMS);
++        &_playoutBuffer[_playoutBufferDataSize], _playout_prefs->Period());
+     if (fetch <= 0)
+       return true;
+ 
+@@ -1719,7 +1685,7 @@ bool AudioDeviceQnx::RecThreadProcess() {
+     for (size_t i = 0; i < count; ++i) {
+       _ptrAudioBuffer->SetRecordedBuffer(
+           &_recordingBuffer[i * _recordingBufferSizeInNMS],
+-          _recordingFramesInNMS);
++          _capture_prefs->Period());
+       _ptrAudioBuffer->SetTypingStatus(KeyPressed());
+       _ptrAudioBuffer->DeliverRecordedData();
+       sleep(0);
+diff --git a/modules/audio_device/qnx/audio_device_qnx.h b/modules/audio_device/qnx/audio_device_qnx.h
+index 8ae3586017..730cd9fac6 100644
+--- a/modules/audio_device/qnx/audio_device_qnx.h
++++ b/modules/audio_device/qnx/audio_device_qnx.h
+@@ -16,6 +16,7 @@
+ 
+ #include <memory>
+ 
++#include "config_utils.h"
+ #include "modules/audio_device/audio_device_generic.h"
+ #include "modules/audio_device/qnx/audio_mixer_manager_qnx.h"
+ #include "rtc_base/platform_thread.h"
+@@ -28,6 +29,7 @@ typedef webrtc::adm_qnx_qsa::QsaSymbolTable WebRTCQsaSymbolTable;
+ WebRTCQsaSymbolTable* GetQsaSymbolTable();
+ 
+ namespace webrtc {
++class PcmPreferences;
+ 
+ class AudioDeviceQnx : public AudioDeviceGeneric {
+  public:
+@@ -124,8 +126,10 @@ class AudioDeviceQnx : public AudioDeviceGeneric {
+       RTC_LOCKS_EXCLUDED(mutex_) override;
+ 
+  private:
+-  int32_t InitRecordingLocked(bool initMicrophone = true) RTC_EXCLUSIVE_LOCKS_REQUIRED(mutex_);
+-  int32_t InitPlayoutLocked(bool initSpeaker = true) RTC_EXCLUSIVE_LOCKS_REQUIRED(mutex_);
++  int32_t InitRecordingLocked(bool initMicrophone = true)
++      RTC_EXCLUSIVE_LOCKS_REQUIRED(mutex_);
++  int32_t InitPlayoutLocked(bool initSpeaker = true)
++      RTC_EXCLUSIVE_LOCKS_REQUIRED(mutex_);
+   int32_t InitSpeakerLocked() RTC_EXCLUSIVE_LOCKS_REQUIRED(mutex_);
+   int32_t InitMicrophoneLocked() RTC_EXCLUSIVE_LOCKS_REQUIRED(mutex_);
+   int32_t GetDevicesInfo(int32_t function,
+@@ -137,7 +141,7 @@ class AudioDeviceQnx : public AudioDeviceGeneric {
+                         snd_pcm_t* deviceHandle,
+                         int32_t channel);
+ 
+-  ssize_t ParamsToBytes(int32_t format, long frames, uint8_t channels);
++  ssize_t ParamsToBytes(uint8_t bytes, long frames, uint8_t channels);
+ 
+   bool KeyPressed() const;
+ 
+@@ -170,17 +174,9 @@ class AudioDeviceQnx : public AudioDeviceGeneric {
+   snd_pcm_uframes_t _recordingBuffersizeInFrame;
+   snd_pcm_uframes_t _recordingPeriodSizeInFrame;
+   snd_pcm_uframes_t _playoutBufferSizeInFrame;
+-  snd_pcm_uframes_t _playoutPeriodSizeInFrame;
+ 
+   uint32_t _recordingBufferSizeInNMS;
+   uint32_t _playoutBufferSizeInNMS;
+-  uint32_t _recordingFramesInNMS;
+-  uint32_t _playoutFramesInNMS;
+-
+-  uint32_t _recordingFreq;
+-  uint32_t _playoutFreq;
+-  uint8_t _recChannels;
+-  uint8_t _playChannels;
+ 
+   int8_t* _recordingBuffer;  // in byte
+   int8_t* _playoutBuffer;    // in byte
+@@ -195,8 +191,6 @@ class AudioDeviceQnx : public AudioDeviceGeneric {
+   snd_pcm_sframes_t _recordingDelay;
+   snd_pcm_sframes_t _playoutDelay;
+ 
+-  int32_t _recordingFormat;
+-  int32_t _playoutFormat;
+   int32_t _recordingFD;
+   int32_t _playoutFD;
+   uint32_t _recordingFragSize;
+@@ -207,6 +201,9 @@ class AudioDeviceQnx : public AudioDeviceGeneric {
+   int32_t _playoutBufferDataSize;
+ 
+   char _oldKeyState[32];
++
++  std::unique_ptr<PcmPreferences> _playout_prefs;
++  std::unique_ptr<PcmPreferences> _capture_prefs;
+ };
+ 
+ }  // namespace webrtc
+-- 
+2.34.1
+

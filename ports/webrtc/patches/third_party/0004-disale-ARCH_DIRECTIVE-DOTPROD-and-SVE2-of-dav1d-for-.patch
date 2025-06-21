@@ -1,0 +1,64 @@
+From 98726caf39c9a88fc1192b08e71ada96391a2563 Mon Sep 17 00:00:00 2001
+From: Yongxin Dai <yodai@blackberry.com>
+Date: Thu, 13 Feb 2025 15:36:43 -0500
+Subject: [PATCH] disale ARCH_DIRECTIVE, DOTPROD and SVE2 of dav1d for SDP7.1
+
+---
+ dav1d/config/linux/arm64/config.h | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+
+diff --git a/dav1d/config/linux/arm64/config.h b/dav1d/config/linux/arm64/config.h
+index 829806897ae..4afc2f416d6 100644
+--- a/dav1d/config/linux/arm64/config.h
++++ b/dav1d/config/linux/arm64/config.h
+@@ -53,7 +53,11 @@
+ 
+ #define HAVE_AS_ARCHEXT_SVE_DIRECTIVE 1
+ 
++#if defined(__QNX__) && __QNX__ < 800
++#define HAVE_AS_ARCH_DIRECTIVE 0
++#else
+ #define HAVE_AS_ARCH_DIRECTIVE 1
++#endif
+ 
+ #define HAVE_AS_FUNC 0
+ 
+@@ -63,7 +67,11 @@
+ 
+ #define HAVE_DLSYM 1
+ 
++#if defined(__QNX__) && __QNX__ < 800
++#define HAVE_DOTPROD 0
++#else
+ #define HAVE_DOTPROD 1
++#endif
+ 
+ #define HAVE_ELF_AUX_INFO 0
+ 
+@@ -73,7 +81,11 @@
+ #define HAVE_GETAUXVAL 1
+ #endif
+ 
++#if defined(__QNX__) && __QNX__ < 800
++#define HAVE_I8MM 0
++#else
+ #define HAVE_I8MM 1
++#endif
+ 
+ #define HAVE_IO_H 0
+ 
+@@ -93,7 +105,11 @@
+ 
+ #define HAVE_SVE 1
+ 
++#if defined(__QNX__) && __QNX__ < 800
++#define HAVE_SVE2 0
++#else
+ #define HAVE_SVE2 1
++#endif
+ 
+ #define HAVE_SYS_TYPES_H 1
+ 
+-- 
+2.34.1
+

@@ -1,0 +1,42 @@
+From c1d3ce55028bb7e1d5a61e6b9b0300fcf31693f6 Mon Sep 17 00:00:00 2001
+From: Yongxin Dai <yodai@blackberry.com>
+Date: Wed, 5 Jun 2024 09:52:05 -0400
+Subject: [PATCH] decrease thread priority
+
+---
+ rtc_base/platform_thread.cc | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/rtc_base/platform_thread.cc b/rtc_base/platform_thread.cc
+index b3cc8f8bbf..a07a0481e1 100644
+--- a/rtc_base/platform_thread.cc
++++ b/rtc_base/platform_thread.cc
+@@ -52,6 +52,7 @@ bool SetPriority(ThreadPriority priority) {
+   return true;
+ #else
+   const int policy = SCHED_FIFO;
++#if !defined(WEBRTC_QNX)
+   const int min_prio = sched_get_priority_min(policy);
+   const int max_prio = sched_get_priority_max(policy);
+   if (min_prio == -1 || max_prio == -1) {
+@@ -60,11 +61,17 @@ bool SetPriority(ThreadPriority priority) {
+ 
+   if (max_prio - min_prio <= 2)
+     return false;
++#endif
+ 
+   // Convert webrtc priority to system priorities:
+   sched_param param;
++#if defined(WEBRTC_QNX)
++  const int top_prio = 13;
++  const int low_prio = 8;
++#else
+   const int top_prio = max_prio - 1;
+   const int low_prio = min_prio + 1;
++#endif
+   switch (priority) {
+     case ThreadPriority::kLow:
+       param.sched_priority = low_prio;
+-- 
+2.34.1
+

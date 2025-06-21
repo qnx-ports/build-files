@@ -1,0 +1,782 @@
+From e7736a669c92d689412e7767788cce6a08ca1394 Mon Sep 17 00:00:00 2001
+From: Yongxin Dai <yodai@blackberry.com>
+Date: Fri, 20 Aug 2021 16:17:24 -0400
+Subject: [PATCH] changes in third_party for QNX
+
+---
+ .../absl/base/internal/low_level_alloc.h      |   4 +-
+ abseil-cpp/absl/numeric/int128.h              |   8 +
+ abseil-cpp/absl/types/variant.h               |  12 +
+ dav1d/config/linux/arm64/config.h             |   4 +
+ libevent/BUILD.gn                             |   6 +
+ libevent/event-config.h                       |   2 +
+ libevent/qnx/config.h                         | 266 ++++++++++++++++
+ libevent/qnx/event-config.h                   | 284 ++++++++++++++++++
+ libevent/signal.c                             |   4 +
+ libxml/BUILD.gn                               |   2 +-
+ opus/src/src/opus_encoder.c                   |   3 +
+ zlib/BUILD.gn                                 |   2 +
+ 12 files changed, 594 insertions(+), 3 deletions(-)
+ create mode 100644 libevent/qnx/config.h
+ create mode 100644 libevent/qnx/event-config.h
+
+diff --git a/abseil-cpp/absl/base/internal/low_level_alloc.h b/abseil-cpp/absl/base/internal/low_level_alloc.h
+index c2f1f25d8e3..2ce0d206a51 100644
+--- a/abseil-cpp/absl/base/internal/low_level_alloc.h
++++ b/abseil-cpp/absl/base/internal/low_level_alloc.h
+@@ -36,7 +36,7 @@
+ // LowLevelAlloc.
+ #ifdef ABSL_LOW_LEVEL_ALLOC_MISSING
+ #error ABSL_LOW_LEVEL_ALLOC_MISSING cannot be directly set
+-#elif !defined(ABSL_HAVE_MMAP) && !defined(_WIN32)
++#elif !defined(ABSL_HAVE_MMAP) && !defined(_WIN32) && !defined(__QNXNTO__)
+ #define ABSL_LOW_LEVEL_ALLOC_MISSING 1
+ #endif
+ 
+@@ -47,7 +47,7 @@
+ #ifdef ABSL_LOW_LEVEL_ALLOC_ASYNC_SIGNAL_SAFE_MISSING
+ #error ABSL_LOW_LEVEL_ALLOC_ASYNC_SIGNAL_SAFE_MISSING cannot be directly set
+ #elif defined(_WIN32) || defined(__asmjs__) || defined(__wasm__) || \
+-    defined(__hexagon__)
++    defined(__hexagon__) || defined(__QNXNTO__)
+ #define ABSL_LOW_LEVEL_ALLOC_ASYNC_SIGNAL_SAFE_MISSING 1
+ #endif
+ 
+diff --git a/abseil-cpp/absl/numeric/int128.h b/abseil-cpp/absl/numeric/int128.h
+index 5a067d17b3f..6a8d4b18917 100644
+--- a/abseil-cpp/absl/numeric/int128.h
++++ b/abseil-cpp/absl/numeric/int128.h
+@@ -259,9 +259,15 @@ ABSL_NAMESPACE_END
+ }  // namespace absl
+ 
+ // Specialized numeric_limits for uint128.
++#if __GNUC__ < 8
+ namespace std {
++#endif
+ template <>
++#if __GNUC__ < 8
+ class numeric_limits<absl::uint128> {
++#else
++class std::numeric_limits<absl::uint128> {
++#endif
+  public:
+   static constexpr bool is_specialized = true;
+   static constexpr bool is_signed = false;
+@@ -303,7 +309,9 @@ class numeric_limits<absl::uint128> {
+   static constexpr absl::uint128 signaling_NaN() { return 0; }
+   static constexpr absl::uint128 denorm_min() { return 0; }
+ };
++#if __GNUC__ < 8
+ }  // namespace std
++#endif
+ 
+ namespace absl {
+ ABSL_NAMESPACE_BEGIN
+diff --git a/abseil-cpp/absl/types/variant.h b/abseil-cpp/absl/types/variant.h
+index 56a7e05ee61..31965ef3569 100644
+--- a/abseil-cpp/absl/types/variant.h
++++ b/abseil-cpp/absl/types/variant.h
+@@ -801,20 +801,32 @@ operator>=(const variant<Types...>& a, const variant<Types...>& b) {
+ ABSL_NAMESPACE_END
+ }  // namespace absl
+ 
++#if __GNUC__ < 8
+ namespace std {
++#endif
+ 
+ // hash()
+ template <>  // NOLINT
++#if __GNUC__ < 8
+ struct hash<absl::monostate> {
++#else
++struct std::hash<absl::monostate> {
++#endif
+   std::size_t operator()(absl::monostate) const { return 0; }
+ };
+ 
+ template <class... T>  // NOLINT
++#if __GNUC__ < 8
+ struct hash<absl::variant<T...>>
++#else
++struct std::hash<absl::variant<T...>>
++#endif
+     : absl::variant_internal::VariantHashBase<absl::variant<T...>, void,
+                                               absl::remove_const_t<T>...> {};
+ 
++#if __GNUC__ < 8
+ }  // namespace std
++#endif
+ 
+ #endif  // ABSL_USES_STD_VARIANT
+ 
+diff --git a/dav1d/config/linux/arm64/config.h b/dav1d/config/linux/arm64/config.h
+index f65f26a0838..829806897ae 100644
+--- a/dav1d/config/linux/arm64/config.h
++++ b/dav1d/config/linux/arm64/config.h
+@@ -67,7 +67,11 @@
+ 
+ #define HAVE_ELF_AUX_INFO 0
+ 
++#if defined(__QNX__)
++#define HAVE_GETAUXVAL 0
++#else
+ #define HAVE_GETAUXVAL 1
++#endif
+ 
+ #define HAVE_I8MM 1
+ 
+diff --git a/libevent/BUILD.gn b/libevent/BUILD.gn
+index 97ed48b38a2..2470e0edc53 100644
+--- a/libevent/BUILD.gn
++++ b/libevent/BUILD.gn
+@@ -51,6 +51,12 @@ static_library("libevent") {
+       "epoll.c",
+     ]
+     include_dirs += [ "android" ]
++  } else if (is_qnx) {
++    sources += [
++      "qnx/config.h",
++      "qnx/event-config.h",
++    ]
++    include_dirs += [ "qnx" ]
+   }
+ 
+   if (!is_debug) {
+diff --git a/libevent/event-config.h b/libevent/event-config.h
+index 22c4b2e6fbf..4713e454cf0 100644
+--- a/libevent/event-config.h
++++ b/libevent/event-config.h
+@@ -11,6 +11,8 @@
+ #include "third_party/libevent/android/event-config.h"
+ #elif defined(__linux__)
+ #include "third_party/libevent/linux/event-config.h"
++#elif defined(__QNXNTO__)
++#include "third_party/libevent/qnx/event-config.h"
+ #elif defined(__FreeBSD__)
+ #include "third_party/libevent/freebsd/event-config.h"
+ #elif defined(__sun)
+diff --git a/libevent/qnx/config.h b/libevent/qnx/config.h
+new file mode 100644
+index 00000000000..c1b10f9f2a5
+--- /dev/null
++++ b/libevent/qnx/config.h
+@@ -0,0 +1,266 @@
++/* config.h.  Generated from config.h.in by configure.  */
++/* config.h.in.  Generated from configure.in by autoheader.  */
++
++/* Define if clock_gettime is available in libc */
++#define DNS_USE_CPU_CLOCK_FOR_ID 1
++
++/* Define is no secure id variant is available */
++/* #undef DNS_USE_GETTIMEOFDAY_FOR_ID */
++
++/* Define to 1 if you have the `clock_gettime' function. */
++#define HAVE_CLOCK_GETTIME 1
++
++/* Define if /dev/poll is available */
++/* #undef HAVE_DEVPOLL */
++
++/* Define to 1 if you have the <dlfcn.h> header file. */
++#define HAVE_DLFCN_H 1
++
++/* Define if your system supports the epoll system calls */
++//#define HAVE_EPOLL 1
++
++/* Define to 1 if you have the `epoll_ctl' function. */
++//#define HAVE_EPOLL_CTL 1
++
++/* Define if your system supports event ports */
++/* #undef HAVE_EVENT_PORTS */
++
++/* Define to 1 if you have the `fcntl' function. */
++#define HAVE_FCNTL 1
++
++/* Define to 1 if you have the <fcntl.h> header file. */
++#define HAVE_FCNTL_H 1
++
++/* Define to 1 if the system has the type `fd_mask'. */
++#define HAVE_FD_MASK 1
++
++/* Define to 1 if you have the `getaddrinfo' function. */
++#define HAVE_GETADDRINFO 1
++
++/* Define to 1 if you have the `getegid' function. */
++#define HAVE_GETEGID 1
++
++/* Define to 1 if you have the `geteuid' function. */
++#define HAVE_GETEUID 1
++
++/* Define to 1 if you have the `getnameinfo' function. */
++#define HAVE_GETNAMEINFO 1
++
++/* Define to 1 if you have the `gettimeofday' function. */
++#define HAVE_GETTIMEOFDAY 1
++
++/* Define to 1 if you have the `inet_ntop' function. */
++#define HAVE_INET_NTOP 1
++
++/* Define to 1 if you have the <inttypes.h> header file. */
++#define HAVE_INTTYPES_H 1
++
++/* Define to 1 if you have the `issetugid' function. */
++/* #undef HAVE_ISSETUGID */
++
++/* Define to 1 if you have the `kqueue' function. */
++/* #undef HAVE_KQUEUE */
++
++/* Define to 1 if you have the `nsl' library (-lnsl). */
++#define HAVE_LIBNSL 1
++
++/* Define to 1 if you have the `resolv' library (-lresolv). */
++#define HAVE_LIBRESOLV 1
++
++/* Define to 1 if you have the `rt' library (-lrt). */
++#define HAVE_LIBRT 1
++
++/* Define to 1 if you have the `socket' library (-lsocket). */
++/* #undef HAVE_LIBSOCKET */
++
++/* Define to 1 if you have the <memory.h> header file. */
++#define HAVE_MEMORY_H 1
++
++/* Define to 1 if you have the <netinet/in6.h> header file. */
++/* #undef HAVE_NETINET_IN6_H */
++
++/* Define to 1 if you have the `poll' function. */
++#define HAVE_POLL 1
++
++/* Define to 1 if you have the <poll.h> header file. */
++#define HAVE_POLL_H 1
++
++/* Define to 1 if you have the `port_create' function. */
++/* #undef HAVE_PORT_CREATE */
++
++/* Define to 1 if you have the <port.h> header file. */
++/* #undef HAVE_PORT_H */
++
++/* Define to 1 if you have the `select' function. */
++#define HAVE_SELECT 1
++
++/* Define if F_SETFD is defined in <fcntl.h> */
++#define HAVE_SETFD 1
++
++/* Define to 1 if you have the `sigaction' function. */
++#define HAVE_SIGACTION 1
++
++/* Define to 1 if you have the `signal' function. */
++#define HAVE_SIGNAL 1
++
++/* Define to 1 if you have the <signal.h> header file. */
++#define HAVE_SIGNAL_H 1
++
++/* Define to 1 if you have the <stdarg.h> header file. */
++#define HAVE_STDARG_H 1
++
++/* Define to 1 if you have the <stdint.h> header file. */
++#define HAVE_STDINT_H 1
++
++/* Define to 1 if you have the <stdlib.h> header file. */
++#define HAVE_STDLIB_H 1
++
++/* Define to 1 if you have the <strings.h> header file. */
++#define HAVE_STRINGS_H 1
++
++/* Define to 1 if you have the <string.h> header file. */
++#define HAVE_STRING_H 1
++
++/* Define to 1 if you have the `strlcpy' function. */
++/* #undef HAVE_STRLCPY */
++
++/* Define to 1 if you have the `strsep' function. */
++#define HAVE_STRSEP 1
++
++/* Define to 1 if you have the `strtok_r' function. */
++#define HAVE_STRTOK_R 1
++
++/* Define to 1 if you have the `strtoll' function. */
++#define HAVE_STRTOLL 1
++
++/* Define to 1 if the system has the type `struct in6_addr'. */
++#define HAVE_STRUCT_IN6_ADDR 1
++
++/* Define to 1 if you have the <sys/devpoll.h> header file. */
++/* #undef HAVE_SYS_DEVPOLL_H */
++
++/* Define to 1 if you have the <sys/epoll.h> header file. */
++#define HAVE_SYS_EPOLL_H 1
++
++/* Define to 1 if you have the <sys/event.h> header file. */
++/* #undef HAVE_SYS_EVENT_H */
++
++/* Define to 1 if you have the <sys/ioctl.h> header file. */
++#define HAVE_SYS_IOCTL_H 1
++
++/* Define to 1 if you have the <sys/param.h> header file. */
++#define HAVE_SYS_PARAM_H 1
++
++/* Define to 1 if you have the <sys/queue.h> header file. */
++#define HAVE_SYS_QUEUE_H 1
++
++/* Define to 1 if you have the <sys/select.h> header file. */
++#define HAVE_SYS_SELECT_H 1
++
++/* Define to 1 if you have the <sys/socket.h> header file. */
++#define HAVE_SYS_SOCKET_H 1
++
++/* Define to 1 if you have the <sys/stat.h> header file. */
++#define HAVE_SYS_STAT_H 1
++
++/* Define to 1 if you have the <sys/time.h> header file. */
++#define HAVE_SYS_TIME_H 1
++
++/* Define to 1 if you have the <sys/types.h> header file. */
++#define HAVE_SYS_TYPES_H 1
++
++/* Define if TAILQ_FOREACH is defined in <sys/queue.h> */
++#define HAVE_TAILQFOREACH 1
++
++/* Define if timeradd is defined in <sys/time.h> */
++#define HAVE_TIMERADD 1
++
++/* Define if timerclear is defined in <sys/time.h> */
++#define HAVE_TIMERCLEAR 1
++
++/* Define if timercmp is defined in <sys/time.h> */
++#define HAVE_TIMERCMP 1
++
++/* Define if timerisset is defined in <sys/time.h> */
++#define HAVE_TIMERISSET 1
++
++/* Define to 1 if the system has the type `uint16_t'. */
++#define HAVE_UINT16_T 1
++
++/* Define to 1 if the system has the type `uint32_t'. */
++#define HAVE_UINT32_T 1
++
++/* Define to 1 if the system has the type `uint64_t'. */
++#define HAVE_UINT64_T 1
++
++/* Define to 1 if the system has the type `uint8_t'. */
++#define HAVE_UINT8_T 1
++
++/* Define to 1 if you have the <unistd.h> header file. */
++#define HAVE_UNISTD_H 1
++
++/* Define to 1 if you have the `vasprintf' function. */
++#define HAVE_VASPRINTF 1
++
++/* Define if kqueue works correctly with pipes */
++/* #undef HAVE_WORKING_KQUEUE */
++
++/* Name of package */
++#define PACKAGE "libevent"
++
++/* Define to the address where bug reports for this package should be sent. */
++#define PACKAGE_BUGREPORT ""
++
++/* Define to the full name of this package. */
++#define PACKAGE_NAME ""
++
++/* Define to the full name and version of this package. */
++#define PACKAGE_STRING ""
++
++/* Define to the one symbol short name of this package. */
++#define PACKAGE_TARNAME ""
++
++/* Define to the version of this package. */
++#define PACKAGE_VERSION ""
++
++/* The size of `int', as computed by sizeof. */
++#define SIZEOF_INT 4
++
++/* The size of `long', as computed by sizeof. */
++#define SIZEOF_LONG 8
++
++/* The size of `long long', as computed by sizeof. */
++#define SIZEOF_LONG_LONG 8
++
++/* The size of `short', as computed by sizeof. */
++#define SIZEOF_SHORT 2
++
++/* Define to 1 if you have the ANSI C header files. */
++#define STDC_HEADERS 1
++
++/* Define to 1 if you can safely include both <sys/time.h> and <time.h>. */
++#define TIME_WITH_SYS_TIME 1
++
++/* Version number of package */
++#define VERSION "1.4.13-stable"
++
++/* Define to appropriate substitue if compiler doesnt have __func__ */
++/* #undef __func__ */
++
++/* Define to empty if `const' does not conform to ANSI C. */
++/* #undef const */
++
++/* Define to `__inline__' or `__inline' if that's what the C compiler
++   calls it, or to nothing if 'inline' is not supported under any name.  */
++#ifndef __cplusplus
++/* #undef inline */
++#endif
++
++/* Define to `int' if <sys/types.h> does not define. */
++/* #undef pid_t */
++
++/* Define to `unsigned int' if <sys/types.h> does not define. */
++/* #undef size_t */
++
++/* Define to unsigned int if you dont have it */
++/* #undef socklen_t */
+diff --git a/libevent/qnx/event-config.h b/libevent/qnx/event-config.h
+new file mode 100644
+index 00000000000..22032539432
+--- /dev/null
++++ b/libevent/qnx/event-config.h
+@@ -0,0 +1,284 @@
++/* event-config.h
++ * Generated by autoconf; post-processed by libevent.
++ * Do not edit this file.
++ * Do not rely on macros in this file existing in later versions.
++ */
++#ifndef _EVENT_CONFIG_H_
++#define _EVENT_CONFIG_H_
++/* config.h.  Generated from config.h.in by configure.  */
++/* config.h.in.  Generated from configure.in by autoheader.  */
++
++/* Define if clock_gettime is available in libc */
++#define _EVENT_DNS_USE_CPU_CLOCK_FOR_ID 1
++
++/* Define is no secure id variant is available */
++/* #undef _EVENT_DNS_USE_GETTIMEOFDAY_FOR_ID */
++
++/* Define to 1 if you have the `clock_gettime' function. */
++#define _EVENT_HAVE_CLOCK_GETTIME 1
++
++/* Define if /dev/poll is available */
++/* #undef _EVENT_HAVE_DEVPOLL */
++
++/* Define to 1 if you have the <dlfcn.h> header file. */
++#define _EVENT_HAVE_DLFCN_H 1
++
++/* Define if your system supports the epoll system calls */
++#define _EVENT_HAVE_EPOLL 1
++
++/* Define to 1 if you have the `epoll_ctl' function. */
++#define _EVENT_HAVE_EPOLL_CTL 1
++
++/* Define if your system supports event ports */
++/* #undef _EVENT_HAVE_EVENT_PORTS */
++
++/* Define to 1 if you have the `fcntl' function. */
++#define _EVENT_HAVE_FCNTL 1
++
++/* Define to 1 if you have the <fcntl.h> header file. */
++#define _EVENT_HAVE_FCNTL_H 1
++
++/* Define to 1 if the system has the type `fd_mask'. */
++#define _EVENT_HAVE_FD_MASK 1
++
++/* Define to 1 if you have the `getaddrinfo' function. */
++#define _EVENT_HAVE_GETADDRINFO 1
++
++/* Define to 1 if you have the `getegid' function. */
++#define _EVENT_HAVE_GETEGID 1
++
++/* Define to 1 if you have the `geteuid' function. */
++#define _EVENT_HAVE_GETEUID 1
++
++/* Define to 1 if you have the `getnameinfo' function. */
++#define _EVENT_HAVE_GETNAMEINFO 1
++
++/* Define to 1 if you have the `gettimeofday' function. */
++#define _EVENT_HAVE_GETTIMEOFDAY 1
++
++/* Define to 1 if you have the `inet_ntop' function. */
++#define _EVENT_HAVE_INET_NTOP 1
++
++/* Define to 1 if you have the <inttypes.h> header file. */
++#define _EVENT_HAVE_INTTYPES_H 1
++
++/* Define to 1 if you have the `issetugid' function. */
++/* #undef _EVENT_HAVE_ISSETUGID */
++
++/* Define to 1 if you have the `kqueue' function. */
++/* #undef _EVENT_HAVE_KQUEUE */
++
++/* Define to 1 if you have the `nsl' library (-lnsl). */
++#define _EVENT_HAVE_LIBNSL 1
++
++/* Define to 1 if you have the `resolv' library (-lresolv). */
++#define _EVENT_HAVE_LIBRESOLV 1
++
++/* Define to 1 if you have the `rt' library (-lrt). */
++#define _EVENT_HAVE_LIBRT 1
++
++/* Define to 1 if you have the `socket' library (-lsocket). */
++/* #undef _EVENT_HAVE_LIBSOCKET */
++
++/* Define to 1 if you have the <memory.h> header file. */
++#define _EVENT_HAVE_MEMORY_H 1
++
++/* Define to 1 if you have the <netinet/in6.h> header file. */
++/* #undef _EVENT_HAVE_NETINET_IN6_H */
++
++/* Define to 1 if you have the `poll' function. */
++#define _EVENT_HAVE_POLL 1
++
++/* Define to 1 if you have the <poll.h> header file. */
++#define _EVENT_HAVE_POLL_H 1
++
++/* Define to 1 if you have the `port_create' function. */
++/* #undef _EVENT_HAVE_PORT_CREATE */
++
++/* Define to 1 if you have the <port.h> header file. */
++/* #undef _EVENT_HAVE_PORT_H */
++
++/* Define to 1 if you have the `select' function. */
++#define _EVENT_HAVE_SELECT 1
++
++/* Define if F_SETFD is defined in <fcntl.h> */
++#define _EVENT_HAVE_SETFD 1
++
++/* Define to 1 if you have the `sigaction' function. */
++#define _EVENT_HAVE_SIGACTION 1
++
++/* Define to 1 if you have the `signal' function. */
++#define _EVENT_HAVE_SIGNAL 1
++
++/* Define to 1 if you have the <signal.h> header file. */
++#define _EVENT_HAVE_SIGNAL_H 1
++
++/* Define to 1 if you have the <stdarg.h> header file. */
++#define _EVENT_HAVE_STDARG_H 1
++
++/* Define to 1 if you have the <stdint.h> header file. */
++#define _EVENT_HAVE_STDINT_H 1
++
++/* Define to 1 if you have the <stdlib.h> header file. */
++#define _EVENT_HAVE_STDLIB_H 1
++
++/* Define to 1 if you have the <strings.h> header file. */
++#define _EVENT_HAVE_STRINGS_H 1
++
++/* Define to 1 if you have the <string.h> header file. */
++#define _EVENT_HAVE_STRING_H 1
++
++/* Define to 1 if you have the `strlcpy' function. */
++/* #undef _EVENT_HAVE_STRLCPY */
++
++/* Define to 1 if you have the `strsep' function. */
++#define _EVENT_HAVE_STRSEP 1
++
++/* Define to 1 if you have the `strtok_r' function. */
++#define _EVENT_HAVE_STRTOK_R 1
++
++/* Define to 1 if you have the `strtoll' function. */
++#define _EVENT_HAVE_STRTOLL 1
++
++/* Define to 1 if the system has the type `struct in6_addr'. */
++#define _EVENT_HAVE_STRUCT_IN6_ADDR 1
++
++/* Define to 1 if you have the <sys/devpoll.h> header file. */
++/* #undef _EVENT_HAVE_SYS_DEVPOLL_H */
++
++/* Define to 1 if you have the <sys/epoll.h> header file. */
++#define _EVENT_HAVE_SYS_EPOLL_H 1
++
++/* Define to 1 if you have the <sys/event.h> header file. */
++/* #undef _EVENT_HAVE_SYS_EVENT_H */
++
++/* Define to 1 if you have the <sys/ioctl.h> header file. */
++#define _EVENT_HAVE_SYS_IOCTL_H 1
++
++/* Define to 1 if you have the <sys/param.h> header file. */
++#define _EVENT_HAVE_SYS_PARAM_H 1
++
++/* Define to 1 if you have the <sys/queue.h> header file. */
++#define _EVENT_HAVE_SYS_QUEUE_H 1
++
++/* Define to 1 if you have the <sys/select.h> header file. */
++#define _EVENT_HAVE_SYS_SELECT_H 1
++
++/* Define to 1 if you have the <sys/socket.h> header file. */
++#define _EVENT_HAVE_SYS_SOCKET_H 1
++
++/* Define to 1 if you have the <sys/stat.h> header file. */
++#define _EVENT_HAVE_SYS_STAT_H 1
++
++/* Define to 1 if you have the <sys/time.h> header file. */
++#define _EVENT_HAVE_SYS_TIME_H 1
++
++/* Define to 1 if you have the <sys/types.h> header file. */
++#define _EVENT_HAVE_SYS_TYPES_H 1
++
++/* Define if TAILQ_FOREACH is defined in <sys/queue.h> */
++#define _EVENT_HAVE_TAILQFOREACH 1
++
++/* Define if timeradd is defined in <sys/time.h> */
++#define _EVENT_HAVE_TIMERADD 1
++
++/* Define if timerclear is defined in <sys/time.h> */
++#define _EVENT_HAVE_TIMERCLEAR 1
++
++/* Define if timercmp is defined in <sys/time.h> */
++#define _EVENT_HAVE_TIMERCMP 1
++
++/* Define if timerisset is defined in <sys/time.h> */
++#define _EVENT_HAVE_TIMERISSET 1
++
++/* Define to 1 if the system has the type `uint16_t'. */
++#define _EVENT_HAVE_UINT16_T 1
++
++/* Define to 1 if the system has the type `uint32_t'. */
++#define _EVENT_HAVE_UINT32_T 1
++
++/* Define to 1 if the system has the type `uint64_t'. */
++#define _EVENT_HAVE_UINT64_T 1
++
++/* Define to 1 if the system has the type `uint8_t'. */
++#define _EVENT_HAVE_UINT8_T 1
++
++/* Define to 1 if you have the <unistd.h> header file. */
++#define _EVENT_HAVE_UNISTD_H 1
++
++/* Define to 1 if you have the `vasprintf' function. */
++#define _EVENT_HAVE_VASPRINTF 1
++
++/* Define if kqueue works correctly with pipes */
++/* #undef _EVENT_HAVE_WORKING_KQUEUE */
++
++/* Define to the sub-directory in which libtool stores uninstalled libraries.
++   */
++#define _EVENT_LT_OBJDIR ".libs/"
++
++/* Numeric representation of the version */
++#define _EVENT_NUMERIC_VERSION 0x01040f00
++
++/* Name of package */
++#define _EVENT_PACKAGE "libevent"
++
++/* Define to the address where bug reports for this package should be sent. */
++#define _EVENT_PACKAGE_BUGREPORT ""
++
++/* Define to the full name of this package. */
++#define _EVENT_PACKAGE_NAME ""
++
++/* Define to the full name and version of this package. */
++#define _EVENT_PACKAGE_STRING ""
++
++/* Define to the one symbol short name of this package. */
++#define _EVENT_PACKAGE_TARNAME ""
++
++/* Define to the home page for this package. */
++#define _EVENT_PACKAGE_URL ""
++
++/* Define to the version of this package. */
++#define _EVENT_PACKAGE_VERSION ""
++
++/* The size of `int', as computed by sizeof. */
++#define _EVENT_SIZEOF_INT 4
++
++/* The size of `long', as computed by sizeof. */
++#define _EVENT_SIZEOF_LONG 8
++
++/* The size of `long long', as computed by sizeof. */
++#define _EVENT_SIZEOF_LONG_LONG 8
++
++/* The size of `short', as computed by sizeof. */
++#define _EVENT_SIZEOF_SHORT 2
++
++/* Define to 1 if you have the ANSI C header files. */
++#define _EVENT_STDC_HEADERS 1
++
++/* Define to 1 if you can safely include both <sys/time.h> and <time.h>. */
++#define _EVENT_TIME_WITH_SYS_TIME 1
++
++/* Version number of package */
++#define _EVENT_VERSION "1.4.15"
++
++/* Define to appropriate substitue if compiler doesnt have __func__ */
++/* #undef _EVENT___func__ */
++
++/* Define to empty if `const' does not conform to ANSI C. */
++/* #undef _EVENT_const */
++
++/* Define to `__inline__' or `__inline' if that's what the C compiler
++   calls it, or to nothing if 'inline' is not supported under any name.  */
++#ifndef _EVENT___cplusplus
++/* #undef _EVENT_inline */
++#endif
++
++/* Define to `int' if <sys/types.h> does not define. */
++/* #undef _EVENT_pid_t */
++
++/* Define to `unsigned int' if <sys/types.h> does not define. */
++/* #undef _EVENT_size_t */
++
++/* Define to unsigned int if you dont have it */
++/* #undef _EVENT_socklen_t */
++#endif
+diff --git a/libevent/signal.c b/libevent/signal.c
+index b8d51ab5198..c5a537bf5e6 100644
+--- a/libevent/signal.c
++++ b/libevent/signal.c
+@@ -191,7 +191,11 @@ _evsignal_set_handler(struct event_base *base,
+ #ifdef HAVE_SIGACTION
+ 	memset(&sa, 0, sizeof(sa));
+ 	sa.sa_handler = handler;
++#if defined(__QNXNTO__)
++  sa.sa_flags |= SA_SIGINFO;
++#else
+ 	sa.sa_flags |= SA_RESTART;
++#endif
+ 	sigfillset(&sa.sa_mask);
+ 
+ 	if (sigaction(evsignal, &sa, sig->sh_old[evsignal]) == -1) {
+diff --git a/libxml/BUILD.gn b/libxml/BUILD.gn
+index 73c974cc34a..908ad34f09d 100644
+--- a/libxml/BUILD.gn
++++ b/libxml/BUILD.gn
+@@ -4,7 +4,7 @@
+ 
+ # Define an "os_include" variable that points at the OS-specific generated
+ # headers.  These were generated by running the configure script offline.
+-if (is_linux || is_chromeos || is_android || is_nacl || is_fuchsia) {
++if (is_linux || is_chromeos || is_android || is_nacl || is_fuchsia || is_qnx) {
+   os_include = "linux"
+ } else if (is_apple) {
+   os_include = "mac"
+diff --git a/opus/src/src/opus_encoder.c b/opus/src/src/opus_encoder.c
+index 8c8db5a5468..78fc16be935 100644
+--- a/opus/src/src/opus_encoder.c
++++ b/opus/src/src/opus_encoder.c
+@@ -627,10 +627,13 @@ opus_int32 frame_size_select(opus_int32 frame_size, int variable_duration, opus_
+       return -1;
+    if (new_size>frame_size)
+       return -1;
++   // instead of n*10ms, QNX often uses n*16ms fragment size, so skip following check
++#if !defined(__QNXNTO__)
+    if (400*new_size!=Fs   && 200*new_size!=Fs   && 100*new_size!=Fs   &&
+         50*new_size!=Fs   &&  25*new_size!=Fs   &&  50*new_size!=3*Fs &&
+         50*new_size!=4*Fs &&  50*new_size!=5*Fs &&  50*new_size!=6*Fs)
+       return -1;
++#endif
+    return new_size;
+ }
+ 
+diff --git a/zlib/BUILD.gn b/zlib/BUILD.gn
+index 378bd0df75c..419b9ff543d 100644
+--- a/zlib/BUILD.gn
++++ b/zlib/BUILD.gn
+@@ -138,6 +138,8 @@ if (use_arm_neon_optimizations) {
+       defines += [ "ARMV8_OS_FUCHSIA" ]
+     } else if (is_win) {
+       defines += [ "ARMV8_OS_WINDOWS" ]
++    } else if (is_qnx) {
++      defines += [ "ARMV8_OS_QNX" ]
+     } else {
+       assert(false, "Unsupported ARM OS")
+     }
+-- 
+2.34.1
+
