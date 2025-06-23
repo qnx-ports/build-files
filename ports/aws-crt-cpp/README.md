@@ -96,6 +96,7 @@ ssh qnxuser@$TARGET_HOST
 export PATH=$PATH:/data/home/qnxuser/bin
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/data/home/qnxuser/lib
 
+cd bin
 sh test.sh
 ```
 
