@@ -27,3 +27,8 @@ log/
 /ports/webrtc/nto-*
 !/ports/webrtc/patches/build
 /ports/webrtc/public
+
+# pdfium
+/ports/pdfium/nto-*
+!/ports/pdfium/patches/build
+/ports/pdfium/public
