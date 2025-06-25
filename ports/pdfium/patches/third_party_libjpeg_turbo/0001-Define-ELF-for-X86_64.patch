@@ -1,0 +1,25 @@
+From 35b002989c5a473f0c1ae36c6c50ae2f86e2bf56 Mon Sep 17 00:00:00 2001
+From: Yongxin Dai <yodai@qnx.com>
+Date: Fri, 11 Jul 2025 11:30:54 -0400
+Subject: [PATCH] Define 'ELF' for X86_64
+
+---
+ BUILD.gn | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/BUILD.gn b/BUILD.gn
+index a17f9e0..b1c82a3 100644
+--- a/BUILD.gn
++++ b/BUILD.gn
+@@ -162,7 +162,7 @@ if (current_cpu == "x86" || current_cpu == "x64") {
+       }
+     } else if (is_mac || is_ios) {
+       defines += [ "MACHO" ]
+-    } else if (is_linux || is_android || is_fuchsia || is_chromeos) {
++    } else if (is_linux || is_android || is_fuchsia || is_chromeos || is_qnx) {
+       defines += [ "ELF" ]
+     }
+   }
+-- 
+2.34.1
+
