@@ -1,0 +1,1118 @@
+From beb85cf7f50a5a1f8f056db4fcb5716da552673a Mon Sep 17 00:00:00 2001
+From: Yongxin Dai <yodai@qnx.com>
+Date: Mon, 7 Jul 2025 09:45:03 -0400
+Subject: [PATCH] Add 'typename' to satisfy SDP7 [2]
+
+---
+ include/v8-internal.h                         |   4 +
+ include/v8-persistent-handle.h                |   4 +
+ src/base/template-meta-programming/list.h     |  24 ++
+ src/baseline/baseline-compiler.cc             |   8 +
+ src/builtins/builtins-internal-gen.cc         |   4 +
+ src/builtins/x64/builtins-x64.cc              |   4 +
+ src/codegen/signature.h                       |   4 +
+ src/common/globals.h                          |  12 +
+ src/compiler/escape-analysis.h                |   4 +
+ src/compiler/turboshaft/assembler.h           |   8 +
+ .../late-load-elimination-reducer.h           |  12 +
+ src/compiler/turboshaft/operations.h          |   4 +
+ src/compiler/turboshaft/variable-reducer.h    |   4 +
+ .../wasm-load-elimination-reducer.h           |  12 +
+ src/deoptimizer/translated-state.h            |   8 +
+ src/handles/global-handles.cc                 |   4 +
+ src/ic/ic.cc                                  |   4 +
+ src/maglev/maglev-ir.cc                       | 220 ++++++++++++++++++
+ src/maglev/maglev-regalloc.cc                 |   4 +
+ src/strings/string-case.cc                    |   4 +
+ test/cctest/test-api.cc                       |   4 +
+ .../turboshaft/snapshot-table-unittest.cc     |   8 +
+ .../unittests/heap/global-handles-unittest.cc |   4 +
+ 23 files changed, 368 insertions(+)
+
+diff --git a/include/v8-internal.h b/include/v8-internal.h
+index cd3c8cf7bed..48c208fef0a 100644
+--- a/include/v8-internal.h
++++ b/include/v8-internal.h
+@@ -1449,7 +1449,11 @@ struct MaybeDefineIteratorConcept<
+   // TODO(pkasting): Add this unconditionally after dropping support for old
+   // libstdc++ versions.
+ #if __has_include(<ranges>)
++#if !defined(__QNX__) || __QNX__ >= 800
+   using iterator_concept = std::iterator_traits<Iterator>::iterator_concept;
++#else
++  using iterator_concept = typename std::iterator_traits<Iterator>::iterator_concept;
++#endif
+ #endif
+ };
+ 
+diff --git a/include/v8-persistent-handle.h b/include/v8-persistent-handle.h
+index 3067cb775fc..0dad0ce115b 100644
+--- a/include/v8-persistent-handle.h
++++ b/include/v8-persistent-handle.h
+@@ -484,7 +484,11 @@ template <typename P>
+ V8_INLINE void PersistentBase<T>::SetWeak(
+     P* parameter, typename WeakCallbackInfo<P>::Callback callback,
+     WeakCallbackType type) {
++#if !defined(__QNX__) || __QNX__ >= 800
+   using Callback = WeakCallbackInfo<void>::Callback;
++#else
++  using Callback = typename WeakCallbackInfo<void>::Callback;
++#endif
+ #if (__GNUC__ >= 8) && !defined(__clang__)
+ #pragma GCC diagnostic push
+ #pragma GCC diagnostic ignored "-Wcast-function-type"
+diff --git a/src/base/template-meta-programming/list.h b/src/base/template-meta-programming/list.h
+index fdf9fac08e6..9edb5dd2e8f 100644
+--- a/src/base/template-meta-programming/list.h
++++ b/src/base/template-meta-programming/list.h
+@@ -132,8 +132,12 @@ struct fold_right_impl;
+ template <template <typename, typename> typename F, typename T, typename Head,
+           typename... Tail>
+ struct fold_right_impl<F, T, list<Head, Tail...>> {
++#if !defined(__QNX__) || __QNX__ >= 800
+   using type =
+       F<Head, typename fold_right_impl<F, T, list<Tail...>>::type>::type;
++#else
++  using type = typename      F<Head, typename fold_right_impl<F, T, list<Tail...>>::type>::type;
++#endif
+ };
+ template <template <typename, typename> typename F, typename T>
+ struct fold_right_impl<F, T, list<>> {
+@@ -145,8 +149,12 @@ struct fold_right1_impl;
+ template <template <TYPENAME1, typename> typename F, typename T, TYPENAME1 Head,
+           TYPENAME1... Tail>
+ struct fold_right1_impl<F, T, list1<Head, Tail...>> {
++#if !defined(__QNX__) || __QNX__ >= 800
+   using type =
+       F<Head, typename fold_right1_impl<F, T, list1<Tail...>>::type>::type;
++#else
++  using type = typename      F<Head, typename fold_right1_impl<F, T, list1<Tail...>>::type>::type;
++#endif
+ };
+ template <template <TYPENAME1, typename> typename F, typename T>
+ struct fold_right1_impl<F, T, list1<>> {
+@@ -216,11 +224,19 @@ constexpr bool all_equal_v = all_equal<List, Cmp>::value;
+ template <typename List, size_t I, typename T>
+ struct insert_at : public detail::insert_at_impl<I, T, list<>, List> {};
+ template <typename List, size_t I, typename T>
++#if !defined(__QNX__) || __QNX__ >= 800
+ using insert_at_t = insert_at<List, I, T>::type;
++#else
++using insert_at_t = typename insert_at<List, I, T>::type;
++#endif
+ template <typename List1, size_t I, TYPENAME1 T>
+ struct insert_at1 : public detail::insert_at1_impl<I, T, list1<>, List1> {};
+ template <typename List1, size_t I, TYPENAME1 T>
++#if !defined(__QNX__) || __QNX__ >= 800
+ using insert_at1_t = insert_at1<List1, I, T>::type;
++#else
++using insert_at1_t = typename insert_at1<List1, I, T>::type;
++#endif
+ 
+ // fold_right recursively applies binary function {F} to elements of the {List}
+ // and the previous result, starting from the right. The initial value is {T}.
+@@ -231,11 +247,19 @@ using insert_at1_t = insert_at1<List1, I, T>::type;
+ template <template <typename, typename> typename F, typename List, typename T>
+ struct fold_right : public detail::fold_right_impl<F, T, List> {};
+ template <template <typename, typename> typename F, typename List, typename T>
++#if !defined(__QNX__) || __QNX__ >= 800
+ using fold_right_t = fold_right<F, List, T>::type;
++#else
++using fold_right_t = typename fold_right<F, List, T>::type;
++#endif
+ template <template <TYPENAME1, typename> typename F, typename List1, typename T>
+ struct fold_right1 : public detail::fold_right1_impl<F, T, List1> {};
+ template <template <TYPENAME1, typename> typename F, typename List1, typename T>
++#if !defined(__QNX__) || __QNX__ >= 800
+ using fold_right1_t = fold_right1<F, List1, T>::type;
++#else
++using fold_right1_t = typename fold_right1<F, List1, T>::type;
++#endif
+ 
+ }  // namespace v8::base::tmp
+ 
+diff --git a/src/baseline/baseline-compiler.cc b/src/baseline/baseline-compiler.cc
+index e30e0036a15..42fd2e902f7 100644
+--- a/src/baseline/baseline-compiler.cc
++++ b/src/baseline/baseline-compiler.cc
+@@ -1489,8 +1489,12 @@ void BaselineCompiler::VisitConstructWithSpread() {
+ 
+   uint32_t arg_count = JSParameterCount(args.register_count());
+ 
++#if !defined(__QNX__) || __QNX__ >= 800
+   using Descriptor =
+       CallInterfaceDescriptorFor<Builtin::kConstructWithSpread_Baseline>::type;
++#else
++  using Descriptor = typename      CallInterfaceDescriptorFor<Builtin::kConstructWithSpread_Baseline>::type;
++#endif
+   Register new_target =
+       Descriptor::GetRegisterParameter(Descriptor::kNewTarget);
+   __ Move(new_target, kInterpreterAccumulatorRegister);
+@@ -1558,8 +1562,12 @@ void BaselineCompiler::VisitTestReferenceEqual() {
+ }
+ 
+ void BaselineCompiler::VisitTestInstanceOf() {
++#if !defined(__QNX__) || __QNX__ >= 800
+   using Descriptor =
+       CallInterfaceDescriptorFor<Builtin::kInstanceOf_Baseline>::type;
++#else
++  using Descriptor = typename      CallInterfaceDescriptorFor<Builtin::kInstanceOf_Baseline>::type;
++#endif
+   Register callable = Descriptor::GetRegisterParameter(Descriptor::kRight);
+   __ Move(callable, kInterpreterAccumulatorRegister);
+ 
+diff --git a/src/builtins/builtins-internal-gen.cc b/src/builtins/builtins-internal-gen.cc
+index 585195eb164..c5ac7a563a6 100644
+--- a/src/builtins/builtins-internal-gen.cc
++++ b/src/builtins/builtins-internal-gen.cc
+@@ -1402,8 +1402,12 @@ void Builtins::Generate_BaselineLeaveFrame(MacroAssembler* masm) {
+ // architectures.
+ #ifndef V8_TARGET_ARCH_X64
+ void Builtins::Generate_MaglevOnStackReplacement(MacroAssembler* masm) {
++#if !defined(__QNX__) || __QNX__ >= 800
+   using D =
+       i::CallInterfaceDescriptorFor<Builtin::kMaglevOnStackReplacement>::type;
++#else
++  using D = typename      i::CallInterfaceDescriptorFor<Builtin::kMaglevOnStackReplacement>::type;
++#endif
+   static_assert(D::kParameterCount == 1);
+   masm->Trap();
+ }
+diff --git a/src/builtins/x64/builtins-x64.cc b/src/builtins/x64/builtins-x64.cc
+index 6e7240d3c1e..ad2b0d41d6a 100644
+--- a/src/builtins/x64/builtins-x64.cc
++++ b/src/builtins/x64/builtins-x64.cc
+@@ -2944,8 +2944,12 @@ void Builtins::Generate_BaselineOnStackReplacement(MacroAssembler* masm) {
+ }
+ 
+ void Builtins::Generate_MaglevOnStackReplacement(MacroAssembler* masm) {
++#if !defined(__QNX__) || __QNX__ >= 800
+   using D =
+       i::CallInterfaceDescriptorFor<Builtin::kMaglevOnStackReplacement>::type;
++#else
++  using D = typename      i::CallInterfaceDescriptorFor<Builtin::kMaglevOnStackReplacement>::type;
++#endif
+   static_assert(D::kParameterCount == 1);
+   OnStackReplacement(masm, OsrSourceTier::kMaglev,
+                      D::MaybeTargetCodeRegister());
+diff --git a/src/codegen/signature.h b/src/codegen/signature.h
+index b3bd396c0ad..4510884886b 100644
+--- a/src/codegen/signature.h
++++ b/src/codegen/signature.h
+@@ -76,7 +76,11 @@ class Signature : public ZoneObject {
+       // Allocate memory for the signature plus the array backing the
+       // signature.
+       constexpr size_t padding = sizeof(Signature<T>) % alignof(T);
++#if !defined(__QNX__) || __QNX__ >= 800
+       using AllocationTypeTag = Signature<T>::Builder;
++#else
++      using AllocationTypeTag = typename Signature<T>::Builder;
++#endif
+       const size_t allocated_bytes =
+           sizeof(Signature<T>) + padding +
+           sizeof(T) * (return_count + parameter_count);
+diff --git a/src/common/globals.h b/src/common/globals.h
+index c79d15be7e8..4d96f601d9a 100644
+--- a/src/common/globals.h
++++ b/src/common/globals.h
+@@ -2518,19 +2518,31 @@ inline KeyedAccessLoadMode CreateKeyedAccessLoadMode(bool handle_oob,
+ 
+ inline KeyedAccessLoadMode GeneralizeKeyedAccessLoadMode(
+     KeyedAccessLoadMode mode1, KeyedAccessLoadMode mode2) {
++#if !defined(__QNX__) || __QNX__ >= 800
+   using T = std::underlying_type<KeyedAccessLoadMode>::type;
++#else
++  using T = typename std::underlying_type<KeyedAccessLoadMode>::type;
++#endif
+   return static_cast<KeyedAccessLoadMode>(static_cast<T>(mode1) |
+                                           static_cast<T>(mode2));
+ }
+ 
+ inline bool LoadModeHandlesOOB(KeyedAccessLoadMode load_mode) {
++#if !defined(__QNX__) || __QNX__ >= 800
+   using T = std::underlying_type<KeyedAccessLoadMode>::type;
++#else
++  using T = typename std::underlying_type<KeyedAccessLoadMode>::type;
++#endif
+   return (static_cast<T>(load_mode) &
+           static_cast<T>(KeyedAccessLoadMode::kHandleOOB)) != 0;
+ }
+ 
+ inline bool LoadModeHandlesHoles(KeyedAccessLoadMode load_mode) {
++#if !defined(__QNX__) || __QNX__ >= 800
+   using T = std::underlying_type<KeyedAccessLoadMode>::type;
++#else
++  using T = typename std::underlying_type<KeyedAccessLoadMode>::type;
++#endif
+   return (static_cast<T>(load_mode) &
+           static_cast<T>(KeyedAccessLoadMode::kHandleHoles)) != 0;
+ }
+diff --git a/src/compiler/escape-analysis.h b/src/compiler/escape-analysis.h
+index d3f9768fe71..d572ef6bb73 100644
+--- a/src/compiler/escape-analysis.h
++++ b/src/compiler/escape-analysis.h
+@@ -125,7 +125,11 @@ class Dependable : public ZoneObject {
+ class VirtualObject : public Dependable {
+  public:
+   using Id = uint32_t;
++#if !defined(__QNX__) || __QNX__ >= 800
+   using const_iterator = ZoneVector<Variable>::const_iterator;
++#else
++  using const_iterator = typename ZoneVector<Variable>::const_iterator;
++#endif
+   VirtualObject(VariableTracker* var_states, Id id, int size);
+   Maybe<Variable> FieldAt(int offset) const {
+     CHECK(IsAligned(offset, kTaggedSize));
+diff --git a/src/compiler/turboshaft/assembler.h b/src/compiler/turboshaft/assembler.h
+index b586b6aa6b2..207d7ed15f3 100644
+--- a/src/compiler/turboshaft/assembler.h
++++ b/src/compiler/turboshaft/assembler.h
+@@ -731,7 +731,11 @@ struct LoopLabelForHelper<std::tuple<V<Ts>...>> {
+ }  // namespace detail
+ 
+ template <typename T>
++#if !defined(__QNX__) || __QNX__ >= 800
+ using LoopLabelFor = detail::LoopLabelForHelper<T>::type;
++#else
++using LoopLabelFor = typename detail::LoopLabelForHelper<T>::type;
++#endif
+ 
+ Handle<Code> BuiltinCodeHandle(Builtin builtin, Isolate* isolate);
+ 
+@@ -789,8 +793,12 @@ struct ReducerStack {
+       reducer_list_index_of<ReducerList, TSReducerBase>::value;
+   static_assert(base_index == length - 1);
+   // Insert a GenericReducerBase before that.
++#if !defined(__QNX__) || __QNX__ >= 800
+   using WithGeneric =
+       reducer_list_insert_at<ReducerList, base_index, GenericReducerBase>::type;
++#else
++  using WithGeneric = typename      reducer_list_insert_at<ReducerList, base_index, GenericReducerBase>::type;
++#endif
+   // If we have a ValueNumberingReducer in the list, we insert at that index,
+   // otherwise before the reducer_base.
+   static constexpr size_t ep_index =
+diff --git a/src/compiler/turboshaft/late-load-elimination-reducer.h b/src/compiler/turboshaft/late-load-elimination-reducer.h
+index f5b9a8da010..7c85d3e6fbb 100644
+--- a/src/compiler/turboshaft/late-load-elimination-reducer.h
++++ b/src/compiler/turboshaft/late-load-elimination-reducer.h
+@@ -213,21 +213,33 @@ struct KeyData {
+ };
+ 
+ struct OffsetListTraits {
++#if !defined(__QNX__) || __QNX__ >= 800
+   using T = SnapshotTable<OpIndex, KeyData>::Key;
++#else
++  using T = typename SnapshotTable<OpIndex, KeyData>::Key;
++#endif
+   static T** prev(T t) { return &(t.data().prev_same_offset); }
+   static T* next(T t) { return &(t.data().next_same_offset); }
+   static bool non_empty(T t) { return t.valid(); }
+ };
+ 
+ struct BaseListTraits {
++#if !defined(__QNX__) || __QNX__ >= 800
+   using T = SnapshotTable<OpIndex, KeyData>::Key;
++#else
++  using T = typename SnapshotTable<OpIndex, KeyData>::Key;
++#endif
+   static T** prev(T t) { return &(t.data().prev_same_base); }
+   static T* next(T t) { return &(t.data().next_same_base); }
+   static bool non_empty(T t) { return t.valid(); }
+ };
+ 
+ struct BaseData {
++#if !defined(__QNX__) || __QNX__ >= 800
+   using Key = SnapshotTable<OpIndex, KeyData>::Key;
++#else
++  using Key = typename SnapshotTable<OpIndex, KeyData>::Key;
++#endif
+   // List of every value at this base that has an offset rather than an index.
+   v8::base::DoublyThreadedList<Key, BaseListTraits> with_offsets;
+   // List of every value at this base that has a valid index.
+diff --git a/src/compiler/turboshaft/operations.h b/src/compiler/turboshaft/operations.h
+index f7e7fd77e41..9bab0e08aa4 100644
+--- a/src/compiler/turboshaft/operations.h
++++ b/src/compiler/turboshaft/operations.h
+@@ -79,7 +79,11 @@ struct VariableData {
+   bool loop_invariant;
+   IntrusiveSetIndex active_loop_variables_index = {};
+ };
++#if !defined(__QNX__) || __QNX__ >= 800
+ using Variable = SnapshotTable<OpIndex, VariableData>::Key;
++#else
++using Variable = typename SnapshotTable<OpIndex, VariableData>::Key;
++#endif
+ 
+ // DEFINING NEW OPERATIONS
+ // =======================
+diff --git a/src/compiler/turboshaft/variable-reducer.h b/src/compiler/turboshaft/variable-reducer.h
+index 113a7b859c1..4292eedd7e6 100644
+--- a/src/compiler/turboshaft/variable-reducer.h
++++ b/src/compiler/turboshaft/variable-reducer.h
+@@ -57,7 +57,11 @@ namespace v8::internal::compiler::turboshaft {
+ template <class AfterNext>
+ class VariableReducer : public RequiredOptimizationReducer<AfterNext> {
+   using Next = RequiredOptimizationReducer<AfterNext>;
++#if !defined(__QNX__) || __QNX__ >= 800
+   using Snapshot = SnapshotTable<OpIndex, VariableData>::Snapshot;
++#else
++  using Snapshot = typename SnapshotTable<OpIndex, VariableData>::Snapshot;
++#endif
+ 
+   struct GetActiveLoopVariablesIndex {
+     IntrusiveSetIndex& operator()(Variable var) const {
+diff --git a/src/compiler/turboshaft/wasm-load-elimination-reducer.h b/src/compiler/turboshaft/wasm-load-elimination-reducer.h
+index 35a1e1327c5..1bc3363f23b 100644
+--- a/src/compiler/turboshaft/wasm-load-elimination-reducer.h
++++ b/src/compiler/turboshaft/wasm-load-elimination-reducer.h
+@@ -79,21 +79,33 @@ struct KeyData {
+ };
+ 
+ struct OffsetListTraits {
++#if !defined(__QNX__) || __QNX__ >= 800
+   using T = SnapshotTable<OpIndex, KeyData>::Key;
++#else
++  using T = typename SnapshotTable<OpIndex, KeyData>::Key;
++#endif
+   static T** prev(T t) { return &(t.data().prev_same_offset); }
+   static T* next(T t) { return &(t.data().next_same_offset); }
+   static bool non_empty(T t) { return t.valid(); }
+ };
+ 
+ struct BaseListTraits {
++#if !defined(__QNX__) || __QNX__ >= 800
+   using T = SnapshotTable<OpIndex, KeyData>::Key;
++#else
++  using T = typename SnapshotTable<OpIndex, KeyData>::Key;
++#endif
+   static T** prev(T t) { return &(t.data().prev_same_base); }
+   static T* next(T t) { return &(t.data().next_same_base); }
+   static bool non_empty(T t) { return t.valid(); }
+ };
+ 
+ struct BaseData {
++#if !defined(__QNX__) || __QNX__ >= 800
+   using Key = SnapshotTable<OpIndex, KeyData>::Key;
++#else
++  using Key = typename SnapshotTable<OpIndex, KeyData>::Key;
++#endif
+   // List of every value at this base that has an offset rather than an index.
+   v8::base::DoublyThreadedList<Key, BaseListTraits> with_offsets;
+ };
+diff --git a/src/deoptimizer/translated-state.h b/src/deoptimizer/translated-state.h
+index 652969eeed3..59867f62a2a 100644
+--- a/src/deoptimizer/translated-state.h
++++ b/src/deoptimizer/translated-state.h
+@@ -428,11 +428,19 @@ class TranslatedState {
+   // Store newly materialized values into the isolate.
+   void StoreMaterializedValuesAndDeopt(JavaScriptFrame* frame);
+ 
++#if !defined(__QNX__) || __QNX__ >= 800
+   using iterator = std::vector<TranslatedFrame>::iterator;
++#else
++  using iterator = typename std::vector<TranslatedFrame>::iterator;
++#endif
+   iterator begin() { return frames_.begin(); }
+   iterator end() { return frames_.end(); }
+ 
++#if !defined(__QNX__) || __QNX__ >= 800
+   using const_iterator = std::vector<TranslatedFrame>::const_iterator;
++#else
++  using const_iterator = typename std::vector<TranslatedFrame>::const_iterator;
++#endif
+   const_iterator begin() const { return frames_.begin(); }
+   const_iterator end() const { return frames_.end(); }
+ 
+diff --git a/src/handles/global-handles.cc b/src/handles/global-handles.cc
+index 171aba8e0cf..7a9b6e3ceec 100644
+--- a/src/handles/global-handles.cc
++++ b/src/handles/global-handles.cc
+@@ -663,7 +663,11 @@ void GlobalHandles::Destroy(Address* location) {
+   }
+ }
+ 
++#if !defined(__QNX__) || __QNX__ >= 800
+ using GenericCallback = v8::WeakCallbackInfo<void>::Callback;
++#else
++using GenericCallback = typename v8::WeakCallbackInfo<void>::Callback;
++#endif
+ 
+ void GlobalHandles::MakeWeak(Address* location, void* parameter,
+                              GenericCallback phantom_callback,
+diff --git a/src/ic/ic.cc b/src/ic/ic.cc
+index e68de754029..d05343ad86f 100644
+--- a/src/ic/ic.cc
++++ b/src/ic/ic.cc
+@@ -1168,7 +1168,11 @@ bool AllowedHandlerChange(KeyedAccessLoadMode old_mode,
+                           KeyedAccessLoadMode new_mode) {
+   // Only allow transitions to allow OOB or allow converting a hole to
+   // undefined.
++#if !defined(__QNX__) || __QNX__ >= 800
+   using T = std::underlying_type<KeyedAccessLoadMode>::type;
++#else
++  using T = typename std::underlying_type<KeyedAccessLoadMode>::type;
++#endif
+   return ((static_cast<T>(old_mode) ^
+            static_cast<T>(GeneralizeKeyedAccessLoadMode(old_mode, new_mode))) &
+           0b11) != 0;
+diff --git a/src/maglev/maglev-ir.cc b/src/maglev/maglev-ir.cc
+index 1753a5048f9..3ca314e3845 100644
+--- a/src/maglev/maglev-ir.cc
++++ b/src/maglev/maglev-ir.cc
+@@ -1238,12 +1238,24 @@ void Phi::SetValueLocationConstraints() {
+ void Phi::GenerateCode(MaglevAssembler* masm, const ProcessingState& state) {}
+ 
+ void ArgumentsElements::SetValueLocationConstraints() {
++#if !defined(__QNX__) || __QNX__ >= 800
+   using SloppyArgsD =
+       CallInterfaceDescriptorFor<Builtin::kNewSloppyArgumentsElements>::type;
++#else
++  using SloppyArgsD = typename      CallInterfaceDescriptorFor<Builtin::kNewSloppyArgumentsElements>::type;
++#endif
++#if !defined(__QNX__) || __QNX__ >= 800
+   using StrictArgsD =
+       CallInterfaceDescriptorFor<Builtin::kNewStrictArgumentsElements>::type;
++#else
++  using StrictArgsD = typename      CallInterfaceDescriptorFor<Builtin::kNewStrictArgumentsElements>::type;
++#endif
++#if !defined(__QNX__) || __QNX__ >= 800
+   using RestArgsD =
+       CallInterfaceDescriptorFor<Builtin::kNewRestArgumentsElements>::type;
++#else
++  using RestArgsD = typename      CallInterfaceDescriptorFor<Builtin::kNewRestArgumentsElements>::type;
++#endif
+   static_assert(
+       SloppyArgsD::GetRegisterParameter(SloppyArgsD::kArgumentCount) ==
+       StrictArgsD::GetRegisterParameter(StrictArgsD::kArgumentCount));
+@@ -2079,11 +2091,19 @@ void MigrateMapIfNeeded::GenerateCode(MaglevAssembler* masm,
+ }
+ 
+ int DeleteProperty::MaxCallStackArgs() const {
++#if !defined(__QNX__) || __QNX__ >= 800
+   using D = CallInterfaceDescriptorFor<Builtin::kDeleteProperty>::type;
++#else
++  using D = typename CallInterfaceDescriptorFor<Builtin::kDeleteProperty>::type;
++#endif
+   return D::GetStackParameterCount();
+ }
+ void DeleteProperty::SetValueLocationConstraints() {
++#if !defined(__QNX__) || __QNX__ >= 800
+   using D = CallInterfaceDescriptorFor<Builtin::kDeleteProperty>::type;
++#else
++  using D = typename CallInterfaceDescriptorFor<Builtin::kDeleteProperty>::type;
++#endif
+   UseFixed(context(), kContextRegister);
+   UseFixed(object(), D::GetRegisterParameter(D::kObject));
+   UseFixed(key(), D::GetRegisterParameter(D::kKey));
+@@ -2101,11 +2121,19 @@ void DeleteProperty::GenerateCode(MaglevAssembler* masm,
+ }
+ 
+ int ForInPrepare::MaxCallStackArgs() const {
++#if !defined(__QNX__) || __QNX__ >= 800
+   using D = CallInterfaceDescriptorFor<Builtin::kForInPrepare>::type;
++#else
++  using D = typename CallInterfaceDescriptorFor<Builtin::kForInPrepare>::type;
++#endif
+   return D::GetStackParameterCount();
+ }
+ void ForInPrepare::SetValueLocationConstraints() {
++#if !defined(__QNX__) || __QNX__ >= 800
+   using D = CallInterfaceDescriptorFor<Builtin::kForInPrepare>::type;
++#else
++  using D = typename CallInterfaceDescriptorFor<Builtin::kForInPrepare>::type;
++#endif
+   UseFixed(context(), kContextRegister);
+   UseFixed(enumerator(), D::GetRegisterParameter(D::kEnumerator));
+   DefineAsFixed(this, kReturnRegister0);
+@@ -2121,11 +2149,19 @@ void ForInPrepare::GenerateCode(MaglevAssembler* masm,
+ }
+ 
+ int ForInNext::MaxCallStackArgs() const {
++#if !defined(__QNX__) || __QNX__ >= 800
+   using D = CallInterfaceDescriptorFor<Builtin::kForInNext>::type;
++#else
++  using D = typename CallInterfaceDescriptorFor<Builtin::kForInNext>::type;
++#endif
+   return D::GetStackParameterCount();
+ }
+ void ForInNext::SetValueLocationConstraints() {
++#if !defined(__QNX__) || __QNX__ >= 800
+   using D = CallInterfaceDescriptorFor<Builtin::kForInNext>::type;
++#else
++  using D = typename CallInterfaceDescriptorFor<Builtin::kForInNext>::type;
++#endif
+   UseFixed(context(), kContextRegister);
+   UseFixed(receiver(), D::GetRegisterParameter(D::kReceiver));
+   UseFixed(cache_array(), D::GetRegisterParameter(D::kCacheArray));
+@@ -2147,11 +2183,19 @@ void ForInNext::GenerateCode(MaglevAssembler* masm,
+ }
+ 
+ int GetIterator::MaxCallStackArgs() const {
++#if !defined(__QNX__) || __QNX__ >= 800
+   using D = CallInterfaceDescriptorFor<Builtin::kGetIteratorWithFeedback>::type;
++#else
++  using D = typename CallInterfaceDescriptorFor<Builtin::kGetIteratorWithFeedback>::type;
++#endif
+   return D::GetStackParameterCount();
+ }
+ void GetIterator::SetValueLocationConstraints() {
++#if !defined(__QNX__) || __QNX__ >= 800
+   using D = CallInterfaceDescriptorFor<Builtin::kGetIteratorWithFeedback>::type;
++#else
++  using D = typename CallInterfaceDescriptorFor<Builtin::kGetIteratorWithFeedback>::type;
++#endif
+   UseFixed(context(), kContextRegister);
+   UseFixed(receiver(), D::GetRegisterParameter(D::kReceiver));
+   DefineAsFixed(this, kReturnRegister0);
+@@ -3035,11 +3079,19 @@ void LoadEnumCacheLength::GenerateCode(MaglevAssembler* masm,
+ 
+ int LoadGlobal::MaxCallStackArgs() const {
+   if (typeof_mode() == TypeofMode::kNotInside) {
++#if !defined(__QNX__) || __QNX__ >= 800
+     using D = CallInterfaceDescriptorFor<Builtin::kLoadGlobalIC>::type;
++#else
++    using D = typename CallInterfaceDescriptorFor<Builtin::kLoadGlobalIC>::type;
++#endif
+     return D::GetStackParameterCount();
+   } else {
++#if !defined(__QNX__) || __QNX__ >= 800
+     using D =
+         CallInterfaceDescriptorFor<Builtin::kLoadGlobalICInsideTypeof>::type;
++#else
++    using D = typename        CallInterfaceDescriptorFor<Builtin::kLoadGlobalICInsideTypeof>::type;
++#endif
+     return D::GetStackParameterCount();
+   }
+ }
+@@ -3070,11 +3122,19 @@ void LoadGlobal::GenerateCode(MaglevAssembler* masm,
+ }
+ 
+ int StoreGlobal::MaxCallStackArgs() const {
++#if !defined(__QNX__) || __QNX__ >= 800
+   using D = CallInterfaceDescriptorFor<Builtin::kStoreGlobalIC>::type;
++#else
++  using D = typename CallInterfaceDescriptorFor<Builtin::kStoreGlobalIC>::type;
++#endif
+   return D::GetStackParameterCount();
+ }
+ void StoreGlobal::SetValueLocationConstraints() {
++#if !defined(__QNX__) || __QNX__ >= 800
+   using D = CallInterfaceDescriptorFor<Builtin::kStoreGlobalIC>::type;
++#else
++  using D = typename CallInterfaceDescriptorFor<Builtin::kStoreGlobalIC>::type;
++#endif
+   UseFixed(context(), kContextRegister);
+   UseFixed(value(), D::GetRegisterParameter(D::kValue));
+   DefineAsFixed(this, kReturnRegister0);
+@@ -3134,13 +3194,21 @@ void CheckFloat64IsNan::GenerateCode(MaglevAssembler* masm,
+ }
+ 
+ void CheckValueEqualsString::SetValueLocationConstraints() {
++#if !defined(__QNX__) || __QNX__ >= 800
+   using D = CallInterfaceDescriptorFor<Builtin::kStringEqual>::type;
++#else
++  using D = typename CallInterfaceDescriptorFor<Builtin::kStringEqual>::type;
++#endif
+   UseFixed(target_input(), D::GetRegisterParameter(D::kLeft));
+   RequireSpecificTemporary(D::GetRegisterParameter(D::kLength));
+ }
+ void CheckValueEqualsString::GenerateCode(MaglevAssembler* masm,
+                                           const ProcessingState& state) {
++#if !defined(__QNX__) || __QNX__ >= 800
+   using D = CallInterfaceDescriptorFor<Builtin::kStringEqual>::type;
++#else
++  using D = typename CallInterfaceDescriptorFor<Builtin::kStringEqual>::type;
++#endif
+ 
+   ZoneLabelRef end(masm);
+   DCHECK_EQ(D::GetRegisterParameter(D::kLeft), ToRegister(target_input()));
+@@ -3402,11 +3470,19 @@ void ConvertHoleToUndefined::GenerateCode(MaglevAssembler* masm,
+ }
+ 
+ int ConvertReceiver::MaxCallStackArgs() const {
++#if !defined(__QNX__) || __QNX__ >= 800
+   using D = CallInterfaceDescriptorFor<Builtin::kToObject>::type;
++#else
++  using D = typename CallInterfaceDescriptorFor<Builtin::kToObject>::type;
++#endif
+   return D::GetStackParameterCount();
+ }
+ void ConvertReceiver::SetValueLocationConstraints() {
++#if !defined(__QNX__) || __QNX__ >= 800
+   using D = CallInterfaceDescriptorFor<Builtin::kToObject>::type;
++#else
++  using D = typename CallInterfaceDescriptorFor<Builtin::kToObject>::type;
++#endif
+   static_assert(D::GetRegisterParameter(D::kInput) == kReturnRegister0);
+   UseFixed(receiver_input(), D::GetRegisterParameter(D::kInput));
+   DefineAsFixed(this, kReturnRegister0);
+@@ -3542,8 +3618,12 @@ void CreateObjectLiteral::GenerateCode(MaglevAssembler* masm,
+ }
+ 
+ int CreateShallowArrayLiteral::MaxCallStackArgs() const {
++#if !defined(__QNX__) || __QNX__ >= 800
+   using D =
+       CallInterfaceDescriptorFor<Builtin::kCreateShallowArrayLiteral>::type;
++#else
++  using D = typename      CallInterfaceDescriptorFor<Builtin::kCreateShallowArrayLiteral>::type;
++#endif
+   return D::GetStackParameterCount();
+ }
+ void CreateShallowArrayLiteral::SetValueLocationConstraints() {
+@@ -3581,8 +3661,12 @@ void CreateArrayLiteral::GenerateCode(MaglevAssembler* masm,
+ }
+ 
+ int CreateShallowObjectLiteral::MaxCallStackArgs() const {
++#if !defined(__QNX__) || __QNX__ >= 800
+   using D =
+       CallInterfaceDescriptorFor<Builtin::kCreateShallowObjectLiteral>::type;
++#else
++  using D = typename      CallInterfaceDescriptorFor<Builtin::kCreateShallowObjectLiteral>::type;
++#endif
+   return D::GetStackParameterCount();
+ }
+ void CreateShallowObjectLiteral::SetValueLocationConstraints() {
+@@ -3628,11 +3712,19 @@ void CreateClosure::GenerateCode(MaglevAssembler* masm,
+ }
+ 
+ int FastCreateClosure::MaxCallStackArgs() const {
++#if !defined(__QNX__) || __QNX__ >= 800
+   using D = CallInterfaceDescriptorFor<Builtin::kFastNewClosure>::type;
++#else
++  using D = typename CallInterfaceDescriptorFor<Builtin::kFastNewClosure>::type;
++#endif
+   return D::GetStackParameterCount();
+ }
+ void FastCreateClosure::SetValueLocationConstraints() {
++#if !defined(__QNX__) || __QNX__ >= 800
+   using D = CallInterfaceDescriptorFor<Builtin::kFastNewClosure>::type;
++#else
++  using D = typename CallInterfaceDescriptorFor<Builtin::kFastNewClosure>::type;
++#endif
+   static_assert(D::HasContextParameter());
+   UseFixed(context(), D::ContextRegister());
+   DefineAsFixed(this, kReturnRegister0);
+@@ -3653,8 +3745,12 @@ int CreateFunctionContext::MaxCallStackArgs() const {
+         Builtin::kFastNewFunctionContextFunction>::type;
+     return D::GetStackParameterCount();
+   } else {
++#if !defined(__QNX__) || __QNX__ >= 800
+     using D =
+         CallInterfaceDescriptorFor<Builtin::kFastNewFunctionContextEval>::type;
++#else
++    using D = typename        CallInterfaceDescriptorFor<Builtin::kFastNewFunctionContextEval>::type;
++#endif
+     return D::GetStackParameterCount();
+   }
+ }
+@@ -3669,8 +3765,12 @@ void CreateFunctionContext::SetValueLocationConstraints() {
+     UseFixed(context(), D::ContextRegister());
+   } else {
+     DCHECK_EQ(scope_type(), ScopeType::EVAL_SCOPE);
++#if !defined(__QNX__) || __QNX__ >= 800
+     using D =
+         CallInterfaceDescriptorFor<Builtin::kFastNewFunctionContextEval>::type;
++#else
++    using D = typename        CallInterfaceDescriptorFor<Builtin::kFastNewFunctionContextEval>::type;
++#endif
+     static_assert(D::HasContextParameter());
+     UseFixed(context(), D::ContextRegister());
+   }
+@@ -3695,7 +3795,11 @@ void CreateFunctionContext::GenerateCode(MaglevAssembler* masm,
+ }
+ 
+ int CreateRegExpLiteral::MaxCallStackArgs() const {
++#if !defined(__QNX__) || __QNX__ >= 800
+   using D = CallInterfaceDescriptorFor<Builtin::kCreateRegExpLiteral>::type;
++#else
++  using D = typename CallInterfaceDescriptorFor<Builtin::kCreateRegExpLiteral>::type;
++#endif
+   return D::GetStackParameterCount();
+ }
+ void CreateRegExpLiteral::SetValueLocationConstraints() {
+@@ -3714,7 +3818,11 @@ void CreateRegExpLiteral::GenerateCode(MaglevAssembler* masm,
+ }
+ 
+ int GetTemplateObject::MaxCallStackArgs() const {
++#if !defined(__QNX__) || __QNX__ >= 800
+   using D = CallInterfaceDescriptorFor<Builtin::kGetTemplateObject>::type;
++#else
++  using D = typename CallInterfaceDescriptorFor<Builtin::kGetTemplateObject>::type;
++#endif
+   return D::GetStackParameterCount();
+ }
+ void GetTemplateObject::SetValueLocationConstraints() {
+@@ -3915,11 +4023,19 @@ void LoadNamedFromSuperGeneric::GenerateCode(MaglevAssembler* masm,
+ }
+ 
+ int SetNamedGeneric::MaxCallStackArgs() const {
++#if !defined(__QNX__) || __QNX__ >= 800
+   using D = CallInterfaceDescriptorFor<Builtin::kStoreIC>::type;
++#else
++  using D = typename CallInterfaceDescriptorFor<Builtin::kStoreIC>::type;
++#endif
+   return D::GetStackParameterCount();
+ }
+ void SetNamedGeneric::SetValueLocationConstraints() {
++#if !defined(__QNX__) || __QNX__ >= 800
+   using D = CallInterfaceDescriptorFor<Builtin::kStoreIC>::type;
++#else
++  using D = typename CallInterfaceDescriptorFor<Builtin::kStoreIC>::type;
++#endif
+   UseFixed(context(), kContextRegister);
+   UseFixed(object_input(), D::GetRegisterParameter(D::kReceiver));
+   UseFixed(value_input(), D::GetRegisterParameter(D::kValue));
+@@ -3939,11 +4055,19 @@ void SetNamedGeneric::GenerateCode(MaglevAssembler* masm,
+ }
+ 
+ int DefineNamedOwnGeneric::MaxCallStackArgs() const {
++#if !defined(__QNX__) || __QNX__ >= 800
+   using D = CallInterfaceDescriptorFor<Builtin::kDefineNamedOwnIC>::type;
++#else
++  using D = typename CallInterfaceDescriptorFor<Builtin::kDefineNamedOwnIC>::type;
++#endif
+   return D::GetStackParameterCount();
+ }
+ void DefineNamedOwnGeneric::SetValueLocationConstraints() {
++#if !defined(__QNX__) || __QNX__ >= 800
+   using D = CallInterfaceDescriptorFor<Builtin::kDefineNamedOwnIC>::type;
++#else
++  using D = typename CallInterfaceDescriptorFor<Builtin::kDefineNamedOwnIC>::type;
++#endif
+   UseFixed(context(), kContextRegister);
+   UseFixed(object_input(), D::GetRegisterParameter(D::kReceiver));
+   UseFixed(value_input(), D::GetRegisterParameter(D::kValue));
+@@ -4183,11 +4307,19 @@ void ExtendPropertiesBackingStore::GenerateCode(MaglevAssembler* masm,
+ }
+ 
+ int SetKeyedGeneric::MaxCallStackArgs() const {
++#if !defined(__QNX__) || __QNX__ >= 800
+   using D = CallInterfaceDescriptorFor<Builtin::kKeyedStoreIC>::type;
++#else
++  using D = typename CallInterfaceDescriptorFor<Builtin::kKeyedStoreIC>::type;
++#endif
+   return D::GetStackParameterCount();
+ }
+ void SetKeyedGeneric::SetValueLocationConstraints() {
++#if !defined(__QNX__) || __QNX__ >= 800
+   using D = CallInterfaceDescriptorFor<Builtin::kKeyedStoreIC>::type;
++#else
++  using D = typename CallInterfaceDescriptorFor<Builtin::kKeyedStoreIC>::type;
++#endif
+   UseFixed(context(), kContextRegister);
+   UseFixed(object_input(), D::GetRegisterParameter(D::kReceiver));
+   UseFixed(key_input(), D::GetRegisterParameter(D::kName));
+@@ -4208,11 +4340,19 @@ void SetKeyedGeneric::GenerateCode(MaglevAssembler* masm,
+ }
+ 
+ int DefineKeyedOwnGeneric::MaxCallStackArgs() const {
++#if !defined(__QNX__) || __QNX__ >= 800
+   using D = CallInterfaceDescriptorFor<Builtin::kDefineKeyedOwnIC>::type;
++#else
++  using D = typename CallInterfaceDescriptorFor<Builtin::kDefineKeyedOwnIC>::type;
++#endif
+   return D::GetStackParameterCount();
+ }
+ void DefineKeyedOwnGeneric::SetValueLocationConstraints() {
++#if !defined(__QNX__) || __QNX__ >= 800
+   using D = CallInterfaceDescriptorFor<Builtin::kDefineKeyedOwnIC>::type;
++#else
++  using D = typename CallInterfaceDescriptorFor<Builtin::kDefineKeyedOwnIC>::type;
++#endif
+   UseFixed(context(), kContextRegister);
+   UseFixed(object_input(), D::GetRegisterParameter(D::kReceiver));
+   UseFixed(key_input(), D::GetRegisterParameter(D::kName));
+@@ -4235,11 +4375,19 @@ void DefineKeyedOwnGeneric::GenerateCode(MaglevAssembler* masm,
+ }
+ 
+ int StoreInArrayLiteralGeneric::MaxCallStackArgs() const {
++#if !defined(__QNX__) || __QNX__ >= 800
+   using D = CallInterfaceDescriptorFor<Builtin::kStoreInArrayLiteralIC>::type;
++#else
++  using D = typename CallInterfaceDescriptorFor<Builtin::kStoreInArrayLiteralIC>::type;
++#endif
+   return D::GetStackParameterCount();
+ }
+ void StoreInArrayLiteralGeneric::SetValueLocationConstraints() {
++#if !defined(__QNX__) || __QNX__ >= 800
+   using D = CallInterfaceDescriptorFor<Builtin::kStoreInArrayLiteralIC>::type;
++#else
++  using D = typename CallInterfaceDescriptorFor<Builtin::kStoreInArrayLiteralIC>::type;
++#endif
+   UseFixed(context(), kContextRegister);
+   UseFixed(object_input(), D::GetRegisterParameter(D::kReceiver));
+   UseFixed(name_input(), D::GetRegisterParameter(D::kName));
+@@ -4359,11 +4507,19 @@ void GeneratorStore::GenerateCode(MaglevAssembler* masm,
+ }
+ 
+ int GetKeyedGeneric::MaxCallStackArgs() const {
++#if !defined(__QNX__) || __QNX__ >= 800
+   using D = CallInterfaceDescriptorFor<Builtin::kKeyedLoadIC>::type;
++#else
++  using D = typename CallInterfaceDescriptorFor<Builtin::kKeyedLoadIC>::type;
++#endif
+   return D::GetStackParameterCount();
+ }
+ void GetKeyedGeneric::SetValueLocationConstraints() {
++#if !defined(__QNX__) || __QNX__ >= 800
+   using D = CallInterfaceDescriptorFor<Builtin::kKeyedLoadIC>::type;
++#else
++  using D = typename CallInterfaceDescriptorFor<Builtin::kKeyedLoadIC>::type;
++#endif
+   UseFixed(context(), kContextRegister);
+   UseFixed(object_input(), D::GetRegisterParameter(D::kReceiver));
+   UseFixed(key_input(), D::GetRegisterParameter(D::kName));
+@@ -4753,11 +4909,19 @@ void TaggedNotEqual::GenerateCode(MaglevAssembler* masm,
+ }
+ 
+ int TestInstanceOf::MaxCallStackArgs() const {
++#if !defined(__QNX__) || __QNX__ >= 800
+   using D = CallInterfaceDescriptorFor<Builtin::kInstanceOf_WithFeedback>::type;
++#else
++  using D = typename CallInterfaceDescriptorFor<Builtin::kInstanceOf_WithFeedback>::type;
++#endif
+   return D::GetStackParameterCount();
+ }
+ void TestInstanceOf::SetValueLocationConstraints() {
++#if !defined(__QNX__) || __QNX__ >= 800
+   using D = CallInterfaceDescriptorFor<Builtin::kInstanceOf_WithFeedback>::type;
++#else
++  using D = typename CallInterfaceDescriptorFor<Builtin::kInstanceOf_WithFeedback>::type;
++#endif
+   UseFixed(context(), kContextRegister);
+   UseFixed(object(), D::GetRegisterParameter(D::kLeft));
+   UseFixed(callable(), D::GetRegisterParameter(D::kRight));
+@@ -4844,11 +5008,19 @@ void ToBooleanLogicalNot::GenerateCode(MaglevAssembler* masm,
+ }
+ 
+ int ToName::MaxCallStackArgs() const {
++#if !defined(__QNX__) || __QNX__ >= 800
+   using D = CallInterfaceDescriptorFor<Builtin::kToName>::type;
++#else
++  using D = typename CallInterfaceDescriptorFor<Builtin::kToName>::type;
++#endif
+   return D::GetStackParameterCount();
+ }
+ void ToName::SetValueLocationConstraints() {
++#if !defined(__QNX__) || __QNX__ >= 800
+   using D = CallInterfaceDescriptorFor<Builtin::kToName>::type;
++#else
++  using D = typename CallInterfaceDescriptorFor<Builtin::kToName>::type;
++#endif
+   UseFixed(context(), kContextRegister);
+   UseFixed(value_input(), D::GetRegisterParameter(D::kInput));
+   DefineAsFixed(this, kReturnRegister0);
+@@ -4912,11 +5084,19 @@ void ToNumberOrNumeric::GenerateCode(MaglevAssembler* masm,
+ }
+ 
+ int ToObject::MaxCallStackArgs() const {
++#if !defined(__QNX__) || __QNX__ >= 800
+   using D = CallInterfaceDescriptorFor<Builtin::kToObject>::type;
++#else
++  using D = typename CallInterfaceDescriptorFor<Builtin::kToObject>::type;
++#endif
+   return D::GetStackParameterCount();
+ }
+ void ToObject::SetValueLocationConstraints() {
++#if !defined(__QNX__) || __QNX__ >= 800
+   using D = CallInterfaceDescriptorFor<Builtin::kToObject>::type;
++#else
++  using D = typename CallInterfaceDescriptorFor<Builtin::kToObject>::type;
++#endif
+   UseFixed(context(), kContextRegister);
+   UseFixed(value_input(), D::GetRegisterParameter(D::kInput));
+   DefineAsFixed(this, kReturnRegister0);
+@@ -4941,11 +5121,19 @@ void ToObject::GenerateCode(MaglevAssembler* masm,
+ }
+ 
+ int ToString::MaxCallStackArgs() const {
++#if !defined(__QNX__) || __QNX__ >= 800
+   using D = CallInterfaceDescriptorFor<Builtin::kToString>::type;
++#else
++  using D = typename CallInterfaceDescriptorFor<Builtin::kToString>::type;
++#endif
+   return D::GetStackParameterCount();
+ }
+ void ToString::SetValueLocationConstraints() {
++#if !defined(__QNX__) || __QNX__ >= 800
+   using D = CallInterfaceDescriptorFor<Builtin::kToString>::type;
++#else
++  using D = typename CallInterfaceDescriptorFor<Builtin::kToString>::type;
++#endif
+   UseFixed(context(), kContextRegister);
+   UseFixed(value_input(), D::GetRegisterParameter(D::kO));
+   DefineAsFixed(this, kReturnRegister0);
+@@ -4973,7 +5161,11 @@ void ToString::GenerateCode(MaglevAssembler* masm,
+ }
+ 
+ void NumberToString::SetValueLocationConstraints() {
++#if !defined(__QNX__) || __QNX__ >= 800
+   using D = CallInterfaceDescriptorFor<Builtin::kNumberToString>::type;
++#else
++  using D = typename CallInterfaceDescriptorFor<Builtin::kNumberToString>::type;
++#endif
+   UseFixed(value_input(), D::GetRegisterParameter(D::kInput));
+   DefineAsFixed(this, kReturnRegister0);
+ }
+@@ -5874,12 +6066,20 @@ void CallBuiltin::GenerateCode(MaglevAssembler* masm,
+ }
+ 
+ int CallCPPBuiltin::MaxCallStackArgs() const {
++#if !defined(__QNX__) || __QNX__ >= 800
+   using D = CallInterfaceDescriptorFor<kCEntry_Builtin>::type;
++#else
++  using D = typename CallInterfaceDescriptorFor<kCEntry_Builtin>::type;
++#endif
+   return D::GetStackParameterCount() + num_args();
+ }
+ 
+ void CallCPPBuiltin::SetValueLocationConstraints() {
++#if !defined(__QNX__) || __QNX__ >= 800
+   using D = CallInterfaceDescriptorFor<kCEntry_Builtin>::type;
++#else
++  using D = typename CallInterfaceDescriptorFor<kCEntry_Builtin>::type;
++#endif
+   UseAny(target());
+   UseAny(new_target());
+   UseFixed(context(), kContextRegister);
+@@ -5894,7 +6094,11 @@ void CallCPPBuiltin::SetValueLocationConstraints() {
+ 
+ void CallCPPBuiltin::GenerateCode(MaglevAssembler* masm,
+                                   const ProcessingState& state) {
++#if !defined(__QNX__) || __QNX__ >= 800
+   using D = CallInterfaceDescriptorFor<kCEntry_Builtin>::type;
++#else
++  using D = typename CallInterfaceDescriptorFor<kCEntry_Builtin>::type;
++#endif
+   constexpr Register kArityReg = D::GetRegisterParameter(D::kArity);
+   constexpr Register kCFunctionReg = D::GetRegisterParameter(D::kCFunction);
+ 
+@@ -5946,11 +6150,19 @@ void CallRuntime::GenerateCode(MaglevAssembler* masm,
+ 
+ int CallWithSpread::MaxCallStackArgs() const {
+   int argc_no_spread = num_args() - 1;
++#if !defined(__QNX__) || __QNX__ >= 800
+   using D = CallInterfaceDescriptorFor<Builtin::kCallWithSpread>::type;
++#else
++  using D = typename CallInterfaceDescriptorFor<Builtin::kCallWithSpread>::type;
++#endif
+   return argc_no_spread + D::GetStackParameterCount();
+ }
+ void CallWithSpread::SetValueLocationConstraints() {
++#if !defined(__QNX__) || __QNX__ >= 800
+   using D = CallInterfaceDescriptorFor<Builtin::kCallWithSpread>::type;
++#else
++  using D = typename CallInterfaceDescriptorFor<Builtin::kCallWithSpread>::type;
++#endif
+   UseFixed(function(), D::GetRegisterParameter(D::kTarget));
+   UseFixed(spread(), D::GetRegisterParameter(D::kSpread));
+   UseFixed(context(), kContextRegister);
+@@ -5973,11 +6185,19 @@ void CallWithSpread::GenerateCode(MaglevAssembler* masm,
+ }
+ 
+ int CallWithArrayLike::MaxCallStackArgs() const {
++#if !defined(__QNX__) || __QNX__ >= 800
+   using D = CallInterfaceDescriptorFor<Builtin::kCallWithArrayLike>::type;
++#else
++  using D = typename CallInterfaceDescriptorFor<Builtin::kCallWithArrayLike>::type;
++#endif
+   return D::GetStackParameterCount();
+ }
+ void CallWithArrayLike::SetValueLocationConstraints() {
++#if !defined(__QNX__) || __QNX__ >= 800
+   using D = CallInterfaceDescriptorFor<Builtin::kCallWithArrayLike>::type;
++#else
++  using D = typename CallInterfaceDescriptorFor<Builtin::kCallWithArrayLike>::type;
++#endif
+   UseFixed(function(), D::GetRegisterParameter(D::kTarget));
+   UseAny(receiver());
+   UseFixed(arguments_list(), D::GetRegisterParameter(D::kArgumentsList));
+diff --git a/src/maglev/maglev-regalloc.cc b/src/maglev/maglev-regalloc.cc
+index 0f2b96d9b50..db9f47ecf9a 100644
+--- a/src/maglev/maglev-regalloc.cc
++++ b/src/maglev/maglev-regalloc.cc
+@@ -51,7 +51,11 @@ namespace {
+ constexpr RegisterStateFlags initialized_node{true, false};
+ constexpr RegisterStateFlags initialized_merge{true, true};
+ 
++#if !defined(__QNX__) || __QNX__ >= 800
+ using BlockReverseIterator = std::vector<BasicBlock>::reverse_iterator;
++#else
++using BlockReverseIterator = typename std::vector<BasicBlock>::reverse_iterator;
++#endif
+ 
+ // A target is a fallthrough of a control node if its ID is the next ID
+ // after the control node.
+diff --git a/src/strings/string-case.cc b/src/strings/string-case.cc
+index e87973f0af3..218c9b26775 100644
+--- a/src/strings/string-case.cc
++++ b/src/strings/string-case.cc
+@@ -15,7 +15,11 @@ namespace internal {
+ // FastAsciiConvert tries to do character processing on a word_t basis if
+ // source and destination strings are properly aligned. Natural alignment of
+ // string data depends on kTaggedSize so we define word_t via Tagged_t.
++#if !defined(__QNX__) || __QNX__ >= 800
+ using word_t = std::make_unsigned<Tagged_t>::type;
++#else
++using word_t = typename std::make_unsigned<Tagged_t>::type;
++#endif
+ 
+ const word_t kWordTAllBitsSet = std::numeric_limits<word_t>::max();
+ const word_t kOneInEveryByte = kWordTAllBitsSet / 0xFF;
+diff --git a/test/cctest/test-api.cc b/test/cctest/test-api.cc
+index 9c724ec366d..1f6e4062ffc 100644
+--- a/test/cctest/test-api.cc
++++ b/test/cctest/test-api.cc
+@@ -8315,7 +8315,11 @@ TEST(GCFromWeakCallbacks) {
+   }
+ 
+   static const int kNumberOfGCTypes = 2;
++#if !defined(__QNX__) || __QNX__ >= 800
+   using Callback = v8::WeakCallbackInfo<FlagAndPersistent>::Callback;
++#else
++  using Callback = typename v8::WeakCallbackInfo<FlagAndPersistent>::Callback;
++#endif
+   Callback gc_forcing_callback[kNumberOfGCTypes] = {&ForceMinorGC1,
+                                                     &ForceFullGC1};
+ 
+diff --git a/test/unittests/compiler/turboshaft/snapshot-table-unittest.cc b/test/unittests/compiler/turboshaft/snapshot-table-unittest.cc
+index 641f6a07224..19ee46d205f 100644
+--- a/test/unittests/compiler/turboshaft/snapshot-table-unittest.cc
++++ b/test/unittests/compiler/turboshaft/snapshot-table-unittest.cc
+@@ -15,8 +15,16 @@ TEST_F(SnapshotTableTest, BasicTest) {
+   AccountingAllocator allocator;
+   Zone zone(&allocator, ZONE_NAME);
+ 
++#if !defined(__QNX__) || __QNX__ >= 800
+   using Key = SnapshotTable<int>::Key;
++#else
++  using Key = typename SnapshotTable<int>::Key;
++#endif
++#if !defined(__QNX__) || __QNX__ >= 800
+   using Snapshot = SnapshotTable<int>::Snapshot;
++#else
++  using Snapshot = typename SnapshotTable<int>::Snapshot;
++#endif
+ 
+   SnapshotTable<int> table(&zone);
+ 
+diff --git a/test/unittests/heap/global-handles-unittest.cc b/test/unittests/heap/global-handles-unittest.cc
+index ece58c86aa6..ce189008606 100644
+--- a/test/unittests/heap/global-handles-unittest.cc
++++ b/test/unittests/heap/global-handles-unittest.cc
+@@ -520,7 +520,11 @@ TEST_F(GlobalHandlesTest, GCFromWeakCallbacks) {
+   }
+ 
+   static const int kNumberOfGCTypes = 2;
++#if !defined(__QNX__) || __QNX__ >= 800
+   using Callback = v8::WeakCallbackInfo<FlagAndHandles>::Callback;
++#else
++  using Callback = typename v8::WeakCallbackInfo<FlagAndHandles>::Callback;
++#endif
+   Callback gc_forcing_callback[kNumberOfGCTypes] = {&ForceMinorGC1,
+                                                     &ForceMajorGC1};
+ 
+-- 
+2.34.1
+
