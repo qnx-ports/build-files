@@ -1,0 +1,27 @@
+From 9d5fb1964980abca002c61a30932af716e1715ac Mon Sep 17 00:00:00 2001
+From: Yongxin Dai <yodai@qnx.com>
+Date: Wed, 9 Apr 2025 12:53:56 -0400
+Subject: [PATCH] declare qnx_sdp_root
+
+---
+ config/qnx/config.gni | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/config/qnx/config.gni b/config/qnx/config.gni
+index b3e91b11e..2c0986d07 100644
+--- a/config/qnx/config.gni
++++ b/config/qnx/config.gni
+@@ -1,2 +1,8 @@
+-if (is_qnx) {
++_qnx_sdp_root = getenv("QNX_TARGET")
++declare_args() {
++  if (_qnx_sdp_root == "") {
++    error("QNX SDP environment variables not set, please run qnxsdp-env.sh first")
++  } else {
++    qnx_sdp_root = _qnx_sdp_root
++  }
+ }
+\ No newline at end of file
+-- 
+2.34.1
+
