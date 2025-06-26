@@ -20,13 +20,9 @@ cd build-files/docker
 # source qnxsdp-env.sh in
 source ~/qnx800/qnxsdp-env.sh
 
-# Clone epoll and libevent
+# Clone libevent
 cd ~/qnx_workspace
-git clone https://github.com/qnx-ports/epoll.git
 git clone https://github.com/qnx-ports/libevent.git
-
-# Build epoll
-make -C build-files/ports/epoll install JLEVEL=4
 
 # Build libevent
 make -C build-files/ports/libevent install JLEVEL=4
@@ -38,14 +34,10 @@ make -C build-files/ports/libevent install JLEVEL=4
 mkdir -p ~/qnx_workspace && cd qnx_workspace
 # Clone the repos
 git clone https://github.com/qnx-ports/build-files.git
-git clone https://github.com/qnx-ports/epoll.git
 git clone https://github.com/qnx-ports/libevent.git
 
 # source qnxsdp-env.sh
 source ~/qnx800/qnxsdp-env.sh
-
-# Build epoll
-make -C build-files/ports/epoll install JLEVEL=4
 
 # Build libevent
 make -C build-files/ports/libevent install JLEVEL=4
