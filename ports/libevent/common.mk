@@ -36,7 +36,7 @@ include $(MKFILES_ROOT)/qtargets.mk
 #because CMake and pkg-config do not necessary add it automatically
 #if the include path is "default"
 CFLAGS += -I$(INSTALL_ROOT)/$(PREFIX)/include
-LDFLAGS += -lsocket -lepoll -lssl -lcrypto
+LDFLAGS += -lsocket -lssl -lcrypto
 
 CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DCMAKE_INSTALL_PREFIX=$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX) \

@@ -32,12 +32,6 @@ jobs:
         with:
           path: build-files
 
-      - name: Checkout epoll
-        uses: actions/checkout@v4
-        with:
-          repository: qnx-ports/epoll
-          path: epoll
-
       - name: Checkout libevent
         uses: actions/checkout@v4
         with:
@@ -69,5 +63,4 @@ jobs:
               source ~/qnx/800/qnxsdp-env.sh
             fi
             cd ~/workspace
-            make -C build-files/ports/epoll install
             make -C build-files/ports/libevent install
