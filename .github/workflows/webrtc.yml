@@ -35,10 +35,13 @@ jobs:
         docker pull ghcr.io/qnx-ports/sdp-build-env:latest
 
     - name: Parse branch name
-      env:
-        BRANCH: ${{ github.head_ref }}
       id: parse
-      run: echo "branch=${BRANCH##*/}" >> $GITHUB_OUTPUT
+      run: |
+        if [[ "${{ github.head_ref }}" != '' ]]; then
+          echo "branch=${GITHUB_HEAD_REF##*/}" >> $GITHUB_OUTPUT
+        else
+          echo "branch=main" >> $GITHUB_OUTPUT
+        fi
 
     - name: Build webrtc
       uses: addnab/docker-run-action@v3
