@@ -15,7 +15,7 @@ on:
       - 'ports/libxml2/**'
 
 jobs:
-  build:
+  build_source:
     runs-on: self-hosted
     if: |
       (github.event_name == 'workflow_dispatch') ||
@@ -32,7 +32,7 @@ jobs:
       with:
         repository: qnx-ports/libxml2
         path: libxml2
-        
+
     - name: Login to GitHub Container Registry
       uses: docker/login-action@v3
       with:
@@ -52,21 +52,6 @@ jobs:
         shell: bash
         run: |
           source ~/qnx/800/qnxsdp-env.sh
-          export TARGET=aarch64-unknown-nto-qnx8.0.0
           cd ~/workspace
-          mkdir -p output
-          cd libxml2
-          ./configure \
-              --build=x86_64-unknown-linux-gnu \
-              --host=$TARGET \
-              --prefix=/usr \
-              --sysconfdir=/etc \
-              --mandir=/usr/share/man \
-              --infodir=/usr/share/info \
-              --enable-static \
-              --with-legacy \
-              --with-lzma \
-              --with-zlib \
-              --with-python=no
-          make
-          make DESTDIR=/home/runner/output install
+          sed -i 's/1.16.3/1.16.1/g' libxml2/configure.ac
+          QNX_PROJECT_ROOT="$(pwd)/libxml2" make -C build-files/ports/libxml2 install 
