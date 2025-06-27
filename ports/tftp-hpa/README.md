@@ -6,25 +6,16 @@ Currently tested version and SDP combos:
 + 5.2 on QNX 8.0/7.1
 
 # Building tftp-hpa
-We will need two patches to make it work:
-+ fix-build-gcc-10.patch: fix build on gcc 10+
-+ qnx-sa-restart.patch: QNX doesn't have `SA_RESTART`, so we just define it to 0
 
 ```bash
-# As of writing, the latest version is 5.2
-export PKGVER="5.2"
 # Specify your build target. This example targets QNX 8.0.0 on aarch64
 # For QNX x86_64, replace `aarch64` with `x86_64`
 # For QNX 7.1.0, replace `qnx8.0.0` with `qnx7.1.0
 export TARGET=aarch64-unknown-nto-qnx8.0.0
-# Specify which target is building for. Here we are doing it for QNX8 for aarch64
-# Fetch source tarball and unarchive it
-curl -O https://www.kernel.org/pub/software/network/tftp/tftp-hpa/tftp-hpa-$PKGVER.tar.gz
-tar xf tftp-hpa-$PKGVER.tar.gz
-cd tftp-hpa-$PKGVER
-# Apply patches
-patch -p1 < ../fix-build-gcc-10.patch
-patch -p1 < ../qnx-sa-restart.patch
+
+# Clone tftp-hpa
+git clone https://github.com/qnx-ports/tftp-hpa.git
+
 # Genrate build script
 ./configure \
     --build=x86_64-unknown-linux-gnu \
