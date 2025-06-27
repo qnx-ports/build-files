@@ -48,9 +48,6 @@ meson compile -C build/
 DESTDIR=$QNX_TARGET meson install -C build/
 
 # Install libxkbcommon
-
-# Checkout xkbcommon
-
 cd ~/qnx_workspace
 QNX_PROJECT_ROOT="$(pwd)/libxkbcommon" JLEVEL=4 make -C build-files/ports/libxkbcommon install
 ```
@@ -91,7 +88,6 @@ meson compile -C build/
 DESTDIR=$QNX_TARGET meson install -C build/
 
 # Install libxkbcommon
-
 cd ~/qnx_workspace
 QNX_PROJECT_ROOT="$(pwd)/libxkbcommon" JLEVEL=4 make -C build-files/ports/libxkbcommon install
 ```
