@@ -37,9 +37,8 @@ jobs:
     - name: Checkout libxkbcommon
       uses: actions/checkout@v4
       with:
-        repository: xkbcommon/libxkbcommon
+        repository: qnx-ports/libxkbcommon
         path: libxkbcommon
-        ref: xkbcommon-1.8.0
       
     - name: Checkout xkeyboard-config
       uses: actions/checkout@v4
@@ -77,7 +76,5 @@ jobs:
           meson setup build --prefix=/usr
           meson compile -C build/
           DESTDIR=$QNX_TARGET meson install -C build/
-          cd /home/runner/workspace/build-files/ports/libxkbcommon
-          ./scripts/patch.sh /home/runner/workspace/libxkbcommon
           cd /home/runner/workspace
           QNX_PROJECT_ROOT="$(pwd)/libxkbcommon" JLEVEL=4 make -C build-files/ports/libxkbcommon install

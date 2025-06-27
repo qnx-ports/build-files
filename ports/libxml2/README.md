@@ -16,23 +16,9 @@ Instructions for compiling and running tests are listed below.
 export TARGET=aarch64-unknown-nto-qnx8.0.0
 ```
 
-2. Download the latest release tarball. As of writing, it's 2.13.5
+2. Clone libxml2
 ```bash
-curl -O https://download.gnome.org/sources/libxml2/2.13/libxml2-2.13.5.tar.xz
-tar xf libxml2-2.13.5.tar.xz
-cd libxml2-2.13.5
-```
-
-3. *OPTIONAL* There is one edgecase in QNX that can cause a segmentation error via a null pointer access. A patch correcting this behaviour is available under build-files/ports/libxml2 and can be applied to libxml 2.13.5.
-```bash
-# Get the patch
-git clone https://github.com/qnx-ports/build-files.git
-cd build-files/ports/libxml2 
-# Patch is named libxml2-2.13.5.patch
-
-# Apply using git apply
-cd <your-libxml2-directory>
-git apply <path-to-build-files>/build-files/ports/libxml2/libxml2-2.13.5.patch
+git clone https://github.com/qnx-ports/libxml2.git
 ```
 
 You can now either compile libxml2 directly or via the recursive makefile structure provided in build-files.
@@ -96,21 +82,14 @@ mkdir libxml2_wksp && cd libxml2_wksp
 ```bash
 #Via HTTPS
 git clone https://github.com/qnx-ports/build-files.git
-git clone https://github.com/GNOME/libxml2.git
+git clone https://github.com/qnx-ports/libxml2.git
 
 #Via SSH
 git clone git@github.com:qnx-ports/build-files.git 
-git clone git@github.com:GNOME/libxml2.git
+git clone git@github.com:qnx-ports/libxml2.git
 ```
 
-3. *Optional* Checkout tested commit. These files are only tested on commit `5505d23`. While they should work on similar versions, functionality is not guaranteed.
-```bash
-cd libxml2
-git checkout 5505d23
-cd ..
-```
-
-4. *Optional* Build in a Docker Container: Build the Docker image and create a container, then update configure.ac to be compatible.
+3. *Optional* Build in a Docker Container: Build the Docker image and create a container, then update configure.ac to be compatible.
 ```bash
 # Start the docker container
 cd build-files/docker
@@ -122,14 +101,14 @@ cd <your-workspace>
 sed -i "s/1.16.3/1.16.1/g" libxml2/configure.ac
 ```
 
-5. Source your SDP (Installed from QNX Software Center)
+4. Source your SDP (Installed from QNX Software Center)
 ```bash
 #QNX 8.0 will be in the directory ~/qnx800/
 #QNX 7.1 will be in the directory ~/qnx710/
 source ~/qnx800/qnxsdp-env.sh
 ```
 
-6. Build the project in your workspace from Step 1
+5. Build the project in your workspace from Step 1
 ```bash
 # Navigate back to your workspace
 cd <path-to-your-workspace>
