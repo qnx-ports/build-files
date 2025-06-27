@@ -21,7 +21,6 @@ jobs:
     strategy:
       matrix:
         qnx_env: ["710", "800"]
-    name: Build for QNX ${{ matrix.qnx_env }}
     runs-on: self-hosted
     if: |
       (github.event_name == 'workflow_dispatch') ||
