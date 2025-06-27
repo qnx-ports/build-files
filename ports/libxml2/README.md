@@ -96,11 +96,11 @@ mkdir libxml2_wksp && cd libxml2_wksp
 ```bash
 #Via HTTPS
 git clone https://github.com/qnx-ports/build-files.git
-git clone https://github.com/GNOME/libxml2.git
+git clone https://github.com/qnx-ports/libxml2.git
 
 #Via SSH
 git clone git@github.com:qnx-ports/build-files.git 
-git clone git@github.com:GNOME/libxml2.git
+git clone git@github.com:qnx-ports/libxml2.git
 ```
 
 3. *Optional* Checkout tested commit. These files are only tested on commit `5505d23`. While they should work on similar versions, functionality is not guaranteed.

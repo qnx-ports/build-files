@@ -30,7 +30,7 @@ pip3 install strenum
 
 # Clone libxkbcommon and xkeyboard-config
 cd ~/qnx_workspace
-git clone https://github.com/xkbcommon/libxkbcommon.git
+git clone https://github.com/qnx-ports/libxkbcommon.git
 git clone https://github.com/qnx-ports/xkeyboard-config.git
 
 # Install xkeyboard-config
@@ -48,15 +48,6 @@ meson compile -C build/
 DESTDIR=$QNX_TARGET meson install -C build/
 
 # Install libxkbcommon
-
-# Checkout xkbcommon-1.8.0
-cd ~/qnx_workspace/libxkbcommon
-git checkout xkbcommon-1.8.0
-
-# Apply qnx_patches if you would like to run tests
-cd ~/qnx_workspace/build-files/ports/libxkbcommon
-./scripts/patch.sh ~/qnx_workspace/libxkbcommon
-
 cd ~/qnx_workspace
 QNX_PROJECT_ROOT="$(pwd)/libxkbcommon" JLEVEL=4 make -C build-files/ports/libxkbcommon install
 ```
@@ -79,7 +70,7 @@ pip3 install strenum
 
 # Clone libxkbcommon and xkeyboard-config
 cd ~/qnx_workspace
-git clone https://github.com/xkbcommon/libxkbcommon.git
+git clone https://github.com/qnx-ports/libxkbcommon.git
 git clone https://github.com/qnx-ports/xkeyboard-config.git
 
 # Install xkeyboard-config
@@ -97,15 +88,6 @@ meson compile -C build/
 DESTDIR=$QNX_TARGET meson install -C build/
 
 # Install libxkbcommon
-
-# Checkout xkbcommon-1.8.0
-cd ~/qnx_workspace/libxkbcommon
-git checkout xkbcommon-1.8.0
-
-# Apply qnx_patches if you would like to run tests
-cd ~/qnx_workspace/build-files/ports/libxkbcommon
-./scripts/patch.sh ~/qnx_workspace/libxkbcommon
-
 cd ~/qnx_workspace
 QNX_PROJECT_ROOT="$(pwd)/libxkbcommon" JLEVEL=4 make -C build-files/ports/libxkbcommon install
 ```
