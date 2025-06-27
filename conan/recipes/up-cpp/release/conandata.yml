@@ -1,0 +1,70 @@
+1.0.0-rc0:
+  sources:
+    url: "https://github.com/eclipse-uprotocol/up-cpp/archive/337b4f4b4193fece4d7067ef754b41ea323e1f96.tar.gz"
+    sha256: "f65fd40e3ba8914e70d3a4a9e5426b646ad6299c94841ff42a918fe75513e128"
+  requirements:
+    protobuf: "3.21.12"
+    up-core-api: "1.6.0-alpha2"
+    spdlog: "1.13.0"
+  test-requirements:
+    gtest: "1.14.0"
+
+1.0.0:
+  sources:
+    url: "https://github.com/eclipse-uprotocol/up-cpp/archive/refs/tags/v1.0.0.tar.gz"
+    sha256: "295c2730155bd86e91b974321ed863bcfc3d7479686694543f69382ba22baa06"
+  requirements:
+    protobuf: "3.21.12"
+    up-core-api: "1.6.0-alpha2"
+  test-requirements:
+    gtest: "1.14.0"
+
+1.0.1-rc1:
+  sources:
+    url: "https://github.com/eclipse-uprotocol/up-cpp/archive/9d53a0a0d318cf2a1ce3ab7ecc37198fa50f3941.tar.gz"
+    sha256: "f6753e5b25ddaa2eb224f6988f76f1b62bc7219a9b72bcdf51b07c498ef9178d"
+  requirements:
+    protobuf: "3.21.12"
+    up-core-api: "1.6.0-alpha2"
+  test-requirements:
+    gtest: "1.14.0"
+
+1.0.1:
+  sources:
+    url: "https://github.com/eclipse-uprotocol/up-cpp/archive/refs/tags/v1.0.1.tar.gz"
+    sha256: "7ca6173abeea6c643ce9d8df5fd43efb445bf2ef3bd3ec6c0f3e807995368f1b"
+  requirements:
+    protobuf: "3.21.12"
+    up-core-api: "1.6.0-alpha2"
+  test-requirements:
+    gtest: "1.14.0"
+
+patches:
+  1.0.0-rc0:
+    - patch_file: "patches/up-cpp-1.0.0-rc0.patch"
+      patch_description: "removed -lpthread for QNX, fix wrong tests names"
+      patch_type: "conan"
+    - patch_file: "patches/up-cpp_capacity_fix.patch"
+      patch_description: "fix test CallbackTest.ReturnValuesAreMoved"
+      patch_type: "bugfix"
+  1.0.0:
+    - patch_file: "patches/up-cpp-1.0.0.patch"
+      patch_description: "removed -lpthread for QNX, fix wrong tests names"
+      patch_type: "conan"
+    - patch_file: "patches/up-cpp_capacity_fix.patch"
+      patch_description: "fix test CallbackTest.ReturnValuesAreMoved"
+      patch_type: "bugfix"
+  1.0.1-rc1:
+    - patch_file: "patches/up-cpp-1.0.1-rc1.patch"
+      patch_description: "removed -lpthread for QNX, fix wrong tests names"
+      patch_type: "conan"
+    - patch_file: "patches/up-cpp_capacity_fix.patch"
+      patch_description: "fix test CallbackTest.ReturnValuesAreMoved"
+      patch_type: "bugfix"
+  1.0.1:
+    - patch_file: "patches/up-cpp-1.0.1.patch"
+      patch_description: "removed -lpthread for QNX"
+      patch_type: "conan"
+    - patch_file: "patches/up-cpp_capacity_fix.patch"
+      patch_description: "fix test CallbackTest.ReturnValuesAreMoved"
+      patch_type: "bugfix"
