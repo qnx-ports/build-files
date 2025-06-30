@@ -2,26 +2,63 @@
 
 Currently these versions are tested:
 + 2.13.5
++ 2.14.4
 
 Cross-compiled on Ubuntu 24.04 for:
 - QNX 8.0 aarch64le on Raspberry Pi 4
 
 Instructions for compiling and running tests are listed below.
 
-*__If you want to run tests__*, follow the compiling from source instructions (or use the recursive makefile directory provided in this repo with the tarball).
+*__If you want to run tests__*, make sure to download libxml2 from its source on GNOME or GitHub. 
 
-# Compile libxml2 from tarball for SDP 7.1/8.0
-1. Specify your build target. This example targets QNX 8.0.0 on aarch64. For QNX 8.0.0 on x86_64, use `export TARGET=x86_64-pc-nto-qnx8.0.0` instead.
+# Instructions (Ubuntu Only)
+## 1. Set up your workspace
+1. **Create a working directory.**
+
+Open your terminal, and navigate to an area where you wish to download and build libxml2. I would recommend making a `projects` or `qnx-workspace` folder and working in that directory or a subdirectory within.
+```bash
+cd ~/<any path>
+# Change libxml2-wksp to the name you prefer.
+mkdir libxml2-wksp && cd libxml2-wksp
+```
+2. **Clone `qnx-ports/build-files`.**
+
+This contains  libxml2 qnx build and patch files.
+```bash
+git clone https://github.com/qnx-ports/build-files.git
+ls # make sure build-files is listed in your current directory
+```
+## 2. Download Source Code
+Choose from one of the following options to download the source code.
+### From Tarball
+1. **Specify your build target.**
+
+This example targets QNX 8.0.0 on aarch64. For QNX 8.0.0 on x86_64, use `export TARGET=x86_64-pc-nto-qnx8.0.0` instead.
 ```bash
 export TARGET=aarch64-unknown-nto-qnx8.0.0
 ```
 
-2. Download the latest release tarball. As of writing, it's 2.13.5
+2. **Download the your prefered release tarball.** 
+We'll be using 2.13.5.
 ```bash
 curl -O https://download.gnome.org/sources/libxml2/2.13/libxml2-2.13.5.tar.xz
 tar xf libxml2-2.13.5.tar.xz
 cd libxml2-2.13.5
 ```
+### From Repository Source
+1. ****
+
+
+
+
+
+
+
+
+
+
+# Compile libxml2 from tarball for SDP 7.1/8.0
+
 
 3. *OPTIONAL* There is one edgecase in QNX that can cause a segmentation error via a null pointer access. A patch correcting this behaviour is available under build-files/ports/libxml2 and can be applied to libxml 2.13.5.
 ```bash
