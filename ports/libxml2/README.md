@@ -30,6 +30,19 @@ ls # make sure build-files is listed in your current directory
 ```
 ## 2. Download Source Code
 Choose from one of the following options to download the source code.
+### From Repository Source (Required for Tests)
+1. **Use git to clone the repository.**
+```bash
+git clone https://github.com/GNOME/libxml2.git
+```
+
+2. **(Optional) Checkout your desired version.**
+
+Checkout your desired version. Check https://github.com/GNOME/libxml2.git for branch names or tags per release.
+```bash
+git checkout <version>
+```
+
 ### From Tarball
 1. **Specify your build target.**
 
@@ -39,44 +52,105 @@ export TARGET=aarch64-unknown-nto-qnx8.0.0
 ```
 
 2. **Download the your prefered release tarball.** 
-We'll be using 2.13.5.
+
+Example: 2.13.5
 ```bash
 curl -O https://download.gnome.org/sources/libxml2/2.13/libxml2-2.13.5.tar.xz
 tar xf libxml2-2.13.5.tar.xz
 cd libxml2-2.13.5
 ```
-### From Repository Source
-1. ****
+## 3. Apply an appropriate QNX Patch
+1. **Locate the correct patchfile.**
 
+Under the `build-files` repo you downloaded, there should be a `ports/libxml2` subfolder. In it are a series of `.patch` files which correspond to different versions of libxml2. \
+Locate the appropriate version of the patchvile via its name, `libxml2-VERSION.patch`. If your version is not available, attempt to use the closest available version.
 
+2. **Apply the patch to the source code.**
 
-
-
-
-
-
-
-
-# Compile libxml2 from tarball for SDP 7.1/8.0
-
-
-3. *OPTIONAL* There is one edgecase in QNX that can cause a segmentation error via a null pointer access. A patch correcting this behaviour is available under build-files/ports/libxml2 and can be applied to libxml 2.13.5.
+Apply the patch using the following command:
 ```bash
-# Get the patch
-git clone https://github.com/qnx-ports/build-files.git
-cd build-files/ports/libxml2 
-# Patch is named libxml2-2.13.5.patch
-
-# Apply using git apply
-cd <your-libxml2-directory>
-git apply <path-to-build-files>/build-files/ports/libxml2/libxml2-2.13.5.patch
+# Navigate to the source code's directory
+cd <path>/libxml2-wksp/libxml2
+# Apply the correct patch, replacing VERSION as needed.
+git apply ../build-files/ports/libxml2/libxml2-VERSION.patch
 ```
 
-You can now either compile libxml2 directly or via the recursive makefile structure provided in build-files.
+## 4. Compilation
 
-__Directly__:
-4. *Compile Directly* Generate Makefile. To activate cross-compiling, we show autotools that build machine has different setup than the host machine.
+There are three options for compilation: You can compile directly using configure and make manually, or you can build recursively in a docker container or in your normal environment. **If running tests, please compile recursively.**
+
+### Recursive Make
+1. **Source your QNX Environment.**
 ```bash
+# Source your desired SDP
+#  QNX 8.0 will be in the directory ~/qnx800/
+#  QNX 7.1 will be in the directory ~/qnx710/
+source ~/qnx800/qnxsdp-env.sh
+```
+
+2. **(Optional) Download a test suite.**
+
+The standard xml conformance suite is needed when running comprehensive tests. Please locate test suite `20080827` or your desired one from the w3 website: https://www.w3.org/XML/Test/. Then download and unpack it into your `build-files/ports/libxml2` download. \
+If this step is not performed, `runxmlconf` test suites will not run on the target.
+```bash
+cd <path-to-wksp>/libxml2-wksp/build-files/ports/libxml2
+curl https://www.w3.org/XML/Test/xmlts20080827.tar.gz | tar -xz
+```
+
+3. **Compile via make.**
+```bash
+# Run Make from your workspace
+cd <path-to-your-workspace>
+QNX_PROJECT_ROOT=${pwd}/libxml2 make -C build-files/ports/libxml2 install
+```
+
+### Recursive Make in Docker Environment
+
+Requires Docker: https://docs.docker.com/engine/install/
+
+1. **Build the Docker image and create a container, then update configure.ac to be compatible.**
+```bash
+# Start the docker container
+cd build-files/docker
+./docker-build-qnx-image.sh
+./docker-create-container.sh
+
+# Configure libxml to be compatible
+cd <your-workspace>
+sed -i "s/1.16.3/1.16.1/g" libxml2/configure.ac
+```
+
+2. **Source your QNX Environment.**
+```bash
+# Source your desired SDP
+#  QNX 8.0 will be in the directory ~/qnx800/
+#  QNX 7.1 will be in the directory ~/qnx710/
+source ~/qnx800/qnxsdp-env.sh
+```
+
+3. **(Optional) Download a test suite.**
+
+The standard xml conformance suite is needed when running comprehensive tests. Please locate test suite `20080827` or your desired one from the w3 website: https://www.w3.org/XML/Test/. Then download and unpack it into your `build-files/ports/libxml2` download. \
+If this step is not performed, `runxmlconf` test suites will not run on the target.
+```bash
+cd <path-to-wksp>/libxml2-wksp/build-files/ports/libxml2
+curl https://www.w3.org/XML/Test/xmlts20080827.tar.gz | tar -xz
+```
+
+4. **Compile via make.**
+```bash
+# Run Make from your workspace
+cd <path-to-your-workspace>
+QNX_PROJECT_ROOT=${pwd}/libxml2 make -C build-files/ports/libxml2 install
+```
+
+### Compiling Directly
+
+1. **Generate Makefile.**
+
+ To activate cross-compiling, we show autotools that build machine has different setup than the host machine.
+```bash
+cd <path to workspace>/libxml2-wksp/libxml2
 ./configure \
     --build=x86_64-unknown-linux-gnu \
     --host=$TARGET \
@@ -91,87 +165,14 @@ __Directly__:
     --with-python=no
 ```
 
-5. *Compile Directly* Actual compiliing
+2. **Compile using Make.**
 ```bash
 make
 ```
 
-6. *Compile Directly* Install compilation products to a folder for transfer to QNX filesystem
+3. **Install compilation products to a folder for transfer to QNX filesystem.**
 ```bash
 make DESTDIR=$OUTPUT_DIR install
-```
-
-__Recursively__:
-4. *Compile Recursively* Clone `build-files` if you have not already
-```bash
-# If you have no already cloned it for the patch file:
-cd <path-to-your-workspace>
-git clone https://github.com/qnx-ports/build-files.git
-```
-
-5. *Compile Recursively* Compile via make
-```bash
-# Source your desired SDP
-#  QNX 8.0 will be in the directory ~/qnx800/
-#  QNX 7.1 will be in the directory ~/qnx710/
-source ~/qnx800/qnxsdp-env.sh
-
-# Run Make from your workspace
-cd <path-to-your-workspace>
-QNX_PROJECT_ROOT=${pwd}/libxml2 make -C build-files/ports/libxml2 install
-```
-
-# Compile libxml2 from source for SDP 7.1/8.0 
-Optionally Requires Docker: https://docs.docker.com/engine/install/
-
-1. Create a new workspace or navigate to an existing one
-```bash
-mkdir libxml2_wksp && cd libxml2_wksp
-```
-
-2. Clone the `build-files` and `libxml2` repos
-```bash
-#Via HTTPS
-git clone https://github.com/qnx-ports/build-files.git
-git clone https://github.com/GNOME/libxml2.git
-
-#Via SSH
-git clone git@github.com:qnx-ports/build-files.git 
-git clone git@github.com:GNOME/libxml2.git
-```
-
-3. *Optional* Checkout tested commit. These files are only tested on commit `5505d23`. While they should work on similar versions, functionality is not guaranteed.
-```bash
-cd libxml2
-git checkout 5505d23
-cd ..
-```
-
-4. *Optional* Build in a Docker Container: Build the Docker image and create a container, then update configure.ac to be compatible.
-```bash
-# Start the docker container
-cd build-files/docker
-./docker-build-qnx-image.sh
-./docker-create-container.sh
-
-# Configure libxml to be compatible
-cd <your-workspace>
-sed -i "s/1.16.3/1.16.1/g" libxml2/configure.ac
-```
-
-5. Source your SDP (Installed from QNX Software Center)
-```bash
-#QNX 8.0 will be in the directory ~/qnx800/
-#QNX 7.1 will be in the directory ~/qnx710/
-source ~/qnx800/qnxsdp-env.sh
-```
-
-6. Build the project in your workspace from Step 1
-```bash
-# Navigate back to your workspace
-cd <path-to-your-workspace>
-# Build
-QNX_PROJECT_ROOT="$(pwd)/libxml2" make -C build-files/ports/libxml2 install -j4
 ```
 
 # Running Tests
@@ -200,15 +201,12 @@ scp -r $QNX_TARGET/aarch64le/usr/local/libxml2_tests/* $TARGET_USER_FOR_INSTALL@
 # ->Replace instances of <user> with the user you installed to (likely qnxuser)
 LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/data/home/<user>/libxml2/lib::/data/home/<user>/libxml2/test/.lib
 
-
-
-
-
 # Navigate to the test directory and run the suite 
 #-> Goes to current user's home directory, change path if installed in another user's home
 cd ~/libxml2/test
 #-> Add permissions to required files (may be needed):
 chmod 764 run_libxml2_tests.sh 
 #-> this also logs results to a file called libxml2_tests.out
-./run_libxml2_tests.sh &2>1 | tee libxml2_tests.out
+./runxmlconf # Standard Suite
+./run_libxml2_tests.sh &2>1 | tee libxml2_tests.out # Custom script which runs all suites
 ```
