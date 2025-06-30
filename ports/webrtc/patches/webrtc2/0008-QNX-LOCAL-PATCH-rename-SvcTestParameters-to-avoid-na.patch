@@ -1,0 +1,34 @@
+From 33f7c7beb9ac40d39e21481664d1e0c161a600ca Mon Sep 17 00:00:00 2001
+From: Yongxin Dai <yodai@blackberry.com>
+Date: Mon, 10 Feb 2025 15:17:20 -0500
+Subject: [QNX LOCAL PATCH] rename SvcTestParameters to avoid name collision
+
+---
+ pc/test/svc_e2e_tests.cc | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/pc/test/svc_e2e_tests.cc b/pc/test/svc_e2e_tests.cc
+index 332e553aff..f37f445775 100644
+--- a/pc/test/svc_e2e_tests.cc
++++ b/pc/test/svc_e2e_tests.cc
+@@ -115,6 +115,8 @@ struct SvcTestParameters {
+   int expected_temporal_layers;
+ };
+ 
++typedef struct SvcTestParameters SvcTestParametersMe;
++
+ class SvcTest : public testing::TestWithParam<
+                     std::tuple<SvcTestParameters, UseDependencyDescriptor>> {
+  public:
+@@ -132,7 +134,7 @@ class SvcTest : public testing::TestWithParam<
+     return VideoCodecConfig(codec);
+   }
+ 
+-  const SvcTestParameters& SvcTestParameters() const {
++  const SvcTestParametersMe& SvcTestParameters() const {
+     return std::get<0>(GetParam());
+   }
+ 
+-- 
+2.34.1
+

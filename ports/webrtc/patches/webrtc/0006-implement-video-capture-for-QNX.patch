@@ -1,0 +1,1267 @@
+From 9030506e5b42ca71b7b5109611691e234f7b89ce Mon Sep 17 00:00:00 2001
+From: Yongxin Dai <yodai@blackberry.com>
+Date: Fri, 14 Apr 2023 15:41:38 -0400
+Subject: [PATCH] implement video capture for QNX
+
+---
+ modules/video_capture/BUILD.gn                |  16 +
+ .../video_capture/qnx/camera_api_helper.cc    | 276 ++++++++++++
+ modules/video_capture/qnx/camera_api_helper.h |  72 +++
+ .../video_capture/qnx/camsymboltable_qnx.cc   |  40 ++
+ .../video_capture/qnx/camsymboltable_qnx.h    |  60 +++
+ modules/video_capture/qnx/device_info_qnx.cc  | 176 ++++++++
+ modules/video_capture/qnx/device_info_qnx.h   |  51 +++
+ .../video_capture/qnx/video_capture_qnx.cc    | 424 ++++++++++++++++++
+ modules/video_capture/qnx/video_capture_qnx.h |  65 +++
+ 9 files changed, 1180 insertions(+)
+ create mode 100644 modules/video_capture/qnx/camera_api_helper.cc
+ create mode 100644 modules/video_capture/qnx/camera_api_helper.h
+ create mode 100644 modules/video_capture/qnx/camsymboltable_qnx.cc
+ create mode 100644 modules/video_capture/qnx/camsymboltable_qnx.h
+ create mode 100644 modules/video_capture/qnx/device_info_qnx.cc
+ create mode 100644 modules/video_capture/qnx/device_info_qnx.h
+ create mode 100644 modules/video_capture/qnx/video_capture_qnx.cc
+ create mode 100644 modules/video_capture/qnx/video_capture_qnx.h
+
+diff --git a/modules/video_capture/BUILD.gn b/modules/video_capture/BUILD.gn
+index 29a7bea9d9..89c98891fd 100644
+--- a/modules/video_capture/BUILD.gn
++++ b/modules/video_capture/BUILD.gn
+@@ -110,6 +110,22 @@ if (!build_with_chromium || is_linux || is_chromeos) {
+         ]
+       }
+     }
++    if (is_qnx) {
++      sources += [
++        "qnx/camera_api_helper.cc",
++        "qnx/camera_api_helper.h",
++        "qnx/camsymboltable_qnx.cc",
++        "qnx/camsymboltable_qnx.h",
++        "qnx/device_info_qnx.cc",
++        "qnx/device_info_qnx.h",
++        "qnx/video_capture_qnx.cc",
++        "qnx/video_capture_qnx.h",
++      ]
++      deps += [
++        "../../media:rtc_media_base",
++        "../utility:late_binding_symbol_table"
++      ]
++    }
+     if (is_win) {
+       sources += [
+         "windows/device_info_ds.cc",
+diff --git a/modules/video_capture/qnx/camera_api_helper.cc b/modules/video_capture/qnx/camera_api_helper.cc
+new file mode 100644
+index 0000000000..5e178ab989
+--- /dev/null
++++ b/modules/video_capture/qnx/camera_api_helper.cc
+@@ -0,0 +1,276 @@
++/*
++ *  Copyright (c) 2023 The WebRTC project authors. All Rights Reserved.
++ *
++ *  Use of this source code is governed by a BSD-style license
++ *  that can be found in the LICENSE file in the root of the source
++ *  tree. An additional intellectual property rights grant can be found
++ *  in the file PATENTS.  All contributing project authors may
++ *  be found in the AUTHORS file in the root of the source tree.
++ */
++
++#include "modules/video_capture/qnx/camera_api_helper.h"
++
++#include <iostream>
++#include <unistd.h>
++
++WebRTCCamSymbolTable* GetCamSymbolTable() {
++  static WebRTCCamSymbolTable* cam_symbol_table = new WebRTCCamSymbolTable();
++  return cam_symbol_table;
++}
++
++#define LATE(sym)                                                              \
++  LATESYM_GET(webrtc::videocapturemodule::CamSymbolTable, GetCamSymbolTable(), \
++              sym)
++
++namespace webrtc {
++namespace videocapturemodule {
++namespace {}  // namespace
++
++CameraAPI::CameraAPI() {
++  RTC_LOG(LS_INFO) << __FUNCTION__ << " created";
++}
++
++CameraAPI::~CameraAPI() {
++  RTC_LOG(LS_INFO) << __FUNCTION__ << " destroyed";
++}
++
++// ============================================================================
++//                                    PUBLIC METHODS
++// ============================================================================
++
++uint32_t CameraAPI::Cameras() {
++  RTC_LOG(LS_INFO) << __FUNCTION__;
++  unsigned num_cams = 0;
++  auto err = LATE(camera_get_supported_cameras)(0, &num_cams, nullptr);
++  if (err != CAMERA_EOK) {
++    RTC_LOG(LS_ERROR) << "camera_get_supported_cameras error: " << err << ", "
++                      << "strerror(err)";
++    return 0;
++  }
++  if (num_cams == 0) {
++    RTC_LOG(LS_INFO) << "no camera has been configured yet";
++  }
++  return num_cams;
++}
++
++bool CameraAPI::SetVFMode(camera_handle_t handle, camera_vfmode_t mode) {
++  auto err = LATE(camera_set_vf_mode)(handle, mode);
++  if (err != CAMERA_EOK) {
++    RTC_LOG(LS_ERROR) << "camera_set_vf_mode handle(" << handle << ", " << mode
++                      << ") error: " << err << ", " << strerror(err);
++    LATE(camera_close)(handle);
++    return false;
++  }
++  return true;
++}
++
++std::unique_ptr<std::vector<camera_unit_t>> CameraAPI::CameraUnits() {
++  RTC_LOG(LS_INFO) << __FUNCTION__;
++  auto num_cams = Cameras();
++  if (!num_cams)
++    return std::unique_ptr<std::vector<camera_unit_t>>{};
++
++  std::unique_ptr<std::vector<camera_unit_t>> units(
++      new std::vector<camera_unit_t>(num_cams, CAMERA_UNIT_1));
++  auto err =
++      LATE(camera_get_supported_cameras)(num_cams, &num_cams, units->data());
++  if (err != CAMERA_EOK) {
++    RTC_LOG(LS_ERROR) << "camera_get_supported_cameras error: " << err << ", "
++                      << strerror(err);
++    return std::unique_ptr<std::vector<camera_unit_t>>{};
++  }
++  return std::move(units);
++}
++
++camera_handle_t CameraAPI::OpenCamera(camera_unit_t unit, uint32_t mode) {
++  RTC_LOG(LS_INFO) << __FUNCTION__ << "(" << unit << ", " << mode << ")";
++  camera_handle_t handle = 0;
++  camera_error_t err;
++  size_t trys = 3;
++  while (((err = LATE(camera_open)(unit, mode, &handle)) == EAGAIN) &&
++         (trys--)) {
++    usleep(100);
++  }
++  if (err != CAMERA_EOK) {
++    RTC_LOG(LS_ERROR) << "camera_open(" << unit << ", " << mode
++                      << ") error: " << err << ", " << strerror(err);
++    return -err;
++  }
++  RTC_DCHECK_GE(handle, 0);
++  if (handle < 0) {
++    RTC_LOG(LS_ERROR) << "camera_open(" << unit << ", " << mode
++                      << ") returned CAMERA_EOK with an invalid handle: "
++                      << handle;
++    return -CAMERA_EACCESS;
++  }
++  return handle;
++}
++
++void CameraAPI::GetLocationName(camera_unit_t unit,
++                                char* name,
++                                uint32_t length) {
++  RTC_LOG(LS_INFO) << __FUNCTION__ << "(" << unit << ", " << name << ", "
++                   << length << ")";
++  memset(name, 0, length);
++  RTC_CHECK_GE(length, CAMERA_LOCATION_NAMELEN);
++  auto err = LATE(camera_get_location_property_internal)(
++      unit, CAMERA_LOCATION_NAME, name, CAMERA_LOCATION_END);
++  if (err != CAMERA_EOK) {
++    RTC_LOG(LS_ERROR) << "camera_get_location_property_internal(" << unit
++                      << " ,CAMERA_LOCATION_NAME,) error: " << err << ", "
++                      << strerror(err);
++  }
++}
++
++std::unique_ptr<std::vector<camera_frametype_t>> CameraAPI::SupportedFrameTypes(
++    camera_handle_t handle) {
++  RTC_LOG(LS_INFO) << __FUNCTION__ << "(handle:" << handle << ")";
++  unsigned num_frametypes = 0;
++  auto err = LATE(camera_get_supported_vf_frame_types)(
++      handle, 0, &num_frametypes, nullptr);
++  if (err != CAMERA_EOK) {
++    RTC_LOG(LS_ERROR) << "camera_get_supported_vf_frame_types(" << handle
++                      << ") error: " << err << ", " << strerror(err);
++    return std::unique_ptr<std::vector<camera_frametype_t>>{};
++  }
++  if (!num_frametypes) {
++    RTC_LOG(LS_WARNING) << "no supported frame found";
++    return std::unique_ptr<std::vector<camera_frametype_t>>{};
++  }
++  auto types = std::make_unique<std::vector<camera_frametype_t>>(
++      num_frametypes, CAMERA_FRAMETYPE_UNSPECIFIED);
++  err = LATE(camera_get_supported_vf_frame_types)(
++      handle, num_frametypes, &num_frametypes, types->data());
++  if (err != CAMERA_EOK) {
++    RTC_LOG(LS_ERROR) << "camera_get_supported_vf_frame_types(" << handle
++                      << ") error: " << err << ", " << strerror(err);
++    return std::unique_ptr<std::vector<camera_frametype_t>>{};
++  }
++  RTC_LOG(LS_INFO) << __FUNCTION__ << " supported types: " << [](auto& vec) {
++    std::ostringstream ss;
++    for (auto& item : vec) {
++      ss << item << ' ';
++    }
++    return ss.str();
++  }(*types.get());
++  return std::move(types);
++}
++
++std::unique_ptr<std::vector<camera_res_t>> CameraAPI::ResolutionsForType(
++    camera_handle_t handle,
++    camera_frametype_t type) {
++  RTC_LOG(LS_INFO) << __FUNCTION__ << "(handle:" << handle << ", type:" << type << ")";
++  unsigned num_resolutions = 0;
++  auto err = LATE(camera_get_specified_vf_resolutions)(
++      handle, type, 0, &num_resolutions, nullptr);
++  if (err != CAMERA_EOK) {
++    RTC_LOG(LS_ERROR) << "camera_get_specified_vf_resolutions(" << handle
++                      << ", " << type << ") error: " << err << ", "
++                      << strerror(err);
++    return std::unique_ptr<std::vector<camera_res_t>>{};
++  }
++  if (num_resolutions == 0) {
++    RTC_LOG(LS_WARNING) << "no valid resolution found for handle: " << handle
++                        << "frame type: " << type;
++    return std::unique_ptr<std::vector<camera_res_t>>{};
++  }
++  auto resolutions = std::make_unique<std::vector<camera_res_t>>(
++      num_resolutions, camera_res_t{0, 0});
++  err = LATE(camera_get_specified_vf_resolutions)(
++      handle, type, num_resolutions, &num_resolutions, resolutions->data());
++  if (err != CAMERA_EOK) {
++    RTC_LOG(LS_ERROR) << "camera_get_specified_vf_resolutions(" << handle
++                      << ", " << type << ") error: " << err << ", "
++                      << strerror(err);
++    return std::unique_ptr<std::vector<camera_res_t>>{};
++  }
++  RTC_LOG(LS_INFO) << __FUNCTION__
++                   << " supported resolutions: " << [](auto& vec) {
++                        std::ostringstream ss;
++                        for (auto& item : vec) {
++                          ss << '{' << item.width << ',' << item.height << '}' << ' ';
++                        }
++                        return ss.str();
++                      }(*resolutions.get());
++  return std::move(resolutions);
++}
++
++std::unique_ptr<std::vector<double>> CameraAPI::RatesForTypeAndRes(
++    camera_handle_t handle,
++    camera_frametype_t type,
++    camera_res_t* res,
++    bool* continuous) {
++  RTC_LOG(LS_INFO) << __FUNCTION__ << "(handle:" << handle << ", type:" << type << ", resolution:{"
++                   << res->width << ", " << res->height << "})";
++  unsigned num_framerates = 0;
++  auto err = LATE(camera_get_specified_vf_framerates)(
++      handle, type, *res, 0, &num_framerates, nullptr, nullptr);
++  if (err != CAMERA_EOK || num_framerates == 0) {
++    RTC_LOG(LS_ERROR) << "camera_get_specified_vf_framerates(" << handle << ", "
++                      << type << ", {" << res->width << ", " << res->height
++                      << "}) error: " << err << ", " << strerror(err);
++    return std::unique_ptr<std::vector<double>>();
++    ;
++  }
++  bool maxmin;
++  auto framerates = std::make_unique<std::vector<double>>(num_framerates, 0);
++  err = LATE(camera_get_specified_vf_framerates)(
++      handle, type, *res, num_framerates, &num_framerates, framerates->data(),
++      &maxmin);
++  if (err != CAMERA_EOK) {
++    RTC_LOG(LS_ERROR) << "camera_get_specified_vf_framerates(" << handle << ", "
++                      << type << ", {" << res->width << ", " << res->height
++                      << "}) error: " << err << ", " << strerror(err);
++    return std::unique_ptr<std::vector<double>>();
++    ;
++  }
++  if (!maxmin) {
++    RTC_LOG(LS_WARNING) << "only discrete FPS supported, maxFPS does not make "
++                           "sense for handle: "
++                        << handle << "frame type: " << type << " resolution: {"
++                        << res->width << ", " << res->height << "}";
++  }
++  if (continuous)
++    *continuous = maxmin;
++  RTC_LOG(LS_INFO) << __FUNCTION__ << " maxmin: " << maxmin
++                   << " supported rates: " << [](auto& vec) {
++                        std::ostringstream ss;
++                        for (auto& item : vec) {
++                          ss << item << ' ';
++                        }
++                        return ss.str();
++                      }(*framerates.get());
++  return std::move(framerates);
++}
++
++int32_t CameraAPI::MaxFPSForTypeAndRes(camera_handle_t handle,
++                                       camera_frametype_t type,
++                                       camera_res_t* res) {
++  RTC_LOG(LS_INFO) << __FUNCTION__ << "(handle:" << handle << ", type:" << type << ", resolution:{"
++                   << res->width << ", " << res->height << "})";
++  auto rates = RatesForTypeAndRes(handle, type, res);
++  if (!rates)
++    return 0;
++  return rates->front();
++}
++
++VideoType CameraAPI::ToLibYuvDefinedType(const camera_frametype_t& format) {
++  switch (format) {
++    case CAMERA_FRAMETYPE_YCBCR420P:
++      return VideoType::kI420;
++    case CAMERA_FRAMETYPE_RGB8888:
++      return VideoType::kARGB;
++    case CAMERA_FRAMETYPE_RGB565:
++      return VideoType::kRGB565;
++    case CAMERA_FRAMETYPE_YCBYCR:
++      return VideoType::kYUY2;
++    case CAMERA_FRAMETYPE_CBYCRY:
++      return VideoType::kUYVY;
++    case CAMERA_FRAMETYPE_NV12:
++      return VideoType::kNV12;
++    default:
++      return VideoType::kUnknown;
++  }
++}
++}  // namespace videocapturemodule
++}  // namespace webrtc
+diff --git a/modules/video_capture/qnx/camera_api_helper.h b/modules/video_capture/qnx/camera_api_helper.h
+new file mode 100644
+index 0000000000..5700754740
+--- /dev/null
++++ b/modules/video_capture/qnx/camera_api_helper.h
+@@ -0,0 +1,72 @@
++/*
++ *  Copyright (c) 2023 The WebRTC project authors. All Rights Reserved.
++ *
++ *  Use of this source code is governed by a BSD-style license
++ *  that can be found in the LICENSE file in the root of the source
++ *  tree. An additional intellectual property rights grant can be found
++ *  in the file PATENTS.  All contributing project authors may
++ *  be found in the AUTHORS file in the root of the source tree.
++ */
++
++#ifndef MODULES_VIDEO_CAPTURE_MAIN_SOURCE_QNX_CAMERA_API_HELPER_H_
++#define MODULES_VIDEO_CAPTURE_MAIN_SOURCE_QNX_CAMERA_API_HELPER_H_
++
++#include <camera/camera_api.h>
++
++#include <memory>
++
++#include "common_video/libyuv/include/webrtc_libyuv.h"
++#include "modules/video_capture/qnx/camsymboltable_qnx.h"
++#include "rtc_base/logging.h"
++
++typedef webrtc::videocapturemodule::CamSymbolTable WebRTCCamSymbolTable;
++WebRTCCamSymbolTable* GetCamSymbolTable();
++
++namespace webrtc {
++namespace videocapturemodule {
++
++class CameraAPI {
++ public:
++  CameraAPI();
++  ~CameraAPI();
++
++  static uint32_t Cameras();
++  static bool SetVFMode(camera_handle_t handle, camera_vfmode_t mode);
++  static std::unique_ptr<std::vector<camera_unit_t>> CameraUnits();
++  static camera_handle_t OpenCamera(camera_unit_t unit, uint32_t mode);
++  static void GetLocationName(camera_unit_t unit, char* name, uint32_t length);
++  template <typename... Args>
++  static bool SetVFProperty(camera_handle_t handle, Args... args) {
++    RTC_LOG(LS_INFO) << __FUNCTION__ << "(" << handle << ")";
++    auto err = LATESYM_GET(webrtc::videocapturemodule::CamSymbolTable,
++                           GetCamSymbolTable(),
++                           camera_private_set_vf_property)(handle, args...);
++    if (err != CAMERA_EOK) {
++      RTC_LOG(LS_ERROR) << "camera_private_set_vf_property(" << handle
++                        << ") error: " << err << ", " << strerror(err);
++      return false;
++    }
++    return true;
++  }
++  static std::unique_ptr<std::vector<camera_frametype_t>> SupportedFrameTypes(
++      camera_handle_t handle);
++  static std::unique_ptr<std::vector<camera_res_t>> ResolutionsForType(
++      camera_handle_t handle,
++      camera_frametype_t type);
++  static std::unique_ptr<std::vector<double>> RatesForTypeAndRes(
++      camera_handle_t handle,
++      camera_frametype_t type,
++      camera_res_t* res,
++      bool* continuous = nullptr);
++  static int32_t MaxFPSForTypeAndRes(camera_handle_t handle,
++                                     camera_frametype_t type,
++                                     camera_res_t* res);
++  static VideoType ToLibYuvDefinedType(const camera_frametype_t& format);
++
++ private:
++};
++
++}  // namespace videocapturemodule
++}  // namespace webrtc
++
++#endif
+diff --git a/modules/video_capture/qnx/camsymboltable_qnx.cc b/modules/video_capture/qnx/camsymboltable_qnx.cc
+new file mode 100644
+index 0000000000..872e240951
+--- /dev/null
++++ b/modules/video_capture/qnx/camsymboltable_qnx.cc
+@@ -0,0 +1,40 @@
++/*
++ * libjingle
++ * Copyright 2004--2010, Google Inc.
++ *
++ * Redistribution and use in source and binary forms, with or without
++ * modification, are permitted provided that the following conditions are met:
++ *
++ *  1. Redistributions of source code must retain the above copyright notice,
++ *     this list of conditions and the following disclaimer.
++ *  2. Redistributions in binary form must reproduce the above copyright notice,
++ *     this list of conditions and the following disclaimer in the documentation
++ *     and/or other materials provided with the distribution.
++ *  3. The name of the author may not be used to endorse or promote products
++ *     derived from this software without specific prior written permission.
++ *
++ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR IMPLIED
++ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
++ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO
++ * EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
++ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
++ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
++ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
++ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
++ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
++ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++
++#include "modules/video_capture/qnx/camsymboltable_qnx.h"
++
++namespace webrtc {
++namespace videocapturemodule {
++
++LATE_BINDING_SYMBOL_TABLE_DEFINE_BEGIN(CamSymbolTable, "libcamapi.so.1")
++#define X(sym) LATE_BINDING_SYMBOL_TABLE_DEFINE_ENTRY(CamSymbolTable, sym)
++CAM_SYMBOLS_LIST
++#undef X
++LATE_BINDING_SYMBOL_TABLE_DEFINE_END(CamSymbolTable)
++
++}  // namespace videocapturemodule
++}  // namespace webrtc
+diff --git a/modules/video_capture/qnx/camsymboltable_qnx.h b/modules/video_capture/qnx/camsymboltable_qnx.h
+new file mode 100644
+index 0000000000..dbab2b5f56
+--- /dev/null
++++ b/modules/video_capture/qnx/camsymboltable_qnx.h
+@@ -0,0 +1,60 @@
++/*
++ * libjingle
++ * Copyright 2004--2010, Google Inc.
++ *
++ * Redistribution and use in source and binary forms, with or without
++ * modification, are permitted provided that the following conditions are met:
++ *
++ *  1. Redistributions of source code must retain the above copyright notice,
++ *     this list of conditions and the following disclaimer.
++ *  2. Redistributions in binary form must reproduce the above copyright notice,
++ *     this list of conditions and the following disclaimer in the documentation
++ *     and/or other materials provided with the distribution.
++ *  3. The name of the author may not be used to endorse or promote products
++ *     derived from this software without specific prior written permission.
++ *
++ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR IMPLIED
++ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
++ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO
++ * EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
++ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
++ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
++ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
++ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
++ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
++ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++
++#ifndef MODULES_VIDEO_CAPTURE_MAIN_SOURCE_QNX_CAMSYMBOLTABLE_QNX_H_
++#define MODULES_VIDEO_CAPTURE_MAIN_SOURCE_QNX_CAMSYMBOLTABLE_QNX_H_
++
++#include "modules/utility/source/late_binding_symbol_table_posix.h"
++
++namespace webrtc {
++namespace videocapturemodule {
++
++// The QSA symbols we need, as an X-Macro list.
++#define CAM_SYMBOLS_LIST                   \
++  X(camera_close)                          \
++  X(camera_get_location_property_internal) \
++  X(camera_get_supported_cameras)          \
++  X(camera_get_specified_vf_framerates)    \
++  X(camera_get_supported_vf_frame_types)   \
++  X(camera_get_specified_vf_resolutions)   \
++  X(camera_open)                           \
++  X(camera_private_get_vf_property)        \
++  X(camera_private_set_vf_property)        \
++  X(camera_set_vf_mode)                    \
++  X(camera_start_viewfinder)               \
++  X(camera_stop_viewfinder)
++
++LATE_BINDING_SYMBOL_TABLE_DECLARE_BEGIN(CamSymbolTable)
++#define X(sym) LATE_BINDING_SYMBOL_TABLE_DECLARE_ENTRY(CamSymbolTable, sym)
++CAM_SYMBOLS_LIST
++#undef X
++LATE_BINDING_SYMBOL_TABLE_DECLARE_END(CamSymbolTable)
++
++}  // namespace videocapturemodule
++}  // namespace webrtc
++
++#endif  // MODULES_VIDEO_CAPTURE_MAIN_SOURCE_QNX_CAMSYMBOLTABLE_QNX_H_
+diff --git a/modules/video_capture/qnx/device_info_qnx.cc b/modules/video_capture/qnx/device_info_qnx.cc
+new file mode 100644
+index 0000000000..6007e91266
+--- /dev/null
++++ b/modules/video_capture/qnx/device_info_qnx.cc
+@@ -0,0 +1,176 @@
++/*
++ *  Copyright (c) 2021 The WebRTC project authors. All Rights Reserved.
++ *
++ *  Use of this source code is governed by a BSD-style license
++ *  that can be found in the LICENSE file in the root of the source
++ *  tree. An additional intellectual property rights grant can be found
++ *  in the file PATENTS.  All contributing project authors may
++ *  be found in the AUTHORS file in the root of the source tree.
++ */
++
++#include "modules/video_capture/qnx/device_info_qnx.h"
++
++#include <errno.h>
++#include <fcntl.h>
++#include <stdio.h>
++#include <stdlib.h>
++#include <string.h>
++#include <sys/ioctl.h>
++#include <unistd.h>
++#include <vector>
++
++#include "modules/video_capture/qnx/camera_api_helper.h"
++#include "modules/video_capture/video_capture.h"
++#include "modules/video_capture/video_capture_defines.h"
++#include "modules/video_capture/video_capture_impl.h"
++#include "rtc_base/logging.h"
++#include "video_capture_qnx.h"
++
++#define LATE(sym)                                                              \
++  LATESYM_GET(webrtc::videocapturemodule::CamSymbolTable, GetCamSymbolTable(), \
++              sym)
++
++namespace webrtc {
++namespace {
++}  // namespace
++namespace videocapturemodule {
++VideoCaptureModule::DeviceInfo* VideoCaptureImpl::CreateDeviceInfo() {
++  return new videocapturemodule::DeviceInfoQnx();
++}
++
++DeviceInfoQnx::DeviceInfoQnx() : DeviceInfoImpl() {
++  Init();
++}
++
++int32_t DeviceInfoQnx::Init() {
++  if (!GetCamSymbolTable()->Load()) {
++    RTC_LOG(LS_ERROR) << "failed to load symbol table";
++    return -1;
++  }
++  return 0;
++}
++
++DeviceInfoQnx::~DeviceInfoQnx() {}
++
++uint32_t DeviceInfoQnx::NumberOfDevices() {
++  RTC_LOG(LS_INFO) << __FUNCTION__;
++  return CameraAPI::Cameras();
++}
++
++int32_t DeviceInfoQnx::GetDeviceName(uint32_t deviceNumber,
++                                     char* deviceNameUTF8,
++                                     uint32_t deviceNameLength,
++                                     char* deviceUniqueIdUTF8,
++                                     uint32_t deviceUniqueIdUTF8Length,
++                                     char* /*productUniqueIdUTF8*/,
++                                     uint32_t /*productUniqueIdUTF8Length*/) {
++  RTC_LOG(LS_INFO) << __FUNCTION__;
++  uint32_t num_cams = CameraAPI::Cameras();
++  if (deviceNumber >= num_cams)
++    return -1;
++
++  auto units = CameraAPI::CameraUnits();
++  if (!units)
++    return -1;
++
++  if (deviceNumber + 1 > units->size())
++    return -1;
++
++  auto unit = units->at(deviceNumber);
++  camera_handle_t handle = CameraAPI::OpenCamera(unit, CAMERA_MODE_RO);
++  if (handle < 0)
++    return -1;
++
++  CameraAPI::GetLocationName(unit, deviceNameUTF8, deviceNameLength);
++  if (!deviceNameUTF8[0]) {
++    auto name(std::to_string(deviceNumber));
++    memcpy(deviceNameUTF8, name.data(), name.size());
++  }
++
++  memset(deviceUniqueIdUTF8, 0, deviceUniqueIdUTF8Length);
++  auto strid(std::to_string(unit));
++  memcpy(deviceUniqueIdUTF8, strid.data(), strid.size());
++
++  LATE(camera_close)(handle);
++  return 0;
++}
++
++int32_t DeviceInfoQnx::CreateCapabilityMap(const char* deviceUniqueIdUTF8) {
++  RTC_LOG(LS_INFO) << __FUNCTION__ << "(" << deviceUniqueIdUTF8 << ")";
++  const int32_t deviceUniqueIdUTF8Length =
++      (int32_t)strlen((char*)deviceUniqueIdUTF8);
++  if (deviceUniqueIdUTF8Length >= kVideoCaptureUniqueNameLength) {
++    RTC_LOG(LS_INFO) << "Device name too long";
++    return -1;
++  }
++  camera_unit_t unit =
++      static_cast<camera_unit_t>(std::stoul(deviceUniqueIdUTF8));
++  camera_handle_t handle = CameraAPI::OpenCamera(unit, CAMERA_MODE_RO);
++  if (handle < 0)
++    return -1;
++  if (!CameraAPI::SetVFMode(handle, CAMERA_VFMODE_VIDEO)) {
++    LATE(camera_close)(handle);
++    return -1;
++  }
++  _captureCapabilities.clear();
++  int size = FillCapabilities(handle);
++  LATE(camera_close)(handle);
++
++  // Store the new used device name
++  _lastUsedDeviceNameLength = deviceUniqueIdUTF8Length;
++  _lastUsedDeviceName =
++      (char*)realloc(_lastUsedDeviceName, _lastUsedDeviceNameLength + 1);
++  memcpy(_lastUsedDeviceName, deviceUniqueIdUTF8,
++         _lastUsedDeviceNameLength + 1);
++
++  RTC_LOG(LS_INFO) << "CreateCapabilityMap size:"
++                   << _captureCapabilities.size();
++  return size;
++}
++
++int32_t DeviceInfoQnx::DisplayCaptureSettingsDialogBox(
++    const char* /*deviceUniqueIdUTF8*/,
++    const char* /*dialogTitleUTF8*/,
++    void* /*parentWindow*/,
++    uint32_t /*positionX*/,
++    uint32_t /*positionY*/) {
++  return -1;
++}
++
++bool DeviceInfoQnx::IsDeviceNameMatches(const char* name,
++                                        const char* deviceUniqueIdUTF8) {
++  if (strncmp(deviceUniqueIdUTF8, name, strlen(name)) == 0)
++    return true;
++  return false;
++}
++
++int32_t DeviceInfoQnx::FillCapabilities(int handle) {
++  RTC_LOG(LS_INFO) << __FUNCTION__ << "(" << handle << ")";
++  auto types = CameraAPI::SupportedFrameTypes(handle);
++  if (!types)
++    return 0;
++
++  for (auto& type : *(types.get())) {
++    if (CameraAPI::ToLibYuvDefinedType(type) == VideoType::kUnknown)
++      continue;
++    auto resolutions = CameraAPI::ResolutionsForType(handle, type);
++    if (!resolutions)
++      continue;
++    for (auto& res : *(resolutions.get())) {
++      auto rate = CameraAPI::MaxFPSForTypeAndRes(handle, type, &res);
++      if (!rate)
++        continue;
++      VideoCaptureCapability cap;
++      cap.videoType = CameraAPI::ToLibYuvDefinedType(type);
++      cap.width = res.width;
++      cap.height = res.height;
++      cap.maxFPS = rate;
++      _captureCapabilities.push_back(cap);
++    }
++  }
++  RTC_LOG(LS_INFO) << "CreateCapabilityMap " << _captureCapabilities.size();
++  return _captureCapabilities.size();
++}
++
++}  // namespace videocapturemodule
++}  // namespace webrtc
+diff --git a/modules/video_capture/qnx/device_info_qnx.h b/modules/video_capture/qnx/device_info_qnx.h
+new file mode 100644
+index 0000000000..ada8974154
+--- /dev/null
++++ b/modules/video_capture/qnx/device_info_qnx.h
+@@ -0,0 +1,51 @@
++/*
++ *  Copyright (c) 2021 The WebRTC project authors. All Rights Reserved.
++ *
++ *  Use of this source code is governed by a BSD-style license
++ *  that can be found in the LICENSE file in the root of the source
++ *  tree. An additional intellectual property rights grant can be found
++ *  in the file PATENTS.  All contributing project authors may
++ *  be found in the AUTHORS file in the root of the source tree.
++ */
++
++#ifndef MODULES_VIDEO_CAPTURE_MAIN_SOURCE_QNX_DEVICE_INFO_QNX_H_
++#define MODULES_VIDEO_CAPTURE_MAIN_SOURCE_QNX_DEVICE_INFO_QNX_H_
++
++#include <stdint.h>
++
++#include "modules/video_capture/device_info_impl.h"
++
++namespace webrtc {
++namespace videocapturemodule {
++class DeviceInfoQnx : public DeviceInfoImpl {
++ public:
++  DeviceInfoQnx();
++  ~DeviceInfoQnx() override;
++  uint32_t NumberOfDevices() override;
++  int32_t GetDeviceName(uint32_t deviceNumber,
++                        char* deviceNameUTF8,
++                        uint32_t deviceNameLength,
++                        char* deviceUniqueIdUTF8,
++                        uint32_t deviceUniqueIdUTF8Length,
++                        char* productUniqueIdUTF8 = 0,
++                        uint32_t productUniqueIdUTF8Length = 0) override;
++  /*
++   * Fills the membervariable _captureCapabilities with capabilites for the
++   * given device name.
++   */
++  int32_t CreateCapabilityMap(const char* deviceUniqueIdUTF8) override
++      RTC_EXCLUSIVE_LOCKS_REQUIRED(_apiLock);
++  int32_t DisplayCaptureSettingsDialogBox(const char* /*deviceUniqueIdUTF8*/,
++                                          const char* /*dialogTitleUTF8*/,
++                                          void* /*parentWindow*/,
++                                          uint32_t /*positionX*/,
++                                          uint32_t /*positionY*/) override;
++  int32_t FillCapabilities(int handle) RTC_EXCLUSIVE_LOCKS_REQUIRED(_apiLock);
++  int32_t Init() override;
++
++ private:
++  bool IsDeviceNameMatches(const char* name, const char* deviceUniqueIdUTF8);
++};
++}  // namespace videocapturemodule
++}  // namespace webrtc
++#endif  // MODULES_VIDEO_CAPTURE_MAIN_SOURCE_QNX_DEVICE_INFO_QNX_H_
+diff --git a/modules/video_capture/qnx/video_capture_qnx.cc b/modules/video_capture/qnx/video_capture_qnx.cc
+new file mode 100644
+index 0000000000..fccb46d570
+--- /dev/null
++++ b/modules/video_capture/qnx/video_capture_qnx.cc
+@@ -0,0 +1,424 @@
++/*
++ *  Copyright (c) 2021 The WebRTC project authors. All Rights Reserved.
++ *
++ *  Use of this source code is governed by a BSD-style license
++ *  that can be found in the LICENSE file in the root of the source
++ *  tree. An additional intellectual property rights grant can be found
++ *  in the file PATENTS.  All contributing project authors may
++ *  be found in the AUTHORS file in the root of the source tree.
++ */
++
++#include "modules/video_capture/qnx/video_capture_qnx.h"
++
++#include <camera/camera_api.h>
++#include <dlfcn.h>
++#include <errno.h>
++#include <fcntl.h>
++#include <stdio.h>
++#include <string.h>
++#include <sys/ioctl.h>
++#include <sys/mman.h>
++#include <sys/select.h>
++#include <time.h>
++#include <unistd.h>
++
++#include <map>
++#include <new>
++#include <set>
++#include <string>
++
++#include "api/scoped_refptr.h"
++#include "media/base/video_common.h"
++#include "modules/video_capture/qnx/camera_api_helper.h"
++#include "modules/video_capture/video_capture.h"
++#include "rtc_base/logging.h"
++#include "rtc_base/ref_counted_object.h"
++
++#define LATE(sym)                                                              \
++  LATESYM_GET(webrtc::videocapturemodule::CamSymbolTable, GetCamSymbolTable(), \
++              sym)
++
++namespace webrtc {
++namespace videocapturemodule {
++namespace {
++camera_frametype_t ToNativeFormat(const VideoType& format) {
++  switch (format) {
++    case VideoType::kI420:
++      return CAMERA_FRAMETYPE_YCBCR420P;
++    case VideoType::kARGB:
++      return CAMERA_FRAMETYPE_RGB8888;
++    case VideoType::kRGB565:
++      return CAMERA_FRAMETYPE_RGB565;
++    case VideoType::kYUY2:
++      return CAMERA_FRAMETYPE_YCBYCR;
++    case VideoType::kUYVY:
++      return CAMERA_FRAMETYPE_CBYCRY;
++    case VideoType::kNV12:
++      return CAMERA_FRAMETYPE_NV12;
++    default:
++      return CAMERA_FRAMETYPE_UNSPECIFIED;
++  }
++}
++
++double GetClosestRete(double* rates, size_t count, double wanted) {
++  if (rates[0] <= wanted)
++    return rates[0];
++  for (size_t i = 1; i < count; ++i) {
++    if (rates[i] == wanted)
++      return wanted;
++    if (rates[i] < wanted)
++      return ((wanted - rates[i]) <= (rates[i - 1] - wanted)) ? rates[i]
++                                                              : rates[i - 1];
++  }
++  return rates[count - 1];
++}
++
++size_t FillFrameInfo(camera_buffer_t* buffer, VideoCaptureCapability& info) {
++  size_t length = 0;
++  info.videoType = CameraAPI::ToLibYuvDefinedType(buffer->frametype);
++  switch (buffer->frametype) {
++    case CAMERA_FRAMETYPE_YCBCR420P: {
++      camera_frame_ycbcr420p_t& d = buffer->framedesc.ycbcr420p;
++      info.width = d.width;
++      info.height = d.height;
++      length = CalcBufferSize(VideoType::kI420, d.width, d.height);
++      break;
++    }
++    case CAMERA_FRAMETYPE_NV12: {
++      camera_frame_nv12_t& d = buffer->framedesc.nv12;
++      info.width = d.width;
++      info.height = d.height;
++      length = CalcBufferSize(VideoType::kNV12, d.width, d.height);
++      break;
++    }
++    case CAMERA_FRAMETYPE_YCBYCR: {
++      camera_frame_ycbycr_t& d = buffer->framedesc.ycbycr;
++      info.width = d.width;
++      info.height = d.height;
++      length = CalcBufferSize(VideoType::kYUY2, d.width, d.height);
++      break;
++    }
++    case CAMERA_FRAMETYPE_CBYCRY: {
++      camera_frame_cbycry_t& d = buffer->framedesc.cbycry;
++      info.width = d.width;
++      info.height = d.height;
++      length = CalcBufferSize(VideoType::kUYVY, d.width, d.height);
++      break;
++    }
++    default:
++      RTC_DCHECK_NOTREACHED();
++      break;
++  }
++  return length;
++}
++}  // namespace
++
++rtc::scoped_refptr<VideoCaptureModule> VideoCaptureImpl::Create(
++    const char* deviceUniqueId) {
++  RTC_LOG(LS_INFO) << __FUNCTION__ << "(" << deviceUniqueId << ")";
++  auto implementation = rtc::make_ref_counted<VideoCaptureDevice>();
++
++  if (implementation->Init(deviceUniqueId) != 0)
++    return nullptr;
++
++  return implementation;
++}
++
++VideoCaptureDevice::VideoCaptureDevice()
++    : VideoCaptureImpl(),
++      // _deviceId(CAMERA_UNIT_NONE),
++      _deviceHandle(CAMERA_HANDLE_INVALID),
++      _buffersAllocatedByDevice(-1),
++      _currentWidth(-1),
++      _currentHeight(-1),
++      _currentFrameRate(-1),
++      _captureStarted(false),
++      _captureVideoType(VideoType::kI420) {}
++
++int32_t VideoCaptureDevice::Init(const char* deviceUniqueIdUTF8) {
++  RTC_LOG(LS_INFO) << __FUNCTION__ << "(" << deviceUniqueIdUTF8 << ")";
++  RTC_CHECK_EQ(_deviceHandle, CAMERA_HANDLE_INVALID);
++  // Load libcamapi
++  if (!GetCamSymbolTable()->Load()) {
++    RTC_LOG(LS_ERROR) << "failed to load symbol table";
++    return -1;
++  }
++
++  int len = strlen((const char*)deviceUniqueIdUTF8);
++  _deviceUniqueId = new (std::nothrow) char[len + 1];
++  if (_deviceUniqueId) {
++    memcpy(_deviceUniqueId, deviceUniqueIdUTF8, len + 1);
++  }
++
++  camera_unit_t unit =
++      static_cast<camera_unit_t>(std::stoul(deviceUniqueIdUTF8));
++  camera_handle_t handle =
++      CameraAPI::OpenCamera(unit, CAMERA_MODE_RW | CAMERA_MODE_ROLL);
++  if (handle < 0) {
++    LATE(camera_close)(handle);
++    return -1;
++  }
++  _deviceHandle = handle;
++  return 0;
++}
++
++VideoCaptureDevice::~VideoCaptureDevice() {
++  StopCapture();
++  if (_deviceHandle != CAMERA_HANDLE_INVALID) {
++    LATE(camera_close)(_deviceHandle);
++  }
++}
++
++int32_t VideoCaptureDevice::StartCapture(
++    const VideoCaptureCapability& capability) {
++  RTC_LOG(LS_INFO) << __FUNCTION__ << " videoType: " << capability.videoType
++                   << ", width: " << capability.width
++                   << ", height: " << capability.height
++                   << ", rate: " << capability.maxFPS;
++  if (_deviceHandle == CAMERA_HANDLE_INVALID) {
++    RTC_LOG(LS_WARNING) << "invalid camera handle";
++    return -1;
++  }
++  if (_captureStarted) {
++    if (capability == _requestedCapability) {
++      return 0;
++    } else {
++      StopCapture();
++    }
++  }
++
++  MutexLock lock(&capture_lock_);
++  _currentFrameRate = 0;
++  _currentWidth = 0;
++  _currentHeight = 0;
++  _captureStarted = false;
++  _captureVideoType = VideoType::kUnknown;
++
++  if (!CameraAPI::SetVFMode(_deviceHandle, CAMERA_VFMODE_VIDEO))
++    return -1;
++  camera_frametype_t currentFrametype = CAMERA_FRAMETYPE_UNSPECIFIED;
++  auto err = LATE(camera_private_get_vf_property)(
++      _deviceHandle, CAMERA_IMGPROP_FORMAT, &currentFrametype,
++      CAMERA_IMGPROP_WIDTH, &_currentWidth, CAMERA_IMGPROP_HEIGHT,
++      &_currentHeight, CAMERA_IMGPROP_FRAMERATE, &_currentFrameRate,
++      CAMERA_IMGPROP_END);
++  if (err != CAMERA_EOK) {
++    RTC_LOG(LS_ERROR) << "camera_private_get_vf_property(" << _deviceHandle
++                      << ") error: " << err << ", " << strerror(err);
++  }
++
++  camera_frametype_t frametype = CAMERA_FRAMETYPE_UNSPECIFIED;
++  uint32_t width = 0, height = 0;
++  double framerate = 0;
++  auto types = CameraAPI::SupportedFrameTypes(_deviceHandle);
++  if (!types)
++    return -1;
++  struct {
++    bool operator()(int a, int b) const {
++      for (auto& n : {a, b})
++        RTC_CHECK(n > CAMERA_FRAMETYPE_UNSPECIFIED &&
++                  n < CAMERA_FRAMETYPE_NUMFRAMETYPES);
++      std::map<int, int> order = {{CAMERA_FRAMETYPE_CBYCRY, 1},
++                                  {CAMERA_FRAMETYPE_YCBYCR, 2},
++                                  {CAMERA_FRAMETYPE_NV12, 3},
++                                  {CAMERA_FRAMETYPE_YCBCR420P, 4},
++                                  {CAMERA_FRAMETYPE_RGB565, 5},
++                                  {CAMERA_FRAMETYPE_YCRYCB, 6},
++                                  {CAMERA_FRAMETYPE_CRYCBY, 7},
++                                  {CAMERA_FRAMETYPE_NV16, 8},
++                                  {CAMERA_FRAMETYPE_RGB8888, 9},
++                                  {CAMERA_FRAMETYPE_RGB888, 10},
++                                  {CAMERA_FRAMETYPE_GRAY8, 11},
++                                  {CAMERA_FRAMETYPE_METADATA, 12},
++                                  {CAMERA_FRAMETYPE_BAYER, 13},
++                                  {CAMERA_FRAMETYPE_COMPRESSEDVIDEO, 14},
++                                  {CAMERA_FRAMETYPE_COMPRESSEDAUDIO, 15},
++                                  {CAMERA_FRAMETYPE_ROI, 16},
++                                  {CAMERA_FRAMETYPE_BAYER14_RGGB_PADLO16, 17}};
++      return order[a] > order[b];
++    }
++  } preferredLess;
++
++  std::sort(types->begin(), types->end(), preferredLess);
++  auto preferredType = ToNativeFormat(capability.videoType);
++  if (preferredType != CAMERA_FRAMETYPE_UNSPECIFIED) {
++    auto it = std::find(types->begin(), types->end(),
++                        ToNativeFormat(capability.videoType));
++    if (it != types->end()) {
++      if (it != types->begin()) {
++        types->erase(it);
++        types->insert(types->begin(), preferredType);
++      }
++    }
++  }
++  for (auto& type : *(types.get())) {
++    if (CameraAPI::ToLibYuvDefinedType(type) == VideoType::kUnknown)
++      continue;
++    auto resolutions = CameraAPI::ResolutionsForType(_deviceHandle, type);
++    if (!resolutions)
++      continue;
++    for (auto& res : *(resolutions.get())) {
++      if ((int32_t)res.width != capability.width ||
++          (int32_t)res.height != capability.height)
++        continue;
++      bool maxmin = false;
++      auto rates =
++          CameraAPI::RatesForTypeAndRes(_deviceHandle, type, &res, &maxmin);
++      if (!rates)
++        continue;
++      double rate = capability.maxFPS;
++      auto it = std::find(rates->begin(), rates->end(), rate);
++      if (it == rates->end()) {
++        if (maxmin) {
++          if (rate > rates->front())
++            rate = rates->front();
++          else if (rate < rates->back())
++            rate = rates->back();
++        } else
++          rate = GetClosestRete(rates->data(), rates->size(), rate);
++      }
++      frametype = type;
++      width = res.width;
++      height = res.height;
++      framerate = rate;
++      break;
++    }
++    if (frametype != CAMERA_FRAMETYPE_UNSPECIFIED)
++      break;
++  }
++
++  if (frametype == CAMERA_FRAMETYPE_UNSPECIFIED) {
++    RTC_LOG(LS_WARNING)
++        << " required capabilites not satisfied, capture not started";
++    return -1;
++  }
++  RTC_LOG(LS_INFO) << "VF properties to set: {frametype: " << frametype
++                   << ", size: " << width << "X" << height
++                   << ", framerate: " << framerate << "}";
++
++  if (!CameraAPI::SetVFProperty(_deviceHandle, CAMERA_IMGPROP_CREATEWINDOW, 0,
++                                CAMERA_IMGPROP_END))
++    return -1;
++  if (!CameraAPI::SetVFProperty(_deviceHandle, CAMERA_IMGPROP_WIDTH, width,
++                                CAMERA_IMGPROP_HEIGHT, height,
++                                CAMERA_IMGPROP_END)) {
++    if (_currentWidth && _currentHeight) {
++      width = _currentWidth;
++      height = _currentHeight;
++    } else
++      return -1;
++  }
++  if (!CameraAPI::SetVFProperty(_deviceHandle, CAMERA_IMGPROP_FRAMERATE,
++                                framerate, CAMERA_IMGPROP_END)) {
++    if (_currentFrameRate)
++      framerate = _currentFrameRate;
++    else
++      return -1;
++  }
++
++FALIBACK:
++  if (!CameraAPI::SetVFProperty(_deviceHandle, CAMERA_IMGPROP_FORMAT, frametype,
++                                CAMERA_IMGPROP_END)) {
++    if (CameraAPI::ToLibYuvDefinedType(currentFrametype) != VideoType::kUnknown)
++      frametype = currentFrametype;
++    else
++      return -1;
++  }
++  // Rev up your engines!
++  err = LATE(camera_start_viewfinder)(_deviceHandle, viewfinder_callback,
++                                      status_callback, this);
++  if (err != CAMERA_EOK) {
++    RTC_LOG(LS_ERROR) << "camera_start_viewfinder(" << _deviceHandle << ", "
++                      << (void*)viewfinder_callback << ", "
++                      << (void*)status_callback << ", " << (void*)this
++                      << ") error: " << err << ", " << strerror(err);
++    if (err == ENOTSUP &&
++        frametype != CAMERA_FRAMETYPE_NV12) {  // FIXME: libasound bug?
++      frametype = CAMERA_FRAMETYPE_NV12;
++      goto FALIBACK;
++    }
++    return -1;
++  }
++  RTC_LOG(LS_INFO) << "VideoCaptureDevice::StartCapture() started in "
++                      "callback mode for unit "
++                   << _deviceUniqueId;
++
++  err = LATE(camera_private_get_vf_property)(
++      _deviceHandle, CAMERA_IMGPROP_FORMAT, &frametype, CAMERA_IMGPROP_WIDTH,
++      &width, CAMERA_IMGPROP_HEIGHT, &height, CAMERA_IMGPROP_FRAMERATE,
++      &framerate, CAMERA_IMGPROP_END);
++  if (err != CAMERA_EOK) {
++    RTC_LOG(LS_ERROR) << "camera_private_get_vf_property(" << _deviceHandle
++                      << ") error: " << err << ", " << strerror(err);
++  }
++  RTC_LOG(LS_INFO) << "actual VF properties: {frametype: " << frametype
++                   << ", size: " << width << "X" << height
++                   << ", framerate: " << framerate << "}";
++  _currentFrameRate = framerate;
++  _currentWidth = width;
++  _currentHeight = height;
++  _captureVideoType = CameraAPI::ToLibYuvDefinedType(frametype);
++  _captureStarted = true;
++  return 0;
++}
++
++int32_t VideoCaptureDevice::StopCapture() {
++  MutexLock lock(&capture_lock_);
++  if (_deviceHandle != CAMERA_HANDLE_INVALID) {
++    LATE(camera_stop_viewfinder)(_deviceHandle);
++  }
++  return 0;
++}
++
++// This callback is invoked by the camera API on a separate thread.
++//
++/*static*/ void VideoCaptureDevice::viewfinder_callback(camera_handle_t fd,
++                                                        camera_buffer_t* buffer,
++                                                        void* obj) {
++  if (buffer && obj) {
++    VideoCaptureDevice* device = reinterpret_cast<VideoCaptureDevice*>(obj);
++    VideoCaptureCapability frameInfo;
++    MutexLock lock(&device->capture_lock_);
++    size_t frame_length = FillFrameInfo(buffer, frameInfo);
++    // convert to to I420 if needed
++    device->IncomingFrame((unsigned char*)buffer->framebuf, frame_length,
++                          frameInfo);
++  }
++}
++
++// This callback is invoked by the camera API on a separate thread.
++/*static*/ void VideoCaptureDevice::status_callback(camera_handle_t,
++                                                    camera_devstatus_t status,
++                                                    uint16_t code,
++                                                    void* obj) {
++  // Don't log common successes.
++  if (obj) {
++    VideoCaptureDevice* device = static_cast<VideoCaptureDevice*>(obj);
++    if (status == CAMERA_STATUS_VIDEOVF)  // The video viewfinder has started.
++      // _captureStarted = true;
++      return;
++    if (status == CAMERA_STATUS_VIEWFINDER_ACTIVE &&
++        !device->status_active_received_) {
++      // Viewfinder is active and working properly, first time received.
++      device->status_active_received_ = true;
++      return;
++    }
++  }
++  RTC_LOG(LS_INFO) << "QNX camera status " << status << ", code " << code
++                   << ".";
++}
++
++bool VideoCaptureDevice::CaptureStarted() {
++  return _captureStarted;
++}
++
++int32_t VideoCaptureDevice::CaptureSettings(VideoCaptureCapability& settings) {
++  settings.width = _currentWidth;
++  settings.height = _currentHeight;
++  settings.maxFPS = _currentFrameRate;
++  settings.videoType = _captureVideoType;
++
++  return 0;
++}
++}  // namespace videocapturemodule
++}  // namespace webrtc
+diff --git a/modules/video_capture/qnx/video_capture_qnx.h b/modules/video_capture/qnx/video_capture_qnx.h
+new file mode 100644
+index 0000000000..4acdc4ae3e
+--- /dev/null
++++ b/modules/video_capture/qnx/video_capture_qnx.h
+@@ -0,0 +1,65 @@
++/*
++ *  Copyright (c) 2021 The WebRTC project authors. All Rights Reserved.
++ *
++ *  Use of this source code is governed by a BSD-style license
++ *  that can be found in the LICENSE file in the root of the source
++ *  tree. An additional intellectual property rights grant can be found
++ *  in the file PATENTS.  All contributing project authors may
++ *  be found in the AUTHORS file in the root of the source tree.
++ */
++
++#ifndef MODULES_VIDEO_CAPTURE_MAIN_SOURCE_QNX_VIDEO_CAPTURE_QNX_H_
++#define MODULES_VIDEO_CAPTURE_MAIN_SOURCE_QNX_VIDEO_CAPTURE_QNX_H_
++
++#include <camera/camera_api.h>
++#include <stddef.h>
++#include <stdint.h>
++
++#include <memory>
++
++#include "modules/video_capture/video_capture_defines.h"
++#include "modules/video_capture/video_capture_impl.h"
++#include "rtc_base/platform_thread.h"
++#include "rtc_base/synchronization/mutex.h"
++
++namespace webrtc {
++namespace videocapturemodule {
++class VideoCaptureDevice : public VideoCaptureImpl {
++ public:
++  VideoCaptureDevice();
++  ~VideoCaptureDevice() override;
++  int32_t Init(const char* deviceUniqueId);
++  int32_t StartCapture(const VideoCaptureCapability& capability) override;
++  int32_t StopCapture() override;
++  bool CaptureStarted() override;
++  int32_t CaptureSettings(VideoCaptureCapability& settings) override;
++  static void LoadLibrary();
++
++ private:
++  enum { kNoOfV4L2Bufffers = 4 };
++
++  static void CaptureThread(void*);
++  static void viewfinder_callback(camera_handle_t,
++                                  camera_buffer_t* buffer,
++                                  void* obj);
++  static void status_callback(camera_handle_t,
++                              camera_devstatus_t status,
++                              uint16_t code,
++                              void* obj);
++  static size_t VideoFrameLength(camera_buffer_t* buffer);
++
++  Mutex capture_lock_;
++  camera_handle_t _deviceHandle;
++
++  int32_t _buffersAllocatedByDevice;
++  int32_t _currentWidth;
++  int32_t _currentHeight;
++  int32_t _currentFrameRate;
++  bool _captureStarted;
++  VideoType _captureVideoType;
++  bool status_active_received_ = false;
++};
++}  // namespace videocapturemodule
++}  // namespace webrtc
++
++#endif  // MODULES_VIDEO_CAPTURE_MAIN_SOURCE_QNX_VIDEO_CAPTURE_QNX_H_
+-- 
+2.34.1
+
