@@ -13,6 +13,10 @@ endif
 ifndef NO_TARGET_OVERRIDE
 clean iclean spotless:
 	rm -fr build
-
+	cd nto-aarch64-le && find . ! -name '*.' -type d -exec rm -rf {} +
+	cd nto-aarch64-le && find . ! -name 'GNUmakefile' -type f -exec rm -f {} +
+	cd nto-x86_64-o && find . ! -name '*.' -type d -exec rm -rf {} +
+	cd nto-x86_64-o && find . ! -name 'GNUmakefile' -type f -exec rm -f {} +
+	
 uninstall:
 endif
