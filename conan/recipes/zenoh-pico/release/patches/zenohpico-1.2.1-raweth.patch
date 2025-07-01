@@ -1,0 +1,22 @@
+diff --git a/src/system/unix/link/raweth.c b/src/system/unix/link/raweth.c
+index 6e15cae0..232ee86f 100644
+--- a/src/system/unix/link/raweth.c
++++ b/src/system/unix/link/raweth.c
+@@ -14,6 +14,8 @@
+ 
+ #include "zenoh-pico/system/link/raweth.h"
+ 
++#if Z_FEATURE_RAWETH_TRANSPORT == 1
++
+ #include <arpa/inet.h>
+ #include <errno.h>
+ #include <ifaddrs.h>
+@@ -36,8 +38,6 @@
+ #include "zenoh-pico/utils/logging.h"
+ #include "zenoh-pico/utils/pointers.h"
+ 
+-#if Z_FEATURE_RAWETH_TRANSPORT == 1
+-
+ #if !defined(__linux)
+ #error "Raweth transport only supported on linux systems"
+ #else

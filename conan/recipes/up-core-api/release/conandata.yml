@@ -1,0 +1,24 @@
+1.6.0-alpha2:
+  sources:
+    url: "https://github.com/eclipse-uprotocol/up-spec/archive/refs/tags/v1.6.0-alpha.2.tar.gz"
+    sha256: "f0159c57d33aa3d148b5032d5f7f079e7eadc9588723a1ac581808b39e85ffdd"
+  requirements:
+    protobuf: "3.21.12"
+  build_requirements:
+    protobuf: "3.21.12"
+1.6.0-alpha3:
+  sources:
+    url: "https://github.com/eclipse-uprotocol/up-spec/archive/refs/tags/v1.6.0-alpha.3.tar.gz"
+    sha256: "ac51d1f5554dffa7b8eda28f075b5671a60a2656a5cef59e7843eddd6a44b9c6"
+  requirements:
+    protobuf: "3.21.12"
+  build_requirements:
+    protobuf: "3.21.12"
+1.6.0-alpha4:
+  sources:
+    url: "https://github.com/eclipse-uprotocol/up-spec/archive/refs/tags/v1.6.0-alpha.4.tar.gz"
+    sha256: "e889a797ae4b69ac7217810c5de170b8525a5ad7cec2c7466f00bda264c20ee1"
+  requirements:
+    protobuf: "3.21.12"
+  build_requirements:
+    protobuf: "3.21.12"
