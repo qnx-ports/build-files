@@ -90,6 +90,7 @@ export QNX_PROJECT_ROOT=$(pwd)
 #
 # <profile-name>: nto-7.1-aarch64-le, nto-7.1-x86_64, nto-8.0-aarch64-le, nto-8.0-x86_64
 # <version-number>: 1.4.0, 1.2.1, 1.0.0-rc5
+# IMPORTANT: version 1.0.0-rc5 has conflict with nto-7.1-*
 #
 conan install -pr:h=$QNX_CONAN_ROOT/tools/profiles/<profile-name> --version=<version-number> $QNX_CONAN_ROOT/recipes/zenoh-cpp/tests
 
@@ -100,11 +101,14 @@ cmake --build build_tests/Release --target tests -- -j
 
 # Run tests on QNX target
 
-#TODO: we have to setup env without router. 
-#./z_pub -m peer -l udp/224.0.0.123:7447#iface=lo
-#./z_sub -m peer -l udp/224.0.0.123:7447#iface=lo
+4 tests are brocken.
 
-
+```bash
+    3 - test_implicit_zenohpico (Not Run)
+    4 - test_keyexpr_zenohpico (Not Run)
+    5 - test_pub_sub_zenohpico (Not Run)
+    6 - test_queryable_get_zenohpico (Not Run)
+```
 
 ```bash
 # Copy ctest.py to adjust paths in CTestTestfile.cmake
@@ -136,3 +140,4 @@ python ./ctest.py
 cd ./build_tests/Release/
 
 ctest
+```

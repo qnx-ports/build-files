@@ -34,6 +34,11 @@ class TestPackageConan(ConanFile):
             tc.cache_variables["CMAKE_CXX_FLAGS_INIT"] = "-Wno-error=pedantic"
             if self.settings.os == "Linux":
                 tc.cache_variables["CMAKE_EXE_LINKER_FLAGS_INIT"] = "-pthread"
+            if self.settings.os == "Neutrino":
+                # workaround since _Bool is not defined for C++ in qnx.
+                # This maybe incorrect use in zenoh-pico/1.0.0-rc5
+                # fixed in newer version of zenoh-pico
+                tc.preprocessor_definitions["_Bool"] = "bool"
 
         tc.cache_variables["ZENOHCXX_ZENOHC"] = False
         tc.cache_variables["ZENOHCXX_ZENOHPICO"] = True
