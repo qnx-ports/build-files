@@ -1,0 +1,24 @@
+diff --git a/cv_bridge/package.xml b/cv_bridge/package.xml
+index 88121a7..67fe588 100644
+--- a/cv_bridge/package.xml
++++ b/cv_bridge/package.xml
+@@ -21,6 +21,7 @@
+ 
+   <build_depend>libboost-dev</build_depend>
+   <build_depend>libboost-python-dev</build_depend>
++  <build_depend>opencv_vendor</build_depend>
+ 
+   <depend>libopencv-dev</depend>
+   <depend>python3-numpy</depend>
+diff --git a/image_geometry/package.xml b/image_geometry/package.xml
+index 8fd9807..4b3b32d 100644
+--- a/image_geometry/package.xml
++++ b/image_geometry/package.xml
+@@ -25,6 +25,7 @@
+   <test_depend>ament_cmake_gtest</test_depend>
+   <test_depend>ament_cmake_pytest</test_depend>
+ 
++  <build_depend>opencv_vendor</build_depend>
+   <export>
+     <build_type>ament_cmake</build_type>
+   </export>
