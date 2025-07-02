@@ -55,3 +55,4 @@ jobs:
           export QNX_CONAN_ROOT=$(realpath ./build-files/conan)
           conan config install $QNX_CONAN_ROOT/tools/qnx-8.0-extension/settings_user.yml
           source ~/qnx/800/qnxsdp-env.sh
+          conan create --version=3.21.12 --build=missing $QNX_CONAN_ROOT/recipes/protobuf/all
