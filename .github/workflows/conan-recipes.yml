@@ -48,7 +48,7 @@ jobs:
         shell: bash
         run: |
           cd ~/workspace
-          python -m venv vpy
+          python3.11 -m venv vpy
           . vpy/bin/activate
           pip install conan
           conan profile detect
