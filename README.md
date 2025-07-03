@@ -19,6 +19,15 @@ You have two options for building the ports:
 2. **Host Build:**
    You can build ports directly on your host system.
 
+## Conan port Status
+
+Click on a port below to navigate to its `README.md` for build and test instructions.
+
+| Port | Version | Status |
+|----------|----------|--------|
+| [gtest](https://github.com/qnx-ports/build-files/blob/main/conan/recipes/gtest/README.md) | 1.10.0/1.13.0/1.14.0 | [![Build](https://github.com/qnx-ports/build-files/actions/workflows/conan-gtest.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/conan-gtest.yml) |
+---
+
 ## Port Status
 
 Click on a port below to navigate to its `README.md` for build and test instructions.
