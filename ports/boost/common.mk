@@ -34,7 +34,7 @@ else
 endif
 
 B2_MODULES = --without-mpi --without-graph_parallel
-B2_EXTRA_OPTS =
+B2_EXTRA_OPTS ?=
 
 # list of flags passed to the b2 command which are shared by all target architectures
 B2_OPTIONS = -q -d2 \
