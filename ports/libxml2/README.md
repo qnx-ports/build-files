@@ -2,6 +2,7 @@
 
 Currently these versions are tested:
 + 2.13.5
++ 2.13.8
 + 2.14.4
 
 Cross-compiled on Ubuntu 24.04 for:
@@ -9,7 +10,7 @@ Cross-compiled on Ubuntu 24.04 for:
 
 Instructions for compiling and running tests are listed below.
 
-*__If you want to run tests__*, make sure to download libxml2 from its source on GNOME or GitHub. 
+*__If you want to run tests__*, make sure to download libxml2 from its source on GNOME or GitHub and not via patching a tarball. 
 
 # Instructions (Ubuntu Only)
 ## 1. Set up your workspace
@@ -33,14 +34,14 @@ Choose from one of the following options to download the source code.
 ### From Repository Source (Required for Tests)
 1. **Use git to clone the repository.**
 ```bash
-git clone https://github.com/GNOME/libxml2.git
+git clone https://github.com/qnx-ports/libxml2.git
 ```
 
 2. **(Optional) Checkout your desired version.**
 
-Checkout your desired version. Check https://github.com/GNOME/libxml2.git for branch names or tags per release.
+Checkout your desired version. Check https://github.com/qnx-ports/libxml2.git for branch names or tags per release.
 ```bash
-git checkout <version>
+git checkout <version> # qnx-2.14.4, qnx-2.13.8, etc
 ```
 
 ### From Tarball
@@ -59,20 +60,15 @@ curl -O https://download.gnome.org/sources/libxml2/2.13/libxml2-2.13.5.tar.xz
 tar xf libxml2-2.13.5.tar.xz
 cd libxml2-2.13.5
 ```
-## 3. Apply an appropriate QNX Patch
-1. **Locate the correct patchfile.**
 
-Under the `build-files` repo you downloaded, there should be a `ports/libxml2` subfolder. In it are a series of `.patch` files which correspond to different versions of libxml2. \
-Locate the appropriate version of the patchvile via its name, `libxml2-VERSION.patch`. If your version is not available, attempt to use the closest available version.
-
-2. **Apply the patch to the source code.**
+3. **Apply the patch to the source code.**
 
 Apply the patch using the following command:
 ```bash
 # Navigate to the source code's directory
 cd <path>/libxml2-wksp/libxml2
 # Apply the correct patch, replacing VERSION as needed.
-git apply ../build-files/ports/libxml2/libxml2-VERSION.patch
+git apply ../build-files/ports/libxml2/libxml2.patch
 ```
 
 ## 4. Compilation
