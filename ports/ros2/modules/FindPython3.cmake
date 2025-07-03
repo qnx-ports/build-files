@@ -58,7 +58,8 @@ function(Python3_add_library target_name)
   target_link_libraries(${target_name} PRIVATE Python3::Python)
 endfunction()
 
-set(NumPy_INCLUDE_DIR "${CMAKE_INSTALL_PREFIX}/../../build/${CPUVARDIR}/numpy_vendor/numpy-prefix/src/numpy/numpy/core/include")
+set(NumPy_INCLUDE_DIR "${CMAKE_INSTALL_PREFIX}/../../build/${CPUVARDIR}/numpy_vendor/numpy-prefix/src/numpy/numpy/core/include"
+                      "${CMAKE_INSTALL_PREFIX}/../../build/${CPUVARDIR}/numpy_vendor/numpy-prefix/src/numpy/build/src.linux-x86_64-3.11/numpy/core/include/numpy")
 set(NumPy_FOUND TRUE)
 if (NOT TARGET NumPy::NumPy)
   add_library(NumPy::NumPy INTERFACE IMPORTED)
