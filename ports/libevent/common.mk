@@ -36,7 +36,7 @@ include $(MKFILES_ROOT)/qtargets.mk
 #because CMake and pkg-config do not necessary add it automatically
 #if the include path is "default"
 CFLAGS += -I$(INSTALL_ROOT)/$(PREFIX)/include
-LDFLAGS += -lsocket -lssl -lcrypto
+LDFLAGS += -lsocket
 
 CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DCMAKE_INSTALL_PREFIX=$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX) \
@@ -47,7 +47,8 @@ CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DEXTRA_CMAKE_C_FLAGS="$(CFLAGS)" \
              -DEXTRA_CMAKE_CXX_FLAGS="$(CXXFLAGS)" \
              -DEXTRA_CMAKE_ASM_FLAGS="$(FLAGS)" \
-             -DEXTRA_CMAKE_LINKER_FLAGS="$(LDFLAGS)"
+             -DEXTRA_CMAKE_LINKER_FLAGS="$(LDFLAGS)" \
+             -DEVENT__DISABLE_OPENSSL=ON
 
 ifndef NO_TARGET_OVERRIDE
 libevent_all:
