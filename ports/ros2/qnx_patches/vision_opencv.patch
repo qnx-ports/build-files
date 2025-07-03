@@ -1,12 +1,13 @@
 diff --git a/cv_bridge/package.xml b/cv_bridge/package.xml
-index 88121a7..67fe588 100644
+index 88121a7..5c4a8d3 100644
 --- a/cv_bridge/package.xml
 +++ b/cv_bridge/package.xml
-@@ -21,6 +21,7 @@
+@@ -21,6 +21,8 @@
  
    <build_depend>libboost-dev</build_depend>
    <build_depend>libboost-python-dev</build_depend>
 +  <build_depend>opencv_vendor</build_depend>
++  <build_depend>numpy_vendor</build_depend>
  
    <depend>libopencv-dev</depend>
    <depend>python3-numpy</depend>
