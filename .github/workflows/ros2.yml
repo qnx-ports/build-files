@@ -35,6 +35,14 @@ jobs:
         repository: qnx-ports/googletest
         path: googletest
 
+    - name: Checkout boost
+      uses: actions/checkout@v4
+      with:
+        repository: boostorg/boost
+        path: boost
+        ref: boost-1.82.0
+        submodules: recursive
+
     - name: Login to GitHub Container Registry
       uses: docker/login-action@v3
       with:
@@ -57,7 +65,13 @@ jobs:
           source /usr/local/qnx/env/bin/activate
           cd ~/workspace
           export QNX_SDP_VERSION=qnx800
-          PREFIX="/usr" QNX_PROJECT_ROOT="$(pwd)/googletest" make -C build-files/ports/googletest install 
+          PREFIX="/usr" QNX_PROJECT_ROOT="$(pwd)/googletest" make -C build-files/ports/googletest install
+          cd boost/tools/build
+          git apply ../../../build-files/ports/boost/tools_qnx.patch
+          cd ~/workspace
+          cd boost/libs/asio && git apply ../../../build-files/ports/boost/asio_1.82.0_qnx.patch
+          cd ~/workspace
+          QNX_PROJECT_ROOT="$(pwd)/boost" make -C build-files/ports/boost install
           cd build-files/ports/ros2
           mkdir -p src
           vcs import src < ros2.repos
