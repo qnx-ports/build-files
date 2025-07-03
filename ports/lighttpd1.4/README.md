@@ -95,4 +95,54 @@ QNX_PROJECT_ROOT="$(pwd)/lighttpd1.4" JLEVEL=4 make -C build-files/ports/lighttp
 
 ## Test instruction
 
-Currently, there is no way to run tests because tests require Perl to run. Perl for QNX is only used internally at the moment.
+Pre-requisite
+
+  - build and install perl5 to the sdp: https://github.com/qnx-ports/build-files/blob/main/ports/perl5/README.md
+
+Build and install tests to SDP.
+```bash
+cd ~/qnx_workspace
+# Build and install all tests
+QNX_PROJECT_ROOT="$(pwd)/lighttpd1.4" JLEVEL=4 make -C build-files/ports/lighttpd1.4 check
+```
+
+**IMPORTANT** before testing you have to properly install perl to the target
+
+  - For example: mkqnximage --type=qemu --arch=x86_64 --clean --run --force --data-size=500 --data-inodes=20000 --perl=yes
+
+Run tests on the target.
+```bash
+# define target IP address
+TARGET_HOST=<target-ip-address-or-hostname>
+
+# copy installed tests to your QNX target
+scp -r  $QNX_TARGET/x86_64/usr/local/bin/lighttpd_tests root@$TARGET_HOST:/data/home/root/
+
+# or
+scp -r  $QNX_TARGET/x86_64/usr/local/bin/lighttpd_tests root@$TARGET_HOST:/data/home/root/
+
+# ssh into the target
+ssh root@$TARGET_HOST
+
+# run tests
+cd /data/home/root/lighttpd_tests
+
+./base_testsuite.sh
+```
+
+**Note**: All tests have to return no error.
+
+```bash
+All tests successful.
+Files=4, Tests=221,  1 wallclock secs ( 0.03 usr  0.00 sys +  0.43 cusr  0.00 csys =  0.46 CPU)
+Result: PASS
+PASS:tests/cleanup.sh
+cleaning up
+==========================================
+Perl tests summary for lighttpd 1.4.73
+==========================================
+# TOTAL: 3
+# PASS: 3
+# FAIL: 0
+==========================================
+```
