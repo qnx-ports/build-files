@@ -1,4 +1,4 @@
-name: conan-recipes
+name: conan-gtest
 
 on:
   workflow_dispatch:
@@ -6,16 +6,14 @@ on:
     branches:
       - main
     paths:
-      - '.github/workflows/conan-recipes.yml'
-      - '!conan/recipes/**'
-      - 'conan/**'
+      - '.github/workflows/conan-gtest.yml'
+      - 'conan/recipes/gtest/**'
   pull_request:
     branches:
       - main
     paths:
-      - '.github/workflows/conan-recipes.yml'
-      - '!conan/recipes/**'
-      - 'conan/**'
+      - '.github/workflows/conan-gtest.yml'
+      - 'conan/recipes/gtest/**'
 
 jobs:
 
@@ -24,7 +22,7 @@ jobs:
     if: |
       (github.event_name == 'workflow_dispatch') ||
       (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
-      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'conan'))
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'conan-gtest'))
     steps:
     - name: Checkout build-files
       uses: actions/checkout@v4
@@ -42,7 +40,7 @@ jobs:
       run: |
         docker pull ghcr.io/qnx-ports/sdp-build-env:latest
 
-    - name: Build conan recipes
+    - name: Build conan gtest recipes
       uses: addnab/docker-run-action@v3
       with:
         image: ghcr.io/qnx-ports/sdp-build-env:latest
@@ -56,12 +54,7 @@ jobs:
           conan profile detect
           export QNX_CONAN_ROOT=$(realpath ./build-files/conan)
           conan config install $QNX_CONAN_ROOT/tools/qnx-8.0-extension/settings_user.yml
-          conan create --version=3.21.12 --build=missing $QNX_CONAN_ROOT/recipes/protobuf/all
           source ~/qnx/800/qnxsdp-env.sh
-          conan create -pr:h=$QNX_CONAN_ROOT/tools/profiles/nto-8.0-x86_64 --version=3.31.7 $QNX_CONAN_ROOT/recipes/cmake/3.x.x
-          conan create -pr:h=$QNX_CONAN_ROOT/tools/profiles/nto-8.0-x86_64 --version=3.21.12 --build=missing $QNX_CONAN_ROOT/recipes/protobuf/all 
+          conan create -pr:h=$QNX_CONAN_ROOT/tools/profiles/nto-8.0-x86_64 --version=1.10.0 --build=missing $QNX_CONAN_ROOT/recipes/gtest/all
+          conan create -pr:h=$QNX_CONAN_ROOT/tools/profiles/nto-8.0-x86_64 --version=1.13.0 --build=missing $QNX_CONAN_ROOT/recipes/gtest/all
           conan create -pr:h=$QNX_CONAN_ROOT/tools/profiles/nto-8.0-x86_64 --version=1.14.0 --build=missing $QNX_CONAN_ROOT/recipes/gtest/all
-          conan create -pr:h=$QNX_CONAN_ROOT/tools/profiles/nto-8.0-x86_64 --version=1.6.0-alpha2 --build=missing $QNX_CONAN_ROOT/recipes/up-core-api/release/
-          conan create -pr:h=$QNX_CONAN_ROOT/tools/profiles/nto-8.0-x86_64 --version=1.0.1 --build=missing $QNX_CONAN_ROOT/recipes/up-cpp/release/
-          conan create -pr:h=$QNX_CONAN_ROOT/tools/profiles/nto-8.0-x86_64 --version=1.4.0 $QNX_CONAN_ROOT/recipes/zenoh-pico/release
-          conan create -pr:h=$QNX_CONAN_ROOT/tools/profiles/nto-8.0-x86_64 --version=1.4.0 $QNX_CONAN_ROOT/recipes/zenoh-cpp/release
