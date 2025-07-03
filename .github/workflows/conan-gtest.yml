@@ -22,7 +22,7 @@ jobs:
     if: |
       (github.event_name == 'workflow_dispatch') ||
       (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
-      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'conan-gtest'))
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'conan'))
     steps:
     - name: Checkout build-files
       uses: actions/checkout@v4
