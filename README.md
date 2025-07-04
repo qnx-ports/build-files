@@ -28,6 +28,8 @@ Click on a port below to navigate to its `README.md` for build and test instruct
 | [cmake](https://github.com/qnx-ports/build-files/blob/main/conan/recipes/cmake/README.md) | 3.31.6/3.31.7 | [![Build](https://github.com/qnx-ports/build-files/actions/workflows/conan-cmake.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/conan-cmake.yml) |
 | [gtest](https://github.com/qnx-ports/build-files/blob/main/conan/recipes/gtest/README.md) | 1.10.0/1.13.0/1.14.0 | [![Build](https://github.com/qnx-ports/build-files/actions/workflows/conan-gtest.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/conan-gtest.yml) |
 | [protobuf](https://github.com/qnx-ports/build-files/blob/main/conan/recipes/protobuf/README.md) | 3.15.0/3.21.12/5.27.2 | [![Build](https://github.com/qnx-ports/build-files/actions/workflows/conan-protobuf.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/conan-protobuf.yml) |
+| [up-core-api](https://github.com/qnx-ports/build-files/blob/main/conan/recipes/up-core-api/README.md) | 1.6.0-alpha2/1.6.0-alpha3/1.6.0-alpha4 | [![Build](https://github.com/qnx-ports/build-files/actions/workflows/conan-up-core-api.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/conan-up-core-api.yml) |
+| [up-cpp](https://github.com/qnx-ports/build-files/blob/main/conan/recipes/up-cpp/README.md) | 1.0.0-rc0/1.0.0<br>1.0.1-rc1/1.0.1 | [![Build](https://github.com/qnx-ports/build-files/actions/workflows/conan-up-cpp.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/conan-up-cpp.yml) |
 ---
 
 ## Port Status
