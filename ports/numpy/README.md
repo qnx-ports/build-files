@@ -32,6 +32,20 @@ WARN: CCompilerOpt.feature_test[1575] : testing failed
 Use `$(nproc)` instead of `4` after `JLEVEL=` and `-j` if you want to use the maximum number of cores to build this project.
 32GB of RAM is recommended for using `JLEVEL=$(nproc)` or `-j$(nproc)`.
 
+## ⚠️ Troubleshooting
+
+### Python 3.x: `'long' is not defined` error
+
+When building NumPy with Python 3.11 or later, the build may fail during Cython compilation with the following error:
+_generator.pyx:3760:36: undeclared name not builtin: long
+This occurs because the `long` type was removed in Python 3.
+### ✅ Fix:
+Use a compatible Cython version. For example, Cython `3.0.11` works well with Python 3.11+ and avoids this error.
+```bash
+pip install Cython==3.0.11
+Save the file and re-run the build process.
+```
+
 # Compile the port for QNX in a Docker container
 
 Pre-requisite: Install Docker on Ubuntu https://docs.docker.com/engine/install/ubuntu/
