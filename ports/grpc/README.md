@@ -31,6 +31,10 @@ cd ~/qnx_workspace
 git clone https://github.com/qnx-ports/muslflt.git
 QNX_PROJECT_ROOT="$(pwd)/muslflt" make -C build-files/ports/muslflt/ install JLEVEL=16
 
+# Install googletest
+git clone https://github.com/qnx-ports/googletest.git
+BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/googletest" make -C build-files/ports/googletest install -j16
+
 # Install abseil-cpp
 git clone https://github.com/qnx-ports/abseil-cpp.git
 QNX_SEVEN_COMPAT="true" QNX_PROJECT_ROOT="$(pwd)/abseil-cpp" make -C build-files/ports/abseil-cpp/ install JLEVEL=16
@@ -50,16 +54,11 @@ git remote add qnx https://github.com/qnx-ports/protobuf.git
 git fetch --all
 git switch qnx-v27.2
 git pull
-cd ~/qnx_workspace/grpc/third_party/benchmark
-git remote add qnx https://github.com/qnx-ports/benchmark.git
-git fetch --all
-git switch qnx-v1.8.3
-git pull
+git submodule update --init
 cd ~/qnx_workspace
 
 # Build grpc
 QNX_PROJECT_ROOT="$(pwd)/grpc" make -C build-files/ports/grpc/ install JLEVEL=16
-
 ```
 
 # Compile the port for QNX
@@ -77,6 +76,10 @@ source ~/qnx800/qnxsdp-env.sh
 git clone https://github.com/qnx-ports/muslflt.git
 QNX_PROJECT_ROOT="$(pwd)/muslflt" make -C build-files/ports/muslflt/ install JLEVEL=16
 
+# Install googletest
+git clone https://github.com/qnx-ports/googletest.git
+BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/googletest" make -C build-files/ports/googletest install -j16
+
 # Install abseil-cpp
 git clone https://github.com/qnx-ports/abseil-cpp.git
 QNX_SEVEN_COMPAT="true" QNX_PROJECT_ROOT="$(pwd)/abseil-cpp" make -C build-files/ports/abseil-cpp/ install JLEVEL=16
@@ -96,11 +99,7 @@ git remote add qnx https://github.com/qnx-ports/protobuf.git
 git fetch --all
 git switch qnx-v27.2
 git pull
-cd ~/qnx_workspace/grpc/third_party/benchmark
-git remote add qnx https://github.com/qnx-ports/benchmark.git
-git fetch --all
-git switch qnx-v1.8.3
-git pull
+git submodule update --init
 cd ~/qnx_workspace
 
 # Build grpc

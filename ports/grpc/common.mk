@@ -30,7 +30,7 @@ GENERATE_PINFO_FILES ?= TRUE
 ALL_DEPENDENCIES = grpc_all
 .PHONY: grpc_all install check clean
 
-CPPFLAGS += $(FLAGS) -D__EXT_QNX -D_QNX_SOURCE $(FORTIFY_DEFS) -O2
+CPPFLAGS += $(FLAGS) -D__EXT_QNX -D_QNX_SOURCE $(FORTIFY_DEFS)
 CPPFLAGS += -I$(INSTALL_ROOT)/$(PREFIX)/include
 CPPFLAGS += -fstack-protector-strong
 # Ignore warnings
@@ -83,6 +83,7 @@ CMAKE_ARGS += -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
               -DEXTRA_CMAKE_LINKER_FLAGS="$(LDFLAGS)" \
               -DGENERATE_PINFO_FILES=$(GENERATE_PINFO_FILES) \
               -DCPU=$(CPU) \
+			  -DEXT=$(EXT) \
               -DCMAKE_CXX_STANDARD=17 \
               -DBUILD_SHARED_LIBS=ON \
               -DgRPC_BUILD_CODEGEN=ON \

@@ -17,6 +17,11 @@ on:
 jobs:
 
   build-aarch64le:
+    strategy:
+      matrix:
+        qnx_env:
+          - ghcr.io/qnx-ports/sdp800-build-env:latest
+          - ghcr.io/qnx-ports/sdp-build-env:latest
     runs-on: self-hosted
     if: |
       (github.event_name == 'workflow_dispatch') ||
@@ -52,12 +57,6 @@ jobs:
       with:
         repository: qnx-ports/benchmark
         path: benchmark
-
-    - name: Checkout protobuf
-      uses: actions/checkout@v4
-      with:
-        repository: qnx-ports/protobuf
-        path: protobuf
     
     - name: Checkout grpc
       uses: actions/checkout@v4
@@ -73,7 +72,7 @@ jobs:
         password: ${{secrets.GITHUB_TOKEN}}
     - name: Pull build environment
       run: |
-        docker pull ghcr.io/qnx-ports/sdp800-build-env:latest
+        docker pull ${{ matrix.qnx_env }}
 
     - name: Build grpc
       uses: addnab/docker-run-action@v3
@@ -82,16 +81,16 @@ jobs:
         options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
         shell: bash
         run: |
+          if [[ "${{ matrix.qnx_env}}" == "ghcr.io/qnx-ports/sdp800-build-env:latest" ]]; then
+            source ~/qnx/800/qnxsdp-env.sh
+          else 
+            source ~/qnx/710/qnxsdp-env.sh
+          fi
           source ~/qnx/800/qnxsdp-env.sh
           cd ~/workspace
-          QNX_PROJECT_ROOT="$(pwd)/muslflt" make -C build-files/ports/muslflt/ install
-          BUILD_TESTING="OFF" QNX_PROJECT_ROOT="$(pwd)/googletest" make -C build-files/ports/googletest/ install
-          QNX_SEVEN_COMPAT="true" QNX_PROJECT_ROOT="$(pwd)/abseil-cpp" make -C build-files/ports/abseil-cpp/ install
-          QNX_PROJECT_ROOT="$(pwd)/benchmark" make -C build-files/ports/benchmark install
-          cd protobuf
-          git submodule update --init
-          cd -
-          CONFIG_CMAKE_ARGS="-G Ninja" GENERATOR_ARGS="-j$(nproc) --verbose" QNX_PROJECT_ROOT="$(pwd)/protobuf" make -C build-files/ports/protobuf install
+          CPULIST=aarch64 QNX_PROJECT_ROOT="$(pwd)/muslflt" make -C build-files/ports/muslflt/ install
+          CPULIST=aarch64 BUILD_TESTING="OFF" QNX_PROJECT_ROOT="$(pwd)/googletest" make -C build-files/ports/googletest/ install
+          CPULIST=aarch64 QNX_SEVEN_COMPAT="true" QNX_PROJECT_ROOT="$(pwd)/abseil-cpp" make -C build-files/ports/abseil-cpp/ install
           cd grpc
           git submodule update --init
           cd third_party/googletest
@@ -99,12 +98,22 @@ jobs:
           git fetch --all
           git switch qnx_v1.13.0 
           git pull
+          cd ~/workspace/grpc/third_party/protobuf
+          git remote add qnx https://github.com/qnx-ports/protobuf.git
+          git fetch --all
+          git switch qnx-v27.2
+          git pull
+          git submodule update --init
           cd ~/workspace
-          touch build-files/ports/grpc/default/nto-x86_64-o/Makefile.dnm
-          touch build-files/ports/grpc/io-sock/nto-x86_64-o/Makefile.dnm
-          CONFIG_CMAKE_ARGS="-G Ninja" GENERATOR_ARGS="-j$(nproc) --verbose" QNX_PROJECT_ROOT="$(pwd)/grpc" make -C build-files/ports/grpc/ install
+          CONFIG_CMAKE_ARGS="-G Ninja" GENERATOR_ARGS="-j$(nproc) --verbose" QNX_PROJECT_ROOT="$(pwd)/grpc" make -C build-files/ports/grpc/host install
+          CPULIST=aarch64 CONFIG_CMAKE_ARGS="-G Ninja" GENERATOR_ARGS="-j$(nproc) --verbose" QNX_PROJECT_ROOT="$(pwd)/grpc" make -C build-files/ports/grpc/ install
   
   build-x86_64o:
+    strategy:
+      matrix:
+        qnx_env:
+          - ghcr.io/qnx-ports/sdp800-build-env:latest
+          - ghcr.io/qnx-ports/sdp-build-env:latest
     runs-on: self-hosted
     if: |
       (github.event_name == 'workflow_dispatch') ||
@@ -149,7 +158,7 @@ jobs:
         password: ${{secrets.GITHUB_TOKEN}}
     - name: Pull build environment
       run: |
-        docker pull ghcr.io/qnx-ports/sdp800-build-env:latest
+        docker pull ${{ matrix.qnx_env }}
 
     - name: Build grpc
       uses: addnab/docker-run-action@v3
@@ -158,11 +167,15 @@ jobs:
         options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
         shell: bash
         run: |
-          source ~/qnx/800/qnxsdp-env.sh
+          if [[ "${{ matrix.qnx_env}}" == "ghcr.io/qnx-ports/sdp800-build-env:latest" ]]; then
+            source ~/qnx/800/qnxsdp-env.sh
+          else 
+            source ~/qnx/710/qnxsdp-env.sh
+          fi
           cd ~/workspace
-          QNX_PROJECT_ROOT="$(pwd)/muslflt" make -C build-files/ports/muslflt/ install
-          QNX_SEVEN_COMPAT="true" QNX_PROJECT_ROOT="$(pwd)/abseil-cpp" make -C build-files/ports/abseil-cpp/ install
-          QNX_PROJECT_ROOT="$(pwd)/benchmark" make -C build-files/ports/benchmark install
+          CPULIST=x86_64 QNX_PROJECT_ROOT="$(pwd)/muslflt" make -C build-files/ports/muslflt/ install
+          CPULIST=x86_64 BUILD_TESTING="OFF" QNX_PROJECT_ROOT="$(pwd)/googletest" make -C build-files/ports/googletest/ install
+          CPULIST=x86_64 QNX_SEVEN_COMPAT="true" QNX_PROJECT_ROOT="$(pwd)/abseil-cpp" make -C build-files/ports/abseil-cpp/ install
           cd grpc
           git submodule update --init
           cd third_party/googletest
@@ -175,12 +188,83 @@ jobs:
           git fetch --all
           git switch qnx-v27.2
           git pull
-          cd ~/workspace/grpc/third_party/benchmark
-          git remote add qnx https://github.com/qnx-ports/benchmark.git
-          git fetch --all
-          git switch qnx-v1.8.3
-          git pull
+          git submodule update --init
           cd ~/workspace
-          touch build-files/ports/grpc/default/nto-aarch64-le/Makefile.dnm
-          touch build-files/ports/grpc/io-sock/nto-aarch64-le/Makefile.dnm
-          CONFIG_CMAKE_ARGS="-G Ninja" GENERATOR_ARGS="-j$(nproc) --verbose" QNX_PROJECT_ROOT="$(pwd)/grpc" make -C build-files/ports/grpc/ install
+          CONFIG_CMAKE_ARGS="-G Ninja" GENERATOR_ARGS="-j$(nproc) --verbose" QNX_PROJECT_ROOT="$(pwd)/grpc" make -C build-files/ports/grpc/host install
+          CPULIST=x86_64 CONFIG_CMAKE_ARGS="-G Ninja" GENERATOR_ARGS="-j$(nproc) --verbose" QNX_PROJECT_ROOT="$(pwd)/grpc" make -C build-files/ports/grpc/ install
+
+  build-armv7le-710:
+    runs-on: self-hosted
+    if: |
+      (github.event_name == 'workflow_dispatch') ||
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'grpc'))
+    timeout-minutes: 480
+    steps:
+    - name: Checkout build-files
+      uses: actions/checkout@v4
+      with:
+        path: build-files
+
+    - name: Checkout muslflt
+      uses: actions/checkout@v4
+      with:
+        repository: qnx-ports/muslflt
+        path: muslflt
+
+    - name: Checkout googletest
+      uses: actions/checkout@v4
+      with:
+        repository: qnx-ports/googletest
+        path: googletest
+
+    - name: Checkout abseil-cpp
+      uses: actions/checkout@v4
+      with:
+        repository: qnx-ports/abseil-cpp
+        path: abseil-cpp
+    
+    - name: Checkout grpc
+      uses: actions/checkout@v4
+      with:
+        repository: qnx-ports/grpc
+        path: grpc
+
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v3
+      with:
+        registry: ghcr.io
+        username: ${{github.actor}}
+        password: ${{secrets.GITHUB_TOKEN}}
+    - name: Pull build environment
+      run: |
+        docker pull ghcr.io/qnx-ports/sdp-build-env:latest
+
+    - name: Build grpc
+      uses: addnab/docker-run-action@v3
+      with:
+        image: ghcr.io/qnx-ports/sdp800-build-env:latest
+        options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
+        shell: bash
+        run: |
+          source ~/qnx/710/qnxsdp-env.sh
+          cd ~/workspace
+          CPULIST=arm QNX_PROJECT_ROOT="$(pwd)/muslflt" make -C build-files/ports/muslflt/ install
+          CPULIST=arm BUILD_TESTING="OFF" QNX_PROJECT_ROOT="$(pwd)/googletest" make -C build-files/ports/googletest/ install
+          CPULIST=arm QNX_SEVEN_COMPAT="true" QNX_PROJECT_ROOT="$(pwd)/abseil-cpp" make -C build-files/ports/abseil-cpp/ install
+          cd grpc
+          git submodule update --init
+          cd third_party/googletest
+          git remote add qnx https://github.com/qnx-ports/googletest.git
+          git fetch --all
+          git switch qnx_v1.13.0 
+          git pull
+          cd ~/workspace/grpc/third_party/protobuf
+          git remote add qnx https://github.com/qnx-ports/protobuf.git
+          git fetch --all
+          git switch qnx-v27.2
+          git pull
+          git submodule update --init
+          cd ~/workspace
+          CONFIG_CMAKE_ARGS="-G Ninja" GENERATOR_ARGS="-j$(nproc) --verbose" QNX_PROJECT_ROOT="$(pwd)/grpc" make -C build-files/ports/grpc/host install
+          CPULIST=arm CONFIG_CMAKE_ARGS="-G Ninja" GENERATOR_ARGS="-j$(nproc) --verbose" QNX_PROJECT_ROOT="$(pwd)/grpc" make -C build-files/ports/grpc/ install
