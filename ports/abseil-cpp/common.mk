@@ -78,7 +78,7 @@ CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DBUILD_TESTING=ON \
              -DABSL_BUILD_TESTING=ON \
              -DCPU=$(CPU) \
-			 -DEXT=$(EXT) \
+             -DEXT=$(EXT) \
              -DABSL_RUN_TESTS=OFF \
              -DABSL_ENABLE_INSTALL=ON \
              -DABSL_USE_EXTERNAL_GOOGLETEST=ON

@@ -72,8 +72,8 @@ CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -Dgtest_build_tests=$(BUILD_TESTING) \
              -Dgtest_build_samples=$(BUILD_TESTING) \
              -Dgmock_build_tests=$(BUILD_TESTING) \
-			 -DCPU=$(CPU) \
-			 -DEXT=$(EXT)
+             -DCPU=$(CPU) \
+             -DEXT=$(EXT)
 
 ifndef NO_TARGET_OVERRIDE
 googletest_all:
