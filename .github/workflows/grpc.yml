@@ -70,7 +70,7 @@ jobs:
         password: ${{secrets.GITHUB_TOKEN}}
     - name: Pull build environment
       run: |
-        docker pull ${{ matrix.qnx_env }}
+        docker pull ghcr.io/qnx-ports/sdp-build-env:latest
 
     - name: Build grpc
       uses: addnab/docker-run-action@v3
@@ -154,7 +154,7 @@ jobs:
         password: ${{secrets.GITHUB_TOKEN}}
     - name: Pull build environment
       run: |
-        docker pull ${{ matrix.qnx_env }}
+        docker pull ghcr.io/qnx-ports/sdp-build-env:latest
 
     - name: Build grpc
       uses: addnab/docker-run-action@v3
