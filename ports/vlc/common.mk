@@ -7,7 +7,7 @@ include $(QCONFIG) #  ##\# #  # #  #  # <link?>
 
 ## Set up user-overridden variables
 PREFIX 			    ?= /usr/local
-QNX_PROJECT_ROOT    ?= $(PRODUCT_ROOT)/../../vlc_2
+QNX_PROJECT_ROOT    ?= $(PRODUCT_ROOT)/../../vlc
 #FIX THIS FROM vlc_2 REVIEWERS THIS IS AN ERROR!!!
 
 ## Set up QNX recursive makefile specifics.
@@ -58,6 +58,7 @@ CONFIGURE_OPTS= --host=$(PLATFORM)-nto \
 				--disable-skins2 \
 				--disable-avcodec \
 				--disable-swscale \
+				--disable-alsa \
 				--disable-qt --disable-qtsvg --disable-qtdeclarative --disable-qtshadertools --disable-qtwayland
 
 MAKE_OPTS= CFLAGS="$(CFLAGS)" 
@@ -65,6 +66,7 @@ MAKE_OPTS= CFLAGS="$(CFLAGS)"
 # This just wraps the configuration available in the qnx port of VLC. it is purely for installation purposes (and to simplify RetroPie's process)
 # In other words, please see those files to make actual changes.
 vlc_all:
+	@cp -r ../qnx $(QNX_PROJECT_ROOT)/qnx
 	@cd $(QNX_PROJECT_ROOT)/qnx && make install
 	@mkdir -p staging/lib
 	@mkdir -p staging/include
@@ -83,4 +85,10 @@ install_rpie: install
 
 clean:
 	rm -rf staging
-	cd $(QNX_PROJECT_ROOT)/qnx && make clean
+	rm -rf $(QNX_PROJECT_ROOT)/qnx
+	rm $(QNX_PROJECT_ROOT)/ABOUT-NLS
+	rm $(QNX_PROJECT_ROOT)/aclocal.m4
+	rm $(QNX_PROJECT_ROOT)/config.h.in
+	rm $(QNX_PROJECT_ROOT)/configure
+	rm $(QNX_PROJECT_ROOT)/configure~
+	rm $(QNX_PROJECT_ROOT)/Makefile.in
