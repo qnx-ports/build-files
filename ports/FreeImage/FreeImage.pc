@@ -1,0 +1,10 @@
+prefix=/home/jaixjm/qnx800/target/qnx//usr/local
+exec_prefix=/home/jaixjm/qnx800/target/qnx/%CPU%//usr/local
+libdir="{exec_prefix}/lib"
+includedir="{prefix}/include"
+
+Name: FreeImage
+Version: 3.18.0
+Description: https://freeimage.sourceforge.io/
+Libs: -L${libdir} 
+Cflags: -I${includedir}
