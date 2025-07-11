@@ -39,7 +39,7 @@ NAME=vlc
 
 VLC_VERSION = 3.0.21
 
-QNX_PROJECT_ROOT ?= $(PRODUCT_ROOT)
+QNX_PROJECT_ROOT ?= $(PRODUCT_ROOT)/../../vlc
 
 #$(INSTALL_ROOT_$(OS)) is pointing to $QNX_TARGET
 #by default, unless it was manually re-routed to
