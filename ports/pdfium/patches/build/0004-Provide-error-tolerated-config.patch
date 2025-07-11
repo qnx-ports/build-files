@@ -1,0 +1,31 @@
+From 108639f6aaee14a5ff442c75f1a60f9e721f68da Mon Sep 17 00:00:00 2001
+From: Yongxin Dai <yodai@qnx.com>
+Date: Fri, 27 Jun 2025 10:38:01 -0400
+Subject: [PATCH] Provide error tolerated config
+
+---
+ config/compiler/BUILD.gn | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/config/compiler/BUILD.gn b/config/compiler/BUILD.gn
+index b20b98c7b..e97b19b60 100644
+--- a/config/compiler/BUILD.gn
++++ b/config/compiler/BUILD.gn
+@@ -2341,6 +2341,14 @@ config("no_incompatible_pointer_warnings") {
+   }
+ }
+ 
++config("permissive") {
++  if (is_qnx && qnx_sdp_version < 800) {
++    cflags = [
++      "-fpermissive",
++    ]
++  }
++}
++
+ # Optimization -----------------------------------------------------------------
+ #
+ # The BUILDCONFIG file sets the "default_optimization" config on targets by
+-- 
+2.34.1
+

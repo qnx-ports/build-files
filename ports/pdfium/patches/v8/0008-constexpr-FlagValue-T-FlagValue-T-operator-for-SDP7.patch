@@ -1,0 +1,40 @@
+From fd20dda6a9b0b3ee70c699ade50c04706279eca1 Mon Sep 17 00:00:00 2001
+From: Yongxin Dai <yodai@qnx.com>
+Date: Mon, 7 Jul 2025 20:48:50 -0400
+Subject: [PATCH] constexpr FlagValue<T>& FlagValue<T>::operator= for SDP7
+
+---
+ src/flags/flags.h | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/src/flags/flags.h b/src/flags/flags.h
+index cc38cf8004e..70f84bf84da 100644
+--- a/src/flags/flags.h
++++ b/src/flags/flags.h
+@@ -51,7 +51,11 @@ class FlagValue {
+   constexpr T value() const { return value_; }
+ 
+   // Assign a new value (defined below).
++#if !defined(__QNX__) || __QNX__ >= 800
+   inline FlagValue<T>& operator=(T new_value);
++#else
++  inline constexpr FlagValue<T>& operator=(T new_value);
++#endif
+ 
+  private:
+   T value_;
+@@ -158,7 +162,11 @@ class V8_EXPORT_PRIVATE FlagList {
+ };
+ 
+ template <typename T>
++#if !defined(__QNX__) || __QNX__ >= 800
+ FlagValue<T>& FlagValue<T>::operator=(T new_value) {
++#else
++constexpr FlagValue<T>& FlagValue<T>::operator=(T new_value) {
++#endif
+   if (new_value != value_) {
+     FlagList::ResetFlagHash();
+     value_ = new_value;
+-- 
+2.34.1
+
