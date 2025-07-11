@@ -64,4 +64,5 @@ jobs:
           cd ~/workspace
           pip3 install --user meson
           PATH=$PATH:/home/runner/.local/bin
+          apt install -y gettext
           QNX_PROJECT_ROOT="$(pwd)/vlc" make -C build-files/ports/vlc
