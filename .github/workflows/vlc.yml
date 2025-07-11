@@ -68,4 +68,6 @@ jobs:
           pip3 install --user meson
           PATH=$PATH:/home/runner/.local/bin
           apt install -y gettext autopoint nasm yasm
+          apt update
+          apt upgrade
           QNX_PROJECT_ROOT="$(pwd)/vlc" make -C build-files/ports/vlc
