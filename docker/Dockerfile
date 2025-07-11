@@ -141,6 +141,7 @@ RUN apt install -qq --assume-yes \
 	gettext \
 	gettext-base \
 	gettext-tools \
+	gettext-devel \
 	gir1.2-atk-1.0 \
 	gir1.2-gdkpixbuf-2.0 \
 	gir1.2-gtk-3.0 \
