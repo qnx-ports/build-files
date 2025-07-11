@@ -70,4 +70,4 @@ jobs:
           apt install -y gettext autopoint nasm yasm
           apt update
           apt upgrade
-          QNX_PROJECT_ROOT="$(pwd)/vlc" make -C build-files/ports/vlc
+          ACLOCAL_ARGS="-fvi -I /usr/share/gettext/m4" QNX_PROJECT_ROOT="$(pwd)/vlc" make -C build-files/ports/vlc
