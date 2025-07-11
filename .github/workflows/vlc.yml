@@ -62,6 +62,9 @@ jobs:
              source ~/qnx/710/qnxsdp-env.sh
           fi
           cd ~/workspace
+          cd vlc
+          autoreconf --install --force 
+          cd ..
           pip3 install --user meson
           PATH=$PATH:/home/runner/.local/bin
           apt install -y gettext autopoint nasm yasm
