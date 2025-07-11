@@ -1,0 +1,62 @@
+diff --git a/test/CMakeLists.txt b/test/CMakeLists.txt
+index 43e9100..be3f97b 100644
+--- a/test/CMakeLists.txt
++++ b/test/CMakeLists.txt
+@@ -34,10 +34,19 @@ function(add_coverage_test Name)
+         PRIVATE
+         GTest::gtest_main
+         GTest::gmock
+-        pthread
+     )
+     target_include_directories(${Name} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
+-    gtest_discover_tests(${Name} XML_OUTPUT_DIR results)
++    if(CMAKE_SYSTEM_NAME MATCHES "QNX")
++        # QNX provides pthread inside libc and does not need to link pthread lib.
++        #
++        # For QNX we are using cross compilation.
++        # Thus, we can't call gtest_discover_tests()
++        # Instead, we call old gtest_add_tests()
++        gtest_add_tests(TARGET ${Name} SOURCES ${ARGN})
++    else()
++        target_link_libraries(${Name} PRIVATE pthread)
++        gtest_discover_tests(${Name} XML_OUTPUT_DIR results)
++    endif()
+ endfunction()
+ 
+ # NOTE: This is temporarily just a call to add_coverage_test. When coverage
+diff --git a/test/extra/NotificationTest.cpp b/test/extra/NotificationTest.cpp
+index 54e772d..6f90e21 100644
+--- a/test/extra/NotificationTest.cpp
++++ b/test/extra/NotificationTest.cpp
+@@ -32,6 +32,6 @@ protected:
+ };
+ 
+ // TODO replace
+-TEST_F(TestFixture, SomeTestName) {}
++TEST_F(TestFixture, SomeTestName0) {}
+ 
+ }  // namespace
+diff --git a/test/extra/PublisherSubscriberTest.cpp b/test/extra/PublisherSubscriberTest.cpp
+index 54e772d..916f8d3 100644
+--- a/test/extra/PublisherSubscriberTest.cpp
++++ b/test/extra/PublisherSubscriberTest.cpp
+@@ -32,6 +32,6 @@ protected:
+ };
+ 
+ // TODO replace
+-TEST_F(TestFixture, SomeTestName) {}
++TEST_F(TestFixture, SomeTestName1) {}
+ 
+ }  // namespace
+diff --git a/test/extra/RpcClientServerTest.cpp b/test/extra/RpcClientServerTest.cpp
+index 54e772d..fcdea65 100644
+--- a/test/extra/RpcClientServerTest.cpp
++++ b/test/extra/RpcClientServerTest.cpp
+@@ -32,6 +32,6 @@ protected:
+ };
+ 
+ // TODO replace
+-TEST_F(TestFixture, SomeTestName) {}
++TEST_F(TestFixture, SomeTestName2) {}
+ 
+ }  // namespace

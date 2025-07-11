@@ -43,6 +43,23 @@ sudo ln -sf /opt/cmake-3.22.0-linux-x86_64/bin/cmake /usr/local/bin/cmake
 # Set QNX_SDP_VERSION to be qnx800 for SDP 8.0 or qnx710 for SDP 7.1
 export QNX_SDP_VERSION=qnx800
 
+# Get boost library for vision_opencv
+cd ~/qnx_workspace
+git clone https://github.com/boostorg/boost.git && cd boost
+git checkout boost-1.82.0
+git submodule update --init --recursive
+
+# Apply a tools patch
+cd tools/build && git apply ../../../build-files/ports/boost/tools_qnx.patch
+cd ~/qnx_workspace
+
+# Apply SA_RESTART patch to asio
+cd boost/libs/asio && git apply ../../../build-files/ports/boost/asio_1.82.0_qnx.patch
+cd ~/qnx_workspace
+
+# Build boost
+make -C build-files/ports/boost/ install QNX_PROJECT_ROOT="$(pwd)/boost" -j4
+
 # Build googletest
 cd ~/qnx_workspace
 PREFIX="/usr" QNX_PROJECT_ROOT="$(pwd)/googletest" make -C build-files/ports/googletest install -j4
@@ -114,6 +131,23 @@ pip install -U \
 
 # source qnxsdp-env.sh
 source ~/qnx800/qnxsdp-env.sh
+
+# Get boost library for vision_opencv
+cd ~/qnx_workspace
+git clone https://github.com/boostorg/boost.git && cd boost
+git checkout boost-1.82.0
+git submodule update --init --recursive
+
+# Apply a tools patch
+cd tools/build && git apply ../../../build-files/ports/boost/tools_qnx.patch
+cd ~/qnx_workspace
+
+# Apply SA_RESTART patch to asio
+cd boost/libs/asio && git apply ../../../build-files/ports/boost/asio_1.82.0_qnx.patch
+cd ~/qnx_workspace
+
+# Build boost
+make -C build-files/ports/boost/ install QNX_PROJECT_ROOT="$(pwd)/boost" -j4
 
 # Build and install googletest
 PREFIX="/usr" QNX_PROJECT_ROOT="$(pwd)/googletest" make -C build-files/ports/googletest install -j4

@@ -11,6 +11,7 @@ EXTRA_INCVPATH += $(PROJECT_ROOT)/../$(OS)
 EXTRA_INCVPATH += $(PROJECT_ROOT)/$(OS)/protocol
 
 EXTRA_INCVPATH += $(addsuffix /libffi-3.2.1/include,$(filter %/usr/lib,$(USE_ROOT_LIB)))
+EXTRA_INCVPATH += $(QNX_TARGET)/$(CPUVARDIR)/usr/local/lib/libffi-3.2.1/include/
 
 EXTRA_SRCVPATH += $(DIST_ROOT)/src
 EXTRA_SRCVPATH += $(PROJECT_ROOT)/../$(OS)

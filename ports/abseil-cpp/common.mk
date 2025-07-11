@@ -70,7 +70,6 @@ CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DCMAKE_FIND_ROOT_PATH="$(CMAKE_FIND_ROOT_PATH)" \
              -DCMAKE_MODULE_PATH="$(CMAKE_MODULE_PATH)" \
              -DCMAKE_BUILD_TYPE=$(CMAKE_BUILD_TYPE) \
-             -DCMAKE_SYSTEM_PROCESSOR=$(CPUVARDIR) \
              -DEXTRA_CMAKE_C_FLAGS="$(CFLAGS)" \
              -DEXTRA_CMAKE_CXX_FLAGS="$(CFLAGS)" \
              -DEXTRA_CMAKE_ASM_FLAGS="$(FLAGS)" \
@@ -79,6 +78,7 @@ CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DBUILD_TESTING=ON \
              -DABSL_BUILD_TESTING=ON \
              -DCPU=$(CPU) \
+             -DEXT=$(EXT) \
              -DABSL_RUN_TESTS=OFF \
              -DABSL_ENABLE_INSTALL=ON \
              -DABSL_USE_EXTERNAL_GOOGLETEST=ON

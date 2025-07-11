@@ -40,4 +40,6 @@ qnx_patch ./src/ros2/rosidl_typesupport rosidl_typesupport.patch
 qnx_patch ./src/ros2/rosidl_typesupport_fastrtps rosidl_typesupport_fastrtps.patch
 qnx_patch ./src/ament/ament_cmake ament_cmake.patch
 
+qnx_patch ./src/ros-perception/vision_opencv vision_opencv.patch
+
 echo "Packages patched with QNX changes"

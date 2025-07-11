@@ -10,7 +10,7 @@ Cross-compiled on Ubuntu 24.04 for:
 
 Instructions for compiling and running tests are listed below.
 
-*__If you want to run tests__*, make sure to download libxml2 from its source on GNOME or GitHub and not via patching a tarball. 
+*__If you want to run tests__*, make sure to download libxml2 from its source on GNOME or GitHub and NOT via patching a tarball.
 
 # Instructions (Ubuntu Only)
 ## 1. Set up your workspace
@@ -35,6 +35,7 @@ Choose from one of the following options to download the source code.
 1. **Use git to clone the repository.**
 ```bash
 git clone https://github.com/qnx-ports/libxml2.git
+
 ```
 
 2. **(Optional) Checkout your desired version.**
@@ -42,6 +43,7 @@ git clone https://github.com/qnx-ports/libxml2.git
 Checkout your desired version. Check https://github.com/qnx-ports/libxml2.git for branch names or tags per release.
 ```bash
 git checkout <version> # qnx-2.14.4, qnx-2.13.8, etc
+
 ```
 
 ### From Tarball
@@ -60,8 +62,13 @@ curl -O https://download.gnome.org/sources/libxml2/2.13/libxml2-2.13.5.tar.xz
 tar xf libxml2-2.13.5.tar.xz
 cd libxml2-2.13.5
 ```
+## 3. Apply an appropriate QNX Patch
+1. **Locate the correct patchfile.**
 
-3. **Apply the patch to the source code.**
+Under the `build-files` repo you downloaded, there should be a `ports/libxml2` subfolder. In it are a series of `.patch` files which correspond to different versions of libxml2. \
+Locate the appropriate version of the patchvile via its name, `libxml2-VERSION.patch`. If your version is not available, attempt to use the closest available version.
+
+2. **Apply the patch to the source code.**
 
 Apply the patch using the following command:
 ```bash
@@ -71,7 +78,7 @@ cd <path>/libxml2-wksp/libxml2
 git apply ../build-files/ports/libxml2/libxml2.patch
 ```
 
-## 4. Compilation
+## 3. Compilation
 
 There are three options for compilation: You can compile directly using configure and make manually, or you can build recursively in a docker container or in your normal environment. **If running tests, please compile recursively.**
 
