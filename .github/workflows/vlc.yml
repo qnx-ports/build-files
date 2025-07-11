@@ -63,7 +63,7 @@ jobs:
           fi
           cd ~/workspace
           cd vlc
-          autoreconf --install --force 
+          autoreconf --install --force --m4_pattern_allow AC_ICONV
           cd ..
           pip3 install --user meson
           PATH=$PATH:/home/runner/.local/bin
