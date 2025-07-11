@@ -62,5 +62,5 @@ jobs:
              source ~/qnx/710/qnxsdp-env.sh
           fi
           cd ~/workspace
-          pip3 install meson
+          pip3 install --user meson
           QNX_PROJECT_ROOT="$(pwd)/vlc" make -C build-files/ports/vlc
