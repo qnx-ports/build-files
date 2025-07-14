@@ -1,0 +1,71 @@
+From 73a73d0a09eae736a0983718c1fdc1d1c1db9c30 Mon Sep 17 00:00:00 2001
+From: Yongxin Dai <yodai@qnx.com>
+Date: Sat, 12 Jul 2025 16:03:32 -0400
+Subject: [PATCH] Declare qnx_sdp_version
+
+---
+ build/config/qnx/config.gni         |  4 +++-
+ build/config/qnx/get_sdp_version.py | 34 +++++++++++++++++++++++++++++
+ 2 files changed, 37 insertions(+), 1 deletion(-)
+ create mode 100755 build/config/qnx/get_sdp_version.py
+
+diff --git a/build/config/qnx/config.gni b/build/config/qnx/config.gni
+index 2c0986d07a86e..f799c7d474402 100644
+--- a/build/config/qnx/config.gni
++++ b/build/config/qnx/config.gni
+@@ -1,8 +1,10 @@
+ _qnx_sdp_root = getenv("QNX_TARGET")
++_qnx_sdp_version = exec_script("get_sdp_version.py", [], "value")
+ declare_args() {
+   if (_qnx_sdp_root == "") {
+     error("QNX SDP environment variables not set, please run qnxsdp-env.sh first")
+   } else {
+     qnx_sdp_root = _qnx_sdp_root
+   }
+-}
+\ No newline at end of file
++  qnx_sdp_version = _qnx_sdp_version
++}
+diff --git a/build/config/qnx/get_sdp_version.py b/build/config/qnx/get_sdp_version.py
+new file mode 100755
+index 0000000000000..4efb66e76bf43
+--- /dev/null
++++ b/build/config/qnx/get_sdp_version.py
+@@ -0,0 +1,34 @@
++#!/usr/bin/env python3
++# Copyright (c) 2024 The Native Client Authors. All rights reserved.
++# Use of this source code is governed by a BSD-style license that can be
++# found in the LICENSE file.
++
++from __future__ import print_function
++
++import os
++import sys
++
++QNX_SDP_VERSION_FILE = os.path.join(
++    os.environ["QNX_TARGET"], "usr/include/sys/nto_version.h"
++)
++
++
++def version_finder(file):
++    for line in file:
++        if "#define _NTO_VERSION" in line:
++            return line
++
++
++def main():
++    if len(sys.argv) != 1:
++        print("usage: %s" % sys.argv[0])
++        sys.exit(1)
++    with open(QNX_SDP_VERSION_FILE, "r") as file:
++        ver_line = version_finder(file)
++        ver = ver_line.split()[2].strip()
++        print(int(ver))
++        return 0
++
++
++if __name__ == "__main__":
++    main()
+-- 
+2.34.1
+

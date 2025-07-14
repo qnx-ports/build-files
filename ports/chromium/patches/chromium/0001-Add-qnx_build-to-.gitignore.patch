@@ -1,0 +1,34 @@
+From 493cd1d6055cbf47066b23dd410b95c9afe3650f Mon Sep 17 00:00:00 2001
+From: Yongxin Dai <yodai@qnx.com>
+Date: Mon, 14 Jul 2025 10:07:16 -0400
+Subject: [PATCH] Add '/qnx_build' to .gitignore
+
+---
+ .gitignore | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/.gitignore b/.gitignore
+index 70e57234120a3..7870c6279d18c 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -233,6 +233,7 @@ vs-chromium-project.txt
+ /libassistant
+ /libinteraction
+ /llvm
++/Makefile
+ /media/cast/logging/cast_logging_proto_lib.xml
+ /media/media_mojo_bindings.xml
+ /media/test/data/internal
+@@ -244,7 +245,9 @@ vs-chromium-project.txt
+ /net/Release
+ /net/testserver.log
+ /orderfiles
++/out
+ /out*/
++/qnx_build
+ /remoting/android/internal/
+ /remoting/appengine/
+ /remoting/host/installer/chrome-remote-desktop_*.buildinfo
+-- 
+2.34.1
+

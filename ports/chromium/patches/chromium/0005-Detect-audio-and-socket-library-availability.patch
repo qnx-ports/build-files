@@ -1,0 +1,103 @@
+From aec4380e097e845f6c2847d81d3e254e5bde6801 Mon Sep 17 00:00:00 2001
+From: Yongxin Dai <yodai@qnx.com>
+Date: Tue, 15 Jul 2025 15:56:36 -0400
+Subject: [PATCH] Detect audio and socket library availability
+
+---
+ build/config/qnx/check_iosnd_header.py  | 24 ++++++++++++++++++++++++
+ build/config/qnx/check_iosock_header.py | 24 ++++++++++++++++++++++++
+ build/config/qnx/config.gni             | 12 ++++++++++++
+ 3 files changed, 60 insertions(+)
+ create mode 100755 build/config/qnx/check_iosnd_header.py
+ create mode 100755 build/config/qnx/check_iosock_header.py
+
+diff --git a/build/config/qnx/check_iosnd_header.py b/build/config/qnx/check_iosnd_header.py
+new file mode 100755
+index 0000000000000..a2d5e16be6073
+--- /dev/null
++++ b/build/config/qnx/check_iosnd_header.py
+@@ -0,0 +1,24 @@
++#!/usr/bin/env python3
++# Copyright (c) 2024 The Native Client Authors. All rights reserved.
++# Use of this source code is governed by a BSD-style license that can be
++# found in the LICENSE file.
++
++from __future__ import print_function
++
++import os
++import sys
++
++QNX_IO_SND_HEADER_DIR = os.environ['QNX_TARGET'] + "/usr/include/alsa"
++
++def main():
++  if len(sys.argv) != 1:
++    print('usage: %s' % sys.argv[0])
++    sys.exit(1)
++  iosnd_file = os.path.join(QNX_IO_SND_HEADER_DIR, 'asoundlib.h')
++  if os.path.exists(iosnd_file):
++    print(True)
++  else:
++    print(False)
++
++if __name__ == '__main__':
++  main()
+diff --git a/build/config/qnx/check_iosock_header.py b/build/config/qnx/check_iosock_header.py
+new file mode 100755
+index 0000000000000..249dde614cea6
+--- /dev/null
++++ b/build/config/qnx/check_iosock_header.py
+@@ -0,0 +1,24 @@
++#!/usr/bin/env python3
++# Copyright (c) 2024 The Native Client Authors. All rights reserved.
++# Use of this source code is governed by a BSD-style license that can be
++# found in the LICENSE file.
++
++from __future__ import print_function
++
++import os
++import sys
++
++QNX_IO_SOCK_HEADER_DIR = os.environ['QNX_TARGET'] + "/usr/include/io-sock"
++
++def main():
++  if len(sys.argv) != 1:
++    print('usage: %s' % sys.argv[0])
++    sys.exit(1)
++  iosock_file = os.path.join(QNX_IO_SOCK_HEADER_DIR, 'sys/socket.h')
++  if os.path.exists(iosock_file):
++    print(True)
++  else:
++    print(False)
++
++if __name__ == '__main__':
++  main()
+diff --git a/build/config/qnx/config.gni b/build/config/qnx/config.gni
+index f799c7d474402..c9c09501564f0 100644
+--- a/build/config/qnx/config.gni
++++ b/build/config/qnx/config.gni
+@@ -1,5 +1,7 @@
+ _qnx_sdp_root = getenv("QNX_TARGET")
+ _qnx_sdp_version = exec_script("get_sdp_version.py", [], "value")
++_is_iosnd = exec_script("check_iosnd_header.py", [], "trim string")
++_is_iosock = exec_script("check_iosock_header.py", [], "trim string")
+ declare_args() {
+   if (_qnx_sdp_root == "") {
+     error("QNX SDP environment variables not set, please run qnxsdp-env.sh first")
+@@ -7,4 +9,14 @@ declare_args() {
+     qnx_sdp_root = _qnx_sdp_root
+   }
+   qnx_sdp_version = _qnx_sdp_version
++  if (_is_iosnd == "True") {
++    rtc_qnx_use_io_snd = true
++  } else {
++    rtc_qnx_use_io_snd = false
++  }
++  if (_is_iosock == "True") {
++    rtc_qnx_use_io_sock = true
++  } else {
++    rtc_qnx_use_io_sock = false
++  }
+ }
+-- 
+2.34.1
+

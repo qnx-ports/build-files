@@ -1,0 +1,63 @@
+From f5296413762979f44fbaeae5cb53c26ff292ea67 Mon Sep 17 00:00:00 2001
+From: Yongxin Dai <yodai@qnx.com>
+Date: Tue, 15 Jul 2025 16:08:22 -0400
+Subject: [PATCH] Conditionally add libraries and include paths
+
+---
+ build/config/BUILD.gn     |  6 +++++-
+ build/config/qnx/BUILD.gn | 18 +++++++++++++-----
+ 2 files changed, 18 insertions(+), 6 deletions(-)
+
+diff --git a/build/config/BUILD.gn b/build/config/BUILD.gn
+index 2ab177c2441f5..a66bd4f23c78c 100644
+--- a/build/config/BUILD.gn
++++ b/build/config/BUILD.gn
+@@ -360,7 +360,11 @@ config("executable_config") {
+       configs += [ "//build/config/chromecast:executable_config" ]
+     }
+   } else if (is_qnx) {
+-    configs += [ "//build/config/gcc:executable_config" ]
++    configs += [
++        "//build/config/gcc:executable_config"
++        "//build/config/qnx:qnx_dynamic_paths",
++        "//build/config/gcc:executable_config",
++      ]
+   }
+ 
+   # If we're using the prebuilt instrumented libraries with the sanitizers, we
+diff --git a/build/config/qnx/BUILD.gn b/build/config/qnx/BUILD.gn
+index 4539246d4c0a2..103eb30589785 100644
+--- a/build/config/qnx/BUILD.gn
++++ b/build/config/qnx/BUILD.gn
+@@ -22,11 +22,6 @@ config("compiler") {
+     "_QNX_SOURCE",
+   ]
+ 
+-  # libs = [
+-  #   "c",
+-  #   "m",
+-  # ]
+-
+   cflags = [ "" ]
+   cflags_cc = [ "-Wno-reorder" ]
+   ldflags = [
+@@ -43,3 +38,16 @@ config("compiler") {
+     ]
+   }
+ }
++
++config("qnx_dynamic_paths") {
++  include_dirs = []
++  lib_dirs = []
++  if (rtc_qnx_use_io_sock) {
++    include_dirs += [ qnx_sdp_root + "/usr/include/io-sock" ]
++    lib_dirs += [ qnx_sdp_root + "/aarch64le/io-sock/lib" ]
++  }
++  if (rtc_qnx_use_io_snd) {
++    include_dirs += [ qnx_sdp_root + "/usr/include/snd" ]
++    lib_dirs += [ qnx_sdp_root + "/aarch64le/lib/snd" ]
++  }
++}
+-- 
+2.34.1
+
