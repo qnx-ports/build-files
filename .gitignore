@@ -23,7 +23,12 @@ build/
 install/
 log/
 
-# webrt
+# webrtc
 /ports/webrtc/nto-*
 !/ports/webrtc/patches/build
 /ports/webrtc/public
+
+# chromium
+/ports/chromium/nto-*
+!/ports/chromium/patches/build
+/ports/chromium/public
