@@ -1,0 +1,9 @@
+sources:
+  "1.2.1":
+    Linux:
+      x86_64:
+        url: "https://github.com/eclipse-zenoh/zenoh/releases/download/1.2.1/zenoh-1.2.1-x86_64-unknown-linux-gnu-standalone.zip"
+        sha256: "4a2c9e3003aa2140a17d11cb0b73390b02d8ab4c176fca808c79581a671d1565"
+    license:
+      url: "https://github.com/eclipse-zenoh/zenoh/raw/1.2.1/LICENSE"
+      sha256: "01a44774f7b1a453595c7c6d7f7308284ba6a1059dc49e14dad6647e1d44a338"

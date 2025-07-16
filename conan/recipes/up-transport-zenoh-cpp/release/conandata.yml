@@ -1,0 +1,18 @@
+1.0.0-rc3:
+  sources:
+    url: "https://github.com/eclipse-uprotocol/up-transport-zenoh-cpp/archive/refs/tags/v1.0.0-rc3.tar.gz"
+    sha256: "c8583490c74d48bd9dc4f76d686a8203920ad045a1bcafa45e509184153d9b73"
+  requirements:
+    zenoh-pico: "1.0.0-rc5"
+    zenoh-cpp: "1.0.0-rc5"
+    up-cpp: "1.0.1"
+    up-core-api: "1.6.0-alpha2"
+    spdlog: "1.13.0"
+    protobuf: "3.21.12"
+  test-requirements:
+    gtest: "1.14.0"
+patches:
+  1.0.0-rc3:
+    - patch_file: "patches/up-transport-zenoh-cpp-1.0.0-rc3-qnx.patch"
+      patch_description: "port QNX7.1/8.0"
+      patch_type: "conan"

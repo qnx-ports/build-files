@@ -125,3 +125,31 @@ cd ./build_tests/Release/
 
 ctest
 ```
+
+# Deploy gtest on QNX target in case of option shared = true
+```bash
+cd ~/qnx_workspace
+
+mkdir stage_gtest
+
+export QNX_GTEST_STAGE=$(realpath ~/qnx_workspace/stage_gtest)
+
+# Copy gtest to stage folder
+#
+# <profile-name>: nto-7.1-aarch64-le, nto-7.1-x86_64, nto-8.0-aarch64-le, nto-8.0-x86_64
+# <version-number>: 1.10.0, 1.13.0, 1.14.0
+#
+conan install -pr:h=$QNX_CONAN_ROOT/tools/profiles/nto-8.0-x86_64 \
+    --requires=gtest/1.14.0 \
+    -d=direct_deploy \
+    --deployer-folder=$QNX_GTEST_STAGE
+
+# Define target IP address
+TARGET_HOST=<target-ip-address-or-hostname>
+
+# Copy cmake to your QNX target
+scp -r $QNX_GTEST_STAGE/direct_deploy/gtest qnxuser@$TARGET_HOST:/data/home/qnxuser/
+
+# If needed please update LD_LIBRARY_PATH on the target
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/data/home/qnxuser/gtest/lib
+```

@@ -2,8 +2,6 @@ import os
 
 from conan import ConanFile
 from conan.tools.cmake import CMakeToolchain, cmake_layout, CMakeDeps
-from conan.tools.scm import Version
-
 
 class TestPackageConan(ConanFile):
     name = "zenoh-cpp_unittest"
