@@ -39,7 +39,7 @@ jobs:
       with:
         repository: qnx-ports/kineto
         path: kineto
-        ref: qnx_master
+        ref: qnx_main
         submodules: recursive
 
     - name: Login to GitHub Container Registry

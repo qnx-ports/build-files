@@ -19,11 +19,6 @@ jobs:
 
   build:
     runs-on: self-hosted
-    strategy:
-      matrix:
-        qnx_env:
-          - ghcr.io/qnx-ports/sdp800-build-env:latest
-          - ghcr.io/qnx-ports/sdp-build-env:latest
     if: |
       (github.event_name == 'workflow_dispatch') ||
       (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
@@ -51,22 +46,18 @@ jobs:
 
     - name: Pull build environment
       run: |
-        docker pull ghcr.io/qnx-ports/sdp800-build-env:latest
+        docker pull ghcr.io/qnx-ports/sdp-build-env:latest
 
     - name: Build sleef
       uses: addnab/docker-run-action@v3
       with:
-        image: ${{ matrix.qnx_env }}
+        image: ghcr.io/qnx-ports/sdp-build-env:latest
         options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
         shell: bash
         run: |
           cd ~/workspace
           WORKSPACE=$PWD
-          if [[ "${{ matrix.qnx_env}}" == "ghcr.io/qnx-ports/sdp800-build-env:latest" ]]; then
-            source ~/qnx/800/qnxsdp-env.sh
-          else
-            source ~/qnx/710/qnxsdp-env.sh
-          fi
+          source ~/qnx/800/qnxsdp-env.sh
           source /usr/local/qnx/env/bin/activate
           cd $WORKSPACE
           QNX_PROJECT_ROOT="$(pwd)/sleef" make -C build-files/ports/sleef install
