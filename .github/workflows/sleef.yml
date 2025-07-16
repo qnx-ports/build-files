@@ -1,0 +1,63 @@
+name: sleef
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/sleef.yml'
+      - 'ports/sleef/**'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/sleef.yml'
+      - 'ports/sleef/**'
+
+jobs:
+
+  build:
+    runs-on: self-hosted
+    if: |
+      (github.event_name == 'workflow_dispatch') ||
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'sleef'))
+    steps:
+    - name: Checkout build-files
+      uses: actions/checkout@v4
+      with:
+        path: build-files
+
+    - name: Checkout sleef
+      uses: actions/checkout@v4
+      with:
+        repository: shibatch/sleef
+        path: sleef
+        ref: 90ae01e5c71e378229ce0b2960a8e95dc89b9f17
+        submodules: recursive
+
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v3
+      with:
+        registry: ghcr.io
+        username: ${{github.actor}}
+        password: ${{secrets.GITHUB_TOKEN}}
+
+    - name: Pull build environment
+      run: |
+        docker pull ghcr.io/qnx-ports/sdp-build-env:latest
+
+    - name: Build sleef
+      uses: addnab/docker-run-action@v3
+      with:
+        image: ghcr.io/qnx-ports/sdp-build-env:latest
+        options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
+        shell: bash
+        run: |
+          cd ~/workspace
+          WORKSPACE=$PWD
+          source ~/qnx/800/qnxsdp-env.sh
+          source /usr/local/qnx/env/bin/activate
+          cd $WORKSPACE
+          QNX_PROJECT_ROOT="$(pwd)/sleef" make -C build-files/ports/sleef install
