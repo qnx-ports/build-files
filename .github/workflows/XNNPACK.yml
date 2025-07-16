@@ -55,6 +55,8 @@ jobs:
         options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
         shell: bash
         run: |
+          cd ~/workspace
+          WORKSPACE=$PWD
           source ~/qnx/800/qnxsdp-env.sh
           source /usr/local/qnx/env/bin/activate
           cd $WORKSPACE
