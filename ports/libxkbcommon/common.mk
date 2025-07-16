@@ -37,6 +37,7 @@ include $(MKFILES_ROOT)/qtargets.mk
 LIBXKBCOMMON_INSTALL_DIR=$(INSTALL_ROOT)
 
 MESON_FLAGS :=  --prefix=/$(CPUVARDIR)/$(PREFIX) \
+								--includedir=$(PREFIX)/include \
                 --cross-file=../qnx_cross.cfg \
                 -Dc_args="$(CFLAGS)" \
                 -Ddefault-layout=us \
