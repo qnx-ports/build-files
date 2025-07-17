@@ -44,7 +44,7 @@ jobs:
         if [[ "${{ github.head_ref }}" != '' ]]; then
           echo "branch=${GITHUB_HEAD_REF##*/}" >> $GITHUB_OUTPUT
         else
-          echo "branch=${GITHUB_REF##*/}" >> $GITHUB_OUTPUT GITHUB_REF
+          echo "branch=main" >> $GITHUB_OUTPUT
         fi
 
     - name: Build pdfium
