@@ -16,3 +16,6 @@ patches:
     - patch_file: "patches/up-transport-zenoh-cpp-1.0.0-rc3-qnx.patch"
       patch_description: "port QNX7.1/8.0"
       patch_type: "conan"
+    - patch_file: "patches/up-transport-zenoh-cpp-1.0.0-rc3-sstream.patch"
+      patch_description: "fix missed explicit <sstream> include"
+      patch_type: "bugfix"

@@ -95,7 +95,7 @@ conan create -pr:h=$QNX_CONAN_ROOT/tools/profiles/<profile-name> --version=1.0.0
 # Build up-transport-zenoh-cpp for QNX target
 #
 # <profile-name>: nto-7.1-aarch64-le, nto-7.1-x86_64, nto-8.0-aarch64-le, nto-8.0-x86_64
-# <version-number>: 1.0.0-rc2, 1.0.0-rc3
+# <version-number>: 1.0.0-rc3
 #
 conan create -pr:h=$QNX_CONAN_ROOT/tools/profiles/<profile-name> --version=1.0.0-rc3 --build=missing $QNX_CONAN_ROOT/recipes/up-transport-zenoh-cpp/release
 ```
