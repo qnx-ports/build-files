@@ -74,7 +74,7 @@ sudo apt-get install -y python3.11-dev python3.11-venv python3.11-distutils soft
 # Create a python virtual environment and install necessary packages
 python3.11 -m venv env
 source env/bin/activate
-pip install -U pip Cython wheel
+pip install -U pip Cython==0.29.35 wheel
 
 # source qnxsdp-env.sh
 source ~/qnx800/qnxsdp-env.sh
