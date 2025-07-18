@@ -12,6 +12,7 @@ EXTRA_INCVPATH += $(DIST_ROOT)/shell-utils
 EXTRA_INCVPATH += $(PROJECT_ROOT)/../../$(OS)
 EXTRA_INCVPATH += $(PROJECT_ROOT)/../../$(OS)/protocol
 EXTRA_INCVPATH += $(addsuffix /pixman-1,$(USE_ROOT_INCLUDE))
+include ../../../../../extra_incvpath.mk
 
 EXTRA_SRCVPATH += $(DIST_ROOT)/tests
 EXTRA_SRCVPATH += $(DIST_ROOT)/shell-utils

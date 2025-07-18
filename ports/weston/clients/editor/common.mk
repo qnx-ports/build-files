@@ -17,6 +17,7 @@ EXTRA_INCVPATH += $(addsuffix /cairo,$(USE_ROOT_INCLUDE))
 EXTRA_INCVPATH += $(addsuffix /pango-1.0,$(USE_ROOT_INCLUDE))
 EXTRA_INCVPATH += $(addsuffix /glib-2.0,$(USE_ROOT_INCLUDE))
 EXTRA_INCVPATH += $(addsuffix /glib-2.0/include,$(filter %/usr/lib,$(USE_ROOT_LIB)))
+include ../../../../../extra_incvpath.mk
 
 EXTRA_SRCVPATH += $(DIST_ROOT)/clients
 EXTRA_SRCVPATH += $(PROJECT_ROOT)/../../$(OS)/protocol

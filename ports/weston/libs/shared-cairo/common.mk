@@ -11,6 +11,7 @@ EXTRA_INCVPATH += $(DIST_ROOT)
 EXTRA_INCVPATH += $(PROJECT_ROOT)/../../nto
 EXTRA_INCVPATH += $(addsuffix /cairo,$(USE_ROOT_INCLUDE))
 EXTRA_INCVPATH += $(addsuffix /pixman-1,$(USE_ROOT_INCLUDE))
+include ../../../../../extra_incvpath.mk
 
 EXTRA_SRCVPATH += $(DIST_ROOT)/shared
 # Stops build system from setting INCVPATH=$(EXTRA_SRCVPATH)

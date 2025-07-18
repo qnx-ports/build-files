@@ -14,6 +14,7 @@ EXTRA_INCVPATH += $(PROJECT_ROOT)/../backends/qnx-screen
 EXTRA_INCVPATH += $(PROJECT_ROOT)/../$(OS)
 EXTRA_INCVPATH += $(PROJECT_ROOT)/../$(OS)/libweston
 EXTRA_INCVPATH += $(addsuffix /pixman-1,$(USE_ROOT_INCLUDE))
+include ../../../../extra_incvpath.mk
 
 EXTRA_SRCVPATH += $(DIST_ROOT)/compositor
 EXTRA_SRCVPATH += $(PROJECT_ROOT)/../$(OS)

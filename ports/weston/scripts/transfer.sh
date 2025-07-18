@@ -51,17 +51,43 @@ sshpass -p "$TARGET_PASSWORD" scp -r $QNX_TARGET/aarch64le/usr/lib/libwayland* "
 
 # Transfer dependency libraries to the target
 echo "Transferring dependency libraries..."
-for lib in libmemstream libpixman libepoll libtimerfd libsignalfd libeventfd; do
+for lib in libmemstream libepoll libtimerfd libsignalfd libeventfd; do
     sshpass -p "$TARGET_PASSWORD" scp $QNX_TARGET/aarch64le/usr/lib/${lib}* "$TARGET_USER@$TARGET_HOST:$TARGET_BASE/lib"
 done
 
+# Transfer pixman dependency
+echo "Transferring pixman dependency..."
+if ls $QNX_TARGET/aarch64le/usr/local/lib/libpixman* 1> /dev/null 2>&1; then
+    sshpass -p "$TARGET_PASSWORD" scp $QNX_TARGET/aarch64le/usr/local/lib/libpixman* "$TARGET_USER@$TARGET_HOST:$TARGET_BASE/lib"
+else
+    sshpass -p "$TARGET_PASSWORD" scp $QNX_TARGET/aarch64le/usr/lib/libpixman* "$TARGET_USER@$TARGET_HOST:$TARGET_BASE/lib"
+fi
+
 # Transfer cairo dependancy
-sshpass -p "$TARGET_PASSWORD" scp $QNX_TARGET/aarch64le/usr/lib/libcairo* "$TARGET_USER@$TARGET_HOST:$TARGET_BASE/lib"
+echo "Transferring cairo dependency..."
+if ls $QNX_TARGET/aarch64le/usr/local/lib/libcairo* 1> /dev/null 2>&1; then
+    sshpass -p "$TARGET_PASSWORD" scp $QNX_TARGET/aarch64le/usr/local/lib/libcairo* "$TARGET_USER@$TARGET_HOST:$TARGET_BASE/lib"
+else
+    sshpass -p "$TARGET_PASSWORD" scp $QNX_TARGET/aarch64le/usr/lib/libcairo* "$TARGET_USER@$TARGET_HOST:$TARGET_BASE/lib"
+fi
 
 # Transfer xkbcommon dependency
 echo "Transferring xkbcommon dependency..."
-sshpass -p "$TARGET_PASSWORD" scp $QNX_TARGET/aarch64le/usr/lib/libxkbcommon* "$TARGET_USER@$TARGET_HOST:$TARGET_BASE/lib"
+
+if ls $QNX_TARGET/aarch64le/usr/local/lib/libxkbcommon* 1> /dev/null 2>&1; then
+    sshpass -p "$TARGET_PASSWORD" scp $QNX_TARGET/aarch64le/usr/local/lib/libxkbcommon* "$TARGET_USER@$TARGET_HOST:$TARGET_BASE/lib"
+else
+    sshpass -p "$TARGET_PASSWORD" scp $QNX_TARGET/aarch64le/usr/lib/libxkbcommon* "$TARGET_USER@$TARGET_HOST:$TARGET_BASE/lib"
+fi
 sshpass -p "$TARGET_PASSWORD" scp -r $QNX_TARGET/usr/share/X11/xkb "$TARGET_USER@$TARGET_HOST:$TARGET_BASE/"
+
+# Transfer libz dependency
+echo "Transferring libz dependency..."
+if ls $QNX_TARGET/aarch64le/usr/local/lib/libz* 1> /dev/null 2>&1; then
+    sshpass -p "$TARGET_PASSWORD" scp $QNX_TARGET/aarch64le/usr/local/lib/libz* "$TARGET_USER@$TARGET_HOST:$TARGET_BASE/lib"
+else
+    sshpass -p "$TARGET_PASSWORD" scp $QNX_TARGET/aarch64le/usr/lib/libz* "$TARGET_USER@$TARGET_HOST:$TARGET_BASE/lib"
+fi
 
 # Transfer test data and executables to the target
 echo "Transferring test data and executables..."

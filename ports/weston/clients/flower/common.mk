@@ -13,6 +13,7 @@ EXTRA_INCVPATH += $(DIST_ROOT)/include
 EXTRA_INCVPATH += $(DIST_ROOT)
 EXTRA_INCVPATH += $(PROJECT_ROOT)/../../$(OS)
 EXTRA_INCVPATH += $(addsuffix /cairo,$(USE_ROOT_INCLUDE))
+include ../../../../../extra_incvpath.mk
 
 EXTRA_SRCVPATH += $(DIST_ROOT)/clients
 
