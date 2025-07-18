@@ -19,7 +19,15 @@ You have two options for building the ports:
 2. **Host Build:**
    You can build ports directly on your host system.
 
-## Conan port Status
+## Open-Source Dashboard
+
+All build and test results are posted to the official Open-Source Dashboard.
+
+To find a dashboard containing a high-level view of all ports and test results, take a look at:
+
+**[QNX Open-Source Dashboard](https://oss.qnx.com/)**
+
+## Conan Port Status
 
 Click on a port below to navigate to its `README.md` for build and test instructions.
 
