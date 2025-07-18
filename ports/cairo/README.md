@@ -44,16 +44,24 @@ Features and Utilities
 
 **NOTE**: QNX ports are only supported from a Linux host operating system
 
-Use `$(nproc)` instead of `4` after `JLEVEL=` and `-j` if you want to use the maximum number of cores to build this project.
-32GB of RAM is recommended for using `JLEVEL=$(nproc)` or `-j$(nproc)`.
-
 Pre-requisite: Install Docker on Ubuntu https://docs.docker.com/engine/install/ubuntu/
 ```bash
-# Create a workspace
+# Install SDP if not exists from QSC
+qnxsoftwarecenter_clt -installBaseline com.qnx.qnx800 -destination $HOME/qnx800 # Change to qnx710 if desired
+
+# Create a workspace before building Docker image
 mkdir -p ~/qnx_workspace && cd ~/qnx_workspace
 
-# Obtain build tools and sources
+# Obtain build tools
 git clone https://github.com/qnx-ports/build-files.git
+
+# Build the Docker image and create a container
+cd build-files/docker
+export QNX_SDP_VERSION=qnx800 # change to qnx710 if desired
+./docker-build-qnx-image.sh
+./docker-create-container.sh
+
+# Obtain sources
 git clone -b 1.7.0 https://github.com/mesonbuild/meson.git
 git clone https://gitlab.freedesktop.org/cairo/cairo.git
 
@@ -62,20 +70,12 @@ cd cairo
 git checkout 1.18.2
 cd ..
 
-# Optionally Build the Docker image and create a container
-cd build-files/docker
-./docker-build-qnx-image.sh
-./docker-create-container.sh
-
-# source qnxsdp-env.sh in
-source ~/qnx800/qnxsdp-env.sh
-cd ~/qnx_workspace
-
-# Optionally use the convenience script to install all dependencies
+# Install all dependencies
+chmod +x ./build-files/ports/cairo/install_all.sh
 ./build-files/ports/cairo/install_all.sh
 
 # Build cairo
-QNX_PROJECT_ROOT="$(pwd)/cairo" JLEVEL=4 make -C build-files/ports/cairo install
+QNX_PROJECT_ROOT="$(pwd)/cairo" JLEVEL=$(nproc) make -C build-files/ports/cairo install
 ```
 
 # Deploy binaries via SSH
