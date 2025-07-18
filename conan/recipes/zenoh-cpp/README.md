@@ -70,7 +70,9 @@ conan create -pr:h=$QNX_CONAN_ROOT/tools/profiles/<profile-name> --version=<vers
 Pre-requisite
 
 * build and install cmake to the target
-  - $QNX_CONAN_ROOT/recipes/cmake/README.md>
+  - $QNX_CONAN_ROOT/recipes/cmake/README.md
+* deploy zenoh-router to the host
+  - $QNX_CONAN_ROOT/recipes/zenoh-router/README.md
 
 ```bash
 cd ~/qnx_workspace
@@ -101,14 +103,10 @@ cmake --build build_tests/Release --target tests -- -j
 
 # Run tests on QNX target
 
-4 tests are brocken.
+Pre-requisite
 
-```bash
-    3 - test_implicit_zenohpico (Not Run)
-    4 - test_keyexpr_zenohpico (Not Run)
-    5 - test_pub_sub_zenohpico (Not Run)
-    6 - test_queryable_get_zenohpico (Not Run)
-```
+* Start zenoh-router on host
+  - $QNX_CONAN_ROOT/recipes/zenoh-router/README.md
 
 ```bash
 # Copy ctest.py to adjust paths in CTestTestfile.cmake

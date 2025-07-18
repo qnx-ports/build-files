@@ -16,3 +16,16 @@
     sha256: "99d8c281442b40c3dada43c63d0f04f848bc472407f9ee375a831e065f9c47e8"
   requirements:
     zenoh-pico: "1.0.0-rc5"
+patches:
+  1.4.0:
+    - patch_file: "patches/zenohcpp-1.4.1-router.patch"
+      patch_description: "disable zenoh-router build for cross-compiling tests"
+      patch_type: "unittest"
+  1.2.1:
+    - patch_file: "patches/zenohcpp-1.2.1-router.patch"
+      patch_description: "disable zenoh-router build for cross-compiling tests"
+      patch_type: "unittest"
+  1.0.0-rc5:
+    - patch_file: "patches/zenohcpp-1.0.0-rc5-router.patch"
+      patch_description: "disable zenoh-router build for cross-compiling tests"
+      patch_type: "unittest"
