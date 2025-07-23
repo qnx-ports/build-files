@@ -65,8 +65,10 @@ MAKE_OPTS= CFLAGS="$(CFLAGS)"
 
 # This just wraps the configuration available in the qnx port of VLC. it is purely for installation purposes (and to simplify RetroPie's process)
 # In other words, please see those files to make actual changes.
+# the make clean deals with the occasional hiccup due to the source being built before.
 vlc_all:
 	@cp -r ../qnx $(QNX_PROJECT_ROOT)/qnx
+	@cd $(QNX_PROJECT_ROOT)/qnx/linux-x86_64 && make clean
 	@cd $(QNX_PROJECT_ROOT)/qnx && make install
 	@mkdir -p staging/lib
 	@mkdir -p staging/include
