@@ -65,7 +65,7 @@ cd ~/qnx_workspace
 PREFIX="/usr" QNX_PROJECT_ROOT="$(pwd)/googletest" make -C build-files/ports/googletest install -j4
 
 # Import ros2 packages
-cd ~/qnx_workspace/build-files/ports/ros2
+cd ~/qnx_workspace/build-files/ports/ros2/humble
 mkdir -p src
 vcs import src < ros2.repos
 
@@ -75,6 +75,10 @@ vcs import src < ros2.repos
 
 # Specify a specific architecture you want to build it for. Otherwise, it will build for both x86_64 and aarch64
 export CPU=aarch64
+
+# Set LD_PRELOAD to the host libzstd.so for x86_64 SDP 7.1 builds
+# to avoid libzstd.so from zstd_vendor being during build
+export LD_PRELOAD=$LD_PRELOAD:/usr/lib/x86_64-linux-gnu/libzstd.so
 
 # Build ros2
 QNX_PYTHON3_PATH=/system/bin/python3 ./scripts/build-ros2.sh
@@ -153,7 +157,7 @@ make -C build-files/ports/boost/ install QNX_PROJECT_ROOT="$(pwd)/boost" -j4
 PREFIX="/usr" QNX_PROJECT_ROOT="$(pwd)/googletest" make -C build-files/ports/googletest install -j4
 
 # Import ros2 packages
-cd ~/qnx_workspace/build-files/ports/ros2
+cd ~/qnx_workspace/build-files/ports/ros2/humble
 mkdir -p src
 vcs import src < ros2.repos
 
@@ -162,6 +166,7 @@ vcs import src < ros2.repos
 ./scripts/patch.sh
 
 # Set LD_PRELOAD to the host libzstd.so for x86_64 SDP 7.1 builds
+# to avoid libzstd.so from zstd_vendor being during build
 export LD_PRELOAD=$LD_PRELOAD:/usr/lib/x86_64-linux-gnu/libzstd.so
 
 # Specify a specific architecture you want to build it for. Otherwise, it will build for both x86_64 and aarch64
