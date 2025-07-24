@@ -88,9 +88,3 @@ install_rpie: install
 clean:
 	-rm -rf staging
 	-rm -rf $(QNX_PROJECT_ROOT)/qnx
-	-rm $(QNX_PROJECT_ROOT)/ABOUT-NLS
-	-rm $(QNX_PROJECT_ROOT)/aclocal.m4
-	-rm $(QNX_PROJECT_ROOT)/config.h.in
-	-rm $(QNX_PROJECT_ROOT)/configure
-	-rm $(QNX_PROJECT_ROOT)/configure~
-	-rm $(QNX_PROJECT_ROOT)/Makefile.in
