@@ -7,13 +7,13 @@ on:
       - main
     paths:
       - '.github/workflows/ros2.yml'
-      - 'ports/ros2/**'
+      - 'ports/ros2/humble/**'
   pull_request:
     branches:
       - main
     paths:
       - '.github/workflows/ros2.yml'
-      - 'ports/ros2/**'
+      - 'ports/ros2/humble/**'
 
 jobs:
 
@@ -72,7 +72,7 @@ jobs:
           cd boost/libs/asio && git apply ../../../build-files/ports/boost/asio_1.82.0_qnx.patch
           cd ~/workspace
           QNX_PROJECT_ROOT="$(pwd)/boost" make -C build-files/ports/boost install
-          cd build-files/ports/ros2
+          cd build-files/ports/ros2/humble
           mkdir -p src
           vcs import src < ros2.repos
           ./scripts/colcon-ignore.sh
