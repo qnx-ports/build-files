@@ -1,7 +1,0 @@
-!Makefile
-!nto-aarch64-le/Makefile
-!nto-x86_64-o/Makefile
-nto-aarch64-le/build
-nto-x86_64-o/build
-nto-aarch64-le/qnx_cross.cfg
-nto-x86_64-o/qnx_cross.cfg
