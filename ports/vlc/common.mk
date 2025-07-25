@@ -7,8 +7,6 @@ include $(QCONFIG) #  ##\# #  # #  #  # <link?>
 
 ## Set up user-overridden variables
 PREFIX 			    ?= /usr/local
-QNX_PROJECT_ROOT    ?= $(PRODUCT_ROOT)/../../vlc
-#FIX THIS FROM vlc_2 REVIEWERS THIS IS AN ERROR!!!
 
 ## Set up QNX recursive makefile specifics.
 .PHONY: vlc_all install clean
@@ -67,6 +65,11 @@ MAKE_OPTS= CFLAGS="$(CFLAGS)"
 # In other words, please see those files to make actual changes.
 # the make clean deals with the occasional hiccup due to the source being built before.
 vlc_all:
+	@echo ===============
+	@echo Building VLC...
+	@echo ===============
+	@if [ -z "$(QNX_PROJECT_ROOT)" ]; then echo "ERROR: QNX_PROJECT_ROOT not set to point at vlc directory"; else echo "Stating in 5 seconds.";fi
+	@if [ -z "$(QNX_PROJECT_ROOT)" ]; then error 1; else sleep 5; fi
 	@cp -r ../qnx $(QNX_PROJECT_ROOT)/qnx
 	@cd $(QNX_PROJECT_ROOT)/qnx/linux-x86_64 && make clean
 	@cd $(QNX_PROJECT_ROOT)/qnx && make install
