@@ -81,4 +81,4 @@ jobs:
           fi
           BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/googletest" make -C build-files/ports/googletest install
           QNX_PROJECT_ROOT="$(pwd)/muslflt" make -C build-files/ports/muslflt/ install
-          BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/abseil-cpp" make -C build-files/ports/abseil-cpp install
+          QNX_SEVEN_COMPAT="true" BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/abseil-cpp" make -C build-files/ports/abseil-cpp install
