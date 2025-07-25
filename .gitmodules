@@ -1,0 +1,4 @@
+[submodule "ports/check"]
+	path = ports/check
+	url = https://github.com/qnx-ports/check-companion
+	branch = qnx-0.15.2
