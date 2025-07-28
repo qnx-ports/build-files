@@ -6,6 +6,7 @@ include $(QCONFIG) #  ##\# #  # #  #  # <link?>
 ####################==================##################################
 
 ## Set up user-overridden variables
+QNX_PROJECT_ROOT    ?= $(PRODUCT_ROOT)/../../vlc
 PREFIX 			    ?= /usr/local
 
 ## Set up QNX recursive makefile specifics.
@@ -68,11 +69,11 @@ vlc_all:
 	@echo ===============
 	@echo Building VLC...
 	@echo ===============
-	@if [ -z "$(QNX_PROJECT_ROOT)" ]; then echo "ERROR: QNX_PROJECT_ROOT not set to point at vlc directory"; else echo "Stating in 5 seconds.";fi
-	@if [ -z "$(QNX_PROJECT_ROOT)" ]; then error 1; else sleep 5; fi
+# @if [ -z "$(QNX_PROJECT_ROOT)" ]; then echo "ERROR: QNX_PROJECT_ROOT not set to point at vlc directory"; else echo "Stating in 5 seconds.";fi
+# @if [ -z "$(QNX_PROJECT_ROOT)" ]; then error 1; else sleep 5; fi
 	@cp -r ../qnx $(QNX_PROJECT_ROOT)/qnx
-	@cd $(QNX_PROJECT_ROOT)/qnx/linux-x86_64 && make clean
-	@cd $(QNX_PROJECT_ROOT)/qnx && make install
+	@cd $(QNX_PROJECT_ROOT)/qnx/linux-x86_64 && QNX_PROJECT_ROOT=$(QNX_PROJECT_ROOT) make clean
+	@cd $(QNX_PROJECT_ROOT)/qnx && QNX_PROJECT_ROOT=$(QNX_PROJECT_ROOT) make install
 	@mkdir -p staging/lib
 	@mkdir -p staging/include
 	@cp -r $(QNX_PROJECT_ROOT)/qnx/$(SOURCE_FOLDER_NAME)/install/lib/* staging/lib/
