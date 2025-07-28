@@ -1,0 +1,71 @@
+#!/bin/sh
+
+#
+#    Default basic prefix is /usr/local
+#
+BASIC_PREFIX="/usr/local"
+
+#
+#	QNX specific build configuration nested level
+#
+NESTED_LEVEL="../../../../lldpd"
+
+#
+#    A prefix path to use on the target.
+#
+PREFIX="${INSTALL_ROOT_nto}/${BASIC_PREFIX}"
+
+#
+#    A prefix path to binary on the target.
+#    bindir	${EXEC_PREFIX}/bin
+#    libdir	${EXEC_PREFIX}/lib
+#
+EXEC_PREFIX="${INSTALL_ROOT_nto}/${cpudir}/${BASIC_PREFIX}"
+
+#
+#	Setup of essential configuration parameters
+#
+function hook_preconfigure {
+#
+# QNX specific changes are covered by prediefined '__QNX__'
+#       For examples: "fd_passing_stream_server" and "fd_passing_stream_client"
+#       For the testsuites:  unit/ip/multicast 
+#
+	CFLAGS="$CFLAGS"
+	CXXFLAGS="$CXXFLAGS"
+
+#
+#	Add socket library
+#
+	LDFLAGS="$LDFLAGS -lsocket -lregex"
+
+#
+#	Distributive directory
+#
+	DIST_BASE="${PWD}/${NESTED_LEVEL}"
+
+#
+#	Setup correct pathes for install and build make commands
+#
+	configure_opts="--srcdir=${DIST_BASE}"
+	configure_opts="${configure_opts} --prefix=${PREFIX}"
+	configure_opts="${configure_opts} --exec-prefix=${EXEC_PREFIX}"
+}
+
+#
+#	Adjust relative path to ./configure tool
+#
+function hook_configure {
+    ${NESTED_LEVEL}/configure \
+        ${ac_host:+"--host=${ac_host}"} \
+        ${ac_build:+"--build=${ac_build}"} \
+        ${configure_opts:+"--enable-min-macro"} \
+        ${ac_params:+${CC:+"CC=${CC}"}} \
+        ${ac_params:+${CFLAGS:+"CFLAGS=-O2 ${CFLAGS}"}} \
+        ${ac_params:+${CPPFLAGS:+"CPPFLAGS=${CPPFLAGS}"}} \
+        ${ac_params:+${LDFLAGS:+"LDFLAGS=${LDFLAGS}"}} \
+        ${ac_params:+${CXX:+"CXX=${CXX}"}} \
+        ${ac_params:+${CXXFLAGS:+"CXXFLAGS=-O2 ${CXXFLAGS}"}} \
+        ${ac_params:+${ac_autotools:+${ac_autotools}}} \
+        || Error "configure failed";
+}
