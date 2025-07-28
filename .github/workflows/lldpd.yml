@@ -55,6 +55,8 @@ jobs:
         shell: bash
         run: |
           source ~/qnx/800/qnxsdp-env.sh
-          cd ~/workspace
+          cd ~/workspace/lldpd
+          ./autogen.sh
+          cd ..
           QNX_PROJECT_ROOT="$(pwd)/lldpd" make -C build-files/ports/lldpd install
 
