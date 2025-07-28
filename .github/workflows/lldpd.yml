@@ -58,5 +58,5 @@ jobs:
           cd ~/workspace/lldpd
           ./autogen.sh
           cd ..
-          QNX_PROJECT_ROOT="$(pwd)/lldpd" make -C build-files/ports/lldpd install
+          QNX_PROJECT_ROOT="$(pwd)/lldpd" make -C build-files/ports/lldpd
 
