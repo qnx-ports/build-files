@@ -54,9 +54,9 @@ jobs:
         options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
         shell: bash
         run: |
-          source ~/qnx/800/qnxsdp-env.sh
           cd ~/workspace/lldpd
           ./autogen.sh
-          cd ..
-          QNX_PROJECT_ROOT="$(pwd)/lldpd" make -C build-files/ports/lldpd
+          cd ~/workspace
+          source ~/qnx/800/qnxsdp-env.sh
+          make -C build-files/ports/lldpd
 
