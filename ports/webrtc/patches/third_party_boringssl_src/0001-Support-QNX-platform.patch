@@ -1,0 +1,136 @@
+From cde2dc1e32a735814848c4f3dee36ec2c6e676d3 Mon Sep 17 00:00:00 2001
+From: Yongxin Dai <yodai@blackberry.com>
+Date: Fri, 17 Sep 2021 13:11:56 -0400
+Subject: [PATCH] Support QNX platform
+
+---
+ crypto/bcm_support.h                 |  2 +-
+ crypto/cpu_aarch64_qnx.c             | 47 ++++++++++++++++++++++++++++
+ crypto/rand_extra/sysrand_internal.h |  2 +-
+ gen/sources.gni                      |  1 +
+ include/openssl/base.h               |  1 +
+ include/openssl/target.h             |  4 +++
+ 6 files changed, 55 insertions(+), 2 deletions(-)
+ create mode 100644 crypto/cpu_aarch64_qnx.c
+
+diff --git a/crypto/bcm_support.h b/crypto/bcm_support.h
+index ab10ed44d..e5bc1feaa 100644
+--- a/crypto/bcm_support.h
++++ b/crypto/bcm_support.h
+@@ -49,7 +49,7 @@ extern "C" {
+ #define OPENSSL_RAND_TRUSTY
+ #elif defined(OPENSSL_WINDOWS)
+ #define OPENSSL_RAND_WINDOWS
+-#elif defined(OPENSSL_LINUX)
++#elif defined(OPENSSL_LINUX) || defined(OPENSSL_QNX)
+ #define OPENSSL_RAND_URANDOM
+ #elif defined(OPENSSL_APPLE) && !defined(OPENSSL_MACOS)
+ // Unlike macOS, iOS and similar hide away getentropy().
+diff --git a/crypto/cpu_aarch64_qnx.c b/crypto/cpu_aarch64_qnx.c
+new file mode 100644
+index 000000000..fd3dfda0a
+--- /dev/null
++++ b/crypto/cpu_aarch64_qnx.c
+@@ -0,0 +1,47 @@
++/* Copyright (c) 2025, Google Inc.
++ *
++ * Permission to use, copy, modify, and/or distribute this software for any
++ * purpose with or without fee is hereby granted, provided that the above
++ * copyright notice and this permission notice appear in all copies.
++ *
++ * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
++ * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
++ * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
++ * SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
++ * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION
++ * OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN
++ * CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE. */
++
++#include "internal.h"
++
++#if defined(OPENSSL_AARCH64) && defined(OPENSSL_QNX) && \
++    !defined(OPENSSL_STATIC_ARMCAP) && !defined(OPENSSL_NO_ASM)
++
++#include <sys/syspage.h>
++#include <aarch64/syspage.h>
++#include <openssl/arm_arch.h>
++
++
++void OPENSSL_cpuid_setup(void) {
++  uint32_t hwcap = SYSPAGE_ENTRY(cpuinfo)->flags;
++
++  OPENSSL_armcap_P |= ARMV7_NEON;
++
++  if (hwcap & AARCH64_CPU_FLAG_AES) {
++    OPENSSL_armcap_P |= ARMV8_AES;
++  }
++  if (hwcap & AARCH64_CPU_FLAG_PMULL) {
++    OPENSSL_armcap_P |= ARMV8_PMULL;
++  }
++  if (hwcap & AARCH64_CPU_FLAG_SHA1) {
++    OPENSSL_armcap_P |= ARMV8_SHA1;
++  }
++  if (hwcap & AARCH64_CPU_FLAG_SHA256) {
++    OPENSSL_armcap_P |= ARMV8_SHA256;
++  }
++  if (hwcap & AARCH64_CPU_FLAG_SHA512) {
++    OPENSSL_armcap_P |= ARMV8_SHA512;
++  }
++}
++
++#endif  // OPENSSL_AARCH64 && OPENSSL_FUCHSIA && !OPENSSL_STATIC_ARMCAP
+diff --git a/crypto/rand_extra/sysrand_internal.h b/crypto/rand_extra/sysrand_internal.h
+index 12bbfca46..440b1bd96 100644
+--- a/crypto/rand_extra/sysrand_internal.h
++++ b/crypto/rand_extra/sysrand_internal.h
+@@ -23,7 +23,7 @@
+ #define OPENSSL_RAND_TRUSTY
+ #elif defined(OPENSSL_WINDOWS)
+ #define OPENSSL_RAND_WINDOWS
+-#elif defined(OPENSSL_LINUX)
++#elif defined(OPENSSL_LINUX) || defined(OPENSSL_QNX)
+ #define OPENSSL_RAND_URANDOM
+ #elif defined(OPENSSL_APPLE) && !defined(OPENSSL_MACOS)
+ // Unlike macOS, iOS and similar hide away getentropy().
+diff --git a/gen/sources.gni b/gen/sources.gni
+index be9dd0a25..c8f1957df 100644
+--- a/gen/sources.gni
++++ b/gen/sources.gni
+@@ -309,6 +309,7 @@ crypto_sources = [
+   "crypto/cpu_aarch64_fuchsia.c",
+   "crypto/cpu_aarch64_linux.c",
+   "crypto/cpu_aarch64_openbsd.c",
++  "crypto/cpu_aarch64_qnx.c",
+   "crypto/cpu_aarch64_sysreg.c",
+   "crypto/cpu_aarch64_win.c",
+   "crypto/cpu_arm_freebsd.c",
+diff --git a/include/openssl/base.h b/include/openssl/base.h
+index 29b598e15..17c2d39d8 100644
+--- a/include/openssl/base.h
++++ b/include/openssl/base.h
+@@ -77,6 +77,7 @@
+ #include <openssl/opensslconf.h>
+ #include <openssl/target.h>  // IWYU pragma: export
+ 
++
+ #if defined(BORINGSSL_PREFIX)
+ #include <boringssl_prefix_symbols.h>
+ #endif
+diff --git a/include/openssl/target.h b/include/openssl/target.h
+index 2760f52ce..6121e3d2c 100644
+--- a/include/openssl/target.h
++++ b/include/openssl/target.h
+@@ -103,6 +103,10 @@
+ #define OPENSSL_FUCHSIA
+ #endif
+ 
++#if defined(__QNXNTO__)
++#define OPENSSL_QNX
++#endif
++
+ // Trusty is Android's TEE target. See
+ // https://source.android.com/docs/security/features/trusty
+ //
+-- 
+2.34.1
+

@@ -1,0 +1,385 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 271c0db..aa8621d 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -189,7 +189,7 @@ endif()
+ ###############################################################################
+ # Testing
+ ###############################################################################
+-if(EPROSIMA_BUILD_TESTS AND IS_TOP_LEVEL AND NOT EPROSIMA_INSTALLER)
++if(QNX OR (EPROSIMA_BUILD_TESTS AND IS_TOP_LEVEL AND NOT EPROSIMA_INSTALLER))
+     enable_testing()
+     include(CTest)
+ 
+diff --git a/test/CMakeLists.txt b/test/CMakeLists.txt
+index 03b63e7..e6d1dd0 100644
+--- a/test/CMakeLists.txt
++++ b/test/CMakeLists.txt
+@@ -23,3 +23,7 @@ add_executable(UnitTests ${UNITTESTS_SOURCE})
+ set_common_compile_options(UnitTests)
+ target_link_libraries(UnitTests fastcdr GTest::gtest_main)
+ add_gtest(UnitTests SOURCES ${UNITTESTS_SOURCE})
++
++if(QNX)
++    install(TARGETS UnitTests DESTINATION test/fastcdr)
++endif()
+diff --git a/test/ResizeTest.cpp b/test/ResizeTest.cpp
+index 10e8c1c..c6e08c2 100644
+--- a/test/ResizeTest.cpp
++++ b/test/ResizeTest.cpp
+@@ -31,9 +31,17 @@ static const uint8_t octet_t = 32;
+ static const char char_t =  'Z';
+ static const wchar_t wchar =  'Z';
+ static const int8_t int8 = 64;
++#ifdef __QNX__
++static const uint16_t ushort_t_QNX = 65500;
++#else
+ static const uint16_t ushort_t = 65500;
++#endif
+ static const int16_t short_t = -32700;
++#ifdef __QNX__
++static const uint32_t ulong_t_QNX = 4294967200;
++#else
+ static const uint32_t ulong_t = 4294967200;
++#endif
+ static const int32_t long_t = -2147483600;
+ static const uint64_t ulonglong_t = 18446744073709551600u;
+ static const int64_t longlong_t = -9223372036800;
+@@ -328,7 +336,11 @@ TEST(CDRResizeTests, UnsignedShort)
+ 
+     EXPECT_NO_THROW(
+     {
++#ifdef __QNX__
++        cdr_ser << ushort_t_QNX;
++#else
+         cdr_ser << ushort_t;
++#endif
+     });
+ 
+     // Deserialization.
+@@ -341,7 +353,11 @@ TEST(CDRResizeTests, UnsignedShort)
+         cdr_des >> ushort_value;
+     });
+ 
++#ifdef __QNX__
++    EXPECT_EQ(ushort_value, ushort_t_QNX);
++#else
+     EXPECT_EQ(ushort_value, ushort_t);
++#endif
+ }
+ 
+ TEST(CDRResizeTests, Short)
+@@ -376,7 +392,11 @@ TEST(CDRResizeTests, UnsignedLong)
+ 
+     EXPECT_NO_THROW(
+     {
++#ifdef __QNX__
++        cdr_ser << ulong_t_QNX;
++#else
+         cdr_ser << ulong_t;
++#endif
+     });
+ 
+     // Deserialization.
+@@ -389,7 +409,11 @@ TEST(CDRResizeTests, UnsignedLong)
+         cdr_des >> ulong_value;
+     });
+ 
++#ifdef __QNX__
++    EXPECT_EQ(ulong_value, ulong_t_QNX);
++#else
+     EXPECT_EQ(ulong_value, ulong_t);
++#endif
+ }
+ 
+ TEST(CDRResizeTests, Long)
+@@ -2276,7 +2300,11 @@ TEST(CDRResizeTests, Complete)
+ 
+     EXPECT_NO_THROW(
+     {
++#ifdef __QNX__
++        cdr_ser << octet_t << char_t << int8 << ushort_t_QNX << short_t << ulong_t_QNX << long_t << ulonglong_t << longlong_t <<
++#else
+         cdr_ser << octet_t << char_t << int8 << ushort_t << short_t << ulong_t << long_t << ulonglong_t << longlong_t <<
++#endif
+             float_tt << double_tt << ldouble_tt << bool_t << string_t;
+         cdr_ser << octet_array_t << char_array_t << int8_array_t << ushort_array_t << short_array_t << ulong_array_t <<
+             long_array_t << ulonglong_array_t << longlong_array_t << float_array_t << double_array_t << ldouble_array_t << bool_array_t;
+@@ -2429,9 +2457,17 @@ TEST(CDRResizeTests, Complete)
+     EXPECT_EQ(char_value, char_t);
+     EXPECT_EQ(wchar_value, wchar);
+     EXPECT_EQ(int8_value, int8);
++#ifdef __QNX__
++    EXPECT_EQ(ushort_value, ushort_t_QNX);
++#else
+     EXPECT_EQ(ushort_value, ushort_t);
++#endif
+     EXPECT_EQ(short_value, short_t);
++#ifdef __QNX__
++    EXPECT_EQ(ulong_value, ulong_t_QNX);
++#else
+     EXPECT_EQ(ulong_value, ulong_t);
++#endif
+     EXPECT_EQ(long_value, long_t);
+     EXPECT_EQ(ulonglong_value, ulonglong_t);
+     EXPECT_EQ(longlong_value, longlong_t);
+@@ -2646,7 +2682,11 @@ TEST(FastCDRResizeTests, UnsignedShort)
+ 
+     EXPECT_NO_THROW(
+     {
++#ifdef __QNX__
++        cdr_ser << ushort_t_QNX;
++#else
+         cdr_ser << ushort_t;
++#endif
+     });
+ 
+     // Deserialization.
+@@ -2659,7 +2699,11 @@ TEST(FastCDRResizeTests, UnsignedShort)
+         cdr_des >> ushort_value;
+     });
+ 
++#ifdef __QNX__
++    EXPECT_EQ(ushort_value, ushort_t_QNX);
++#else
+     EXPECT_EQ(ushort_value, ushort_t);
++#endif
+ }
+ 
+ TEST(FastCDRResizeTests, Short)
+@@ -2694,7 +2738,11 @@ TEST(FastCDRResizeTests, UnsignedLong)
+ 
+     EXPECT_NO_THROW(
+     {
++#ifdef __QNX__
++        cdr_ser << ulong_t_QNX;
++#else
+         cdr_ser << ulong_t;
++#endif
+     });
+ 
+     // Deserialization.
+@@ -2707,7 +2755,11 @@ TEST(FastCDRResizeTests, UnsignedLong)
+         cdr_des >> ulong_value;
+     });
+ 
++#ifdef __QNX__
++    EXPECT_EQ(ulong_value, ulong_t_QNX);
++#else
+     EXPECT_EQ(ulong_value, ulong_t);
++#endif
+ }
+ 
+ TEST(FastCDRResizeTests, Long)
+@@ -4595,7 +4647,11 @@ TEST(FastCDRResizeTests, Complete)
+ 
+     EXPECT_NO_THROW(
+     {
++#ifdef __QNX__
++        cdr_ser << octet_t << char_t << int8 << ushort_t_QNX << short_t << ulong_t_QNX << long_t << ulonglong_t << longlong_t <<
++#else
+         cdr_ser << octet_t << char_t << int8 << ushort_t << short_t << ulong_t << long_t << ulonglong_t << longlong_t <<
++#endif
+             float_tt << double_tt << ldouble_tt << bool_t << string_t;
+         cdr_ser << octet_array_t << char_array_t << int8_array_t << ushort_array_t << short_array_t << ulong_array_t <<
+             long_array_t << ulonglong_array_t << longlong_array_t << float_array_t << double_array_t << ldouble_array_t << bool_array_t;
+@@ -4747,9 +4803,17 @@ TEST(FastCDRResizeTests, Complete)
+     EXPECT_EQ(char_value, char_t);
+     EXPECT_EQ(wchar_value, wchar);
+     EXPECT_EQ(int8_value, int8);
++#ifdef __QNX__
++    EXPECT_EQ(ushort_value, ushort_t_QNX);
++#else
+     EXPECT_EQ(ushort_value, ushort_t);
++#endif
+     EXPECT_EQ(short_value, short_t);
++#ifdef __QNX__
++    EXPECT_EQ(ulong_value, ulong_t_QNX);
++#else
+     EXPECT_EQ(ulong_value, ulong_t);
++#endif
+     EXPECT_EQ(long_value, long_t);
+     EXPECT_EQ(ulonglong_value, ulonglong_t);
+     EXPECT_EQ(longlong_value, longlong_t);
+diff --git a/test/SimpleTest.cpp b/test/SimpleTest.cpp
+index 48bdd95..02fbd36 100644
+--- a/test/SimpleTest.cpp
++++ b/test/SimpleTest.cpp
+@@ -37,9 +37,17 @@ static const uint8_t octet_t = 32;
+ static const char char_t =  'Z';
+ static const wchar_t wchar = 'Z';
+ static const int8_t int8 = 64;
++#ifdef __QNX__
++static const uint16_t ushort_t_QNX = 65500;
++#else
+ static const uint16_t ushort_t = 65500;
++#endif
+ static const int16_t short_t = -32700;
++#ifdef __QNX__
++static const uint32_t ulong_t_QNX = 4294967200;
++#else
+ static const uint32_t ulong_t = 4294967200;
++#endif
+ static const int32_t long_t = -2147483600;
+ static const uint64_t ulonglong_t = 18446744073709551600u;
+ static const int64_t longlong_t = -9223372036800;
+@@ -472,8 +480,13 @@ TEST(CDRTests, Int8)
+ 
+ TEST(CDRTests, UnsignedShort)
+ {
++#ifdef __QNX__
++    check_good_case(ushort_t_QNX);
++    check_no_space(ushort_t_QNX);
++#else
+     check_good_case(ushort_t);
+     check_no_space(ushort_t);
++#endif
+ }
+ 
+ TEST(CDRTests, Short)
+@@ -484,8 +497,13 @@ TEST(CDRTests, Short)
+ 
+ TEST(CDRTests, UnsignedLong)
+ {
++#ifdef __QNX__
++    check_good_case(ulong_t_QNX);
++    check_no_space(ulong_t_QNX);
++#else
+     check_good_case(ulong_t);
+     check_no_space(ulong_t);
++#endif
+ }
+ 
+ TEST(CDRTests, Long)
+@@ -1853,7 +1871,11 @@ TEST(CDRTests, Complete)
+ 
+     EXPECT_NO_THROW(
+     {
++#ifdef __QNX__
++        cdr_ser << octet_t << char_t << int8 << ushort_t_QNX << short_t << ulong_t_QNX << long_t << ulonglong_t << longlong_t <<
++#else
+         cdr_ser << octet_t << char_t << int8 << ushort_t << short_t << ulong_t << long_t << ulonglong_t << longlong_t <<
++#endif
+             float_tt << double_tt << ldouble_tt << bool_t << string_t;
+         cdr_ser << octet_array_t << char_array_t << int8_array_t << ushort_array_t << short_array_t << ulong_array_t <<
+             long_array_t << ulonglong_array_t << longlong_array_t << float_array_t << double_array_t << ldouble_array_t << bool_array_t;
+@@ -2017,9 +2039,17 @@ TEST(CDRTests, Complete)
+     EXPECT_EQ(char_value, char_t);
+     EXPECT_EQ(wchar_value, wchar);
+     EXPECT_EQ(int8_value, int8);
++#ifdef __QNX__
++    EXPECT_EQ(ushort_value, ushort_t_QNX);
++#else
+     EXPECT_EQ(ushort_value, ushort_t);
++#endif
+     EXPECT_EQ(short_value, short_t);
++#ifdef __QNX__
++    EXPECT_EQ(ulong_value, ulong_t_QNX);
++#else
+     EXPECT_EQ(ulong_value, ulong_t);
++#endif
+     EXPECT_EQ(long_value, long_t);
+     EXPECT_EQ(ulonglong_value, ulonglong_t);
+     EXPECT_EQ(longlong_value, longlong_t);
+@@ -2253,7 +2283,11 @@ TEST(FastCDRTests, UnsignedShort)
+ 
+     EXPECT_NO_THROW(
+     {
++#ifdef __QNX__
++        cdr_ser << ushort_t_QNX;
++#else
+         cdr_ser << ushort_t;
++#endif
+     });
+ 
+     // Deserialization.
+@@ -2266,7 +2300,11 @@ TEST(FastCDRTests, UnsignedShort)
+         cdr_des >> ushort_value;
+     });
+ 
++#ifdef __QNX__
++    EXPECT_EQ(ushort_value, ushort_t_QNX);
++#else
+     EXPECT_EQ(ushort_value, ushort_t);
++#endif
+ 
+     // Check bad case without space
+     char buffer_bad[1];
+@@ -2277,7 +2315,11 @@ TEST(FastCDRTests, UnsignedShort)
+ 
+     EXPECT_THROW(
+     {
++#ifdef __QNX__
++        cdr_ser_bad << ushort_t_QNX;
++#else
+         cdr_ser_bad << ushort_t;
++#endif
+     },
+         NotEnoughMemoryException);
+ 
+@@ -2351,7 +2393,11 @@ TEST(FastCDRTests, UnsignedLong)
+ 
+     EXPECT_NO_THROW(
+     {
++#ifdef __QNX__
++        cdr_ser << ulong_t_QNX;
++#else
+         cdr_ser << ulong_t;
++#endif
+     });
+ 
+     // Deserialization.
+@@ -2364,7 +2410,11 @@ TEST(FastCDRTests, UnsignedLong)
+         cdr_des >> ulong_value;
+     });
+ 
++#ifdef __QNX__
++    EXPECT_EQ(ulong_value, ulong_t_QNX);
++#else
+     EXPECT_EQ(ulong_value, ulong_t);
++#endif
+ 
+     // Check bad case without space
+     char buffer_bad[1];
+@@ -2375,7 +2425,11 @@ TEST(FastCDRTests, UnsignedLong)
+ 
+     EXPECT_THROW(
+     {
++#ifdef __QNX__
++        cdr_ser_bad << ulong_t_QNX;
++#else
+         cdr_ser_bad << ulong_t;
++#endif
+     },
+         NotEnoughMemoryException);
+ 
+@@ -6252,7 +6306,11 @@ TEST(FastCDRTests, Complete)
+ 
+     EXPECT_NO_THROW(
+     {
++#ifdef __QNX__
++        cdr_ser << octet_t << char_t << int8 << ushort_t_QNX << short_t << ulong_t_QNX << long_t << ulonglong_t << longlong_t <<
++#else
+         cdr_ser << octet_t << char_t << int8 << ushort_t << short_t << ulong_t << long_t << ulonglong_t << longlong_t <<
++#endif
+             float_tt << double_tt << ldouble_tt << bool_t << string_t;
+         cdr_ser << octet_array_t << char_array_t << int8_array_t << ushort_array_t << short_array_t << ulong_array_t <<
+             long_array_t << ulonglong_array_t << longlong_array_t << float_array_t << double_array_t << ldouble_array_t << bool_array_t;
+@@ -6412,9 +6470,17 @@ TEST(FastCDRTests, Complete)
+     EXPECT_EQ(char_value, char_t);
+     EXPECT_EQ(wchar_value, wchar);
+     EXPECT_EQ(int8_value, int8);
++#ifdef __QNX__
++    EXPECT_EQ(ushort_value, ushort_t_QNX);
++#else
+     EXPECT_EQ(ushort_value, ushort_t);
++#endif
+     EXPECT_EQ(short_value, short_t);
++#ifdef __QNX__
++    EXPECT_EQ(ulong_value, ulong_t_QNX);
++#else
+     EXPECT_EQ(ulong_value, ulong_t);
++#endif
+     EXPECT_EQ(long_value, long_t);
+     EXPECT_EQ(ulonglong_value, ulonglong_t);
+     EXPECT_EQ(longlong_value, longlong_t);

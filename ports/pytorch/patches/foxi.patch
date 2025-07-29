@@ -1,0 +1,29 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b406d0f..7a3caa5 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -53,13 +53,17 @@ add_library(foxi_loader STATIC foxi/onnxifi_loader.c)
+ target_include_directories(foxi_loader PUBLIC
+   $<BUILD_INTERFACE:${FOXI_ROOT}>
+   $<INSTALL_INTERFACE:include>)
+-# Users of ONNX backend API would compile it with their toolchain, so it is
+-# implemented in standard C89 for maximum compatibility
+-set_target_properties(foxi_loader
+-                      PROPERTIES C_STANDARD
+-                                 90
+-                                 C_EXTENSIONS
+-                                 NO)
++
++if(NOT QNX)
++  # Users of ONNX backend API would compile it with their toolchain, so it is
++  # implemented in standard C89 for maximum compatibility
++  set_target_properties(foxi_loader
++                        PROPERTIES C_STANDARD
++                                  90
++                                  C_EXTENSIONS
++                                  NO)
++endif()
++
+ target_link_libraries(foxi_loader PUBLIC foxi ${CMAKE_DL_LIBS})
+ if(MSVC)
+   add_msvc_runtime_flag(foxi_loader)

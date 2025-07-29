@@ -1,0 +1,10 @@
+libdir=${qnx_target}/${cpu_dir}/usr/lib
+includedir=${qnx_target}/usr/include
+
+Name: libXML
+Version: 2.9.13
+Description: libXML library version2.
+Requires:
+Libs: -L${libdir} -lxml2
+Libs.private: -licui18n -licuuc -licudata  -lz -llzma  -lm  
+Cflags: -I${includedir}/libxml2 

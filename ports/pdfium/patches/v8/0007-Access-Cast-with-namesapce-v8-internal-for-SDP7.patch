@@ -1,0 +1,54 @@
+From ee41c16cf5fb05b148ff0c31947fbd4fb740b9b7 Mon Sep 17 00:00:00 2001
+From: Yongxin Dai <yodai@qnx.com>
+Date: Mon, 7 Jul 2025 19:38:18 -0400
+Subject: [PATCH] Access Cast with namesapce v8::internal for SDP7
+
+---
+ src/api/api.cc | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
+
+diff --git a/src/api/api.cc b/src/api/api.cc
+index 6aa29b3512b..2e22a1b2b30 100644
+--- a/src/api/api.cc
++++ b/src/api/api.cc
+@@ -83,6 +83,9 @@
+ #include "src/numbers/conversions-inl.h"
+ #include "src/objects/api-callbacks.h"
+ #include "src/objects/backing-store.h"
++#if defined(__QNX__) && __QNX__ < 800
++#include "src/objects/casting.h"
++#endif
+ #include "src/objects/contexts.h"
+ #include "src/objects/embedder-data-array-inl.h"
+ #include "src/objects/embedder-data-slot-inl.h"
+@@ -4577,14 +4580,14 @@ v8::PropertyDescriptor::PropertyDescriptor() : private_(new PrivateData()) {}
+ // DataDescriptor
+ v8::PropertyDescriptor::PropertyDescriptor(v8::Local<v8::Value> value)
+     : private_(new PrivateData()) {
+-  private_->desc.set_value(Cast<i::JSAny>(Utils::OpenHandle(*value, true)));
++  private_->desc.set_value(i::Cast<i::JSAny>(Utils::OpenHandle(*value, true)));
+ }
+ 
+ // DataDescriptor with writable field
+ v8::PropertyDescriptor::PropertyDescriptor(v8::Local<v8::Value> value,
+                                            bool writable)
+     : private_(new PrivateData()) {
+-  private_->desc.set_value(Cast<i::JSAny>(Utils::OpenHandle(*value, true)));
++  private_->desc.set_value(i::Cast<i::JSAny>(Utils::OpenHandle(*value, true)));
+   private_->desc.set_writable(writable);
+ }
+ 
+@@ -4594,8 +4597,8 @@ v8::PropertyDescriptor::PropertyDescriptor(v8::Local<v8::Value> get,
+     : private_(new PrivateData()) {
+   DCHECK(get.IsEmpty() || get->IsUndefined() || get->IsFunction());
+   DCHECK(set.IsEmpty() || set->IsUndefined() || set->IsFunction());
+-  private_->desc.set_get(Cast<i::JSAny>(Utils::OpenHandle(*get, true)));
+-  private_->desc.set_set(Cast<i::JSAny>(Utils::OpenHandle(*set, true)));
++  private_->desc.set_get(i::Cast<i::JSAny>(Utils::OpenHandle(*get, true)));
++  private_->desc.set_set(i::Cast<i::JSAny>(Utils::OpenHandle(*set, true)));
+ }
+ 
+ v8::PropertyDescriptor::~PropertyDescriptor() { delete private_; }
+-- 
+2.34.1
+

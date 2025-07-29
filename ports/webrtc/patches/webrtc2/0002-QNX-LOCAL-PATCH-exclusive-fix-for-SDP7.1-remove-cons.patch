@@ -1,0 +1,46 @@
+From 299d591f0b53d00c782799cc31da3f9039e5ca89 Mon Sep 17 00:00:00 2001
+From: Yongxin Dai <yodai@blackberry.com>
+Date: Tue, 18 Feb 2025 13:51:29 -0500
+Subject: [QNX LOCAL PATCH] exclusive fix for SDP7.1: remove constexpr
+ specifier
+
+---
+ api/video/video_frame_type.h               | 4 ++++
+ api/video_codecs/simple_encoder_wrapper.cc | 4 ++++
+ 2 files changed, 8 insertions(+)
+
+diff --git a/api/video/video_frame_type.h b/api/video/video_frame_type.h
+index 9079829ff8..5a8bd5556a 100644
+--- a/api/video/video_frame_type.h
++++ b/api/video/video_frame_type.h
+@@ -24,7 +24,11 @@ enum class VideoFrameType {
+   kVideoFrameDelta = 4,
+ };
+ 
++#if defined(__QNX__) && __QNX__ < 800
++inline absl::string_view VideoFrameTypeToString(
++#else
+ inline constexpr absl::string_view VideoFrameTypeToString(
++#endif
+     VideoFrameType frame_type) {
+   switch (frame_type) {
+     case VideoFrameType::kEmptyFrame:
+diff --git a/api/video_codecs/simple_encoder_wrapper.cc b/api/video_codecs/simple_encoder_wrapper.cc
+index ae5282d5aa..d5475a72f9 100644
+--- a/api/video_codecs/simple_encoder_wrapper.cc
++++ b/api/video_codecs/simple_encoder_wrapper.cc
+@@ -231,7 +231,11 @@ void SimpleEncoderWrapper::Encode(
+   }
+ 
+   encoder_->Encode(std::move(frame_buffer),
++#if defined(WEBRTC_QNX) && __QNX__ < 800
++                   VideoEncoderInterface::TemporalUnitSettings {.presentation_timestamp = presentation_timestamp_},
++#else
+                    {.presentation_timestamp = presentation_timestamp_},
++#endif
+                    std::move(encode_settings));
+   presentation_timestamp_ += 1 / Frequency::Hertz(fps_);
+ }
+-- 
+2.34.1
+

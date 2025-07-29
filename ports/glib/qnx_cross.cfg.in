@@ -1,0 +1,34 @@
+[constants]
+target_arch = 'CPU'
+target = 'nto' + target_arch
+qnx_host_dir = 'QSDP'
+qnx_install_dir = 'INSTALL_DIR'
+qnx_target_dir = 'QNX_TARGET_DIR'
+
+[host_machine]
+system = 'qnx'
+cpu_family = target_arch
+cpu = target_arch
+endian = 'little'
+
+[built-in options]
+c_link_args = ['-lm', '-lsocket', '-lgcc_s']
+c_args = ['-D_QNX_SOURCE']
+cpp_link_args = c_link_args
+cpp_args = c_args + ['-stdlib=libstdc++']
+
+[properties]
+growing_stack = false
+# pkg-config settings
+pkg_config_libdir = [qnx_install_dir + '/lib/pkgconfig', qnx_install_dir + '/share/pkgconfig', qnx_target_dir + '/lib/pkgconfig', qnx_target_dir + '/share/pkgconfig']
+
+[binaries]
+c = [qnx_host_dir + '/usr/bin/' + target + '-gcc']
+cpp = [qnx_host_dir + '/usr/bin/' + target + '-g++']
+ar = qnx_host_dir + '/usr/bin/' + target + '-ar'
+ld = qnx_host_dir + '/usr/bin/' + target + '-ld'
+strip = qnx_host_dir + '/usr/bin/' + target + '-strip'
+objcopy = qnx_host_dir + '/usr/bin/' + target + '-objcopy'
+# Using the host pkg-config
+pkg-config = 'pkg-config'
+windres = ''

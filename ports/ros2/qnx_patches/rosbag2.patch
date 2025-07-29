@@ -1,0 +1,74 @@
+diff --git a/rosbag2_py/CMakeLists.txt b/rosbag2_py/CMakeLists.txt
+index e72dd233..218ce26f 100644
+--- a/rosbag2_py/CMakeLists.txt
++++ b/rosbag2_py/CMakeLists.txt
+@@ -15,6 +15,11 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+   add_compile_options(-Wall -Wextra -Wpedantic)
+ endif()
+ 
++if(QNX)
++  # Workaround for sys/termio.h:115 error
++  add_compile_definitions(__hpux=1)
++endif()
++
+ # Figure out Python3 debug/release before anything else can find_package it
+ if(WIN32 AND CMAKE_BUILD_TYPE STREQUAL "Debug")
+   find_package(python_cmake_module REQUIRED)
+@@ -33,7 +38,17 @@ find_package(rosbag2_storage REQUIRED)
+ find_package(rosbag2_transport REQUIRED)
+ 
+ # Find python before pybind11
+-find_package(Python3 REQUIRED COMPONENTS Interpreter Development)
++if(QNX)
++  find_library(python3_LIBRARY NAMES python3)
++
++  include_directories(${PROJECT_NAME}
++    ${QNX_TARGET}/usr/include/python${PYTHON_VERSION_QNX}
++    ${QNX_TARGET}/usr/include/${CPUVARDIR}/python${PYTHON_VERSION_QNX}
++    ${QNX_TARGET}/${CPUVARDIR}/usr/lib/python${PYTHON_VERSION_QNX}/site-packages/numpy/core/include
++    ${QNX_TARGET}/usr/include/tinyxml2)
++else()
++  find_package(Python3 REQUIRED COMPONENTS Interpreter Development)
++endif()
+ 
+ find_package(pybind11_vendor REQUIRED)
+ find_package(pybind11 REQUIRED)
+diff --git a/rosbag2_storage_mcap_testdata/package.xml b/rosbag2_storage_mcap_testdata/package.xml
+index ffa03146..615dac16 100644
+--- a/rosbag2_storage_mcap_testdata/package.xml
++++ b/rosbag2_storage_mcap_testdata/package.xml
+@@ -12,6 +12,8 @@
+   <buildtool_depend>ament_cmake</buildtool_depend>
+   <buildtool_depend>rosidl_default_generators</buildtool_depend>
+ 
++  <depend>numpy_vendor</depend>
++
+   <test_depend>ament_lint_auto</test_depend>
+   <test_depend>ament_lint_common</test_depend>
+ 
+diff --git a/zstd_vendor/CMakeLists.txt b/zstd_vendor/CMakeLists.txt
+index e3d4a22a..4fdbb9ed 100644
+--- a/zstd_vendor/CMakeLists.txt
++++ b/zstd_vendor/CMakeLists.txt
+@@ -9,7 +9,11 @@ option(FORCE_BUILD_VENDOR_PKG
+   OFF)
+ 
+ if(NOT FORCE_BUILD_VENDOR_PKG)
+-  find_package(zstd QUIET)
++  if(QNX AND $ENV{QNX_SDP_VERSION} STREQUAL "qnx800")
++    find_package(zstd REQUIRED)
++  else()
++    find_package(zstd QUIET)
++  endif()
+ endif()
+ 
+ macro(build_zstd)
+@@ -59,7 +63,7 @@ macro(build_zstd)
+     USE_SOURCE_PERMISSIONS)
+ endmacro()
+ 
+-if (NOT zstd_FOUND OR "${zstd_VERSION}" VERSION_LESS 1.4.4)
++if ($ENV{QNX_SDP_VERSION} STREQUAL "qnx710" OR (NOT QNX AND NOT (zstd_FOUND OR "${zstd_VERSION}" VERSION_LESS 1.4.4)))
+   build_zstd()
+ else()
+   message(STATUS "Found Zstd, skipping build.")

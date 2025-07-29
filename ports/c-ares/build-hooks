@@ -1,0 +1,78 @@
+#!/bin/sh
+
+function hook_configure {
+
+# Fortify define should be in CPPFLAGS
+    CPPFLAGS="${CPPFLAGS} -D_FORTIFY_SOURCE=2 -O2"
+    CFLAGS=`echo ${CFLAGS} | gawk '{sub("-D_FORTIFY_SOURCE=2", ""); print}'`
+	export PKG_CONFIG_PATH=${INSTALL_ROOT_nto}/${cpudir}/usr/lib/pkgconfig:${INSTALL_ROOT_nto}/${cpudir}/usr/local/lib/pkgconfig
+	#export PKG_CONFIG_LIBDIR=
+
+    ${QNX_PROJECT_ROOT}/configure --prefix=${INSTALL_ROOT_nto}/${cpudir}/usr --includedir=${INSTALL_ROOT_HDR} --host=${machine} \
+	CPPFLAGS="${CPPFLAGS} -D_QNX_SOURCE" LIBS="-lregex" --disable-symbol-hiding --enable-tests-build-override --enable-qcc-compat
+	
+
+
+}
+
+function hook_make {
+    FixMakeEnvironment
+
+    if [ "${make_cmds}" == "install" ]; then
+	# make and install the .a and .so and headers only
+	CURDIR=${PWD}
+	make -fMakefile \
+	    ${make_CC:+"CC=${make_CC}"} \
+	    ${make_defns} \
+	    ${ac_autotools} \
+	    ${make_opts} \
+	    ${JLEVEL:+"-j${JLEVEL}"} \
+	    || exit;
+	cd ${CURDIR}/src/lib
+	make -fMakefile \
+	    ${make_CC:+"CC=${make_CC}"} \
+	    ${make_defns} \
+	    ${ac_autotools} \
+	    ${make_opts} \
+	    install-libLTLIBRARIES \
+	    ${JLEVEL:+"-j${JLEVEL}"} \
+	    || exit;
+	cd ${CURDIR}/include
+	make -fMakefile \
+	    ${make_CC:+"CC=${make_CC}"} \
+	    ${make_defns} \
+	    ${ac_autotools} \
+	    ${make_opts} \
+	    install-includeHEADERS \
+	    ${JLEVEL:+"-j${JLEVEL}"} \
+	    || exit;
+	cd ${CURDIR}
+	# Collect so lib version number
+	sonum=$(grep "^CARES_VERSION_INFO" ./src/lib/Makefile)
+	# Remove text before the version numbers
+	sonum=${sonum##*\ }
+	# Remove the minor version numbers
+	sonum=${sonum%%:*}
+	if ! use -i ${INSTALL_ROOT_nto}/${cpudir}/usr/lib/libcares.so.${sonum} > /dev/null 2>&1; then
+	    gen_pinfo -n${INSTALL_ROOT_nto}/${cpudir}/usr/lib/libcares.so libcares.so usr/lib DESCRIPTION="libcares.so"
+	    ${UM_HOST} -iTAGID -iVERSION -f ${INSTALL_ROOT_nto}/${cpudir}/usr/lib/libcares.so.pinfo ${INSTALL_ROOT_nto}/${cpudir}/usr/lib/libcares.so.${sonum}
+	    if [ "$?" != "0" ]; then
+		echo "usemsg failed!"
+		exit
+	    fi
+	fi
+	# Copy the tests to the test directory
+	mkdir -p ${INSTALL_ROOT_nto}/${cpudir}/tests/cares
+	cp ${CURDIR}/test/.libs/arestest   ${INSTALL_ROOT_nto}/${cpudir}/tests/cares/
+	cd ${CURDIR}
+    else
+	make -fMakefile \
+	    ${make_CC:+"CC=${make_CC}"} \
+	    ${make_defns} \
+	    ${ac_autotools} \
+	    ${make_opts} \
+	    ${make_cmds} \
+	    ${JLEVEL:+"-j${JLEVEL}"} \
+	    || exit;
+    fi
+}

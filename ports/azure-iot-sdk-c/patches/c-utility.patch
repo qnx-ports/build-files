@@ -1,0 +1,170 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 85220955..58eb6b6e 100755
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -471,7 +471,7 @@ SOURCE_GROUP(devdoc FILES ${aziotsharedutil_md_files})
+ 
+ # Add ignore deprecated functions so we may use 1.1.1 APIs
+ # in OpenSSL 3
+-if(DEFINED LINUX OR DEFINED MACOSX)
++if(DEFINED LINUX OR DEFINED MACOSX OR DEFINED QNX)
+   set_property(
+     SOURCE
+       ${CMAKE_CURRENT_LIST_DIR}/adapters/tlsio_openssl.c
+@@ -644,6 +644,8 @@ if(LINUX)
+     if(${use_c_ares})
+         set(aziotsharedutil_target_libs ${aziotsharedutil_target_libs} cares)
+     endif()
++elseif(QNX)
++    set(aziotsharedutil_target_libs ${aziotsharedutil_target_libs} m)
+ endif()
+ 
+ target_link_libraries(aziotsharedutil ${aziotsharedutil_target_libs})
+diff --git a/adapters/socketio_berkeley.c b/adapters/socketio_berkeley.c
+index 983e899d..007c057d 100755
+--- a/adapters/socketio_berkeley.c
++++ b/adapters/socketio_berkeley.c
+@@ -288,7 +288,7 @@ static int lookup_address(SOCKET_IO_INSTANCE* socket_io_instance)
+     return result;
+ }
+ 
+-#ifndef __APPLE__
++#if !defined(__APPLE__) && !defined(__QNX__)
+ static void destroy_network_interface_descriptions(NETWORK_INTERFACE_DESCRIPTION* nid)
+ {
+     if (nid != NULL)
+@@ -582,7 +582,7 @@ static int initiate_socket_connection(SOCKET_IO_INSTANCE* socket_io_instance)
+             LogError("Failure: socket create failure %d.", socket_io_instance->socket);
+             result = MU_FAILURE;
+         }
+-        #ifndef __APPLE__
++        #if !defined(__APPLE__) && !defined(__QNX__)
+         else if (socket_io_instance->target_mac_address != NULL &&
+                     set_target_network_interface(socket_io_instance->socket, socket_io_instance->target_mac_address) != 0)
+         {
+@@ -1154,7 +1154,7 @@ void socketio_dowork(CONCRETE_IO_HANDLE socket_io)
+ #define SOL_TCP 6
+ #endif
+ 
+-#ifndef __APPLE__
++#if !defined(__APPLE__) && !defined(__QNX__)
+ static void strtoup(char* str)
+ {
+     if (str != NULL)
+@@ -1220,8 +1220,16 @@ int socketio_setoption(CONCRETE_IO_HANDLE socket_io, const char* optionName, con
+         }
+         else if (strcmp(optionName, "tcp_keepalive_time") == 0)
+         {
+-#ifdef __APPLE__
++#if defined(__APPLE__)
+             result = setsockopt(socket_io_instance->socket, IPPROTO_TCP, TCP_KEEPALIVE, value, sizeof(int));
++#elif defined(__QNX__)
++#if __QNX__ >= 800
++            // QNX 8 or later
++            result = setsockopt(socket_io_instance->socket, IPPROTO_TCP, TCP_KEEPIDLE, value, sizeof(int));
++#else
++            // QNX 7.x or earlier
++            result = setsockopt(socket_io_instance->socket, IPPROTO_TCP, TCP_KEEPALIVE, value, sizeof(int));
++#endif
+ #else
+             result = setsockopt(socket_io_instance->socket, SOL_TCP, TCP_KEEPIDLE, value, sizeof(int));
+ #endif
+@@ -1229,12 +1237,16 @@ int socketio_setoption(CONCRETE_IO_HANDLE socket_io, const char* optionName, con
+         }
+         else if (strcmp(optionName, "tcp_keepalive_interval") == 0)
+         {
+-            result = setsockopt(socket_io_instance->socket, SOL_TCP, TCP_KEEPINTVL, value, sizeof(int));
+-            if (result == -1) result = errno;
++            #if defined(__QNX__) && __QNX__ < 800
++                result = ENOSYS;
++            #else
++                result = setsockopt(socket_io_instance->socket, SOL_TCP, TCP_KEEPINTVL, value, sizeof(int));
++                if (result == -1) result = errno;
++            #endif
+         }
+         else if (strcmp(optionName, OPTION_NET_INT_MAC_ADDRESS) == 0)
+         {
+-#ifdef __APPLE__
++#if defined(__APPLE__) || defined(__QNX__)
+             LogError("option not supported.");
+             result = MU_FAILURE;
+ #else
+diff --git a/configs/azure_c_shared_utilityFunctions.cmake b/configs/azure_c_shared_utilityFunctions.cmake
+index 9b6e1d1c..794adce3 100644
+--- a/configs/azure_c_shared_utilityFunctions.cmake
++++ b/configs/azure_c_shared_utilityFunctions.cmake
+@@ -258,6 +258,18 @@ function(build_test_artifacts whatIsBuilding use_gballoc)
+             linux_unittests_add_exe(${whatIsBuilding} ${ARGN})
+         endif()
+     endif()
++
++    if(
++        (("${whatIsBuilding}" MATCHES ".*ut.*") AND ${run_unittests}) OR
++        (("${whatIsBuilding}" MATCHES ".*e2e.*") AND ${run_e2e_tests}) OR
++        (("${whatIsBuilding}" MATCHES ".*int.*") AND ${run_int_tests})
++    )
++        install(TARGETS ${whatIsBuilding}_exe
++            RUNTIME
++            DESTINATION bin/azure-iot-sdk-c/tests
++        )
++    endif()
++
+ endfunction(build_test_artifacts)
+ 
+ 
+@@ -538,6 +550,18 @@ function(build_c_test_artifacts whatIsBuilding use_gballoc folder)
+             c_linux_unittests_add_exe(${whatIsBuilding} ${folder} ${ARGN})
+         endif()
+     endif()
++
++    if(
++        (("${whatIsBuilding}" MATCHES ".*ut.*") AND ${run_unittests}) OR
++        (("${whatIsBuilding}" MATCHES ".*e2e.*") AND ${run_e2e_tests}) OR
++        (("${whatIsBuilding}" MATCHES ".*int.*") AND ${run_int_tests})
++    )
++        install(TARGETS ${whatIsBuilding}_exe
++            RUNTIME
++            DESTINATION bin/azure-iot-sdk-c/${folder}
++        )
++    endif()
++
+ endfunction()
+ 
+ function(compile_c_test_artifacts_as whatIsBuilding compileAsWhat)
+@@ -763,7 +787,7 @@ function(set_platform_files c_shared_dir)
+         endif()
+     endif()
+     
+-    if(WIN32 OR MACOSX OR LINUX)
++    if(WIN32 OR MACOSX OR LINUX OR QNX)
+         set (ENVIRONMENT_VARIABLE_C_FILE ${c_shared_dir}/adapters/envvariable.c PARENT_SCOPE)
+     endif()
+ endfunction(set_platform_files)
+diff --git a/configs/azure_iot_build_rules.cmake b/configs/azure_iot_build_rules.cmake
+index 655b7f01..f586f9f4 100644
+--- a/configs/azure_iot_build_rules.cmake
++++ b/configs/azure_iot_build_rules.cmake
+@@ -75,7 +75,7 @@ elseif(UNIX) #LINUX OR APPLE
+     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Werror")
+     if(NOT (IN_OPENWRT OR APPLE))
+         # _XOPEN_SOURCE=500 is required for glibc to expose random and srandom.
+-        set (CMAKE_C_FLAGS "-D_POSIX_C_SOURCE=200112L -D_XOPEN_SOURCE=500 ${CMAKE_C_FLAGS}")
++        set (CMAKE_C_FLAGS "-D_POSIX_C_SOURCE=200112L -D_XOPEN_SOURCE=600 ${CMAKE_C_FLAGS}")
+     endif()
+ endif()
+ 
+diff --git a/testtools/micromock/CMakeLists.txt b/testtools/micromock/CMakeLists.txt
+index 0894902f..72a9124f 100644
+--- a/testtools/micromock/CMakeLists.txt
++++ b/testtools/micromock/CMakeLists.txt
+@@ -86,6 +86,10 @@ set_target_properties(micromock_ctest
+                PROPERTIES
+                FOLDER "test_tools")
+ 
++install(TARGETS micromock_ctest
++  LIBRARY
++)
++
+ #these are the include folders
+ #the following "set" statetement exports across the project a global variable called MICROMOCK_INC_FOLDER that expands to whatever needs to included when using micromock library
+ set(MICROMOCK_INC_FOLDER ${CMAKE_CURRENT_LIST_DIR}/inc CACHE INTERNAL "this is what needs to be included if using micromock lib" FORCE)

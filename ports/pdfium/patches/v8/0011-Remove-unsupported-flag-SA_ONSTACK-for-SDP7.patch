@@ -1,0 +1,28 @@
+From c2bae11903a86b57a5f5b59b6b012c82d2139b1b Mon Sep 17 00:00:00 2001
+From: Yongxin Dai <yodai@qnx.com>
+Date: Tue, 8 Jul 2025 11:49:21 -0400
+Subject: [PATCH] Remove unsupported flag SA_ONSTACK for SDP7
+
+---
+ src/libsampler/sampler.cc | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/src/libsampler/sampler.cc b/src/libsampler/sampler.cc
+index 4efb44728b5..936849126f5 100644
+--- a/src/libsampler/sampler.cc
++++ b/src/libsampler/sampler.cc
+@@ -347,7 +347,11 @@ class SignalHandler {
+     sa.sa_sigaction = &HandleProfilerSignal;
+     sigemptyset(&sa.sa_mask);
+ #if V8_OS_QNX
++#if __QNX__ >= 800
+     sa.sa_flags = SA_SIGINFO | SA_ONSTACK;
++#else
++    sa.sa_flags = SA_SIGINFO;
++#endif
+ #else
+     sa.sa_flags = SA_RESTART | SA_SIGINFO | SA_ONSTACK;
+ #endif
+-- 
+2.34.1
+

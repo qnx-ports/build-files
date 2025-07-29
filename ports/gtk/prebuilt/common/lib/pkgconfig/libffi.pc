@@ -1,0 +1,9 @@
+prefix=/usr/local
+libdir=${qnx_target}/${cpu_dir}/usr/lib
+includedir=${prefix}/include
+
+Name: libffi
+Description: Library supporting Foreign Function Interfaces
+Version: 3.4.2
+Libs: -lffi
+Cflags: -I${includedir} -L${libdir}

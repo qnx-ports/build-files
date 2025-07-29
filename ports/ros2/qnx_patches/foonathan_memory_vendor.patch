@@ -1,0 +1,1108 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index dffac71..4e500ae 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1,127 +1,58 @@
+ cmake_minimum_required(VERSION 3.5)
+-project(foonathan_memory_vendor VERSION "1.2.0")
+ 
+-find_package(foonathan_memory QUIET)
++project(foonathan_memory_vendor)
+ 
+-if(NOT foonathan_memory_FOUND)
+-  ###############################################################################
+-  # Default shared libraries
+-  ###############################################################################
+-  # Global flag to cause add_library() to create shared libraries if on.
+-  # If set to true, this will cause all libraries to be built shared
+-  # unless the library was explicitly added as a static library.
+-  option(BUILD_SHARED_LIBS "Create shared libraries by default" ON)
++find_package(ament_cmake REQUIRED)
+ 
+-  # Option to build memory examples
+-  option(BUILD_MEMORY_EXAMPLES "Build memory examples" OFF)
+-  # Option to build memory tests
+-  option(BUILD_MEMORY_TESTS "Build memory tests" OFF)
+-  # Option to build memory tools
+-  option(BUILD_MEMORY_TOOLS "Build memory tools" ON)
++set(PACKAGE_VERSION "1.0.0")
+ 
+-  # Validate option dependency
+-  if((NOT BUILD_MEMORY_TOOLS) AND (BUILD_MEMORY_EXAMPLES OR BUILD_MEMORY_TESTS))
+-    message(FATAL_ERROR
+-      "BUILD_MEMORY_TOOLS is required when BUILD_MEMORY_EXAMPLES"
+-      " or BUILD_MEMORY_TESTS are set")
+-  endif()
++macro(build_foonathan_memory)
+ 
+-  if(BUILD_SHARED_LIBS)
+-    # Library will be statically created with PIC code
+-    list(APPEND extra_cmake_args -DCMAKE_POSITION_INDEPENDENT_CODE=ON)
+-  endif()
++  set(extra_cmake_args)
+ 
+   if(DEFINED CMAKE_BUILD_TYPE)
+     list(APPEND extra_cmake_args -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE})
+   endif()
+ 
++  list( APPEND extra_cmake_args  -DFOONATHAN_MEMORY_BUILD_EXAMPLES=OFF )
++  list( APPEND extra_cmake_args  -DFOONATHAN_MEMORY_BUILD_TESTS=OFF )
++  list( APPEND extra_cmake_args  -DBUILD_SHARED_LIBS=ON )
++  list( APPEND extra_cmake_args  -DCMAKE_POSITION_INDEPENDENT_CODE=ON )
++  list( APPEND extra_cmake_args  -DFOONATHAN_MEMORY_CONTAINER_NODE_SIZES_IMPL=${CMAKE_CURRENT_SOURCE_DIR}/nto/${CPUVARDIR}/include/container_node_sizes_impl.hpp )
++
++  list( APPEND extra_cmake_args  -DCMAKE_INSTALL_INCLUDEDIR=${CMAKE_INSTALL_PREFIX}/include )
++  list( APPEND extra_cmake_args  -DCMAKE_INSTALL_BINDIR=${CMAKE_INSTALL_PREFIX}/bin )
++  list( APPEND extra_cmake_args  -DCMAKE_INSTALL_LIBDIR=${CMAKE_INSTALL_PREFIX}/lib )
++  list( APPEND extra_cmake_args  -DCMAKE_INSTALL_DATADIR=${CMAKE_INSTALL_PREFIX}/share )
++
++  list( APPEND extra_cmake_args  -DCMAKE_CXX_COMPILE_FEATURES="cxx_constexpr" )
++
+   if(DEFINED CMAKE_TOOLCHAIN_FILE)
+     list(APPEND extra_cmake_args "-DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE}")
+-    if(ANDROID)
+-      if(DEFINED ANDROID_ABI)
+-        list(APPEND extra_cmake_args "-DANDROID_ABI=${ANDROID_ABI}")
+-      endif()
+-      if(DEFINED ANDROID_CPP_FEATURES)
+-        list(APPEND extra_cmake_args "-DANDROID_CPP_FEATURES=${ANDROID_CPP_FEATURES}")
+-      endif()
+-      if(DEFINED ANDROID_FUNCTION_LEVEL_LINKING)
+-        list(APPEND extra_cmake_args
+-          "-DANDROID_FUNCTION_LEVEL_LINKING=${ANDROID_FUNCTION_LEVEL_LINKING}")
+-      endif()
+-      if(DEFINED ANDROID_NATIVE_API_LEVEL)
+-        list(APPEND extra_cmake_args "-DANDROID_NATIVE_API_LEVEL=${ANDROID_NATIVE_API_LEVEL}")
+-      endif()
+-      if(DEFINED ANDROID_NDK)
+-        list(APPEND extra_cmake_args "-DANDROID_NDK=${ANDROID_NDK}")
+-      endif()
+-      if(DEFINED ANDROID_STL)
+-        list(APPEND extra_cmake_args "-DANDROID_STL=${ANDROID_STL}")
+-      endif()
+-      if(DEFINED ANDROID_TOOLCHAIN_NAME)
+-        list(APPEND extra_cmake_args "-DANDROID_TOOLCHAIN_NAME=${ANDROID_TOOLCHAIN_NAME}")
+-      endif()
+-    endif()
+   endif()
+-  include(ExternalProject)
+ 
+-  if(INSTALLER_PLATFORM)
+-    set(PATCH_COMMAND_STR PATCH_COMMAND
+-      git apply ${CMAKE_CURRENT_SOURCE_DIR}/CMakeLists.txt.patch &&
+-      sed -i -e "s/INSTALLER_PLATFORM/${INSTALLER_PLATFORM}/g" CMakeLists.txt)
++  if(QNX)
++    list(APPEND extra_cmake_args "-DFOONATHAN_MEMORY_BUILD_TESTS=ON")
+   endif()
+ 
+-  externalproject_add(foo_mem-ext
+-  GIT_REPOSITORY https://github.com/foonathan/memory.git
+-  GIT_TAG v0.7-1
+-  TIMEOUT 600
+-  # Avoid the update (git pull) and so the recompilation of foonathan_memory library each time.
+-  UPDATE_COMMAND ""
+-  CMAKE_ARGS
+-    -DFOONATHAN_MEMORY_BUILD_EXAMPLES=${BUILD_MEMORY_EXAMPLES}
+-    -DFOONATHAN_MEMORY_BUILD_TESTS=${BUILD_MEMORY_TESTS}
+-    -DFOONATHAN_MEMORY_BUILD_TOOLS=${BUILD_MEMORY_TOOLS}
+-    -DCMAKE_INSTALL_PREFIX=${CMAKE_CURRENT_BINARY_DIR}/foo_mem_ext_prj_install
+-    ${extra_cmake_args}
+-    -Wno-dev
+-    ${PATCH_COMMAND_STR}
++  include(ExternalProject)
++  ExternalProject_Add(foonathan_memory
++    GIT_REPOSITORY https://github.com/foonathan/memory.git
++    #GIT_TAG bf64e407a98d8482c98687bbfd3379585ec95586
++    GIT_TAG bab692e382cd58b30ff15af3664604bbc576eb78
++    TIMEOUT 600
++    PATCH_COMMAND git apply ${CMAKE_CURRENT_SOURCE_DIR}/qnx.patch
++    CMAKE_ARGS
++    -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}
++      ${extra_cmake_args}
++      -Wno-dev
+   )
+ 
+-  # The external project will install to the build folder, but we'll install that on make install.
+-  install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/foo_mem_ext_prj_install/
+-  DESTINATION ${CMAKE_INSTALL_PREFIX})
+-else()
+-  message(STATUS "Found foonathan_memory ${foonathan_memory_VERSION}")
+-endif()
+-
+-configure_file(foonathan_memory_vendorConfig.cmake.in
+-  "${PROJECT_BINARY_DIR}/foonathan_memory_vendorConfig.cmake" @ONLY)
+-
+-include(CMakePackageConfigHelpers)
+-write_basic_package_version_file(
+-  "${PROJECT_BINARY_DIR}/foonathan_memory_vendorConfig-version.cmake"
+-  COMPATIBILITY AnyNewerVersion)
++endmacro()
+ 
+-find_package(ament_cmake_test QUIET)
+-if(BUILD_TESTING)
+-  find_package(ament_cmake_copyright QUIET)
+-  find_package(ament_cmake_lint_cmake QUIET)
+-  find_package(ament_cmake_xmllint QUIET)
+-  if(ament_cmake_copyright_FOUND)
+-    ament_copyright()
+-  endif()
+-  if(ament_cmake_lint_cmake_FOUND)
+-    ament_lint_cmake()
+-  endif()
+-  if(ament_cmake_xmllint_FOUND)
+-    ament_xmllint()
+-  endif()
++find_package(foonathan_memory QUIET)
++if(NOT foonathan_memory_FOUND)
++  build_foonathan_memory()
+ endif()
+ 
+-install(FILES
+-  package.xml
+-  DESTINATION share/${PROJECT_NAME})
+-
+-install(FILES
+-  "${PROJECT_BINARY_DIR}/foonathan_memory_vendorConfig.cmake"
+-  "${PROJECT_BINARY_DIR}/foonathan_memory_vendorConfig-version.cmake"
+-  DESTINATION share/${PROJECT_NAME}/cmake)
++ament_package()
+diff --git a/nto/aarch64le/include/container_node_sizes_impl.hpp b/nto/aarch64le/include/container_node_sizes_impl.hpp
+new file mode 100644
+index 0000000..d510640
+--- /dev/null
++++ b/nto/aarch64le/include/container_node_sizes_impl.hpp
+@@ -0,0 +1,448 @@
++// The following section was autogenerated by nodesize_dbg
++//=== BEGIN AUTOGENERATED SECTION ===//
++
++namespace detail
++{
++    template <std::size_t Alignment>
++    struct forward_list_node_size;
++
++    template <>
++    struct forward_list_node_size<1>
++    : std::integral_constant<std::size_t, 15>
++    {};
++
++    template <>
++    struct forward_list_node_size<2>
++    : std::integral_constant<std::size_t, 14>
++    {};
++
++    template <>
++    struct forward_list_node_size<4>
++    : std::integral_constant<std::size_t, 12>
++    {};
++
++    template <>
++    struct forward_list_node_size<8>
++    : std::integral_constant<std::size_t, 8>
++    {};
++
++    template <>
++    struct forward_list_node_size<16>
++    : std::integral_constant<std::size_t, 16>
++    {};
++} // namespace detail
++
++template <typename T>
++struct forward_list_node_size
++: std::integral_constant<std::size_t,
++       detail::forward_list_node_size<alignof(T)>::value + sizeof(T)>
++{};
++
++namespace detail
++{
++    template <std::size_t Alignment>
++    struct list_node_size;
++
++    template <>
++    struct list_node_size<1>
++    : std::integral_constant<std::size_t, 23>
++    {};
++
++    template <>
++    struct list_node_size<2>
++    : std::integral_constant<std::size_t, 22>
++    {};
++
++    template <>
++    struct list_node_size<4>
++    : std::integral_constant<std::size_t, 20>
++    {};
++
++    template <>
++    struct list_node_size<8>
++    : std::integral_constant<std::size_t, 16>
++    {};
++
++    template <>
++    struct list_node_size<16>
++    : std::integral_constant<std::size_t, 16>
++    {};
++} // namespace detail
++
++template <typename T>
++struct list_node_size
++: std::integral_constant<std::size_t,
++       detail::list_node_size<alignof(T)>::value + sizeof(T)>
++{};
++
++namespace detail
++{
++    template <std::size_t Alignment>
++    struct set_node_size;
++
++    template <>
++    struct set_node_size<1>
++    : std::integral_constant<std::size_t, 31>
++    {};
++
++    template <>
++    struct set_node_size<2>
++    : std::integral_constant<std::size_t, 30>
++    {};
++
++    template <>
++    struct set_node_size<4>
++    : std::integral_constant<std::size_t, 28>
++    {};
++
++    template <>
++    struct set_node_size<8>
++    : std::integral_constant<std::size_t, 32>
++    {};
++
++    template <>
++    struct set_node_size<16>
++    : std::integral_constant<std::size_t, 32>
++    {};
++} // namespace detail
++
++template <typename T>
++struct set_node_size
++: std::integral_constant<std::size_t,
++       detail::set_node_size<alignof(T)>::value + sizeof(T)>
++{};
++
++namespace detail
++{
++    template <std::size_t Alignment>
++    struct multiset_node_size;
++
++    template <>
++    struct multiset_node_size<1>
++    : std::integral_constant<std::size_t, 31>
++    {};
++
++    template <>
++    struct multiset_node_size<2>
++    : std::integral_constant<std::size_t, 30>
++    {};
++
++    template <>
++    struct multiset_node_size<4>
++    : std::integral_constant<std::size_t, 28>
++    {};
++
++    template <>
++    struct multiset_node_size<8>
++    : std::integral_constant<std::size_t, 32>
++    {};
++
++    template <>
++    struct multiset_node_size<16>
++    : std::integral_constant<std::size_t, 32>
++    {};
++} // namespace detail
++
++template <typename T>
++struct multiset_node_size
++: std::integral_constant<std::size_t,
++       detail::multiset_node_size<alignof(T)>::value + sizeof(T)>
++{};
++
++namespace detail
++{
++    template <std::size_t Alignment>
++    struct unordered_set_node_size;
++
++    template <>
++    struct unordered_set_node_size<1>
++    : std::integral_constant<std::size_t, 23>
++    {};
++
++    template <>
++    struct unordered_set_node_size<2>
++    : std::integral_constant<std::size_t, 22>
++    {};
++
++    template <>
++    struct unordered_set_node_size<4>
++    : std::integral_constant<std::size_t, 20>
++    {};
++
++    template <>
++    struct unordered_set_node_size<8>
++    : std::integral_constant<std::size_t, 16>
++    {};
++
++    template <>
++    struct unordered_set_node_size<16>
++    : std::integral_constant<std::size_t, 16>
++    {};
++} // namespace detail
++
++template <typename T>
++struct unordered_set_node_size
++: std::integral_constant<std::size_t,
++       detail::unordered_set_node_size<alignof(T)>::value + sizeof(T)>
++{};
++
++namespace detail
++{
++    template <std::size_t Alignment>
++    struct unordered_multiset_node_size;
++
++    template <>
++    struct unordered_multiset_node_size<1>
++    : std::integral_constant<std::size_t, 23>
++    {};
++
++    template <>
++    struct unordered_multiset_node_size<2>
++    : std::integral_constant<std::size_t, 22>
++    {};
++
++    template <>
++    struct unordered_multiset_node_size<4>
++    : std::integral_constant<std::size_t, 20>
++    {};
++
++    template <>
++    struct unordered_multiset_node_size<8>
++    : std::integral_constant<std::size_t, 16>
++    {};
++
++    template <>
++    struct unordered_multiset_node_size<16>
++    : std::integral_constant<std::size_t, 16>
++    {};
++} // namespace detail
++
++template <typename T>
++struct unordered_multiset_node_size
++: std::integral_constant<std::size_t,
++       detail::unordered_multiset_node_size<alignof(T)>::value + sizeof(T)>
++{};
++
++namespace detail
++{
++    template <std::size_t Alignment>
++    struct map_node_size;
++
++    template <>
++    struct map_node_size<1>
++    : std::integral_constant<std::size_t, 30>
++    {};
++
++    template <>
++    struct map_node_size<2>
++    : std::integral_constant<std::size_t, 28>
++    {};
++
++    template <>
++    struct map_node_size<4>
++    : std::integral_constant<std::size_t, 32>
++    {};
++
++    template <>
++    struct map_node_size<8>
++    : std::integral_constant<std::size_t, 32>
++    {};
++
++    template <>
++    struct map_node_size<16>
++    : std::integral_constant<std::size_t, 32>
++    {};
++} // namespace detail
++
++template <typename T>
++struct map_node_size
++: std::integral_constant<std::size_t,
++       detail::map_node_size<alignof(T)>::value + sizeof(T)>
++{};
++
++namespace detail
++{
++    template <std::size_t Alignment>
++    struct multimap_node_size;
++
++    template <>
++    struct multimap_node_size<1>
++    : std::integral_constant<std::size_t, 30>
++    {};
++
++    template <>
++    struct multimap_node_size<2>
++    : std::integral_constant<std::size_t, 28>
++    {};
++
++    template <>
++    struct multimap_node_size<4>
++    : std::integral_constant<std::size_t, 32>
++    {};
++
++    template <>
++    struct multimap_node_size<8>
++    : std::integral_constant<std::size_t, 32>
++    {};
++
++    template <>
++    struct multimap_node_size<16>
++    : std::integral_constant<std::size_t, 32>
++    {};
++} // namespace detail
++
++template <typename T>
++struct multimap_node_size
++: std::integral_constant<std::size_t,
++       detail::multimap_node_size<alignof(T)>::value + sizeof(T)>
++{};
++
++namespace detail
++{
++    template <std::size_t Alignment>
++    struct unordered_map_node_size;
++
++    template <>
++    struct unordered_map_node_size<1>
++    : std::integral_constant<std::size_t, 22>
++    {};
++
++    template <>
++    struct unordered_map_node_size<2>
++    : std::integral_constant<std::size_t, 20>
++    {};
++
++    template <>
++    struct unordered_map_node_size<4>
++    : std::integral_constant<std::size_t, 16>
++    {};
++
++    template <>
++    struct unordered_map_node_size<8>
++    : std::integral_constant<std::size_t, 16>
++    {};
++
++    template <>
++    struct unordered_map_node_size<16>
++    : std::integral_constant<std::size_t, 16>
++    {};
++} // namespace detail
++
++template <typename T>
++struct unordered_map_node_size
++: std::integral_constant<std::size_t,
++       detail::unordered_map_node_size<alignof(T)>::value + sizeof(T)>
++{};
++
++namespace detail
++{
++    template <std::size_t Alignment>
++    struct unordered_multimap_node_size;
++
++    template <>
++    struct unordered_multimap_node_size<1>
++    : std::integral_constant<std::size_t, 22>
++    {};
++
++    template <>
++    struct unordered_multimap_node_size<2>
++    : std::integral_constant<std::size_t, 20>
++    {};
++
++    template <>
++    struct unordered_multimap_node_size<4>
++    : std::integral_constant<std::size_t, 16>
++    {};
++
++    template <>
++    struct unordered_multimap_node_size<8>
++    : std::integral_constant<std::size_t, 16>
++    {};
++
++    template <>
++    struct unordered_multimap_node_size<16>
++    : std::integral_constant<std::size_t, 16>
++    {};
++} // namespace detail
++
++template <typename T>
++struct unordered_multimap_node_size
++: std::integral_constant<std::size_t,
++       detail::unordered_multimap_node_size<alignof(T)>::value + sizeof(T)>
++{};
++
++namespace detail
++{
++    template <std::size_t Alignment>
++    struct shared_ptr_stateless_node_size;
++
++    template <>
++    struct shared_ptr_stateless_node_size<1>
++    : std::integral_constant<std::size_t, 32>
++    {};
++
++    template <>
++    struct shared_ptr_stateless_node_size<2>
++    : std::integral_constant<std::size_t, 32>
++    {};
++
++    template <>
++    struct shared_ptr_stateless_node_size<4>
++    : std::integral_constant<std::size_t, 32>
++    {};
++
++    template <>
++    struct shared_ptr_stateless_node_size<8>
++    : std::integral_constant<std::size_t, 32>
++    {};
++
++    template <>
++    struct shared_ptr_stateless_node_size<16>
++    : std::integral_constant<std::size_t, 48>
++    {};
++} // namespace detail
++
++template <typename T>
++struct shared_ptr_stateless_node_size
++: std::integral_constant<std::size_t,
++       detail::shared_ptr_stateless_node_size<alignof(T)>::value + sizeof(T)>
++{};
++
++namespace detail
++{
++    template <std::size_t Alignment>
++    struct shared_ptr_stateful_node_size;
++
++    template <>
++    struct shared_ptr_stateful_node_size<1>
++    : std::integral_constant<std::size_t, 40>
++    {};
++
++    template <>
++    struct shared_ptr_stateful_node_size<2>
++    : std::integral_constant<std::size_t, 40>
++    {};
++
++    template <>
++    struct shared_ptr_stateful_node_size<4>
++    : std::integral_constant<std::size_t, 40>
++    {};
++
++    template <>
++    struct shared_ptr_stateful_node_size<8>
++    : std::integral_constant<std::size_t, 40>
++    {};
++
++    template <>
++    struct shared_ptr_stateful_node_size<16>
++    : std::integral_constant<std::size_t, 64>
++    {};
++} // namespace detail
++
++template <typename T>
++struct shared_ptr_stateful_node_size
++: std::integral_constant<std::size_t,
++       detail::shared_ptr_stateful_node_size<alignof(T)>::value + sizeof(T)>
++{};
++
++//=== END AUTOGENERATED SECTION ===//
+diff --git a/nto/x86_64/include/container_node_sizes_impl.hpp b/nto/x86_64/include/container_node_sizes_impl.hpp
+new file mode 100644
+index 0000000..d510640
+--- /dev/null
++++ b/nto/x86_64/include/container_node_sizes_impl.hpp
+@@ -0,0 +1,448 @@
++// The following section was autogenerated by nodesize_dbg
++//=== BEGIN AUTOGENERATED SECTION ===//
++
++namespace detail
++{
++    template <std::size_t Alignment>
++    struct forward_list_node_size;
++
++    template <>
++    struct forward_list_node_size<1>
++    : std::integral_constant<std::size_t, 15>
++    {};
++
++    template <>
++    struct forward_list_node_size<2>
++    : std::integral_constant<std::size_t, 14>
++    {};
++
++    template <>
++    struct forward_list_node_size<4>
++    : std::integral_constant<std::size_t, 12>
++    {};
++
++    template <>
++    struct forward_list_node_size<8>
++    : std::integral_constant<std::size_t, 8>
++    {};
++
++    template <>
++    struct forward_list_node_size<16>
++    : std::integral_constant<std::size_t, 16>
++    {};
++} // namespace detail
++
++template <typename T>
++struct forward_list_node_size
++: std::integral_constant<std::size_t,
++       detail::forward_list_node_size<alignof(T)>::value + sizeof(T)>
++{};
++
++namespace detail
++{
++    template <std::size_t Alignment>
++    struct list_node_size;
++
++    template <>
++    struct list_node_size<1>
++    : std::integral_constant<std::size_t, 23>
++    {};
++
++    template <>
++    struct list_node_size<2>
++    : std::integral_constant<std::size_t, 22>
++    {};
++
++    template <>
++    struct list_node_size<4>
++    : std::integral_constant<std::size_t, 20>
++    {};
++
++    template <>
++    struct list_node_size<8>
++    : std::integral_constant<std::size_t, 16>
++    {};
++
++    template <>
++    struct list_node_size<16>
++    : std::integral_constant<std::size_t, 16>
++    {};
++} // namespace detail
++
++template <typename T>
++struct list_node_size
++: std::integral_constant<std::size_t,
++       detail::list_node_size<alignof(T)>::value + sizeof(T)>
++{};
++
++namespace detail
++{
++    template <std::size_t Alignment>
++    struct set_node_size;
++
++    template <>
++    struct set_node_size<1>
++    : std::integral_constant<std::size_t, 31>
++    {};
++
++    template <>
++    struct set_node_size<2>
++    : std::integral_constant<std::size_t, 30>
++    {};
++
++    template <>
++    struct set_node_size<4>
++    : std::integral_constant<std::size_t, 28>
++    {};
++
++    template <>
++    struct set_node_size<8>
++    : std::integral_constant<std::size_t, 32>
++    {};
++
++    template <>
++    struct set_node_size<16>
++    : std::integral_constant<std::size_t, 32>
++    {};
++} // namespace detail
++
++template <typename T>
++struct set_node_size
++: std::integral_constant<std::size_t,
++       detail::set_node_size<alignof(T)>::value + sizeof(T)>
++{};
++
++namespace detail
++{
++    template <std::size_t Alignment>
++    struct multiset_node_size;
++
++    template <>
++    struct multiset_node_size<1>
++    : std::integral_constant<std::size_t, 31>
++    {};
++
++    template <>
++    struct multiset_node_size<2>
++    : std::integral_constant<std::size_t, 30>
++    {};
++
++    template <>
++    struct multiset_node_size<4>
++    : std::integral_constant<std::size_t, 28>
++    {};
++
++    template <>
++    struct multiset_node_size<8>
++    : std::integral_constant<std::size_t, 32>
++    {};
++
++    template <>
++    struct multiset_node_size<16>
++    : std::integral_constant<std::size_t, 32>
++    {};
++} // namespace detail
++
++template <typename T>
++struct multiset_node_size
++: std::integral_constant<std::size_t,
++       detail::multiset_node_size<alignof(T)>::value + sizeof(T)>
++{};
++
++namespace detail
++{
++    template <std::size_t Alignment>
++    struct unordered_set_node_size;
++
++    template <>
++    struct unordered_set_node_size<1>
++    : std::integral_constant<std::size_t, 23>
++    {};
++
++    template <>
++    struct unordered_set_node_size<2>
++    : std::integral_constant<std::size_t, 22>
++    {};
++
++    template <>
++    struct unordered_set_node_size<4>
++    : std::integral_constant<std::size_t, 20>
++    {};
++
++    template <>
++    struct unordered_set_node_size<8>
++    : std::integral_constant<std::size_t, 16>
++    {};
++
++    template <>
++    struct unordered_set_node_size<16>
++    : std::integral_constant<std::size_t, 16>
++    {};
++} // namespace detail
++
++template <typename T>
++struct unordered_set_node_size
++: std::integral_constant<std::size_t,
++       detail::unordered_set_node_size<alignof(T)>::value + sizeof(T)>
++{};
++
++namespace detail
++{
++    template <std::size_t Alignment>
++    struct unordered_multiset_node_size;
++
++    template <>
++    struct unordered_multiset_node_size<1>
++    : std::integral_constant<std::size_t, 23>
++    {};
++
++    template <>
++    struct unordered_multiset_node_size<2>
++    : std::integral_constant<std::size_t, 22>
++    {};
++
++    template <>
++    struct unordered_multiset_node_size<4>
++    : std::integral_constant<std::size_t, 20>
++    {};
++
++    template <>
++    struct unordered_multiset_node_size<8>
++    : std::integral_constant<std::size_t, 16>
++    {};
++
++    template <>
++    struct unordered_multiset_node_size<16>
++    : std::integral_constant<std::size_t, 16>
++    {};
++} // namespace detail
++
++template <typename T>
++struct unordered_multiset_node_size
++: std::integral_constant<std::size_t,
++       detail::unordered_multiset_node_size<alignof(T)>::value + sizeof(T)>
++{};
++
++namespace detail
++{
++    template <std::size_t Alignment>
++    struct map_node_size;
++
++    template <>
++    struct map_node_size<1>
++    : std::integral_constant<std::size_t, 30>
++    {};
++
++    template <>
++    struct map_node_size<2>
++    : std::integral_constant<std::size_t, 28>
++    {};
++
++    template <>
++    struct map_node_size<4>
++    : std::integral_constant<std::size_t, 32>
++    {};
++
++    template <>
++    struct map_node_size<8>
++    : std::integral_constant<std::size_t, 32>
++    {};
++
++    template <>
++    struct map_node_size<16>
++    : std::integral_constant<std::size_t, 32>
++    {};
++} // namespace detail
++
++template <typename T>
++struct map_node_size
++: std::integral_constant<std::size_t,
++       detail::map_node_size<alignof(T)>::value + sizeof(T)>
++{};
++
++namespace detail
++{
++    template <std::size_t Alignment>
++    struct multimap_node_size;
++
++    template <>
++    struct multimap_node_size<1>
++    : std::integral_constant<std::size_t, 30>
++    {};
++
++    template <>
++    struct multimap_node_size<2>
++    : std::integral_constant<std::size_t, 28>
++    {};
++
++    template <>
++    struct multimap_node_size<4>
++    : std::integral_constant<std::size_t, 32>
++    {};
++
++    template <>
++    struct multimap_node_size<8>
++    : std::integral_constant<std::size_t, 32>
++    {};
++
++    template <>
++    struct multimap_node_size<16>
++    : std::integral_constant<std::size_t, 32>
++    {};
++} // namespace detail
++
++template <typename T>
++struct multimap_node_size
++: std::integral_constant<std::size_t,
++       detail::multimap_node_size<alignof(T)>::value + sizeof(T)>
++{};
++
++namespace detail
++{
++    template <std::size_t Alignment>
++    struct unordered_map_node_size;
++
++    template <>
++    struct unordered_map_node_size<1>
++    : std::integral_constant<std::size_t, 22>
++    {};
++
++    template <>
++    struct unordered_map_node_size<2>
++    : std::integral_constant<std::size_t, 20>
++    {};
++
++    template <>
++    struct unordered_map_node_size<4>
++    : std::integral_constant<std::size_t, 16>
++    {};
++
++    template <>
++    struct unordered_map_node_size<8>
++    : std::integral_constant<std::size_t, 16>
++    {};
++
++    template <>
++    struct unordered_map_node_size<16>
++    : std::integral_constant<std::size_t, 16>
++    {};
++} // namespace detail
++
++template <typename T>
++struct unordered_map_node_size
++: std::integral_constant<std::size_t,
++       detail::unordered_map_node_size<alignof(T)>::value + sizeof(T)>
++{};
++
++namespace detail
++{
++    template <std::size_t Alignment>
++    struct unordered_multimap_node_size;
++
++    template <>
++    struct unordered_multimap_node_size<1>
++    : std::integral_constant<std::size_t, 22>
++    {};
++
++    template <>
++    struct unordered_multimap_node_size<2>
++    : std::integral_constant<std::size_t, 20>
++    {};
++
++    template <>
++    struct unordered_multimap_node_size<4>
++    : std::integral_constant<std::size_t, 16>
++    {};
++
++    template <>
++    struct unordered_multimap_node_size<8>
++    : std::integral_constant<std::size_t, 16>
++    {};
++
++    template <>
++    struct unordered_multimap_node_size<16>
++    : std::integral_constant<std::size_t, 16>
++    {};
++} // namespace detail
++
++template <typename T>
++struct unordered_multimap_node_size
++: std::integral_constant<std::size_t,
++       detail::unordered_multimap_node_size<alignof(T)>::value + sizeof(T)>
++{};
++
++namespace detail
++{
++    template <std::size_t Alignment>
++    struct shared_ptr_stateless_node_size;
++
++    template <>
++    struct shared_ptr_stateless_node_size<1>
++    : std::integral_constant<std::size_t, 32>
++    {};
++
++    template <>
++    struct shared_ptr_stateless_node_size<2>
++    : std::integral_constant<std::size_t, 32>
++    {};
++
++    template <>
++    struct shared_ptr_stateless_node_size<4>
++    : std::integral_constant<std::size_t, 32>
++    {};
++
++    template <>
++    struct shared_ptr_stateless_node_size<8>
++    : std::integral_constant<std::size_t, 32>
++    {};
++
++    template <>
++    struct shared_ptr_stateless_node_size<16>
++    : std::integral_constant<std::size_t, 48>
++    {};
++} // namespace detail
++
++template <typename T>
++struct shared_ptr_stateless_node_size
++: std::integral_constant<std::size_t,
++       detail::shared_ptr_stateless_node_size<alignof(T)>::value + sizeof(T)>
++{};
++
++namespace detail
++{
++    template <std::size_t Alignment>
++    struct shared_ptr_stateful_node_size;
++
++    template <>
++    struct shared_ptr_stateful_node_size<1>
++    : std::integral_constant<std::size_t, 40>
++    {};
++
++    template <>
++    struct shared_ptr_stateful_node_size<2>
++    : std::integral_constant<std::size_t, 40>
++    {};
++
++    template <>
++    struct shared_ptr_stateful_node_size<4>
++    : std::integral_constant<std::size_t, 40>
++    {};
++
++    template <>
++    struct shared_ptr_stateful_node_size<8>
++    : std::integral_constant<std::size_t, 40>
++    {};
++
++    template <>
++    struct shared_ptr_stateful_node_size<16>
++    : std::integral_constant<std::size_t, 64>
++    {};
++} // namespace detail
++
++template <typename T>
++struct shared_ptr_stateful_node_size
++: std::integral_constant<std::size_t,
++       detail::shared_ptr_stateful_node_size<alignof(T)>::value + sizeof(T)>
++{};
++
++//=== END AUTOGENERATED SECTION ===//
+diff --git a/package.xml b/package.xml
+index f8c7fc9..e8ac3a1 100644
+--- a/package.xml
++++ b/package.xml
+@@ -11,7 +11,9 @@
+   <license>Apache License 2.0</license> <!-- The contents of this vendor package are Apache 2.0 -->
+   <license>zlib License</license> <!-- foonathan/memory is licensed under the zlib License (https://github.com/foonathan/memory/blob/main/LICENSE) -->
+   <buildtool_depend>cmake</buildtool_depend>
++  <buildtool_depend>ament_cmake_test</buildtool_depend>
+   <buildtool_depend>git</buildtool_depend>
++  <build_depend>ament_cmake</build_depend>
+ 
+   <buildtool_export_depend>cmake</buildtool_export_depend>
+ 
+diff --git a/qnx.patch b/qnx.patch
+new file mode 100644
+index 0000000..c10f3f4
+--- /dev/null
++++ b/qnx.patch
+@@ -0,0 +1,12 @@
++diff --git a/test/CMakeLists.txt b/test/CMakeLists.txt
++index 74dd5b7..7b12d03 100644
++--- a/test/CMakeLists.txt
+++++ b/test/CMakeLists.txt
++@@ -55,3 +55,7 @@ target_include_directories(foonathan_memory_test PRIVATE
++                             ${FOONATHAN_MEMORY_SOURCE_DIR}/include/foonathan/memory)
++ 
++ add_test(NAME test COMMAND foonathan_memory_test)
+++
+++if(QNX)
+++    install(TARGETS foonathan_memory_test DESTINATION test/foonathan_memory)
+++endif()

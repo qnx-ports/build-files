@@ -1,0 +1,36 @@
+diff --git a/rclpy/CMakeLists.txt b/rclpy/CMakeLists.txt
+index eb48e4e..ea9c883 100644
+--- a/rclpy/CMakeLists.txt
++++ b/rclpy/CMakeLists.txt
+@@ -14,6 +14,13 @@ if(CMAKE_COMPILER_IS_GNUCC OR CMAKE_C_COMPILER_ID MATCHES "Clang")
+   add_compile_options(-Wall -Wextra)
+ endif()
+ 
++if(QNX)
++  set(CMAKE_CXX_COMPILE_FEATURES
++    cxx_inheriting_constructors
++    cxx_user_literals
++    cxx_right_angle_brackets)
++endif()
++
+ # Figure out Python3 debug/release before anything else can find_package it
+ if(WIN32 AND CMAKE_BUILD_TYPE STREQUAL "Debug")
+   find_package(python_cmake_module REQUIRED)
+@@ -38,7 +45,16 @@ find_package(rmw_implementation_cmake REQUIRED)
+ find_package(rosidl_runtime_c REQUIRED)
+ 
+ # Find python before pybind11
+-find_package(Python3 REQUIRED COMPONENTS Interpreter Development)
++if(QNX)
++  find_library(python3_LIBRARY NAMES python3)
++
++  include_directories(${PROJECT_NAME}
++    ${QNX_TARGET}/usr/include/python${PYTHON_VERSION_QNX}
++    ${QNX_TARGET}/usr/include/${CPUVARDIR}/python${PYTHON_VERSION_QNX}
++    ${QNX_TARGET}/${CPUVARDIR}/usr/lib/python${PYTHON_VERSION_QNX}/site-packages/numpy/core/include)
++else()
++  find_package(Python3 REQUIRED COMPONENTS Interpreter Development)
++endif()
+ 
+ find_package(pybind11_vendor REQUIRED)
+ find_package(pybind11 REQUIRED)

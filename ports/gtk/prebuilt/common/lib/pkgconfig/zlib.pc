@@ -1,0 +1,8 @@
+libdir=${qnx_target}/${cpu_dir}/usr/lib
+includedir=${qnx_target}/usr/include
+
+Name: zlib
+Description: zlib compression library
+Version: 1.2.11
+Libs: -L${libdir} -lz
+Cflags: -I${includedir}

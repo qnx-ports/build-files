@@ -1,0 +1,26 @@
+diff --git a/rosidl_typesupport_cpp/CMakeLists.txt b/rosidl_typesupport_cpp/CMakeLists.txt
+index c6aa1cb..e33348e 100644
+--- a/rosidl_typesupport_cpp/CMakeLists.txt
++++ b/rosidl_typesupport_cpp/CMakeLists.txt
+@@ -52,6 +52,10 @@ ament_export_targets(${PROJECT_NAME})
+ 
+ ament_index_register_resource("rosidl_runtime_packages")
+ 
++if(QNX)
++  set(BUILD_TESTING ON)
++endif()
++
+ if(BUILD_TESTING)
+   find_package(ament_lint_auto REQUIRED)
+   ament_lint_auto_find_test_dependencies()
+@@ -127,6 +131,10 @@ if(BUILD_TESTING)
+ 
+   find_package(ament_cmake_pytest REQUIRED)
+   ament_add_pytest_test(test_cli_extension test/test_cli_extension.py)
++
++  if(QNX)
++    install(DIRECTORY ${CMAKE_BINARY_DIR}/ DESTINATION test/rosidl_typesupport_cpp)
++  endif()
+ endif()
+ 
+ if(BUILD_SHARED_LIBS)

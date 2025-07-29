@@ -1,0 +1,50 @@
+diff --git a/orocos_kdl_vendor/CMakeLists.txt b/orocos_kdl_vendor/CMakeLists.txt
+index 655e562..fa71950 100644
+--- a/orocos_kdl_vendor/CMakeLists.txt
++++ b/orocos_kdl_vendor/CMakeLists.txt
+@@ -50,6 +50,10 @@ macro(build_orocos_kdl)
+   list(APPEND extra_cmake_args "-DENABLE_TESTS=OFF")
+   list(APPEND extra_cmake_args "-DENABLE_EXAMPLES=OFF")
+ 
++  if(QNX)
++    list(APPEND extra_cmake_args "-DEIGEN3_INCLUDE_DIR=${Eigen3_INCLUDE_DIRS}")
++  endif()
++
+   include(ExternalProject)
+ 
+   # Build orocos_kdl
+diff --git a/orocos_kdl_vendor/package.xml b/orocos_kdl_vendor/package.xml
+index c5de981..a3ba4ee 100644
+--- a/orocos_kdl_vendor/package.xml
++++ b/orocos_kdl_vendor/package.xml
+@@ -19,7 +19,7 @@
+   <buildtool_depend>git</buildtool_depend>
+ 
+   <!-- orocos_kdl depends on eigen -->
+-  <depend>eigen</depend>
++  <depend>eigen3</depend>
+   <depend>eigen3_cmake_module</depend>
+   <depend>liborocos-kdl-dev</depend>
+ 
+diff --git a/python_orocos_kdl_vendor/CMakeLists.txt b/python_orocos_kdl_vendor/CMakeLists.txt
+index 48554fd..fb56765 100644
+--- a/python_orocos_kdl_vendor/CMakeLists.txt
++++ b/python_orocos_kdl_vendor/CMakeLists.txt
+@@ -23,7 +23,16 @@ if(NOT FORCE_BUILD_VENDOR_PKG)
+     # Force FindPython3 to use the debug interpreter where ROS 2 expects it
+     set(Python3_EXECUTABLE "${PYTHON_EXECUTABLE_DEBUG}")
+   endif()
+-  find_package(Python3 REQUIRED COMPONENTS Interpreter Development)
++  if(QNX)
++    find_library(python3_LIBRARY NAMES python3)
++
++    include_directories(${PROJECT_NAME}
++      ${QNX_TARGET}/usr/include/python${PYTHON_VERSION_QNX}
++      ${QNX_TARGET}/usr/include/${CPUVARDIR}/python${PYTHON_VERSION_QNX})
++  else()
++    # Find python before pybind11
++    find_package(Python3 REQUIRED COMPONENTS Interpreter Development)
++  endif()
+   execute_process(
+     COMMAND ${Python3_EXECUTABLE} -c "import PyKDL"
+     RESULT_VARIABLE pykdl_import_exit_code

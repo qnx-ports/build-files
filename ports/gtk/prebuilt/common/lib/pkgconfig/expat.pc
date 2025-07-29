@@ -1,0 +1,9 @@
+libdir=${qnx_target}/${cpu_dir}/usr/lib
+includedir=${qnx_target}/usr/include
+
+Name: expat
+Version: 2.4.7
+Description: expat XML parser
+URL: https://libexpat.github.io/
+Libs: -L${libdir} -lexpat -lm
+Cflags: -I${includedir}

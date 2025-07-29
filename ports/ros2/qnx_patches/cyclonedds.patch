@@ -1,0 +1,59 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f046b631..335c4619 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -43,6 +43,10 @@ set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake/Modules")
+ option(BUILD_IDLC "Build IDL preprocessor" ${not_crosscompiling})
+ option(BUILD_DDSPERF "Build ddsperf tool" ${not_crosscompiling})
+ 
++if(QNX)
++  set(BUILD_IDLC NO)
++endif()
++
+ set(CMAKE_C_STANDARD 99)
+ if(CMAKE_SYSTEM_NAME STREQUAL "VxWorks")
+   add_definitions(-std=c99)
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 8c0049c7..17dd3910 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -48,6 +48,10 @@ else()
+   set(ENABLE_SHM "AUTO" CACHE STRING "Enable shared memory support")
+ endif()
+ 
++if(QNX)
++  set(ENABLE_SHM OFF)
++endif()
++
+ set_property(CACHE ENABLE_SHM PROPERTY STRINGS ON OFF AUTO)
+ if(ENABLE_SHM)
+   if(NOT ENABLE_SHM STREQUAL "AUTO")
+diff --git a/src/ddsrt/include/dds/features.h.in b/src/ddsrt/include/dds/features.h.in
+index cf527db3..2d1601c3 100644
+--- a/src/ddsrt/include/dds/features.h.in
++++ b/src/ddsrt/include/dds/features.h.in
+@@ -24,8 +24,10 @@
+ /* Whether or not support for network partitions is included */
+ #cmakedefine DDS_HAS_NETWORK_PARTITIONS 1
+ 
++#ifndef __QNXNTO__
+ /* Whether or not support for source-specific multicast is included */
+ #cmakedefine DDS_HAS_SSM 1
++#endif
+ 
+ /* Whether or not features dependent on OpenSSL are included */
+ #cmakedefine DDS_HAS_SSL 1
+diff --git a/src/ddsrt/src/ifaddrs/posix/ifaddrs.c b/src/ddsrt/src/ifaddrs/posix/ifaddrs.c
+index 217d1f98..38f68213 100644
+--- a/src/ddsrt/src/ifaddrs/posix/ifaddrs.c
++++ b/src/ddsrt/src/ifaddrs/posix/ifaddrs.c
+@@ -104,7 +104,7 @@ static enum ddsrt_iftype guess_iftype (const struct ifaddrs *sys_ifa)
+     switch (IFM_TYPE (ifmr.ifm_active))
+     {
+       case IFM_ETHER:
+-#if !defined __FreeBSD__
++#if !defined __FreeBSD__ && !defined __QNXNTO__
+       case IFM_TOKEN:
+       case IFM_FDDI:
+ #endif
+ 
