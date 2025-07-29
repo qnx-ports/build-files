@@ -27,6 +27,7 @@ jobs:
     - name: Checkout build-files
       uses: actions/checkout@v4
       with:
+        repository: qnx-ports/build-files
         path: build-files
         submodules: 'true'
 
