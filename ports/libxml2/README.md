@@ -74,7 +74,7 @@ Apply the patch using the following command:
 ```bash
 # Navigate to the source code's directory
 cd <path>/libxml2-wksp/libxml2
-# Apply the correct patch, replacing VERSION as needed.
+# Apply the correct patch
 git apply ../build-files/ports/libxml2/libxml2.patch
 ```
 
