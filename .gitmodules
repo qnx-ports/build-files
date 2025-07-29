@@ -1,0 +1,3 @@
+[submodule "ports/check-companion"]
+	path = ports/check-companion
+	url = https://github.com/qnx-ports/check-companion.git
