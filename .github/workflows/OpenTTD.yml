@@ -1,0 +1,65 @@
+name: OpenTTD
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/OpenTTD.yml'
+      - 'ports/RetroPie/OpenTTD/**'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/OpenTTD.yml'
+      - 'ports/RetroPie/OpenTTD/**'
+
+jobs:
+
+  build:
+    runs-on: self-hosted
+    if: |
+      (github.event_name == 'workflow_dispatch') ||
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'pull_request' && (contains(github.event.pull_request.title, 'OpenTTD')||contains(github.event.pull_request.title, 'Open TTD')))
+    steps:
+    - name: Checkout build-files
+      uses: actions/checkout@v4
+      with:
+        path: build-files
+
+    - name: Checkout OpenTTD
+      uses: actions/checkout@v4
+      with:
+        repository: qnx-ports/OpenTTD
+        path: openttd
+    
+    - name: Checkout SDL
+      uses: actions/checkout@v4
+      with:
+        repository: qnx-ports/SDL
+        path: SDL
+
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v3
+      with:
+        registry: ghcr.io
+        username: ${{github.actor}}
+        password: ${{secrets.GITHUB_TOKEN}}
+    - name: Pull build environment
+      run: |
+        docker pull ghcr.io/qnx-ports/sdp800-build-env:latest
+
+    - name: Build OpenTTD
+      uses: addnab/docker-run-action@v3
+      with:
+        image: ghcr.io/qnx-ports/sdp800-build-env:latest
+        options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
+        shell: bash
+        run: |
+          source ~/qnx/800/qnxsdp-env.sh
+          ~/qnx/qnxsoftwarecenter/qnxsoftwarecenter_clt -profile com.qnx.qnx800_1 -installPackage com.qnx.qnx800.target.screen.fonts.engine/0.0.1.00020T202311191218L  
+          cd ~/workspace
+          PREFIX="/usr/local" QNX_PROJECT_ROOT="$(pwd)/SDL" make -C build-files/ports/SDL install -j$(nproc)
+          PREFIX="/usr/local" QNX_PROJECT_ROOT="$(pwd)/OpenTTD" make -C build-files/ports/RetroPie/openttd install -j$(nproc)
