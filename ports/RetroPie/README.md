@@ -13,7 +13,9 @@ The main pieces of the Retro*Pie* (forgive my humor) are listed below, alongside
 | --- | :---: | :---: |
 | RetroArch         | Supported via [Fork](https://github.com/qnx-ports/retroarch) | N/A |
 | Emulation Station | Supported via [Fork](https://github.com/qnx-ports/EmulationStation)        | N/A |
-| RetroPie Menu     | Planned           | N/A |
+| OpenTTD | Supported via [Fork](https://github.com/qnx-ports/OpenTTD)        | N/A |
+
+A Full list of dependencies and their forks can be found later on this page.
 
 *Currently we are planning support for QNX 8.0*, which you can get access to from the ***[QNXE Free Non-Commercial License](https://www.qnx.com/products/everywhere/)***. For RetroPie and dependencies, we only officially support aarch64le architectures (i.e. Raspberry Pi 4/5), however files for x86_64 devices can also be built and installed via the provided build script.
 
@@ -23,12 +25,16 @@ For more specifics on RetroArch and supported Cores, as well as Emulation Statio
 
 ### Via Script
 To successfully build/install RetroPie on a QNX device, follow these steps:
-0. **Make sure you have the following installed on your linux host**: 
+
+**BEFORE STARTING, Make sure you have the following installed on your Linux (Ideally Ubuntu) Host machine**: 
 - bash
 - curl
 - unzip
 - git
 - gcc and g++
+- autotools, including autopoint and gettext
+- nasm 
+- yasm
 
 1. **Ensure you have a QNX License.** If not, see how to get one here: [QNXE Free Non-Commercial License](https://www.qnx.com/products/everywhere/). You must also install the Wayland/Weston, Base Graphics, Vulkan SDK, and any board-specific (i.e. Quickstart Image or Raspberry Pi Board Support) packages from [QNX Software Centre](https://www.qnx.com/download/group.html?programid=29178).
 
@@ -64,8 +70,10 @@ scp -r staging/aarch64le/* <hostname>:/install/file/path/
 ```
 
 
-
 # RetroArch
+
+RetroArch is an emulator backend used for most of the gaming related content within RetroPie. \
+It works using a "Core" and "Content" system - Think of RetroArch as your TV, displaying content and sound. A "Core" is your game console - whichever you load or "Connect to the TV" handles input and what games you can play. Your "Content" is simply a collection of games or other stuff that you can play on the core.
 
 ## Core List
 You can build any supported core via the following process. Instructions and details are also included in the README.md files in each subdirectory.
@@ -82,31 +90,52 @@ cd RetroArch && make install
 | -- | -- |
 | [2048](https://github.com/libretro/libretro-2048) | The game of 2048. Upstream can be built directly. |
 | [Retro8](https://github.com/Jakz/retro8) | A [PICO-8](https://www.lexaloffle.com/pico-8.php) implementation for RetroArch. Currently has minor issues. |
+| [Fake08](https://github.com/jtothebell/fake-08/) | A [PICO-8](https://www.lexaloffle.com/pico-8.php) implementation for RetroArch. |
 | [MrBoom](https://github.com/Javanaise/mrboom-libretro) | A port of BomberMan for MSDOS to RetroArch. Requires minor patching to build. |
 | [libretro-samples](https://github.com/libretro/libretro-samples) | Sample and demo apps for LibRetro. |
 
-#### Planned
-| Core | Description |
-| -- | -- |
-| TODO | TODO |
 
 # Emulation Station
-Marked TODO
 
-# TODO
+Emulation Station is a controller friendly, highly customizable frontend which we use to easily tie together all of the different parts of RetroPie.
 
-##RETROARCH:
-Done - replaced w screen system_Requires qt for bps (is this a qt package??)
-??check on this_Requires wayland sdp package, need to add .pc files. Reach out to graphics team? - forged them
-Done_Need a HAVE_DYLIB fix.
+It's highly customizable via xml files. The presets for RetroPie for QNX can be found in the [configs folder in this directory](configs/emulationstation). These group different games and startup commands under submenus, can can also support video files.
 
-##EMULATIONSTATION:
-Freetype satisfied!
-FreeImage 3.18.0 Ported
-_SDL 2 Requires Work
+Also important to note - some aspects of Emulation Station are installed under ~/.emulationstation by default, including these configurations and any themes. **Multiple installations of Retropie on one QNX User Profile may collide with each other because of this**.
 
-Curl - in theory exists?
+## Theming
 
-vlc?
+We have a custom, QNX-Specific Emulation Station theme. It is available at [qnx-ports/es-theme-qnx](https://github.com/qnx-ports/es-theme-qnx). 
 
-RapidJSON complete
+# Dependency Manifest & Licenses
+
+The following projects are built and installed by build_install_all.sh. They are linked here alongside their license. \
+An * before a project's name indicates it being installed from upstream, i.e. a source not under QNX. \
+Last Updated 7/18/2025 M/D/Y
+
+|                |Name                                           |License|Description|
+|----------------|-----------------------------------------------|-------|-----------|
+|*Programs*      |[RetroArch](RetroArch/README.md)               |[GPLv3](https://docs.libretro.com/development/licenses/) |A emulator (libretro) frontend, which serves as the host for many of RetroPie's emulators.|
+|                |[Emulation Station](EmulationStation/README.md)|[MIT](https://github.com/Aloshi/EmulationStation/blob/master/LICENSE.md)| A controller-based menu that can start various programs and emulators.|
+|*Libretro Cores*|[*mrboom](libretro-cores/mrboom/README.md)      |[MIT](https://github.com/Javanaise/mrboom-libretro/blob/master/LICENSE)| A modernized 'Bomberman' clone with many new features.|
+|                |[*retro8](libretro-cores/retro8/README.md)      |[GPLv3](https://github.com/Jakz/retro8/blob/master/LICENSE)|An older PICO-8 open source implementation for libretro.|
+|                |[*fake-08](libretro-cores/fake-08/README.md)      |[MIT](https://github.com/jtothebell/fake-08/blob/master/LICENSE.MD)|A modern PICO-8 open source implementation for libretro.|
+|                |[*2048](libretro-cores/2048/README.md)          |[Public Domain](https://github.com/libretro/libretro-2048/blob/master/COPYING)|A 2048 implementation for libretro.|
+|                |[*samples](libretro-cores/test/)                |[MIT](https://github.com/libretro/libretro-samples/blob/master/license)|A series of tests and samples for libretro.|
+|*Content*       |[*fake-08/retro8: cmy platonic solids](https://www.lexaloffle.com/bbs/?pid=cmyplatonicsolids-0)|None, N/A|We do not distribute - this is pulled from its source via CURL.|
+|                |[*fake-08/retro8: Celeste Classic](https://www.lexaloffle.com/bbs/?pid=11722)|None, N/A|We do not distribute - this is pulled from its source via CURL.|
+|                |[*fake-08/retro8: Celeste Classic 2](https://www.lexaloffle.com/bbs/?pid=86783)|CC4-BY-NC-SA|We do not distribute - this is pulled from its source via CURL.|
+|                |[*fake-08/retro8: Just One Boss](https://www.lexaloffle.com/bbs/?pid=49234)|CC4-BY-NC-SA|We do not distribute - this is pulled from its source via CURL.|
+|                |[*RetroArch: Assets](https://github.com/libretro/retroarch-assets)  |[CC-BY-4.0](https://github.com/libretro/retroarch-assets/blob/master/COPYING)|RetroArch's assets for its various GUIs.|
+|                |[*RetroArch: Info](https://github.com/libretro/libretro-core-info)                          |[MIT](https://github.com/libretro/libretro-core-info/blob/master/COPYING)|RetroArch's core info files for menu display purposes.|
+|                |[OpenTTD](OpenTTD/README.md)            |[GPLv2](https://wiki.openttd.org/License)|Transport Tycoon Game.|
+|                |[OpenGFX](OpenTTD/README.md)            |[GPLv2](https://github.com/OpenTTD/OpenGFX/blob/master/README.md#50-license)|Graphics for above.|
+|                |[es-theme-qnx](https://github.com/qnx-ports/es-theme-qnx) | None |Emulation Station's Theme.|
+|*Dependencies*  |[VLC](../vlc/README.md)                        |[GPLv2](https://www.videolan.org/legal.html)|VLC Media Player and Engine, needed for Emulation Station.|
+|                |[SDL2](../SDL/README.md)                       |[zlib](https://www.libsdl.org/license.php)|SDL library for display purposes. Needed by Emulation Station.|
+|                |[pugixml](../pugixml/README.md)                |[MIT](https://pugixml.org/license.html)|.xml parser, needed by Emulation Station.|
+|                |[nanosvg](../nanosvg/README.md)                |[zlib](https://github.com/memononen/nanosvg/blob/master/LICENSE.txt)|.svg parsing library, for vector graphics. Needed by Emulation Station.|
+|                |[rapidjson](../rapidjson/README.md)            |[MIT](https://github.com/Tencent/rapidjson/blob/master/license.txt)|.json parser, needed by Emulation Station.|
+|                |[FreeImage](../FreeImage/README.md)            |[GPLv3, FIPL](https://freeimage.sourceforge.io/license.html)|Multifaceted image library, needed by Emulation Station.|
+|                |[Lua](../lua/README.md)            |[MIT](https://www.lua.org/license.html)|Scripting language, needed by many games.|
+
