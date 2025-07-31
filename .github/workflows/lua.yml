@@ -19,6 +19,7 @@ jobs:
 
   build:
     strategy:
+      fail-fast: false
        matrix:
          qnx_env: ["710", "800"]
     name: Build for QNX ${{ matrix.qnx_env }} with muslflt
