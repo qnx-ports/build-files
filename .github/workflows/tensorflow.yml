@@ -1,0 +1,71 @@
+name: tensorflow-lite
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/tensorflow.yml'
+      - 'ports/tensorflow/**'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/tensorflow.yml'
+      - 'ports/tensorflow/**'
+
+jobs:
+
+  build:
+    runs-on: self-hosted
+    if: |
+      (github.event_name == 'workflow_dispatch') ||
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'tensorflow'))
+    steps:
+    - name: Checkout build-files
+      uses: actions/checkout@v4
+      with:
+        path: build-files
+
+    - name: Checkout numpy
+      uses: actions/checkout@v4
+      with:
+        repository: qnx-ports/numpy
+        path: numpy
+        submodules: recursive
+
+    - name: Checkout tensorflow
+      uses: actions/checkout@v4
+      with:
+        repository: qnx-ports/tensorflow
+        path: tensorflow
+
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v3
+      with:
+        registry: ghcr.io
+        username: ${{github.actor}}
+        password: ${{secrets.GITHUB_TOKEN}}
+
+    - name: Pull build environment
+      run: |
+        docker pull ghcr.io/qnx-ports/sdp800-build-env:latest
+
+    - name: Build tensorflow
+      uses: addnab/docker-run-action@v3
+      with:
+        image: ghcr.io/qnx-ports/sdp800-build-env:latest
+        options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
+        shell: bash
+        run: |
+          source ~/qnx/800/qnxsdp-env.sh
+          cd ~/workspace
+          source /usr/local/qnx/env/bin/activate
+          mkdir -p flatc-native-build && cd flatc-native-build
+          cmake ../tensorflow/tensorflow/lite/tools/cmake/native_tools/flatbuffers
+          cmake --build .
+          cd ~/workspace
+          QNX_PROJECT_ROOT="$(pwd)/numpy" make -C build-files/ports/numpy install 
+          QNX_PROJECT_ROOT="$(pwd)/tensorflow" QNX_PATCH_DIR="$(pwd)/build-files/ports/tensorflow/patches" TFLITE_HOST_TOOLS_DIR="$(pwd)/flatc-native-build/flatbuffers-flatc/bin/" make -C build-files/ports/tensorflow install 

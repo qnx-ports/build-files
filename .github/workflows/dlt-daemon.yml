@@ -1,4 +1,4 @@
-name: check
+name: dlt-daemon
 
 on:
   workflow_dispatch:
@@ -6,35 +6,34 @@ on:
     branches:
       - main
     paths:
-      - '.github/workflows/check.yml'
-      - 'ports/check/**'
+      - '.github/workflows/dlt-daemon.yml'
+      - 'ports/dlt-daemon/**'
   pull_request:
     branches:
       - main
     paths:
-      - '.github/workflows/check.yml'
-      - 'ports/check/**'
+      - '.github/workflows/dlt-daemon.yml'
+      - 'ports/dlt-daemon/**'
 
 jobs:
 
   build:
     runs-on: self-hosted
     if: |
-      (github.event_name != 'workflow_dispatch') ||
+      (github.event_name == 'workflow_dispatch') ||
       (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
-      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'check'))
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'dlt-daemon'))
     steps:
     - name: Checkout build-files
       uses: actions/checkout@v4
       with:
-        repository: qnx-ports/build-files
         path: build-files
 
-    - name: Checkout check
+    - name: Checkout dlt-daemon
       uses: actions/checkout@v4
       with:
-        repository: qnx-ports/check
-        path: check
+        repository: qnx-ports/dlt-daemon
+        path: dlt-daemon
         submodules: 'true'
 
     - name: Login to GitHub Container Registry
@@ -48,7 +47,7 @@ jobs:
       run: |
         docker pull ghcr.io/qnx-ports/sdp-build-env:latest
 
-    - name: Build check
+    - name: Build dlt-daemon
       uses: addnab/docker-run-action@v3
       with:
         image: ghcr.io/qnx-ports/sdp-build-env:latest
@@ -57,5 +56,5 @@ jobs:
         run: |
           source ~/qnx/800/qnxsdp-env.sh
           cd ~/workspace
-          BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/check" make -C build-files/ports/check install
+          BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/dlt-daemon" make -C build-files/ports/dlt-daemon install
 

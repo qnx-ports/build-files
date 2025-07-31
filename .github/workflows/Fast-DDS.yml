@@ -1,0 +1,103 @@
+name: Fast-DDS
+ 
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/Fast-DDS.yml'
+      - 'ports/Fast-DDS/**'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/Fast-DDS.yml'
+      - 'ports/Fast-DDS/**'
+
+jobs:
+ 
+  build:
+    strategy:
+      matrix:
+        qnx_env:
+          - ghcr.io/qnx-ports/sdp800-build-env:latest
+          - ghcr.io/qnx-ports/sdp-build-env:latest
+    runs-on: self-hosted
+    if: |
+      (github.event_name == 'workflow_dispatch') ||
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'Fast-DDS'))
+    steps:
+    - name: Checkout build-files
+      uses: actions/checkout@v4
+      with:
+        path: build-files
+
+    - name: Checkout Fast-DDS
+      uses: actions/checkout@v4
+      with:
+        repository: qnx-ports/Fast-DDS
+        path: Fast-DDS
+        ref: qnx_v2.14.4
+    
+    - name: Checkout tinyxml2
+      uses: actions/checkout@v4
+      with:
+        repository: qnx-ports/tinyxml2
+        path: tinyxml2
+
+    - name: Checkout Fast-CDR
+      uses: actions/checkout@v4
+      with:
+        repository: eProsima/Fast-CDR
+        path: Fast-CDR
+        ref: v2.2.5
+
+    - name: Checkout foonathan_memory_vendor
+      uses: actions/checkout@v4
+      with:
+        repository: eProsima/foonathan_memory_vendor
+        path: foonathan_memory_vendor
+        ref: v1.3.1
+        
+    - name: Checkout asio
+      uses: actions/checkout@v4
+      with:
+        repository: qnx-ports/asio
+        path: asio
+ 
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v3
+      with:
+        registry: ghcr.io
+        username: ${{github.actor}}
+        password: ${{secrets.GITHUB_TOKEN}}
+ 
+    - name: Pull build environment
+      run: |
+        docker pull ${{ matrix.qnx_env }}
+
+    - name: Build Fast-DDS
+      uses: addnab/docker-run-action@v3
+      with:
+        image: ${{ matrix.qnx_env }}
+        options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
+        shell: bash
+        run: |
+          if [[ "${{ matrix.qnx_env}}" == "ghcr.io/qnx-ports/sdp800-build-env:latest" ]]; then
+            source ~/qnx/800/qnxsdp-env.sh
+          else 
+            source ~/qnx/710/qnxsdp-env.sh
+          fi
+          cd ~/workspace
+
+          cd asio/asio
+          ./autogen.sh
+          cd ~/workspace
+          make -C build-files/ports/asio install -j$(nproc)
+          
+          QNX_PROJECT_ROOT="$(pwd)/Fast-CDR" JLEVEL=$(nproc) make -C build-files/ports/Fast-CDR clean install
+          QNX_PROJECT_ROOT="$(pwd)/foonathan_memory_vendor" JLEVEL=$(nproc) make -C build-files/ports/foonathan_memory_vendor clean install
+          JLEVEL=$(nproc) BUILD_TESTING="OFF" QNX_PROJECT_ROOT="$(pwd)/tinyxml2" make -C build-files/ports/tinyxml2 install 
+          QNX_PROJECT_ROOT="$(pwd)/Fast-DDS" JLEVEL=$(nproc) make -C build-files/ports/Fast-DDS clean install

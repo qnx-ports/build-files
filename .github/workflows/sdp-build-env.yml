@@ -1,0 +1,92 @@
+name: sdp-build-env
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/sdp-build-env.yml'
+      - 'docker/**'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/sdp-build-env.yml'
+      - 'docker/**'
+
+jobs:
+  build-sdp-image:
+    runs-on: self-hosted
+    if: |
+      (github.event_name == 'workflow_dispatch') ||
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'sdp-build-env'))
+    permissions:
+      contents: read
+      packages: write
+    steps:
+    - name: Checkout build-files
+      uses: actions/checkout@v4
+      with:
+        path: build-files
+
+    - name: Prepare QNX Software Center
+      env:
+        MYQNX_USER: ${{ secrets.MYQNX_USER }}
+        MYQNX_PASSWORD: ${{ secrets.MYQNX_PASSWORD }}
+      run: |
+        echo "Downloading QNX Software Center ..."
+        mkdir ${{ github.workspace }}/.qnx
+        curl -v --cookie-jar ${{ github.workspace }}/.qnx/myqnxcookies.auth --form "userlogin=$MYQNX_USER" --form "password=$MYQNX_PASSWORD" -X POST https://www.qnx.com/account/login.html > login_response.html
+        curl -v -L --cookie ${{ github.workspace }}/.qnx/myqnxcookies.auth https://www.qnx.com/download/download/77351/qnx-setup-2.0.3-202408131717-linux.run > qnx-setup-lin.run
+        chmod a+x qnx-setup-lin.run
+        ./qnx-setup-lin.run force-override disable-auto-start agree-to-license-terms ${{ github.workspace }}/qnx
+
+    - name: Download SDP 7.1
+      env:
+        SDP710_LICENSE_KEY: ${{ secrets.SDP710_LICENSE_KEY }}
+        MYQNX_USER: ${{ secrets.MYQNX_USER }}
+        MYQNX_PASSWORD: ${{ secrets.MYQNX_PASSWORD }}
+      run: |
+        echo "Installing SDP 7.1 License ..."
+        ${{ github.workspace }}/qnx/qnxsoftwarecenter/qnxsoftwarecenter_clt -syncLicenseKeys -myqnx.user="$MYQNX_USER" -myqnx.password="$MYQNX_PASSWORD" -addLicenseKey $SDP710_LICENSE_KEY
+        cp -r ~/.qnx/license ${{ github.workspace }}/.qnx
+        echo "Downloading QNX SDP 7.1 ..."
+        ${{ github.workspace }}/qnx/qnxsoftwarecenter/qnxsoftwarecenter_clt -mirror -cleanInstall -destination ${{ github.workspace }}/qnx/710 -installBaseline com.qnx.qnx710 -installPackage com.qnx.qnx710.target.sf.base,com.qnx.qnx710.target.sf.camapi,com.qnx.qnx710.target.sf.sensor -myqnx.user="$MYQNX_USER" -myqnx.password="$MYQNX_PASSWORD"
+
+    - name: Download SDP 8.0
+      env:
+        SDP800_LICENSE_KEY: ${{ secrets.SDP800_LICENSE_KEY }}
+        MYQNX_USER: ${{ secrets.MYQNX_USER }}
+        MYQNX_PASSWORD: ${{ secrets.MYQNX_PASSWORD }}
+      run: |
+        echo "Installing SDP 8.0 License ..."
+        ${{ github.workspace }}/qnx/qnxsoftwarecenter/qnxsoftwarecenter_clt -syncLicenseKeys -myqnx.user="$MYQNX_USER" -myqnx.password="$MYQNX_PASSWORD" -addLicenseKey $SDP800_LICENSE_KEY
+        cp -r ~/.qnx/license ${{ github.workspace }}/.qnx
+        echo "Downloading QNX SDP 8.0 ..."
+        ${{ github.workspace }}/qnx/qnxsoftwarecenter/qnxsoftwarecenter_clt -mirror -cleanInstall -destination ${{ github.workspace }}/qnx/800 -installBaseline com.qnx.qnx800 -myqnx.user="$MYQNX_USER" -myqnx.password="$MYQNX_PASSWORD"
+
+
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v3
+      with:
+        registry: ghcr.io
+        username: ${{github.actor}}
+        password: ${{secrets.GITHUB_TOKEN}}
+
+    - name: Build interactive SDP build environment image
+      run: |
+        # Cleanup first
+        docker container rm tmp || true
+        cd build-files/docker
+        ./docker-build-qnx-image.sh
+        docker image tag qnx800:latest ghcr.io/qnx-ports/sdp-build-env:latest
+        docker create --name tmp ghcr.io/qnx-ports/sdp-build-env:latest
+        docker cp ${{ github.workspace }}/qnx tmp:/home/runner
+        docker cp ${{ github.workspace }}/.qnx tmp:/home/runner
+        docker commit tmp ghcr.io/qnx-ports/sdp-build-env:latest
+        # Cleanup afterwards
+        docker container rm tmp
+        # Push changes
+        docker push ghcr.io/qnx-ports/sdp-build-env:latest

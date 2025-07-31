@@ -1,4 +1,4 @@
-name: check
+name: boost
 
 on:
   workflow_dispatch:
@@ -6,36 +6,36 @@ on:
     branches:
       - main
     paths:
-      - '.github/workflows/check.yml'
-      - 'ports/check/**'
+      - '.github/workflows/boost.yml'
+      - 'ports/boost/**'
   pull_request:
     branches:
       - main
     paths:
-      - '.github/workflows/check.yml'
-      - 'ports/check/**'
+      - '.github/workflows/boost.yml'
+      - 'ports/boost/**'
 
 jobs:
 
   build:
     runs-on: self-hosted
     if: |
-      (github.event_name != 'workflow_dispatch') ||
+      (github.event_name == 'workflow_dispatch') ||
       (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
-      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'check'))
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'boost'))
     steps:
     - name: Checkout build-files
       uses: actions/checkout@v4
       with:
-        repository: qnx-ports/build-files
         path: build-files
 
-    - name: Checkout check
+    - name: Checkout boost
       uses: actions/checkout@v4
       with:
-        repository: qnx-ports/check
-        path: check
-        submodules: 'true'
+        repository: boostorg/boost
+        path: boost
+        ref: boost-1.82.0
+        submodules: recursive
 
     - name: Login to GitHub Container Registry
       uses: docker/login-action@v3
@@ -46,16 +46,20 @@ jobs:
 
     - name: Pull build environment
       run: |
-        docker pull ghcr.io/qnx-ports/sdp-build-env:latest
+        docker pull ghcr.io/qnx-ports/sdp800-build-env:latest
 
-    - name: Build check
+    - name: Build boost
       uses: addnab/docker-run-action@v3
       with:
-        image: ghcr.io/qnx-ports/sdp-build-env:latest
+        image: ghcr.io/qnx-ports/sdp800-build-env:latest
         options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
         shell: bash
         run: |
           source ~/qnx/800/qnxsdp-env.sh
           cd ~/workspace
-          BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/check" make -C build-files/ports/check install
-
+          cd boost/tools/build
+          git apply ../../../build-files/ports/boost/tools_qnx.patch
+          cd ~/workspace
+          cd boost/libs/asio && git apply ../../../build-files/ports/boost/asio_1.82.0_qnx.patch
+          cd ~/workspace
+          QNX_PROJECT_ROOT="$(pwd)/boost" make -C build-files/ports/boost install

@@ -1,0 +1,69 @@
+name: pixman
+ 
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/pixman.yml'
+      - 'ports/pixman/**'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/pixman.yml'
+      - 'ports/pixman/**'
+
+jobs:
+ 
+  build:
+    strategy:
+      matrix:
+        qnx_env:
+          - ghcr.io/qnx-ports/sdp800-build-env:latest
+          - ghcr.io/qnx-ports/sdp-build-env:latest
+    runs-on: self-hosted
+    if: |
+      (github.event_name == 'workflow_dispatch') ||
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'pixman'))
+    steps:
+    - name: Checkout build-files
+      uses: actions/checkout@v4
+      with:
+        path: build-files
+
+    - name: Checkout meson
+      uses: actions/checkout@v4
+      with:
+        repository: mesonbuild/meson
+        path: meson
+        ref: 1.7.0
+ 
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v3
+      with:
+        registry: ghcr.io
+        username: ${{github.actor}}
+        password: ${{secrets.GITHUB_TOKEN}}
+ 
+    - name: Pull build environment
+      run: |
+        docker pull ${{ matrix.qnx_env }}
+ 
+    - name: Build pixman
+      uses: addnab/docker-run-action@v3
+      with:
+        image: ${{ matrix.qnx_env }}
+        options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
+        shell: bash
+        run: |
+          if [[ "${{ matrix.qnx_env}}" == "ghcr.io/qnx-ports/sdp800-build-env:latest" ]]; then
+            source ~/qnx/800/qnxsdp-env.sh
+          else 
+            source ~/qnx/710/qnxsdp-env.sh
+          fi
+          cd workspace
+          git clone -b pixman-0.44.2 https://gitlab.freedesktop.org/pixman/pixman.git
+          JLEVEL=$(nproc) QNX_PROJECT_ROOT="$(pwd)/pixman" make -C build-files/ports/pixman install

@@ -1,0 +1,71 @@
+name: glog
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/glog.yml'
+      - 'ports/glog/**'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/glog.yml'
+      - 'ports/glog/**'
+
+jobs:
+
+  build:
+    runs-on: self-hosted
+    if: |
+      (github.event_name == 'workflow_dispatch') ||
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'glog'))
+    steps:
+    - name: Checkout build-files
+      uses: actions/checkout@v4
+      with:
+        path: build-files
+
+    - name: Checkout glog
+      uses: actions/checkout@v4
+      with:
+        repository: qnx-ports/glog
+        path: glog
+    
+    - name: Checkout gflags
+      uses: actions/checkout@v4
+      with:
+        repository: qnx-ports/gflags
+        path: gflags
+    
+    - name: Checkout googletest
+      uses: actions/checkout@v4
+      with:
+        repository: qnx-ports/googletest
+        path: googletest
+
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v3
+      with:
+        registry: ghcr.io
+        username: ${{github.actor}}
+        password: ${{secrets.GITHUB_TOKEN}}
+    - name: Pull build environment
+      run: |
+        docker pull ghcr.io/qnx-ports/sdp800-build-env:latest
+
+    - name: Build glog
+      uses: addnab/docker-run-action@v3
+      with:
+        image: ghcr.io/qnx-ports/sdp800-build-env:latest
+        options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
+        shell: bash
+        run: |
+          source ~/qnx/800/qnxsdp-env.sh
+          cd ~/workspace
+          PREFIX="/usr/local" QNX_PROJECT_ROOT="$(pwd)/googletest" make -C build-files/ports/googletest install -j$(nproc)
+          PREFIX="/usr/local" OSLIST="nto" QNX_PROJECT_ROOT="$(pwd)/gflags" make -C build-files/ports/gflags install -j$(nproc)
+          PREFIX="/usr/local" QNX_PROJECT_ROOT="$(pwd)/glog" make -C build-files/ports/glog install -j$(nproc)

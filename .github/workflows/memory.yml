@@ -1,4 +1,4 @@
-name: check
+name: memory
 
 on:
   workflow_dispatch:
@@ -6,36 +6,34 @@ on:
     branches:
       - main
     paths:
-      - '.github/workflows/check.yml'
-      - 'ports/check/**'
+      - '.github/workflows/memory.yml'
+      - 'ports/memory/**'
   pull_request:
     branches:
       - main
     paths:
-      - '.github/workflows/check.yml'
-      - 'ports/check/**'
+      - '.github/workflows/memory.yml'
+      - 'ports/memory/**'
 
 jobs:
 
   build:
     runs-on: self-hosted
     if: |
-      (github.event_name != 'workflow_dispatch') ||
+      (github.event_name == 'workflow_dispatch') ||
       (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
-      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'check'))
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'memory'))
     steps:
     - name: Checkout build-files
       uses: actions/checkout@v4
       with:
-        repository: qnx-ports/build-files
         path: build-files
 
-    - name: Checkout check
+    - name: Checkout memory
       uses: actions/checkout@v4
       with:
-        repository: qnx-ports/check
-        path: check
-        submodules: 'true'
+        repository: foonathan/memory
+        path: memory
 
     - name: Login to GitHub Container Registry
       uses: docker/login-action@v3
@@ -43,19 +41,21 @@ jobs:
         registry: ghcr.io
         username: ${{github.actor}}
         password: ${{secrets.GITHUB_TOKEN}}
-
     - name: Pull build environment
       run: |
-        docker pull ghcr.io/qnx-ports/sdp-build-env:latest
+        docker pull ghcr.io/qnx-ports/sdp800-build-env:latest
 
-    - name: Build check
+    - name: Build memory v0.7-3 (tag checkout does not work)
       uses: addnab/docker-run-action@v3
       with:
-        image: ghcr.io/qnx-ports/sdp-build-env:latest
+        image: ghcr.io/qnx-ports/sdp800-build-env:latest
         options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
         shell: bash
         run: |
           source ~/qnx/800/qnxsdp-env.sh
           cd ~/workspace
-          BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/check" make -C build-files/ports/check install
-
+          cd memory
+          git checkout 0f07757
+          cd ~/workspace
+          patch memory/test/CMakeLists.txt < build-files/ports/memory/memory_0.7-3_patch.patch
+          QNX_PROJECT_ROOT="$(pwd)/memory" make -C build-files/ports/memory install

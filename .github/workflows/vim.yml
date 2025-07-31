@@ -1,0 +1,69 @@
+name: vim
+ 
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/vim.yml'
+      - 'ports/vim/**'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/vim.yml'
+      - 'ports/vim/**'
+
+jobs:
+ 
+  build:
+    strategy:
+      matrix:
+        qnx_env:
+          - ghcr.io/qnx-ports/sdp800-build-env:latest
+          - ghcr.io/qnx-ports/sdp-build-env:latest
+    runs-on: self-hosted
+    if: |
+      (github.event_name == 'workflow_dispatch') ||
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'vim'))
+    steps:
+    - name: Checkout build-files
+      uses: actions/checkout@v4
+      with:
+        path: build-files
+
+    - name: Checkout vim
+      uses: actions/checkout@v4
+      with:
+        repository: vim/vim
+        path: vim
+        ref: v9.1.1198
+        submodules: recursive
+ 
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v3
+      with:
+        registry: ghcr.io
+        username: ${{github.actor}}
+        password: ${{secrets.GITHUB_TOKEN}}
+ 
+    - name: Pull build environment
+      run: |
+        docker pull ${{ matrix.qnx_env }}
+ 
+    - name: Build vim
+      uses: addnab/docker-run-action@v3
+      with:
+        image: ${{ matrix.qnx_env }}
+        options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
+        shell: bash
+        run: |
+          if [[ "${{ matrix.qnx_env}}" == "ghcr.io/qnx-ports/sdp800-build-env:latest" ]]; then
+            source ~/qnx/800/qnxsdp-env.sh
+          else 
+            source ~/qnx/710/qnxsdp-env.sh
+          fi
+          cd workspace
+          QNX_PROJECT_ROOT="$(pwd)/vim" make -C build-files/ports/vim install

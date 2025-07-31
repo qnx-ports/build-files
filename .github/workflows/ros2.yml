@@ -1,0 +1,80 @@
+name: ros2 humble
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/ros2.yml'
+      - 'ports/ros2/**'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/ros2.yml'
+      - 'ports/ros2/**'
+
+jobs:
+
+  build:
+    runs-on: self-hosted
+    if: |
+      (github.event_name == 'workflow_dispatch') ||
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'ros2'))
+    steps:
+    - name: Checkout build-files
+      uses: actions/checkout@v4
+      with:
+        path: build-files
+
+    - name: Checkout googletest
+      uses: actions/checkout@v4
+      with:
+        repository: qnx-ports/googletest
+        path: googletest
+
+    - name: Checkout boost
+      uses: actions/checkout@v4
+      with:
+        repository: boostorg/boost
+        path: boost
+        ref: boost-1.82.0
+        submodules: recursive
+
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v3
+      with:
+        registry: ghcr.io
+        username: ${{github.actor}}
+        password: ${{secrets.GITHUB_TOKEN}}
+
+    - name: Pull build environment
+      run: |
+        docker pull ghcr.io/qnx-ports/sdp800-build-env:latest
+
+    - name: Build ros2
+      uses: addnab/docker-run-action@v3
+      with:
+        image: ghcr.io/qnx-ports/sdp800-build-env:latest
+        options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
+        shell: bash
+        run: |
+          source ~/qnx/800/qnxsdp-env.sh
+          source /usr/local/qnx/env/bin/activate
+          cd ~/workspace
+          export QNX_SDP_VERSION=qnx800
+          PREFIX="/usr" QNX_PROJECT_ROOT="$(pwd)/googletest" make -C build-files/ports/googletest install
+          cd boost/tools/build
+          git apply ../../../build-files/ports/boost/tools_qnx.patch
+          cd ~/workspace
+          cd boost/libs/asio && git apply ../../../build-files/ports/boost/asio_1.82.0_qnx.patch
+          cd ~/workspace
+          QNX_PROJECT_ROOT="$(pwd)/boost" make -C build-files/ports/boost install
+          cd build-files/ports/ros2
+          mkdir -p src
+          vcs import src < ros2.repos
+          ./scripts/colcon-ignore.sh
+          ./scripts/patch.sh
+          ./scripts/build-ros2.sh

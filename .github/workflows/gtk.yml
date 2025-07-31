@@ -1,4 +1,4 @@
-name: check
+name: gtk
 
 on:
   workflow_dispatch:
@@ -6,36 +6,40 @@ on:
     branches:
       - main
     paths:
-      - '.github/workflows/check.yml'
-      - 'ports/check/**'
+      - '.github/workflows/gtk.yml'
+      - 'ports/gtk/**'
   pull_request:
     branches:
       - main
     paths:
-      - '.github/workflows/check.yml'
-      - 'ports/check/**'
+      - '.github/workflows/gtk.yml'
+      - 'ports/gtk/**'
 
 jobs:
-
   build:
     runs-on: self-hosted
     if: |
-      (github.event_name != 'workflow_dispatch') ||
+      (github.event_name == 'workflow_dispatch') ||
       (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
-      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'check'))
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'gtk'))
     steps:
     - name: Checkout build-files
       uses: actions/checkout@v4
       with:
-        repository: qnx-ports/build-files
         path: build-files
 
-    - name: Checkout check
+    - name: Checkout gtk
       uses: actions/checkout@v4
       with:
-        repository: qnx-ports/check
-        path: check
-        submodules: 'true'
+        repository: qnx-ports/gtk
+        path: gtk
+
+    - name: Checkout meson
+      uses: actions/checkout@v4
+      with:
+        repository: mesonbuild/meson
+        path: meson
+        ref: 1.3.1
 
     - name: Login to GitHub Container Registry
       uses: docker/login-action@v3
@@ -46,16 +50,15 @@ jobs:
 
     - name: Pull build environment
       run: |
-        docker pull ghcr.io/qnx-ports/sdp-build-env:latest
+        docker pull ghcr.io/qnx-ports/sdp800-build-env:latest
 
-    - name: Build check
+    - name: Build gtk
       uses: addnab/docker-run-action@v3
       with:
-        image: ghcr.io/qnx-ports/sdp-build-env:latest
+        image: ghcr.io/qnx-ports/sdp800-build-env:latest
         options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
         shell: bash
         run: |
           source ~/qnx/800/qnxsdp-env.sh
-          cd ~/workspace
-          BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/check" make -C build-files/ports/check install
-
+          cd workspace
+          QNX_PROJECT_ROOT="$(pwd)/gtk" make INSTALL_ROOT_nto=/tmp/staging USE_INSTALL_ROOT=true -C build-files/ports/gtk JLEVEL=$(nproc) install

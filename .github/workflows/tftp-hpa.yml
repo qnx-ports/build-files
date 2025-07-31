@@ -1,0 +1,68 @@
+name: tftp-hpa
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/tftp-hpa.yml'
+      - 'ports/tftp-hpa/**'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/tftp-hpa.yml'
+      - 'ports/tftp-hpa/**'
+
+jobs:
+  build:
+    runs-on: self-hosted
+    if: |
+      (github.event_name == 'workflow_dispatch') ||
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'tftp-hpa'))
+    steps:
+    - name: Checkout build-files
+      uses: actions/checkout@v4
+      with:
+        path: build-files
+
+    - name: Checkout tftp-hpa
+      uses: actions/checkout@v4
+      with:
+        repository: qnx-ports/tftp-hpa
+        path: tftp-hpa
+
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v3
+      with:
+        registry: ghcr.io
+        username: ${{github.actor}}
+        password: ${{secrets.GITHUB_TOKEN}}
+
+    - name: Pull build environment
+      run: |
+        docker pull ghcr.io/qnx-ports/sdp800-build-env:latest
+
+    - name: Build tftp-hpa
+      uses: addnab/docker-run-action@v3
+      with:
+        image: ghcr.io/qnx-ports/sdp800-build-env:latest
+        options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
+        shell: bash
+        run: |
+          source ~/qnx/800/qnxsdp-env.sh
+          cd workspace
+          mkdir -p output
+          cd tftp-hpa
+          # Configure
+          ./configure \
+              --build=x86_64-unknown-linux-gnu \
+              --host=aarch64-unknown-nto-qnx8.0.0 \
+              --prefix=/usr \
+              --mandir=/usr/share/man
+          # Make
+          make
+          # Install
+          make install INSTALLROOT=/home/runner/workspace/output
