@@ -1,17 +1,17 @@
 from conan import ConanFile
 from conan.tools.cmake import CMakeToolchain, CMake, cmake_layout, CMakeDeps
-from conan.tools.files import apply_conandata_patches, export_conandata_patches, get, copy
-import os
+from conan.tools.files import apply_conandata_patches, export_conandata_patches, get
+from conan.tools.scm import Version
 
-class ZenohCppRecipe(ConanFile):
-    name = "zenoh-cpp"
+class upZenohTransportRecipe(ConanFile):
+    name = "up-transport-zenoh-cpp"
 
     # Optional metadata
     license = "Apache-2.0"
-    author = "ZettaScale Zenoh Team, <zenoh@zettascale.tech>"
-    url = "https://github.com/eclipse-zenoh/zenoh-cpp"
-    description = "C++ bindings for Zenoh"
-    topics = ("automotive", "iot", "zenoh", "messaging")
+    author = "Contributors to the Eclipse Foundation <uprotocol-dev@eclipse.org>"
+    url = "https://github.com/eclipse-uprotocol/up-transport-zenoh-cpp"
+    description = "This library provides a Zenoh-based uProtocol transport for C++ uEntities"
+    topics = ("automotive", "iot", "uprotocol", "messaging")
 
     # Binary configuration
     settings = "os", "compiler", "build_type", "arch"
@@ -31,6 +31,10 @@ class ZenohCppRecipe(ConanFile):
         else:
             self.output.warning("No requirements specified in conandata.yml. Please check your configuration.")
 
+        if "test-requirements" in version_data:
+            for requirement, version in version_data["test-requirements"].items():
+                self.test_requires(f"{requirement}/{version}")
+
     def source(self):
         get(self, **self.conan_data[self.version]["sources"], strip_root=True)
 
@@ -44,11 +48,13 @@ class ZenohCppRecipe(ConanFile):
         deps = CMakeDeps(self)
         deps.generate()
         tc = CMakeToolchain(self)
-        tc.cache_variables["ZENOHCXX_ZENOHC"] = False
-        tc.cache_variables["ZENOHCXX_ZENOHPICO"] = True
-        tc.cache_variables["ZENOHCXX_EXAMPLES_PROTOBUF"] = False
-        tc.cache_variables["ZENOHCXX_ENABLE_TESTS"] = False
-        tc.cache_variables["ZENOHCXX_ENABLE_EXAMPLES"] = False
+        if self.settings.os == "Neutrino":
+            v_zenoh_pico = Version(self.dependencies["zenoh-pico"].ref.version)
+            if v_zenoh_pico <= "1.0.0-rc5":
+                # workaround since _Bool is not defined for C++ in qnx.
+                # This maybe incorrect use in zenoh-pico/1.0.0-rc5 and older
+                # fixed in newer version of zenoh-pico
+                tc.preprocessor_definitions["_Bool"] = "bool"
         tc.generate()
 
     def build(self):
@@ -58,10 +64,8 @@ class ZenohCppRecipe(ConanFile):
         cmake.build()
 
     def package(self):
-        copy(self, "LICENSE", self.source_folder, os.path.join(self.package_folder, "licenses"))
         cmake = CMake(self)
         cmake.install()
 
     def package_info(self):
-        self.cpp_info.libs = ["zenohcxx"]
-        self.cpp_info.builddirs.append(os.path.join("lib", "cmake"))
+        self.cpp_info.libs = ["up-transport-zenoh-cpp"]
