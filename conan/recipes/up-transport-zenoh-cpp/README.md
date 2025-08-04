@@ -45,7 +45,7 @@ export QNX_CONAN_ROOT=$(realpath ~/qnx_workspace/build-files/conan)
 conan config install $QNX_CONAN_ROOT/tools/qnx-8.0-extension/settings_user.yml
 ```
 
-# Build and install release up-cpp for QNX into conan cache
+# Build and install release up-transport-zenoh-cpp for QNX into conan cache
 
 ```bash
 cd ~/qnx_workspace
@@ -134,7 +134,7 @@ Pre-requisite
 * deploy and start zenoh-router on the host
   - $QNX_CONAN_ROOT/recipes/zenoh-router/README.md
 * deploy cmake to the target
-  - $QNX_CONAN_ROOT/recipes/cmake/README.md>
+  - $QNX_CONAN_ROOT/recipes/cmake/README.md
 * deploy gtest *.so to the target
   - $QNX_CONAN_ROOT/recipes/gtest/README.md
 
@@ -171,4 +171,11 @@ python ./ctest.py
 cd ./build_tests/Release/
 
 ctest
+```
+CTest reports no error
+
+```bash
+100% tests passed, 0 tests failed out of 9
+
+Total Test time (real) =  26.95 sec
 ```

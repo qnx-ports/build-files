@@ -139,3 +139,10 @@ cd ./build_tests/Release/
 
 ctest
 ```
+CTest reports no error
+
+```bash
+100% tests passed, 0 tests failed out of 8
+
+Total Test time (real) =  46.80 sec
+```
