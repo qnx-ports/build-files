@@ -8,11 +8,12 @@ Supports QNX7.1 and QNX8.0
 
 glib currently has 2 different building profiles and only one of them should be installed on both the target and host system.
 
-# glib (2.84.1) for QNX
+# glib (2.84.3) for QNX (Recommanded)
 
 **NOTE**: currently both x86_64 and aarch64le are supported
 
 Current these versions are tested:
++ 2.84.3
 + 2.84.1 
 
 See test reports in `tests/`. They remain the same as the other version
@@ -38,7 +39,7 @@ Optional pre-requisite: Install Docker on Ubuntu https://docs.docker.com/engine/
 # Create a workspace
 mkdir -p ~/qnx_workspace && cd ~/qnx_workspace
 git clone https://github.com/qnx-ports/build-files.git
-git clone -b 2.84.1 https://gitlab.gnome.org/GNOME/glib.git
+git clone -b 2.84.3 https://gitlab.gnome.org/GNOME/glib.git
 
 # Optionally build the Docker image and create a container
 cd build-files/docker
@@ -53,7 +54,7 @@ source ~/qnx800/qnxsdp-env.sh
 QNX_PROJECT_ROOT="$(pwd)/glib" JLEVEL=4 make -C build-files/ports/glib install
 ```
 
-# glib for QNX (Recommanded)
+# glib for QNX 
 
 **NOTE**: currently only aarch64le is supported.
 
