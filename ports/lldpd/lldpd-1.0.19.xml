@@ -8,7 +8,7 @@ remote="origin"
 sync-j="4" />
  
 <project name="lldpd" path="lldpd" revision="5f8e0138ca237359fcf320670b19ed48b8789602"/>
-<project name="lldpd-companion" path="build-files/ports/lldpd-companion" revision="721d9694727dc6a2188aa235689c63760e37a9a1"/>
+<project name="lldpd-companion" path="build-files/ports/lldpd" revision="721d9694727dc6a2188aa235689c63760e37a9a1"/>
 <project name="check" path="check" revision="bdd4d582f388806e01bcd0c4b505a83682e49078"/>
-<project name="check-companion" path="build-files/ports/check-companion" revision="9b604ae61ce6f59014606cdd86a55c3f113f09ff"/>
+<project name="check-companion" path="build-files/ports/check" revision="9b604ae61ce6f59014606cdd86a55c3f113f09ff"/>
 </manifest>
