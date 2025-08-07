@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest>
+<remote name="origin"
+fetch="https://github.com/qnx-ports/" />
+ 
+<default revision="main"
+remote="origin"
+sync-j="4" />
+ 
+<project name="lldpd" path="lldpd" revision="qnx-1.0.19"/>
+<project name="lldpd-companion" path="lldpd-companion" revision="qnx-1.0.19"/>
+<project name="check" path="check" revision="qnx-0.15.2"/>
+<project name="check-companion" path="check-companion" revision="qnx-0.15.2"/>
+</manifest>
