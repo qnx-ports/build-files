@@ -1,0 +1,62 @@
+diff --git a/orocos_kdl_vendor/CMakeLists.txt b/orocos_kdl_vendor/CMakeLists.txt
+index 89be346..c7b025b 100644
+--- a/orocos_kdl_vendor/CMakeLists.txt
++++ b/orocos_kdl_vendor/CMakeLists.txt
+@@ -16,6 +16,7 @@ ament_vendor(orocos_kdl_vendor
+   CMAKE_ARGS
+     -DENABLE_TESTS:BOOL=OFF
+     -DENABLE_EXAMPLES:BOOL=OFF
++    $<$<BOOL:${QNX}>:-DEIGEN3_INCLUDE_DIR=${Eigen3_INCLUDE_DIRS}>
+   PATCHES patches
+ )
+ 
+diff --git a/python_orocos_kdl_vendor/CMakeLists.txt b/python_orocos_kdl_vendor/CMakeLists.txt
+index bd493da..b096d6c 100644
+--- a/python_orocos_kdl_vendor/CMakeLists.txt
++++ b/python_orocos_kdl_vendor/CMakeLists.txt
+@@ -23,7 +23,16 @@ if(NOT FORCE_BUILD_VENDOR_PKG)
+     # Force FindPython3 to use the debug interpreter where ROS 2 expects it
+     set(Python3_EXECUTABLE "${PYTHON_EXECUTABLE_DEBUG}")
+   endif()
+-  find_package(Python3 REQUIRED COMPONENTS Interpreter Development)
++  if(QNX)
++    find_library(python3_LIBRARY NAMES python3)
++
++    include_directories(${PROJECT_NAME}
++      ${QNX_TARGET}/usr/include/python${PYTHON_VERSION_QNX}
++      ${QNX_TARGET}/usr/include/${CPUVARDIR}/python${PYTHON_VERSION_QNX})
++  else()
++    # Find python before pybind11
++    find_package(Python3 REQUIRED COMPONENTS Interpreter Development)
++  endif()
+   execute_process(
+     COMMAND ${Python3_EXECUTABLE} -c "import PyKDL"
+     RESULT_VARIABLE pykdl_import_exit_code
+@@ -38,7 +47,15 @@ endif()
+ macro(build_pykdl)
+   # Find python before pybind11
+   # Workaround for https://github.com/pybind/pybind11/issues/3996
+-  find_package(Python3 REQUIRED COMPONENTS Interpreter Development)
++  if(QNX)
++    find_library(python3_LIBRARY NAMES python3)
++
++    include_directories(${PROJECT_NAME}
++      ${QNX_TARGET}/usr/include/python${PYTHON_VERSION_QNX}
++      ${QNX_TARGET}/usr/include/${CPUVARDIR}/python${PYTHON_VERSION_QNX})
++  else()
++    find_package(Python3 REQUIRED COMPONENTS Interpreter Development)
++  endif()
+ 
+   include(FetchContent)
+ 
+@@ -49,7 +66,9 @@ macro(build_pykdl)
+     URL_MD5 f273799921a2fd21b79211c93fa67a5d
+     PATCH_COMMAND
+       ${CMAKE_COMMAND} -E chdir <SOURCE_DIR> git apply -p1 --ignore-space-change --whitespace=nowarn
+-        ${CMAKE_CURRENT_SOURCE_DIR}/patches/0001-fix-windows-debug.patch
++        ${CMAKE_CURRENT_SOURCE_DIR}/patches/0001-fix-windows-debug.patch &&
++      ${CMAKE_COMMAND} -E chdir <SOURCE_DIR> git apply -p1 --ignore-space-change --whitespace=nowarn
++        ${CMAKE_CURRENT_SOURCE_DIR}/patches/0002-qnx-python-fix.patch
+   )
+ 
+   fetchcontent_getproperties(python_orocos_kdl)

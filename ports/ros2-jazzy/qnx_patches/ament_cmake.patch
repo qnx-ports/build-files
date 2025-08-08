@@ -1,0 +1,30 @@
+diff --git a/ament_cmake_core/cmake/core/python.cmake b/ament_cmake_core/cmake/core/python.cmake
+index 204f002..54c5fc8 100644
+--- a/ament_cmake_core/cmake/core/python.cmake
++++ b/ament_cmake_core/cmake/core/python.cmake
+@@ -34,5 +34,9 @@ if(NOT TARGET Python3::Interpreter)
+   cmake_policy(SET CMP0094 NEW)
+   set(Python3_FIND_UNVERSIONED_NAMES FIRST)
+ 
++  if(QNX)
++    find_package(Python3 ${PYTHON_VERSION_QNX} REQUIRED COMPONENTS Interpreter)
++  else()
+   find_package(Python3 REQUIRED COMPONENTS Interpreter)
++  endif()
+ endif()
+diff --git a/ament_cmake_vendor_package/cmake/ament_vendor.cmake b/ament_cmake_vendor_package/cmake/ament_vendor.cmake
+index c9b963c..e280104 100644
+--- a/ament_cmake_vendor_package/cmake/ament_vendor.cmake
++++ b/ament_cmake_vendor_package/cmake/ament_vendor.cmake
+@@ -314,5 +314,11 @@ function(_ament_vendor TARGET_NAME VCS_TYPE VCS_URL VCS_VERSION PATCHES CMAKE_AR
+       DESTINATION "opt/${PROJECT_NAME}"
+       USE_SOURCE_PERMISSIONS
+     )
++    # Also install to main lib directory for compatibility with Humble-style packages
++    install(
++      DIRECTORY "${INSTALL_DIR}/"
++      DESTINATION "."
++      USE_SOURCE_PERMISSIONS
++    )
+   endif()
+ endfunction()

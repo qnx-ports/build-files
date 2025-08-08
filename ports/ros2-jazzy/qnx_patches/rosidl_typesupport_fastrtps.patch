@@ -1,0 +1,52 @@
+diff --git a/rosidl_typesupport_fastrtps_c/CMakeLists.txt b/rosidl_typesupport_fastrtps_c/CMakeLists.txt
+index e2bda00..7871d60 100644
+--- a/rosidl_typesupport_fastrtps_c/CMakeLists.txt
++++ b/rosidl_typesupport_fastrtps_c/CMakeLists.txt
+@@ -63,6 +63,10 @@ ament_export_targets(${PROJECT_NAME})
+ 
+ ament_index_register_resource("rosidl_typesupport_c")
+ 
++if(QNX AND QNX_TESTING)
++  set(BUILD_TESTING ON)
++endif()
++
+ if(BUILD_TESTING)
+   find_package(ament_cmake_gtest REQUIRED)
+   find_package(ament_lint_auto REQUIRED)
+@@ -103,6 +107,10 @@ if(BUILD_TESTING)
+ 
+   find_package(ament_cmake_pytest REQUIRED)
+   ament_add_pytest_test(test_cli_extension test/test_cli_extension.py)
++
++  if(QNX )
++    install(DIRECTORY ${CMAKE_BINARY_DIR}/ DESTINATION test/rosidl_typesupport_fastrtps_cpp)
++  endif()
+ endif()
+ 
+ ament_package(
+diff --git a/rosidl_typesupport_fastrtps_cpp/CMakeLists.txt b/rosidl_typesupport_fastrtps_cpp/CMakeLists.txt
+index 6d0f636..9a1040f 100644
+--- a/rosidl_typesupport_fastrtps_cpp/CMakeLists.txt
++++ b/rosidl_typesupport_fastrtps_cpp/CMakeLists.txt
+@@ -64,6 +64,10 @@ ament_export_targets(${PROJECT_NAME})
+ 
+ ament_index_register_resource("rosidl_typesupport_cpp")
+ 
++if(QNX AND QNX_TESTING)
++  set(BUILD_TESTING ON)
++endif()
++
+ if(BUILD_TESTING)
+   find_package(ament_cmake_gtest REQUIRED)
+   find_package(ament_lint_auto REQUIRED)
+@@ -106,6 +110,10 @@ if(BUILD_TESTING)
+ 
+   find_package(ament_cmake_pytest REQUIRED)
+   ament_add_pytest_test(test_cli_extension test/test_cli_extension.py)
++
++  if(QNX)
++    install(DIRECTORY ${CMAKE_BINARY_DIR}/ DESTINATION test/rosidl_typesupport_fastrtps_cpp)
++  endif()
+ endif()
+ 
+ ament_package(
