@@ -9,6 +9,7 @@ include $(QCONFIG) #  ##\# #  # #  #  # <link?>
 QNX_PROJECT_ROOT    ?= $(PRODUCT_ROOT)/../../vlc
 PREFIX 			    ?= /usr/local
 
+
 ## Set up QNX recursive makefile specifics.
 .PHONY: vlc_all install clean
 ALL_DEPENDENCIES = vlc_all
