@@ -1,0 +1,31 @@
+1.4.0:
+  sources:
+    url: "https://github.com/eclipse-zenoh/zenoh-cpp/archive/refs/tags/1.4.0.tar.gz"
+    sha256: "45999825a39a8f98a9a7e29457fd80a6656ad2852350e849c073ea7bdf517304"
+  requirements:
+    zenoh-pico: "1.4.0"
+1.2.1:
+  sources:
+    url: "https://github.com/eclipse-zenoh/zenoh-cpp/archive/refs/tags/1.2.1.tar.gz"
+    sha256: "2ad821e1c69d60c082688af7f66e8ff2029d94988767fa7ce5b6c889b3eb545a"
+  requirements:
+    zenoh-pico: "1.2.1"
+1.0.0-rc5:
+  sources:
+    url: "https://github.com/eclipse-zenoh/zenoh-cpp/archive/refs/tags/1.0.0.5.tar.gz"
+    sha256: "99d8c281442b40c3dada43c63d0f04f848bc472407f9ee375a831e065f9c47e8"
+  requirements:
+    zenoh-pico: "1.0.0-rc5"
+patches:
+  1.4.0:
+    - patch_file: "patches/zenohcpp-1.4.1-router.patch"
+      patch_description: "disable zenoh-router build for cross-compiling tests"
+      patch_type: "unittest"
+  1.2.1:
+    - patch_file: "patches/zenohcpp-1.2.1-router.patch"
+      patch_description: "disable zenoh-router build for cross-compiling tests"
+      patch_type: "unittest"
+  1.0.0-rc5:
+    - patch_file: "patches/zenohcpp-1.0.0-rc5-router.patch"
+      patch_description: "disable zenoh-router build for cross-compiling tests"
+      patch_type: "unittest"

@@ -1,0 +1,97 @@
+From 575f5ca2d92c64c5250374c01f05c5eaca8f30b6 Mon Sep 17 00:00:00 2001
+From: Yongxin Dai <yodai@qnx.com>
+Date: Tue, 8 Jul 2025 10:46:03 -0400
+Subject: [PATCH] Enable calling UNREACHABLE() from constexpr caller for SDP7
+
+---
+ src/base/logging.cc | 16 ++++++++++++++++
+ src/base/logging.h  | 17 +++++++++++++++++
+ 2 files changed, 33 insertions(+)
+
+diff --git a/src/base/logging.cc b/src/base/logging.cc
+index 54aa99f02d7..14a080946cc 100644
+--- a/src/base/logging.cc
++++ b/src/base/logging.cc
+@@ -215,6 +215,22 @@ void V8_Fatal(const char* format, ...) {
+   v8::base::OS::Abort();
+ }
+ 
++#if defined(__QNX__) && __QNX__ < 800
++#ifdef DEBUG
++constexpr void V8_Fatal_Single_Arg(const char* file, int line, const char* arg) {
++#else
++constexpr void V8_Fatal_Single_Arg(const char* arg) {
++  const char* file = "";
++  int line = 0;
++#endif
++
++  // Print the error message.
++  fprintf(stderr, arg);
++
++  abort();
++}
++#endif
++
+ void V8_Dcheck(const char* file, int line, const char* message) {
+   if (v8::base::DcheckFailuresAreIgnored()) {
+     // In this mode, DCHECK failures don't lead to process termination.
+diff --git a/src/base/logging.h b/src/base/logging.h
+index 7c5c7a01758..31facdc6438 100644
+--- a/src/base/logging.h
++++ b/src/base/logging.h
+@@ -28,6 +28,10 @@ V8_BASE_EXPORT V8_NOINLINE void V8_Dcheck(const char* file, int line,
+ // FATAL() calls.
+ [[noreturn]] PRINTF_FORMAT(3, 4) V8_BASE_EXPORT V8_NOINLINE
+     void V8_Fatal(const char* file, int line, const char* format, ...);
++#if defined(__QNX__) && __QNX__ < 800
++    constexpr void V8_Fatal_Single_Arg(const char* file, int line, const char* arg);
++#define FATAL_SINGLE_ARG(arg) V8_Fatal(__FILE__, __LINE__, arg)
++#endif
+ #define FATAL(...) V8_Fatal(__FILE__, __LINE__, __VA_ARGS__)
+ 
+ // The following can be used instead of FATAL() to prevent calling
+@@ -38,6 +42,9 @@ V8_BASE_EXPORT V8_NOINLINE void V8_Dcheck(const char* file, int line,
+ #else
+ [[noreturn]] PRINTF_FORMAT(1, 2) V8_BASE_EXPORT V8_NOINLINE
+     void V8_Fatal(const char* format, ...);
++#if defined(__QNX__) && __QNX__ < 800
++    constexpr void V8_Fatal_Single_Arg(const char* arg);
++#endif
+ #define GRACEFUL_FATAL(...) V8_Fatal(__VA_ARGS__)
+ 
+ #if !defined(OFFICIAL_BUILD)
+@@ -45,6 +52,9 @@ V8_BASE_EXPORT V8_NOINLINE void V8_Dcheck(const char* file, int line,
+ // numbers. It saves binary size to drop the |file| & |line| as opposed to just
+ // passing in "", 0 for them.
+ #define FATAL(...) V8_Fatal(__VA_ARGS__)
++#if defined(__QNX__) && __QNX__ < 800
++#define FATAL_SINGLE_ARG(arg) V8_Fatal_Single_Arg(arg)
++#endif
+ #else
+ // FATAL(msg) -> IMMEDIATE_CRASH()
+ // FATAL(msg, ...) -> V8_Fatal(msg, ...)
+@@ -54,6 +64,9 @@ V8_BASE_EXPORT V8_NOINLINE void V8_Dcheck(const char* file, int line,
+   FATAL_HELPER(__VA_ARGS__, V8_Fatal, V8_Fatal, V8_Fatal, V8_Fatal, V8_Fatal, \
+                V8_Fatal, FATAL_DISCARD_ARG)                                   \
+   (__VA_ARGS__)
++#if defined(__QNX__) && __QNX__ < 800
++#define FATAL_SINGLE_ARG(arg) V8_Fatal_Single_Arg(arg)
++#endif
+ #endif  // !defined(OFFICIAL_BUILD)
+ #endif  // DEBUG
+ 
+@@ -64,7 +77,11 @@ constexpr const char* kUnreachableCodeMessage = "unreachable code";
+ }  // namespace v8::base
+ 
+ #define UNIMPLEMENTED() FATAL(::v8::base::kUnimplementedCodeMessage)
++#if !defined(__QNX__) || __QNX__ >= 800
+ #define UNREACHABLE() FATAL(::v8::base::kUnreachableCodeMessage)
++#else
++#define UNREACHABLE() FATAL_SINGLE_ARG(::v8::base::kUnreachableCodeMessage)
++#endif
+ // g++ versions <= 8 cannot use UNREACHABLE() in a constexpr function.
+ // TODO(miladfarca): Remove once all compilers handle this properly.
+ #if defined(__GNUC__) && !defined(__clang__) && (__GNUC__ <= 8)
+-- 
+2.34.1
+

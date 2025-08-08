@@ -39,7 +39,7 @@ NAME=vlc
 
 VLC_VERSION = 3.0.21
 
-QNX_PROJECT_ROOT ?= $(PRODUCT_ROOT)
+QNX_PROJECT_ROOT ?= $(PRODUCT_ROOT)/../../vlc
 
 #$(INSTALL_ROOT_$(OS)) is pointing to $QNX_TARGET
 #by default, unless it was manually re-routed to
@@ -106,6 +106,7 @@ VLC_CONTRIB_ARGS := --host=$(VLC_HOST) \
 			--disable-skins2 \
 			--disable-avcodec \
 			--disable-swscale \
+			--disable-alsa \
 			--disable-qt --disable-qtsvg --disable-qtdeclarative --disable-qtshadertools --disable-qtwayland 
 
 # Environment variables to VLC's build configuration
@@ -127,6 +128,7 @@ VLC_CFG_ENV := CFLAGS="-D_QNX_SOURCE ${VLC_C_FLAGS}" \
 # Arguments to VLC's build configuration
 VLC_CFG_ARGS += --host=${VLC_HOST} \
 		--build=i386-linux \
+		--disable-alsa \
 		--disable-a52 \
 		--disable-xcb \
 		--enable-gles2 \
@@ -137,7 +139,7 @@ VLC_CFG_ARGS += --host=${VLC_HOST} \
 		--disable-skins2 \
 		--disable-avcodec \
 		--disable-swscale \
-		--disable-qt --disable-qtsvg --disable-qtdeclarative --disable-qtshadertools --disable-qtwayland 
+		--disable-qt --disable-qtsvg --disable-qtdeclarative --disable-qtshadertools --disable-qtwayland --disable-alsa
 
 VLC_MAKE_ENV := LIBS_qt="-lfreetype -lz -lxml2 -llzma"
 
@@ -177,13 +179,13 @@ contrib/Makefile: .prereq_check
 # Configure VLC's build system to cross-compile for the target.
 build/Makefile: .prereq_check .built_contrib $(HOST_PROTOC)
 	@mkdir -p build
-	@cd build && $(VLC_CFG_ENV) $(QNX_PROJECT_ROOT)/configure $(VLC_CFG_ARGS) --enable-alsa=no --enable-vdpau=no \
+	@cd build && $(VLC_CFG_ENV) $(QNX_PROJECT_ROOT)/configure $(VLC_CFG_ARGS) --disable-alsa --enable-alsa=no --enable-vdpau=no \
 				--disable-lua \
 				--disable-a52 \
 				--disable-skins2 \
 				--disable-avcodec \
 				--disable-swscale \
-				--disable-qt --disable-chromecast
+				--disable-qt --disable-chromecast --disable-alsa
 
 # Build VLC for the target.
 vlc_all: .prereq_check build/Makefile $(HOST_PROTOC)

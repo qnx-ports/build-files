@@ -1,0 +1,245 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 956e74d..efc37d5 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -16,7 +16,8 @@ find_package(protobuf REQUIRED)
+ find_package(spdlog REQUIRED)
+ find_package(up-core-api REQUIRED)
+ find_package(up-cpp REQUIRED)
+-find_package(zenohcpp REQUIRED)
++find_package(zenohpico REQUIRED)
++find_package(zenohcxx REQUIRED)
+ 
+ # TODO NEEDED?
+ #add_definitions(-DSPDLOG_FMT_EXTERNAL)
+@@ -51,7 +52,8 @@ target_include_directories(${PROJECT_NAME}
+ 	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+ 	$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+ 	$<BUILD_INTERFACE:${CMAKE_BINARY_DIR}>
+-	${zenohcpp_INCLUDE_DIR}
++	${zenohpico_INCLUDE_DIR}
++	${zenohcxx_zenohpico_INCLUDE_DIR}
+ 	${up-cpp_INCLUDE_DIR}
+ 	${up-core-api_INCLUDE_DIR}
+ 	${protobuf_INCLUDE_DIR}
+@@ -61,7 +63,8 @@ set_property(TARGET ${PROJECT_NAME} PROPERTY POSITION_INDEPENDENT_CODE ON)
+ 
+ target_link_libraries(${PROJECT_NAME}
+ 	PRIVATE
+-	zenohcpp::lib
++	zenohpico::lib
++	zenohcxx::zenohpico
+ 	up-cpp::up-cpp
+ 	up-core-api::up-core-api
+ 	protobuf::libprotobuf
+diff --git a/include/up-transport-zenoh-cpp/ZenohUTransport.h b/include/up-transport-zenoh-cpp/ZenohUTransport.h
+index 38074a4..44b00da 100644
+--- a/include/up-transport-zenoh-cpp/ZenohUTransport.h
++++ b/include/up-transport-zenoh-cpp/ZenohUTransport.h
+@@ -19,7 +19,6 @@
+ #include <optional>
+ #include <unordered_map>
+ 
+-#define ZENOHCXX_ZENOHC
+ #include <zenoh.hxx>
+ 
+ #include "ThreadSafeMap.h"
+@@ -44,6 +43,7 @@ namespace uprotocol::transport {
+ /// * [MUST] Throw an exception if the transport fails to initialize or the
+ ///          configuration is invalid.
+ struct ZenohUTransport : public UTransport {
++#ifdef ZENOHCXX_ZENOHC
+ 	/// @brief Constructor
+ 	///
+ 	/// @param defaultUri Default Authority and Entity (as a UUri) for
+@@ -52,7 +52,14 @@ struct ZenohUTransport : public UTransport {
+ 	///                   transport configuration.
+ 	ZenohUTransport(const v1::UUri& defaultUri,
+ 	                const std::filesystem::path& configFile);
+-
++#endif
++#ifdef ZENOHCXX_ZENOHPICO
++	/// @brief Constructor
++	///
++	/// @param defaultUri Default Authority and Entity (as a UUri) for
++	///                   clients using this transport instance.
++	explicit ZenohUTransport(const v1::UUri& defaultUri);
++#endif
+ 	virtual ~ZenohUTransport() = default;
+ 
+ protected:
+diff --git a/src/ZenohUTransport.cpp b/src/ZenohUTransport.cpp
+index b25f690..8786bc0 100644
+--- a/src/ZenohUTransport.cpp
++++ b/src/ZenohUTransport.cpp
+@@ -174,6 +174,7 @@ v1::UMessage ZenohUTransport::queryToUMessage(const zenoh::Query& query) {
+ 	return message;
+ }
+ 
++#ifdef ZENOHCXX_ZENOHC
+ ZenohUTransport::ZenohUTransport(const v1::UUri& defaultUri,
+                                  const std::filesystem::path& configFile)
+     : UTransport(defaultUri),
+@@ -184,6 +185,19 @@ ZenohUTransport::ZenohUTransport(const v1::UUri& defaultUri,
+ 
+ 	spdlog::info("ZenohUTransport init");
+ }
++#endif
++
++#ifdef ZENOHCXX_ZENOHPICO
++ZenohUTransport::ZenohUTransport(const v1::UUri& defaultUri)
++    : UTransport(defaultUri),
++      session_(zenoh::Session::open(
++          std::move(zenoh::Config::create_default()))) {
++	// TODO: add to setup or remove
++	spdlog::set_level(spdlog::level::debug);
++
++	spdlog::info("ZenohUTransport init");
++}
++#endif
+ 
+ v1::UStatus ZenohUTransport::registerPublishNotificationListener_(
+     const std::string& zenoh_key, CallableConn listener) {
+diff --git a/test/CMakeLists.txt b/test/CMakeLists.txt
+index af10579..5b6c21d 100644
+--- a/test/CMakeLists.txt
++++ b/test/CMakeLists.txt
+@@ -26,16 +26,27 @@ function(add_coverage_test Name)
+         up-core-api::up-core-api
+         up-cpp::up-cpp
+         up-cpp::up-transport-zenoh-cpp
+-        zenohcpp::lib
++        zenohpico::lib
++        zenohcxx::zenohpico
+         spdlog::spdlog
+         protobuf::protobuf
+         PRIVATE
+         GTest::gtest_main
+         GTest::gmock
+-        pthread
+     )
++    if(CMAKE_SYSTEM_NAME MATCHES "QNX")
++        target_link_libraries(${Name} PRIVATE socket)
++    else()
++        target_link_libraries(${Name} PRIVATE pthread)
++    endif()
++
+     target_include_directories(${Name} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
+-    gtest_discover_tests(${Name} XML_OUTPUT_DIR results)
++    if(CMAKE_CROSSCOMPILING)
++        ## Workaround for legacy "gtest" tests setup in case of cross-build
++        gtest_add_tests(TARGET ${Name} SOURCES ${ARGN})
++    else()
++        gtest_discover_tests(${Name} XML_OUTPUT_DIR results)
++    endif()
+ endfunction()
+ 
+ # NOTE: This is temporarily just a call to add_coverage_test. When coverage
+diff --git a/test/coverage/ZenohUTransportTest.cpp b/test/coverage/ZenohUTransportTest.cpp
+index 0fd3c65..9c87923 100644
+--- a/test/coverage/ZenohUTransportTest.cpp
++++ b/test/coverage/ZenohUTransportTest.cpp
+@@ -64,12 +64,18 @@ v1::UUri create_uuri(std::string_view serialized) {
+ 
+ // TODO(sashacmc): config generation
+ TEST_F(TestZenohUTransport, ConstructDestroy) {
++#ifdef ZENOHCXX_ZENOHC
+ 	std::cout << ZENOH_CONFIG_FILE << std::endl;
+ 
+ 	zenoh::init_logger();
+ 
+ 	auto transport = std::make_shared<transport::ZenohUTransport>(
+ 	    create_uuri(ENTITY_URI_STR), ZENOH_CONFIG_FILE);
++#endif
++#ifdef ZENOHCXX_ZENOHPICO
++	auto transport = std::make_shared<transport::ZenohUTransport>(
++	    create_uuri(ENTITY_URI_STR));
++#endif
+ }
+ 
+ struct ExposeKeyString : public transport::ZenohUTransport {
+diff --git a/test/extra/NotificationTest.cpp b/test/extra/NotificationTest.cpp
+index 0adc624..5551c95 100644
+--- a/test/extra/NotificationTest.cpp
++++ b/test/extra/NotificationTest.cpp
+@@ -52,13 +52,19 @@ v1::UUri getUUri(uint16_t resource) {
+ 
+ std::shared_ptr<transport::UTransport> getTransport(
+     const v1::UUri& uuri = getUUri(0)) {
++#ifdef ZENOHCXX_ZENOHC
+ 	return std::make_shared<transport::ZenohUTransport>(uuri,
+ 	                                                    ZENOH_CONFIG_FILE);
++#endif
++#ifdef ZENOHCXX_ZENOHPICO
++	return std::make_shared<transport::ZenohUTransport>(uuri);
++#endif
+ }
+ 
+ TEST_F(NotificationTest, BasicNotificationTestWithPayload) {
++#ifdef ZENOHCXX_ZENOHC
+ 	zenoh::init_logger();
+-
++#endif
+ 	auto transport = getTransport();
+ 	auto source = getUUri(0x8000);
+ 	auto sink = getUUri(0);
+@@ -103,8 +109,9 @@ TEST_F(NotificationTest, BasicNotificationTestWithPayload) {
+ }
+ 
+ TEST_F(NotificationTest, BasicNotificationTestWithoutPayload) {
++#ifdef ZENOHCXX_ZENOHC
+ 	zenoh::init_logger();
+-
++#endif
+ 	auto transport = getTransport();
+ 	auto source = getUUri(0x8000);
+ 	auto sink = getUUri(0);
+diff --git a/test/extra/PublisherSubscriberTest.cpp b/test/extra/PublisherSubscriberTest.cpp
+index 6477a4a..c140b15 100644
+--- a/test/extra/PublisherSubscriberTest.cpp
++++ b/test/extra/PublisherSubscriberTest.cpp
+@@ -37,7 +37,13 @@ protected:
+ 
+ 	// Run once per execution of the test application.
+ 	// Used for setup of all tests. Has access to this instance.
++#ifdef ZENOHCXX_ZENOHC
+ 	PublisherSubscriberTest() { zenoh::init_logger(); }
++#endif
++#ifdef ZENOHCXX_ZENOHPICO
++	PublisherSubscriberTest() {}
++#endif
++
+ 	~PublisherSubscriberTest() = default;
+ 
+ 	// Run once per execution of the test application.
+@@ -57,8 +63,13 @@ v1::UUri makeUUri(uint16_t resource_id) {
+ 
+ std::shared_ptr<transport::UTransport> getTransport(
+     const v1::UUri& uuri = makeUUri(ENTITY_URI)) {
++#ifdef ZENOHCXX_ZENOHC
+ 	return std::make_shared<transport::ZenohUTransport>(uuri,
+ 	                                                    ZENOH_CONFIG_FILE);
++#endif
++#ifdef ZENOHCXX_ZENOHPICO
++	return std::make_shared<transport::ZenohUTransport>(uuri);
++#endif
+ }
+ 
+ // ValidateMessages
+diff --git a/test/extra/RpcClientServerTest.cpp b/test/extra/RpcClientServerTest.cpp
+index b7188a6..5af9bea 100644
+--- a/test/extra/RpcClientServerTest.cpp
++++ b/test/extra/RpcClientServerTest.cpp
+@@ -61,7 +61,12 @@ protected:
+ 	// Run once per TEST_F.
+ 	// Used to set up clean environments per test.
+ 	void SetUp() override {
++#ifdef ZENOHCXX_ZENOHC
+ 		transport_ = std::make_shared<Transport>(ident, ZENOH_CONFIG_FILE);
++#endif
++#ifdef ZENOHCXX_ZENOHPICO
++		transport_ = std::make_shared<Transport>(ident);
++#endif
+ 		EXPECT_NE(nullptr, transport_);
+ 	}
+ 

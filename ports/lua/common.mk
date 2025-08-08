@@ -26,7 +26,8 @@ include $(MKFILES_ROOT)/qtargets.mk
 #### Determine host
 
 ## QNX 8.0.x
-ifneq (,$(findstring qnx800,$(QNX_TARGET)))
+
+ifneq (,$(findstring 800,$(QNX_TARGET)))
 ifneq (,$(findstring aarch64,$(CPUDIR)))
 HOST_DETECT = aarch64-unknown-nto-qnx8.0.0
 V_OPT=gcc_ntoaarch64le
@@ -38,7 +39,8 @@ endif
 endif
 
 ## QNX 7.1.x
-ifneq (,$(findstring qnx710,$(QNX_TARGET)))
+
+ifneq (,$(findstring 710,$(QNX_TARGET)))
 ifneq (,$(findstring aarch64,$(CPUDIR)))
 HOST_DETECT = aarch64-unknown-nto-qnx7.1.0
 V_OPT=gcc_ntoaarch64le

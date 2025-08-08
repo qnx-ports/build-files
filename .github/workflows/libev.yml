@@ -16,11 +16,11 @@ on:
       - "ports/libev/**"
 
 jobs:
+
   build:
     strategy:
       matrix:
         qnx_env: ["710", "800"]
-    name: Build for QNX ${{ matrix.qnx_env }}
     runs-on: self-hosted
     if: |
       (github.event_name == 'workflow_dispatch') ||
@@ -31,6 +31,12 @@ jobs:
         uses: actions/checkout@v4
         with:
           path: build-files
+
+      - name: Checkout libev
+        uses: actions/checkout@v4
+        with:
+          repository: qnx-ports/libev
+          path: libev
 
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v3
@@ -56,8 +62,5 @@ jobs:
               source ~/qnx/800/qnxsdp-env.sh
             fi
             cd ~/workspace
-            curl -O https://dist.schmorp.de/libev/libev-4.33.tar.gz
-            tar xvf libev-4.33.tar.gz
-            mv libev-4.33 libev
-            patch -i build-files/ports/libev/libev-4.33.patch libev/ev.c
             make -C build-files/ports/libev install
+            

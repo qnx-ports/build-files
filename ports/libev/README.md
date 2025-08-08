@@ -22,14 +22,8 @@ cd build-files/docker
 source ~/qnx800/qnxsdp-env.sh
 cd ~/qnx_workspace
 
-# Note: libev does not have an official latest upstream source on GitHub. Hence we download latest official source as archive from their website and then apply QNX specific changes as a patch to this source.
-# Install libev archive
-curl -O https://dist.schmorp.de/libev/libev-4.33.tar.gz
-tar xvf libev-4.33.tar.gz
-mv libev-4.33 libev
-
-# Apply libev patch
-patch -i build-files/ports/libev/libev-4.33.patch libev/ev.c
+# Clone libev
+git clone https://github.com/qnx-ports/libev.git
 
 # Build libev
 make -C build-files/ports/libev install
@@ -41,17 +35,10 @@ make -C build-files/ports/libev install
 # Clone the repos
 mkdir -p ~/qnx_workspace && cd qnx_workspace
 git clone https://github.com/qnx-ports/build-files.git
+git clone https://github.com/qnx-ports/libev.git
 
 # source qnxsdp-env.sh
 source ~/qnx800/qnxsdp-env.sh
-
-# Install libev archive
-curl -O https://dist.schmorp.de/libev/libev-4.33.tar.gz
-tar xvf libev-4.33.tar.gz
-mv libev-4.33 libev
-
-# Apply libev patch
-patch -i build-files/ports/libev/libev-4.33.patch libev/ev.c
 
 # Build libev
 make -C build-files/ports/libev install

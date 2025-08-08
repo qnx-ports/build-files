@@ -1,0 +1,462 @@
+From 1b21ce5f7a1731032b4f2cbddd10ef8818bafd4f Mon Sep 17 00:00:00 2001
+From: Yongxin Dai <yodai@qnx.com>
+Date: Mon, 24 Mar 2025 12:24:19 -0400
+Subject: [PATCH] parse pcm parameters from json file
+
+---
+ modules/audio_device/BUILD.gn            |  11 +-
+ modules/audio_device/qnx/config_utils.cc | 309 +++++++++++++++++++++++
+ modules/audio_device/qnx/config_utils.h  |  79 ++++++
+ rtc_base/BUILD.gn                        |   4 +-
+ 4 files changed, 399 insertions(+), 4 deletions(-)
+ create mode 100644 modules/audio_device/qnx/config_utils.cc
+ create mode 100644 modules/audio_device/qnx/config_utils.h
+
+diff --git a/modules/audio_device/BUILD.gn b/modules/audio_device/BUILD.gn
+index 7e834aac4b..2c5704b98c 100644
+--- a/modules/audio_device/BUILD.gn
++++ b/modules/audio_device/BUILD.gn
+@@ -394,6 +394,10 @@ rtc_library("audio_device_impl") {
+         ]
+       }
+       if (is_qnx) {
++        sources += [
++          "qnx/config_utils.cc",
++          "qnx/config_utils.h",
++        ]
+         if (rtc_qnx_use_io_snd) {
+           defines = [ "WEBRTC_QNX_USE_IO_SND" ]
+           sources += [
+@@ -413,10 +417,11 @@ rtc_library("audio_device_impl") {
+             "qnx/qsasymboltable_qnx.cc",
+             "qnx/qsasymboltable_qnx.h",
+           ]
+-          deps += [
+-            "../utility:late_binding_symbol_table",
+-          ]
+         }
++        deps += [
++          "../../rtc_base:rtc_json",
++          "../utility:late_binding_symbol_table",
++        ]
+       }
+       configs += [ ":audio_device_warnings_config" ]
+     }
+diff --git a/modules/audio_device/qnx/config_utils.cc b/modules/audio_device/qnx/config_utils.cc
+new file mode 100644
+index 0000000000..dfeac64f0a
+--- /dev/null
++++ b/modules/audio_device/qnx/config_utils.cc
+@@ -0,0 +1,309 @@
++/*
++ *  Copyright (c) 2025 The WebRTC project authors. All Rights Reserved.
++ *
++ *  Use of this source code is governed by a BSD-style license
++ *  that can be found in the LICENSE file in the root of the source
++ *  tree. An additional intellectual property rights grant can be found
++ *  in the file PATENTS.  All contributing project authors may
++ *  be found in the AUTHORS file in the root of the source tree.
++ */
++
++#include "config_utils.h"
++
++#include <fstream>
++#include <iostream>
++#include <map>
++#include <numeric>
++#include <string>
++
++#include "rtc_base/logging.h"
++#include "rtc_base/strings/json.h"
++#include "rtc_base/strings/string_builder.h"
++
++namespace webrtc {
++namespace {
++constexpr uint8_t CHAR_BASE = 48;
++
++constexpr char palyout_pcm_config_path[] = "/etc/webrtc/playout_pcm.cfg";
++constexpr char capture_pcm_config_path[] = "/etc/webrtc/capture_pcm.cfg";
++
++static std::map<const std::string, PcmPara> s_pcm_params = {
++    {"card", SND_CARD},     {"device", SND_DEVICE}, {"plugin", SND_PLUGIN},
++    {"format", SND_FORMAT}, {"rate", SND_RATE},     {"channels", SND_CHANNELS},
++    {"period", SND_PERIOD}, {"buffer", SND_BUFFER}};
++
++#if defined(WEBRTC_QNX_USE_IO_SND)
++#if defined(WEBRTC_ARCH_BIG_ENDIAN)
++static std::map<const std::string, int> s_pcm_format = {
++    {"U8", SND_PCM_FORMAT_U8},          {"S8", SND_PCM_FORMAT_S8},
++    {"U16", SND_PCM_FORMAT_U16_BE},     {"S16", SND_PCM_FORMAT_S16_BE},
++    {"U24", SND_PCM_FORMAT_U24_BE},     {"S24", SND_PCM_FORMAT_S24_BE},
++    {"U32", SND_PCM_FORMAT_U32_BE},     {"S32", SND_PCM_FORMAT_S32_BE},
++    {"FLOAT", SND_PCM_FORMAT_FLOAT_BE}, {"FLOAT64", SND_PCM_FORMAT_FLOAT64_BE}};
++#else
++static std::map<const std::string, int> s_pcm_format = {
++    {"U8", SND_PCM_FORMAT_U8},          {"S8", SND_PCM_FORMAT_S8},
++    {"U16", SND_PCM_FORMAT_U16_LE},     {"S16", SND_PCM_FORMAT_S16_LE},
++    {"U24", SND_PCM_FORMAT_U24_LE},     {"S24", SND_PCM_FORMAT_S24_LE},
++    {"U32", SND_PCM_FORMAT_U32_LE},     {"S32", SND_PCM_FORMAT_S32_LE},
++    {"FLOAT", SND_PCM_FORMAT_FLOAT_LE}, {"FLOAT64", SND_PCM_FORMAT_FLOAT64_LE}};
++#endif
++#else
++#if defined(WEBRTC_ARCH_BIG_ENDIAN)
++static std::map<const std::string, int> s_pcm_format = {
++    {"U8", SND_PCM_SFMT_U8},          {"S8", SND_PCM_SFMT_S8},
++    {"U16", SND_PCM_SFMT_U16_BE},     {"S16", SND_PCM_SFMT_S16_BE},
++    {"U24", SND_PCM_SFMT_U24_BE},     {"S24", SND_PCM_SFMT_S24_BE},
++    {"U32", SND_PCM_SFMT_U32_BE},     {"S32", SND_PCM_SFMT_S32_BE},
++    {"FLOAT", SND_PCM_SFMT_FLOAT_BE}, {"FLOAT64", SND_PCM_SFMT_FLOAT64_BE}};
++#else
++static std::map<const std::string, int> s_pcm_format = {
++    {"U8", SND_PCM_SFMT_U8},          {"S8", SND_PCM_SFMT_S8},
++    {"U16", SND_PCM_SFMT_U16_LE},     {"S16", SND_PCM_SFMT_S16_LE},
++    {"U24", SND_PCM_SFMT_U24_LE},     {"S24", SND_PCM_SFMT_S24_LE},
++    {"U32", SND_PCM_SFMT_U32_LE},     {"S32", SND_PCM_SFMT_S32_LE},
++    {"FLOAT", SND_PCM_SFMT_FLOAT_LE}, {"FLOAT64", SND_PCM_SFMT_FLOAT64_LE}};
++#endif
++#endif
++
++std::unique_ptr<char[]> valueFromEnv(const char* name) {
++  char* value = getenv(name);
++  if (!value)
++    return std::unique_ptr<char[]>{};
++  std::string raw(value);
++  size_t pos = raw.find(':');
++  if (pos == std::string::npos)
++    return std::unique_ptr<char[]>{};
++  int card = std::atoi(raw.substr(0, pos).data());
++  int device = std::atoi(raw.substr(pos + 1).data());
++  int plugin(0);
++  pos = raw.find(':', ++pos);
++  if (pos != std::string::npos)
++    plugin = std::atoi(raw.substr(pos + 1).data());
++  std::unique_ptr<char[]> buf(new char[4]);
++  buf[0] = (char)(card + CHAR_BASE);
++  buf[1] = (char)(device + CHAR_BASE);
++  buf[2] = (char)(plugin + CHAR_BASE);
++  buf[3] = '\0';
++  return std::move(buf);
++}
++
++const char* targetedPlayDev() {
++  static std::unique_ptr<char[]> playout =
++      valueFromEnv("WEBRTC_AUDIO_PLAY_DEVICE");
++  return playout.get();
++}
++
++const char* targetedRecordDev() {
++  static std::unique_ptr<char[]> record =
++      valueFromEnv("WEBRTC_AUDIO_RECORD_DEVICE");
++  return record.get();
++}
++}  // namespace
++
++PcmPreferences::PcmPreferences(uint32_t rate, uint8_t channels)
++    : _card(-1),
++      _device(-1),
++      _plugin(false),
++#if defined(WEBRTC_QNX_USE_IO_SND)
++#if defined(WEBRTC_ARCH_BIG_ENDIAN)
++      _format(SND_PCM_FORMAT_S16_BE),
++#else
++      _format(SND_PCM_FORMAT_S16_LE),
++#endif
++#else
++#if defined(WEBRTC_ARCH_BIG_ENDIAN)
++      _format(SND_PCM_SFMT_S16_BE),
++#else
++      _format(SND_PCM_SFMT_S16_LE),
++#endif
++#endif
++      _rate(rate),
++      _channels(channels),
++      _name(nullptr) {
++}
++
++void PcmPreferences::UpdatePcmPara(PcmPara id, int value) {
++  switch (id) {
++    case SND_CARD:
++      _card = value;
++      break;
++    case SND_DEVICE:
++      _device = value;
++      break;
++    case SND_FORMAT:
++      _format = value;
++      break;
++    case SND_RATE:
++      _rate = value;
++      break;
++    case SND_CHANNELS:
++      _channels = value;
++      break;
++    case SND_PERIOD:
++      _period = value;
++      break;
++    case SND_BUFFER:
++      _buffer = value;
++      break;
++    default:
++      RTC_DCHECK_NOTREACHED();
++  }
++}
++
++void PcmPreferences::UpdatePcmPara(PcmPara id, bool value) {
++  switch (id) {
++    case SND_PLUGIN:
++      _plugin = value;
++      break;
++    default:
++      RTC_DCHECK_NOTREACHED();
++  }
++}
++
++void PcmPreferences::UpdatePcmPara(PcmPara id, const std::string& value) {
++  switch (id) {
++    case SND_FORMAT:
++      _format = s_pcm_format[value];
++      break;
++    default:
++      RTC_DCHECK_NOTREACHED();
++  }
++}
++
++#if !defined(WEBRTC_QNX_USE_IO_SND)
++const uint8_t PcmPreferences::FrameBytes() {
++  uint8_t bytes = 0;
++  switch (_format) {
++#if defined(WEBRTC_ARCH_BIG_ENDIAN)
++    case SND_PCM_SFMT_U8:
++    case SND_PCM_SFMT_S8:
++      bytes = 1;
++      break;
++    case SND_PCM_SFMT_U16_BE:
++    case SND_PCM_SFMT_S16_BE:
++      bytes = 2;
++      break;
++    case SND_PCM_SFMT_U24_BE:
++    case SND_PCM_SFMT_S24_BE:
++      bytes = 3;
++      break;
++    case SND_PCM_SFMT_U32_BE:
++    case SND_PCM_SFMT_S32_BE:
++    case SND_PCM_SFMT_FLOAT64_BE:
++      bytes = 4;
++      break;
++    case SND_PCM_SFMT_FLOAT_BE:
++      bytes = 8;
++      break;
++    default:
++      RTC_DCHECK_NOTREACHED();
++#else
++    case SND_PCM_SFMT_U8:
++    case SND_PCM_SFMT_S8:
++      bytes = 1;
++      break;
++    case SND_PCM_SFMT_U16_LE:
++    case SND_PCM_SFMT_S16_LE:
++      bytes = 2;
++      break;
++    case SND_PCM_SFMT_U24_LE:
++    case SND_PCM_SFMT_S24_LE:
++      bytes = 3;
++      break;
++    case SND_PCM_SFMT_U32_LE:
++    case SND_PCM_SFMT_S32_LE:
++    case SND_PCM_SFMT_FLOAT64_LE:
++      bytes = 4;
++      break;
++    case SND_PCM_SFMT_FLOAT_LE:
++      bytes = 8;
++      break;
++    default:
++      RTC_DCHECK_NOTREACHED();
++#endif
++  }
++  return bytes;
++}
++#endif
++
++void PcmPreferences::Initialize(bool play) {
++  _period = _rate / 100;  // samples in 10ms
++  _buffer = play ? 2 * _period : 3 * _period;
++
++  UpdateConfigFromJsonFile(play);
++
++  auto env = play ? targetedPlayDev() : targetedRecordDev();
++  if (env) {
++    _card = env[0] - CHAR_BASE;
++    _device = env[1] - CHAR_BASE;
++    _plugin = env[2] - CHAR_BASE;
++  }
++  if (_card >= 0 && _device >= 0) {
++    auto buf = new char[4];
++    buf[0] = (char)(_card + CHAR_BASE);
++    buf[1] = (char)(_device + CHAR_BASE);
++    buf[2] = (char)((_plugin ? 1 : 0) + CHAR_BASE);
++    buf[3] = '\0';
++    _name.reset(buf);
++  }
++}
++
++void PcmPreferences::UpdateConfigFromJsonFile(bool play) {
++  std::string json_string;
++  std::string s;
++  auto config_file = play ? palyout_pcm_config_path : capture_pcm_config_path;
++  std::ifstream f(config_file);
++  if (!f.is_open()) {
++    RTC_DLOG(LS_INFO) << __FUNCTION__ << config_file << " not found";
++    return;
++  }
++
++  while (std::getline(f, s)) {
++    json_string += s;
++  }
++
++  bool parsing_successful;
++  UpdateFromJsonString(json_string, &parsing_successful);
++  if (!parsing_successful) {
++    std::cout << "Parsing of json string failed: " << std::endl
++              << json_string << std::endl;
++  }
++}
++
++void PcmPreferences::UpdateFromJsonString(absl::string_view json_string,
++                                          bool* parsing_successful) {
++  RTC_DCHECK(parsing_successful);
++  *parsing_successful = true;
++
++  Json::Value root;
++  Json::CharReaderBuilder builder;
++  std::string error_message;
++  std::unique_ptr<Json::CharReader> reader(builder.newCharReader());
++  bool success =
++      reader->parse(json_string.data(), json_string.data() + json_string.size(),
++                    &root, &error_message);
++  if (!success) {
++    RTC_LOG(LS_ERROR) << "Incorrect JSON format: " << error_message;
++    *parsing_successful = false;
++    return;
++  }
++  //   auto cfg = std::make_unique<PcmPreferences>();
++  for (const auto& [field, v] : s_pcm_params) {
++    Json::Value val;
++    success = rtc::GetValueFromJsonObject(root, field, &val);
++    if (success) {
++      if (val.isString()) {
++        auto str = val.asString();
++        std::transform(str.begin(), str.end(), str.begin(), ::toupper);
++        UpdatePcmPara(v, str);
++      } else if (val.isInt())
++        UpdatePcmPara(v, val.asInt());
++      else if (val.isBool())
++        UpdatePcmPara(v, val.asBool());
++      else
++        RTC_DCHECK_NOTREACHED();
++    }
++  }
++}
++}  // namespace webrtc
+diff --git a/modules/audio_device/qnx/config_utils.h b/modules/audio_device/qnx/config_utils.h
+new file mode 100644
+index 0000000000..b1f6a60060
+--- /dev/null
++++ b/modules/audio_device/qnx/config_utils.h
+@@ -0,0 +1,79 @@
++/*
++ *  Copyright (c) 2025 The WebRTC project authors. All Rights Reserved.
++ *
++ *  Use of this source code is governed by a BSD-style license
++ *  that can be found in the LICENSE file in the root of the source
++ *  tree. An additional intellectual property rights grant can be found
++ *  in the file PATENTS.  All contributing project authors may
++ *  be found in the AUTHORS file in the root of the source tree.
++ */
++
++#ifndef AUDIO_DEVICE_CONFIG_UTILS_H_
++#define AUDIO_DEVICE_CONFIG_UTILS_H_
++
++#if defined(WEBRTC_QNX_USE_IO_SND)
++#include <alsa/asoundlib.h>
++#else
++#include <sys/asoundlib.h>
++typedef unsigned long snd_pcm_uframes_t;
++#endif
++
++#include "absl/strings/string_view.h"
++
++namespace webrtc {
++enum PcmPara {
++  SND_CARD = 1 << 0,
++  SND_DEVICE = 1 << 1,
++  SND_PLUGIN = 1 << 2,
++  SND_FORMAT = 1 << 3,
++  SND_RATE = 1 << 4,
++  SND_CHANNELS = 1 << 5,
++  SND_PERIOD = 1 << 6,
++  SND_BUFFER = 1 << 7
++};
++class PcmPreferences {
++ public:
++  PcmPreferences(uint32_t rate, uint8_t channels);
++  ~PcmPreferences() {}
++  void Initialize(const char* path, const char* env);
++  const int16_t& Card() { return _card; }
++  const int16_t& Device() { return _device; }
++  const bool& Plugin() { return _plugin; }
++  const int& Format() { return _format; }
++  const uint32_t& Rate() { return _rate; }
++  const uint8_t& Channels() { return _channels; }
++  const snd_pcm_uframes_t& Period() { return _period; }
++  const snd_pcm_uframes_t& Buffer() { return _buffer; }
++  const char* Name() { return _name.get(); }
++#if !defined(WEBRTC_QNX_USE_IO_SND)
++  const uint8_t FrameBytes();
++#endif
++  void SetFormat(int format) { _format = format; }
++  void SetRate(uint32_t rate) { _rate = rate; }
++  void SetChannels(uint8_t channels) { _channels = channels; }
++  void SetPeriod(snd_pcm_uframes_t period) { _period = period; }
++  void Initialize(bool play);
++
++ private:
++  snd_pcm_uframes_t CalculateBuffer(snd_pcm_uframes_t perod);
++  void UpdatePcmPara(PcmPara id, int value);
++  void UpdatePcmPara(PcmPara id, bool value);
++  void UpdatePcmPara(PcmPara id, const std::string& value);
++  void UpdateConfigFromJsonFile(bool play);
++  void UpdateFromJsonString(absl::string_view json_string,
++                            bool* parsing_successful);
++
++  int16_t _card;
++  int16_t _device;
++  bool _plugin;
++  int _format;
++  uint32_t _rate;
++  uint8_t _channels;
++  std::unique_ptr<char[]> _name;
++  snd_pcm_uframes_t _period;
++  snd_pcm_uframes_t _buffer;
++};
++
++}  // namespace webrtc
++
++#endif  // AUDIO_DEVICE_CONFIG_UTILS_H_
+diff --git a/rtc_base/BUILD.gn b/rtc_base/BUILD.gn
+index 55642b564c..e7c6b76c39 100644
+--- a/rtc_base/BUILD.gn
++++ b/rtc_base/BUILD.gn
+@@ -821,7 +821,9 @@ config("rtc_json_suppressions") {
+ }
+ 
+ rtc_library("rtc_json") {
+-  testonly = true
++  if (!is_qnx) {
++    testonly = true
++  }
+   public_configs = [ ":rtc_json_suppressions" ]
+   defines = []
+   sources = [
+-- 
+2.34.1
+

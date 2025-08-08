@@ -53,7 +53,7 @@ jobs:
         ${{ github.workspace }}/qnx/qnxsoftwarecenter/qnxsoftwarecenter_clt -syncLicenseKeys -myqnx.user="$MYQNX_USER" -myqnx.password="$MYQNX_PASSWORD" -addLicenseKey $SDP710_LICENSE_KEY
         cp -r ~/.qnx/license ${{ github.workspace }}/.qnx
         echo "Downloading QNX SDP 7.1 ..."
-        ${{ github.workspace }}/qnx/qnxsoftwarecenter/qnxsoftwarecenter_clt -mirror -cleanInstall -destination ${{ github.workspace }}/qnx/710 -installBaseline com.qnx.qnx710 -myqnx.user="$MYQNX_USER" -myqnx.password="$MYQNX_PASSWORD"
+        ${{ github.workspace }}/qnx/qnxsoftwarecenter/qnxsoftwarecenter_clt -mirror -cleanInstall -destination ${{ github.workspace }}/qnx/710 -installBaseline com.qnx.qnx710 -installPackage com.qnx.qnx710.target.sf.base,com.qnx.qnx710.target.sf.camapi,com.qnx.qnx710.target.sf.sensor -myqnx.user="$MYQNX_USER" -myqnx.password="$MYQNX_PASSWORD"
 
     - name: Download SDP 8.0
       env:

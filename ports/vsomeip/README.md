@@ -61,6 +61,9 @@ cd $WORKSPACE
 
 # SDP 8.0: build and install boost
 BOOST_CPP_VERSION_FLAG="-std=c++17" QNX_PROJECT_ROOT="$(pwd)/boost" make -C build-files/ports/boost install -j4
+# SDP 8.0: build and install boost version 1.74
+B2_EXTRA_OPTS="--without-python" BOOST_CPP_VERSION_FLAG="-std=c++17" QNX_PROJECT_ROOT="$(pwd)/boost" make -C build-files/ports/boost install -j4
+
 # SDP 7.1: build and install boost
 #QNX_PROJECT_ROOT="$(pwd)/boost" make -C build-files/ports/boost install -j4
 
@@ -116,6 +119,9 @@ cd $WORKSPACE
 
 # SDP 8.0: build and install boost
 BOOST_CPP_VERSION_FLAG="-std=c++17" QNX_PROJECT_ROOT="$(pwd)/boost" make -C build-files/ports/boost install -j4
+# SDP 8.0: build and install boost version 1.74
+B2_EXTRA_OPTS="--without-python" BOOST_CPP_VERSION_FLAG="-std=c++17" QNX_PROJECT_ROOT="$(pwd)/boost" make -C build-files/ports/boost install -j4
+
 # SDP 7.1: build and install boost
 #QNX_PROJECT_ROOT="$(pwd)/boost" make -C build-files/ports/boost install -j4
 

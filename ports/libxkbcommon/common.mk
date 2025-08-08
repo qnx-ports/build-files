@@ -5,9 +5,9 @@ include $(QCONFIG)
 
 include $(MKFILES_ROOT)/qmacros.mk
 
-NAME=libxkbcommon
+NAME = libxkbcommon
 
-QNX_PROJECT_ROOT ?= $(PRODUCT_ROOT)
+QNX_PROJECT_ROOT ?= $(PRODUCT_ROOT)/../../$(NAME)
 
 #$(INSTALL_ROOT_$(OS)) is pointing to $QNX_TARGET
 #by default, unless it was manually re-routed to
@@ -21,7 +21,7 @@ INSTALL_ROOT ?= $(INSTALL_ROOT_$(OS))
 #This prefix path may be exposed to the source code,
 #the linker, or package discovery config files (.pc,
 #CMake config modules, etc.). Default is /usr/local
-PREFIX ?= /usr
+PREFIX ?= /usr/local
 
 #choose Release or Debug
 MESON_BUILD_TYPE ?= release
@@ -37,7 +37,7 @@ include $(MKFILES_ROOT)/qtargets.mk
 LIBXKBCOMMON_INSTALL_DIR=$(INSTALL_ROOT)
 
 MESON_FLAGS :=  --prefix=/$(CPUVARDIR)/$(PREFIX) \
-                --includedir=$(PREFIX)/include \
+								--includedir=$(PREFIX)/include \
                 --cross-file=../qnx_cross.cfg \
                 -Dc_args="$(CFLAGS)" \
                 -Ddefault-layout=us \
@@ -48,7 +48,8 @@ MESON_FLAGS :=  --prefix=/$(CPUVARDIR)/$(PREFIX) \
                 -Ddefault-rules=hidut \
                 -Dxkb-config-root=/usr/share/xkb \
                 -Dx-locale-root=/usr/share/locale \
-				--reconfigure
+
+NINJA_ARGS ?= -j $(firstword $(JLEVEL) 1)
 
 # Set cross file
 qnx_cross.cfg: $(PROJECT_ROOT)/qnx_cross.cfg.in
@@ -60,7 +61,8 @@ qnx_cross.cfg: $(PROJECT_ROOT)/qnx_cross.cfg.in
 $(NAME)_all: qnx_cross.cfg
 	@mkdir -p build
 	@cd build && meson setup $(MESON_FLAGS) . $(QNX_PROJECT_ROOT)
-	@cd build && DESTDIR=$(LIBXKBCOMMON_INSTALL_DIR) meson install
+	@cd build && DESTDIR=$(LIBXKBCOMMON_INSTALL_DIR) \
+	ninja install $(NINJA_ARGS)
 
 install check: $(NAME)_all
 	@echo Installing...

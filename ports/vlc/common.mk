@@ -6,9 +6,9 @@ include $(QCONFIG) #  ##\# #  # #  #  # <link?>
 ####################==================##################################
 
 ## Set up user-overridden variables
-PREFIX 			    ?= /usr/local
 QNX_PROJECT_ROOT    ?= $(PRODUCT_ROOT)/../../vlc
-#FIX THIS FROM vlc_2 REVIEWERS THIS IS AN ERROR!!!
+PREFIX 			    ?= /usr/local
+
 
 ## Set up QNX recursive makefile specifics.
 .PHONY: vlc_all install clean
@@ -65,9 +65,16 @@ MAKE_OPTS= CFLAGS="$(CFLAGS)"
 
 # This just wraps the configuration available in the qnx port of VLC. it is purely for installation purposes (and to simplify RetroPie's process)
 # In other words, please see those files to make actual changes.
+# the make clean deals with the occasional hiccup due to the source being built before.
 vlc_all:
+	@echo ===============
+	@echo Building VLC...
+	@echo ===============
+# @if [ -z "$(QNX_PROJECT_ROOT)" ]; then echo "ERROR: QNX_PROJECT_ROOT not set to point at vlc directory"; else echo "Stating in 5 seconds.";fi
+# @if [ -z "$(QNX_PROJECT_ROOT)" ]; then error 1; else sleep 5; fi
 	@cp -r ../qnx $(QNX_PROJECT_ROOT)/qnx
-	@cd $(QNX_PROJECT_ROOT)/qnx && make install
+	@cd $(QNX_PROJECT_ROOT)/qnx/linux-x86_64 && QNX_PROJECT_ROOT=$(QNX_PROJECT_ROOT) make clean
+	@cd $(QNX_PROJECT_ROOT)/qnx && QNX_PROJECT_ROOT=$(QNX_PROJECT_ROOT) make install
 	@mkdir -p staging/lib
 	@mkdir -p staging/include
 	@cp -r $(QNX_PROJECT_ROOT)/qnx/$(SOURCE_FOLDER_NAME)/install/lib/* staging/lib/
@@ -84,11 +91,5 @@ install_rpie: install
 	@cp staging/include/* $(PRODUCT_ROOT)/RetroPie/staging/$(CPUDIR)/include/
 
 clean:
-	rm -rf staging
-	rm -rf $(QNX_PROJECT_ROOT)/qnx
-	rm $(QNX_PROJECT_ROOT)/ABOUT-NLS
-	rm $(QNX_PROJECT_ROOT)/aclocal.m4
-	rm $(QNX_PROJECT_ROOT)/config.h.in
-	rm $(QNX_PROJECT_ROOT)/configure
-	rm $(QNX_PROJECT_ROOT)/configure~
-	rm $(QNX_PROJECT_ROOT)/Makefile.in
+	-rm -rf staging
+	-rm -rf $(QNX_PROJECT_ROOT)/qnx

@@ -1,0 +1,24 @@
+From 561c3679073677f9c983063eb3dcaa4719b88aed Mon Sep 17 00:00:00 2001
+From: Yongxin Dai <yodai@qnx.com>
+Date: Wed, 2 Apr 2025 13:39:30 -0400
+Subject: [PATCH] Add '/qnx_build' to .gitignore.
+
+---
+ .gitignore | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/.gitignore b/.gitignore
+index 8202b82014..91ea7aacae 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -46,6 +46,7 @@
+ /ios
+ /mojo
+ /out
++/qnx_build
+ /testing
+ /third_party
+ /tools
+-- 
+2.34.1
+

@@ -1,0 +1,63 @@
+name: XNNPACK
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/XNNPACK.yml'
+      - 'ports/XNNPACK/**'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/XNNPACK.yml'
+      - 'ports/XNNPACK/**'
+
+jobs:
+
+  build:
+    runs-on: self-hosted
+    if: |
+      (github.event_name == 'workflow_dispatch') ||
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'XNNPACK'))
+    steps:
+    - name: Checkout build-files
+      uses: actions/checkout@v4
+      with:
+        path: build-files
+
+    - name: Checkout XNNPACK
+      uses: actions/checkout@v4
+      with:
+        repository: qnx-ports/XNNPACK
+        path: XNNPACK
+        ref: qnx_master
+        submodules: recursive
+
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v3
+      with:
+        registry: ghcr.io
+        username: ${{github.actor}}
+        password: ${{secrets.GITHUB_TOKEN}}
+
+    - name: Pull build environment
+      run: |
+        docker pull ghcr.io/qnx-ports/sdp-build-env:latest
+
+    - name: Build XNNPACK
+      uses: addnab/docker-run-action@v3
+      with:
+        image: ghcr.io/qnx-ports/sdp-build-env:latest
+        options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
+        shell: bash
+        run: |
+          cd ~/workspace
+          WORKSPACE=$PWD
+          source ~/qnx/800/qnxsdp-env.sh
+          source /usr/local/qnx/env/bin/activate
+          cd $WORKSPACE
+          QNX_PROJECT_ROOT="$(pwd)/XNNPACK" make -C build-files/ports/XNNPACK install
