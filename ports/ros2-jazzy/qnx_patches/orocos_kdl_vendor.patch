@@ -60,3 +60,28 @@ index bd493da..b096d6c 100644
    )
  
    fetchcontent_getproperties(python_orocos_kdl)
+diff --git a/python_orocos_kdl_vendor/patches/0002-qnx-python-fix.patch b/python_orocos_kdl_vendor/patches/0002-qnx-python-fix.patch
+new file mode 100644
+index 0000000..f869065
+--- /dev/null
++++ b/python_orocos_kdl_vendor/patches/0002-qnx-python-fix.patch
+@@ -0,0 +1,19 @@
++--- a/python_orocos_kdl/CMakeLists.txt	2023-12-08 15:19:53.469243534 +0000
+++++ b/python_orocos_kdl/CMakeLists.txt	2023-12-08 15:20:18.110104659 +0000
++@@ -25,7 +25,15 @@
++ 
++ set(PYBIND11_PYTHON_VERSION ${PYTHON_VERSION} CACHE STRING "Python version used by PyBind11")
++ 
++-find_package(Python ${PYTHON_VERSION} COMPONENTS Interpreter Development REQUIRED)
+++if(QNX)
+++  find_library(python3_LIBRARY NAMES python3)
+++
+++  include_directories(${PROJECT_NAME}
+++    ${QNX_TARGET}/usr/include/python${PYTHON_VERSION_QNX}
+++    ${QNX_TARGET}/usr/include/${CPUVARDIR}/python${PYTHON_VERSION_QNX})
+++else()
+++  find_package(Python ${PYTHON_VERSION} COMPONENTS Interpreter Development REQUIRED)
+++endif()
++ if(WIN32 AND CMAKE_BUILD_TYPE STREQUAL "Debug")
++   get_filename_component(_python_executable_dir "${Python_EXECUTABLE}" DIRECTORY)
++   get_filename_component(_python_executable_name "${Python_EXECUTABLE}" NAME_WE)

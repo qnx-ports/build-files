@@ -236,7 +236,7 @@ ros2 run demo_nodes_cpp talker
 
 Launch the dummy robot demo node on RPI4.
 ```bash
-ros2 launch dummy_robot_bringup dummy_robot_bringup.launch.py
+ros2 launch dummy_robot_bringup dummy_robot_bringup_launch.py
 ```
 
 Install ROS2 jazzy on your Ubuntu host.
