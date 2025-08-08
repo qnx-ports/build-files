@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<?xml-model
+  href="http://download.ros.org/schema/package_format2.xsd"
+  schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="2">
+  <name>netifaces_vendor</name>
+  <version>0.10.9</version>
+  <description>
+    Wrapper around netifaces, it provides a fixed CMake module and an ExternalProject build of it.
+  </description>
+  <maintainer email="asobhy@blackberry.com">Ahmed Sobhy</maintainer>
+  <license>MIT License</license>
+  <license>MIT License</license>  <!-- netifaces is MIT -->
+  <url type="website">https://alastairs-place.net/projects/netifaces/</url>
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

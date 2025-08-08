@@ -1,0 +1,121 @@
+diff --git a/numpy/core/include/numpy/npy_3kcompat.h b/numpy/core/include/numpy/npy_3kcompat.h
+index 62fde943a..4fa41ec07 100644
+--- a/numpy/core/include/numpy/npy_3kcompat.h
++++ b/numpy/core/include/numpy/npy_3kcompat.h
+@@ -12,6 +12,10 @@
+ #ifndef NUMPY_CORE_INCLUDE_NUMPY_NPY_3KCOMPAT_H_
+ #define NUMPY_CORE_INCLUDE_NUMPY_NPY_3KCOMPAT_H_
+ 
++#ifdef __QNX__
++#include <unistd.h>
++#endif
++
+ #include <Python.h>
+ #include <stdio.h>
+ 
+diff --git a/numpy/core/include/numpy/npy_endian.h b/numpy/core/include/numpy/npy_endian.h
+index 5e58a7f52..6a15366eb 100644
+--- a/numpy/core/include/numpy/npy_endian.h
++++ b/numpy/core/include/numpy/npy_endian.h
+@@ -9,11 +9,15 @@
+ #if defined(NPY_HAVE_ENDIAN_H) || defined(NPY_HAVE_SYS_ENDIAN_H)
+     /* Use endian.h if available */
+ 
+-    #if defined(NPY_HAVE_ENDIAN_H)
+-    #include <endian.h>
+-    #elif defined(NPY_HAVE_SYS_ENDIAN_H)
+-    #include <sys/endian.h>
+-    #endif
++    #if defined(__QNX__)
++	#include <gulliver.h>
++	#else
++		#if defined(NPY_HAVE_ENDIAN_H)
++			#include <endian.h>
++		#elif defined(NPY_HAVE_SYS_ENDIAN_H)
++			#include <sys/endian.h>
++		#endif
++	#endif
+ 
+     #if defined(BYTE_ORDER) && defined(BIG_ENDIAN) && defined(LITTLE_ENDIAN)
+         #define NPY_BYTE_ORDER    BYTE_ORDER
+diff --git a/numpy/distutils/ccompiler.py b/numpy/distutils/ccompiler.py
+index 40f495fc7..2a1bbdee1 100644
+--- a/numpy/distutils/ccompiler.py
++++ b/numpy/distutils/ccompiler.py
+@@ -5,6 +5,8 @@
+ import shlex
+ import time
+ import subprocess
++# QNX
++import platform
+ from copy import copy
+ from pathlib import Path
+ from distutils import ccompiler
+@@ -808,6 +810,11 @@ def gen_lib_options(compiler, library_dirs, runtime_library_dirs, libraries):
+     r = _distutils_gen_lib_options(compiler, library_dirs,
+                                    runtime_library_dirs, libraries)
+     lib_opts = []
++    # Need to add CFLAGS to linker options for QNX
++    if 'QNX_TARGET' in os.environ:
++        lib_opts = [os.environ['CFLAGS']]
++    else:
++        log.error("QNX_TARGET not defined")
+     for i in r:
+         if is_sequence(i):
+             lib_opts.extend(list(i))
+diff --git a/numpy/distutils/system_info.py b/numpy/distutils/system_info.py
+index 3dca7fb5a..d35525bdc 100644
+--- a/numpy/distutils/system_info.py
++++ b/numpy/distutils/system_info.py
+@@ -326,16 +326,23 @@ def add_system_root(library_root):
+         add_system_root(os.path.join(conda_dir, 'Library'))
+ 
+ else:
+-    default_lib_dirs = libpaths(['/usr/local/lib', '/opt/lib', '/usr/lib',
+-                                 '/opt/local/lib', '/sw/lib'], platform_bits)
+-    default_runtime_dirs = []
+-    default_include_dirs = ['/usr/local/include',
+-                            '/opt/include',
+-                            # path of umfpack under macports
+-                            '/opt/local/include/ufsparse',
+-                            '/opt/local/include', '/sw/include',
+-                            '/usr/include/suitesparse']
+-    default_src_dirs = ['.', '/usr/local/src', '/opt/src', '/sw/src']
++    if 'QNX_TARGET' in os.environ:
++        default_lib_dirs = []
++        default_runtime_dirs = []
++        default_include_dirs = []
++        default_src_dirs = []
++    else:
++        log.error("QNX_TARGET not defined")
++        default_lib_dirs = libpaths(['/usr/local/lib', '/opt/lib', '/usr/lib',
++                                     '/opt/local/lib', '/sw/lib'], platform_bits)
++        default_runtime_dirs = []
++        default_include_dirs = ['/usr/local/include',
++                                '/opt/include', '/usr/include',
++                                # path of umfpack under macports
++                                '/opt/local/include/ufsparse',
++                                '/opt/local/include', '/sw/include',
++                                '/usr/include/suitesparse']
++        default_src_dirs = ['.', '/usr/local/src', '/opt/src', '/sw/src']
+ 
+     default_x11_lib_dirs = libpaths(['/usr/X11R6/lib', '/usr/X11/lib',
+                                      '/usr/lib'], platform_bits)
+diff --git a/numpy/distutils/unixccompiler.py b/numpy/distutils/unixccompiler.py
+index 4884960fd..b7c14ad1e 100644
+--- a/numpy/distutils/unixccompiler.py
++++ b/numpy/distutils/unixccompiler.py
+@@ -46,7 +46,12 @@ def UnixCCompiler__compile(self, obj, src, ext, cc_args, extra_postargs, pp_opts
+     # gcc style automatic dependencies, outputs a makefile (-MF) that lists
+     # all headers needed by a c file as a side effect of compilation (-MMD)
+     if getattr(self, '_auto_depends', False):
+-        deps = ['-MMD', '-MF', obj + '.d']
++        # QNX compiler does not like -MMD and -MF flags
++        if 'QNX_TARGET' in os.environ:
++            deps = []
++        else:
++            log.error("QNX_TARGET not defined")
++            deps = ['-MMD', '-MF', obj + '.d']
+     else:
+         deps = []
+ 

@@ -1,0 +1,38 @@
+diff --git a/image_tools/package.xml b/image_tools/package.xml
+index 45ed648..dcfff08 100644
+--- a/image_tools/package.xml
++++ b/image_tools/package.xml
+@@ -14,13 +14,13 @@
+   <author email="mabel@openrobotics.org">Mabel Zhang</author>
+ 
+   <buildtool_depend>ament_cmake</buildtool_depend>
+-  <build_depend>libopencv-dev</build_depend>
++  <build_depend>opencv_vendor</build_depend>
+   <build_depend>rclcpp</build_depend>
+   <build_depend>rclcpp_components</build_depend>
+   <build_depend>sensor_msgs</build_depend>
+   <build_depend>std_msgs</build_depend>
+ 
+-  <exec_depend>libopencv-dev</exec_depend>
++  <exec_depend>opencv_vendor</exec_depend>
+   <exec_depend>rclcpp</exec_depend>
+   <exec_depend>rclcpp_components</exec_depend>
+   <exec_depend>sensor_msgs</exec_depend>
+diff --git a/intra_process_demo/package.xml b/intra_process_demo/package.xml
+index c078448..dbdae86 100644
+--- a/intra_process_demo/package.xml
++++ b/intra_process_demo/package.xml
+@@ -15,12 +15,11 @@
+ 
+   <buildtool_depend>ament_cmake</buildtool_depend>
+ 
+-  <build_depend>libopencv-dev</build_depend>
++  <build_depend>opencv_vendor</build_depend>
+   <build_depend>rclcpp</build_depend>
+   <build_depend>sensor_msgs</build_depend>
+   <build_depend>std_msgs</build_depend>
+ 
+-  <exec_depend>libopencv-dev</exec_depend>
+   <exec_depend>rclcpp</exec_depend>
+   <exec_depend>sensor_msgs</exec_depend>
+ 

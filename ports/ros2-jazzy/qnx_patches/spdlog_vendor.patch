@@ -1,0 +1,22 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 539c4bf..d50acb9 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -14,8 +14,16 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+   set(CMAKE_CXX_FLAGS "-Wno-deprecated-declarations ${CMAKE_CXX_FLAGS}")
+ endif()
+ 
++# For QNX, always build spdlog from source
++# For other platforms, use system spdlog if found and version >= 1.5.0
++if(QNX)
++  set(SPDLOG_SATISFIED FALSE)
++else()
++  set(SPDLOG_SATISFIED ${spdlog_FOUND})
++endif()
++
+ ament_vendor(spdlog_vendor
+-  SATISFIED ${spdlog_FOUND}
++  SATISFIED ${SPDLOG_SATISFIED}
+   VCS_URL https://github.com/gabime/spdlog.git
+   VCS_VERSION v1.12.0
+   CMAKE_ARGS

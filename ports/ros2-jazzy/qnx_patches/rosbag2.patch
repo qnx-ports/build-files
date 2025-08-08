@@ -1,0 +1,56 @@
+diff --git a/rosbag2_py/CMakeLists.txt b/rosbag2_py/CMakeLists.txt
+index a4364cc9..49d353ed 100644
+--- a/rosbag2_py/CMakeLists.txt
++++ b/rosbag2_py/CMakeLists.txt
+@@ -16,6 +16,11 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+   add_compile_options(-Wall -Wextra -Wpedantic)
+ endif()
+ 
++if(QNX)
++  # Workaround for sys/termio.h:115 error
++  add_compile_definitions(__hpux=1)
++endif()
++
+ # Figure out Python3 debug/release before anything else can find_package it
+ if(WIN32 AND CMAKE_BUILD_TYPE STREQUAL "Debug")
+   find_package(python_cmake_module REQUIRED)
+@@ -34,7 +39,17 @@ find_package(rosbag2_storage REQUIRED)
+ find_package(rosbag2_transport REQUIRED)
+ 
+ # Find python before pybind11
+-find_package(Python3 REQUIRED COMPONENTS Interpreter Development)
++if(QNX)
++  find_library(python3_LIBRARY NAMES python3)
++
++  include_directories(${PROJECT_NAME}
++    ${QNX_TARGET}/usr/include/python${PYTHON_VERSION_QNX}
++    ${QNX_TARGET}/usr/include/${CPUVARDIR}/python${PYTHON_VERSION_QNX}
++    ${QNX_TARGET}/${CPUVARDIR}/usr/lib/python${PYTHON_VERSION_QNX}/site-packages/numpy/core/include
++    ${QNX_TARGET}/usr/include/tinyxml2)
++else()
++  find_package(Python3 REQUIRED COMPONENTS Interpreter Development)
++endif()
+ 
+ find_package(pybind11_vendor REQUIRED)
+ find_package(pybind11 REQUIRED)
+diff --git a/zstd_vendor/CMakeLists.txt b/zstd_vendor/CMakeLists.txt
+index 9ec3c07a..c25cfae0 100644
+--- a/zstd_vendor/CMakeLists.txt
++++ b/zstd_vendor/CMakeLists.txt
+@@ -8,10 +8,14 @@ list(INSERT CMAKE_MODULE_PATH 0 "${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules")
+ # We need at least VERSION 1.5.5, version check is done in Findzstd.cmake
+ # The platform with the oldest supported version is RHEL-9,
+ # which has zstd 1.5.1.  Make sure we have at least that version.
+-find_package(zstd 1.5.1 QUIET)
++if(QNX AND $ENV{QNX_SDP_VERSION} STREQUAL "qnx800")
++  find_package(zstd REQUIRED)
++else()
++  find_package(zstd QUIET)
++endif()
+ 
+ ament_vendor(zstd_vendor
+-  SATISFIED ${zstd_FOUND}
++  SATISFIED ${ZSTD_SATISFIED}
+   VCS_URL https://github.com/facebook/zstd.git
+   VCS_VERSION v1.5.5
+   SOURCE_SUBDIR build/cmake
