@@ -1,315 +1,318 @@
-[submodule "check-companion"]
+[submodule "ports-companion/check-companion"]
 	path = ports-companion/check
 	url = https://github.com/qnx-ports/check-companion.git
-[submodule "abseil-cpp"]
+[submodule "ports-companion/abseil-cpp"]
 	path = ports-companion/abseil-cpp
 	url = https://github.com/qnx-ports/abseil-cpp-companion.git
-[submodule "asio"]
+[submodule "ports-companion/asio"]
 	path = ports-companion/asio
 	url = https://github.com/qnx-ports/asio-companion.git
-[submodule "aws-crt-cpp"]
+[submodule "ports-companion/aws-crt-cpp"]
 	path = ports-companion/aws-crt-cpp
 	url = https://github.com/qnx-ports/aws-crt-cpp-companion.git
-[submodule "azure-iot-sdk-c"]
+[submodule "ports-companion/azure-iot-sdk-c"]
 	path = ports-companion/azure-iot-sdk-c
 	url = https://github.com/qnx-ports/azure-iot-sdk-c-companion.git
-[submodule "bash"]
+[submodule "ports-companion/bash"]
 	path = ports-companion/bash
 	url = https://github.com/qnx-ports/bash-companion.git
-[submodule "benchmark"]
+[submodule "ports-companion/benchmark"]
 	path = ports-companion/benchmark
 	url = https://github.com/qnx-ports/benchmark-companion.git
-[submodule "boost"]
+[submodule "ports-companion/boost"]
 	path = ports-companion/boost
 	url = https://github.com/qnx-ports/boost-companion.git
-[submodule "brotli"]
+[submodule "ports-companion/brotli"]
 	path = ports-companion/brotli
 	url = https://github.com/qnx-ports/brotli-companion.git
-[submodule "bzip2"]
+[submodule "ports-companion/bzip2"]
 	path = ports-companion/bzip2
 	url = https://github.com/qnx-ports/bzip2-companion.git
-[submodule "cairo"]
+[submodule "ports-companion/cairo"]
 	path = ports-companion/cairo
 	url = https://github.com/qnx-ports/cairo-companion.git
-[submodule "CANdb"]
+[submodule "ports-companion/CANdb"]
 	path = ports-companion/CANdb
 	url = https://github.com/qnx-ports/CANdb-companion.git
-[submodule "capnproto"]
+[submodule "ports-companion/capnproto"]
 	path = ports-companion/capnproto
 	url = https://github.com/qnx-ports/capnproto-companion.git
-[submodule "c-ares"]
+[submodule "ports-companion/c-ares"]
 	path = ports-companion/c-ares
 	url = https://github.com/qnx-ports/c-ares-companion.git
-[submodule "Catch2"]
+[submodule "ports-companion/Catch2"]
 	path = ports-companion/Catch2
 	url = https://github.com/qnx-ports/Catch2-companion.git
-[submodule "check"]
+[submodule "ports-companion/check"]
 	path = ports-companion/check
 	url = https://github.com/qnx-ports/check-companion.git
-[submodule "cJSON"]
+[submodule "ports-companion/cJSON"]
 	path = ports-companion/cJSON
 	url = https://github.com/qnx-ports/cJSON-companion.git
-[submodule "clapack"]
+[submodule "ports-companion/clapack"]
 	path = ports-companion/clapack
 	url = https://github.com/qnx-ports/clapack-companion.git
-[submodule "ComputeLibrary"]
+[submodule "ports-companion/ComputeLibrary"]
 	path = ports-companion/ComputeLibrary
 	url = https://github.com/qnx-ports/ComputeLibrary-companion.git
-[submodule "cpuinfo"]
+[submodule "ports-companion/cpuinfo"]
 	path = ports-companion/cpuinfo
 	url = https://github.com/qnx-ports/cpuinfo-companion.git
-[submodule "csmith"]
+[submodule "ports-companion/csmith"]
 	path = ports-companion/csmith
 	url = https://github.com/qnx-ports/csmith-companion.git
-[submodule "curl"]
+[submodule "ports-companion/curl"]
 	path = ports-companion/curl
 	url = https://github.com/qnx-ports/curl-companion.git
-[submodule "dlt-daemon"]
+[submodule "ports-companion/dlt-daemon"]
 	path = ports-companion/dlt-daemon
 	url = https://github.com/qnx-ports/dlt-daemon-companion.git
-[submodule "eigen"]
+[submodule "ports-companion/eigen"]
 	path = ports-companion/eigen
 	url = https://github.com/qnx-ports/eigen-companion.git
-[submodule "epoll"]
+[submodule "ports-companion/epoll"]
 	path = ports-companion/epoll
 	url = https://github.com/qnx-ports/epoll-companion.git
-[submodule "farmhash"]
+[submodule "ports-companion/farmhash"]
 	path = ports-companion/farmhash
 	url = https://github.com/qnx-ports/farmhash-companion.git
-[submodule "Fast-CDR"]
+[submodule "ports-companion/Fast-CDR"]
 	path = ports-companion/Fast-CDR
 	url = https://github.com/qnx-ports/Fast-CDR-companion.git
-[submodule "Fast-DDS"]
+[submodule "ports-companion/Fast-DDS"]
 	path = ports-companion/Fast-DDS
 	url = https://github.com/qnx-ports/Fast-DDS-companion.git
-[submodule "fontconfig"]
+[submodule "ports-companion/fontconfig"]
 	path = ports-companion/fontconfig
 	url = https://github.com/qnx-ports/fontconfig-companion.git
-[submodule "foonathan_memory_vendor"]
+[submodule "ports-companion/foonathan_memory_vendor"]
 	path = ports-companion/foonathan_memory_vendor
 	url = https://github.com/qnx-ports/foonathan_memory_vendor-companion.git
-[submodule "FreeImage"]
+[submodule "ports-companion/FreeImage"]
 	path = ports-companion/FreeImage
 	url = https://github.com/qnx-ports/FreeImage-companion.git
-[submodule "freetype"]
+[submodule "ports-companion/freetype"]
 	path = ports-companion/freetype
 	url = https://github.com/qnx-ports/freetype-companion.git
-[submodule "fribidi"]
+[submodule "ports-companion/fribidi"]
 	path = ports-companion/fribidi
 	url = https://github.com/qnx-ports/fribidi-companion.git
-[submodule "gdk-pixbuf"]
+[submodule "ports-companion/gdk-pixbuf"]
 	path = ports-companion/gdk-pixbuf
 	url = https://github.com/qnx-ports/gdk-pixbuf-companion.git
-[submodule "gettext-runtime"]
+[submodule "ports-companion/gettext-runtime"]
 	path = ports-companion/gettext-runtime
 	url = https://github.com/qnx-ports/gettext-runtime-companion.git
-[submodule "gflags"]
+[submodule "ports-companion/gflags"]
 	path = ports-companion/gflags
 	url = https://github.com/qnx-ports/gflags-companion.git
-[submodule "glib"]
+[submodule "ports-companion/glib"]
 	path = ports-companion/glib
 	url = https://github.com/qnx-ports/glib-companion.git
-[submodule "glog"]
+[submodule "ports-companion/glog"]
 	path = ports-companion/glog
 	url = https://github.com/qnx-ports/glog-companion.git
-[submodule "googletest"]
+[submodule "ports-companion/googletest"]
 	path = ports-companion/googletest
 	url = https://github.com/qnx-ports/googletest-companion.git
-[submodule "graphene"]
+[submodule "ports-companion/graphene"]
 	path = ports-companion/graphene
 	url = https://github.com/qnx-ports/graphene-companion.git
-[submodule "graphite"]
+[submodule "ports-companion/graphite"]
 	path = ports-companion/graphite
 	url = https://github.com/qnx-ports/graphite-companion.git
-[submodule "grpc"]
+[submodule "ports-companion/grpc"]
 	path = ports-companion/grpc
 	url = https://github.com/qnx-ports/grpc-companion.git
-[submodule "gtk"]
+[submodule "ports-companion/gtk"]
 	path = ports-companion/gtk
 	url = https://github.com/qnx-ports/gtk-companion.git
-[submodule "gtsam"]
+[submodule "ports-companion/gtsam"]
 	path = ports-companion/gtsam
 	url = https://github.com/qnx-ports/gtsam-companion.git
-[submodule "harfbuzz"]
+[submodule "ports-companion/harfbuzz"]
 	path = ports-companion/harfbuzz
 	url = https://github.com/qnx-ports/harfbuzz-companion.git
-[submodule "icu"]
+[submodule "ports-companion/icu"]
 	path = ports-companion/icu
 	url = https://github.com/qnx-ports/icu-companion.git
-[submodule "jansson"]
+[submodule "ports-companion/jansson"]
 	path = ports-companion/jansson
 	url = https://github.com/qnx-ports/jansson-companion.git
-[submodule "kineto"]
+[submodule "ports-companion/kineto"]
 	path = ports-companion/kineto
 	url = https://github.com/qnx-ports/kineto-companion.git
-[submodule "lely-core"]
+[submodule "ports-companion/lely-core"]
 	path = ports-companion/lely-core
 	url = https://github.com/qnx-ports/lely-core-companion.git
-[submodule "libdatrie"]
+[submodule "ports-companion/libdatrie"]
 	path = ports-companion/libdatrie
 	url = https://github.com/qnx-ports/libdatrie-companion.git
-[submodule "libev"]
+[submodule "ports-companion/libev"]
 	path = ports-companion/libev
 	url = https://github.com/qnx-ports/libev-companion.git
-[submodule "libevent"]
+[submodule "ports-companion/libevent"]
 	path = ports-companion/libevent
 	url = https://github.com/qnx-ports/libevent-companion.git
-[submodule "libexpat"]
+[submodule "ports-companion/libexpat"]
 	path = ports-companion/libexpat
 	url = https://github.com/qnx-ports/libexpat-companion.git
-[submodule "libffi"]
+[submodule "ports-companion/libffi"]
 	path = ports-companion/libffi
 	url = https://github.com/qnx-ports/libffi-companion.git
-[submodule "libiconv"]
+[submodule "ports-companion/libiconv"]
 	path = ports-companion/libiconv
 	url = https://github.com/qnx-ports/libiconv-companion.git
-[submodule "libjpeg-turbo"]
+[submodule "ports-companion/libjpeg-turbo"]
 	path = ports-companion/libjpeg-turbo
 	url = https://github.com/qnx-ports/libjpeg-turbo-companion.git
-[submodule "libjson"]
+[submodule "ports-companion/libjson"]
 	path = ports-companion/libjson
 	url = https://github.com/qnx-ports/libjson-companion.git
-[submodule "libpng"]
+[submodule "ports-companion/libpng"]
 	path = ports-companion/libpng
 	url = https://github.com/qnx-ports/libpng-companion.git
-[submodule "libthai"]
+[submodule "ports-companion/libthai"]
 	path = ports-companion/libthai
 	url = https://github.com/qnx-ports/libthai-companion.git
-[submodule "libuv"]
+[submodule "ports-companion/libuv"]
 	path = ports-companion/libuv
 	url = https://github.com/qnx-ports/libuv-companion.git
-[submodule "libxkbcommon"]
+[submodule "ports-companion/libxkbcommon"]
 	path = ports-companion/libxkbcommon
 	url = https://github.com/qnx-ports/libxkbcommon-companion.git
-[submodule "libxml2"]
+[submodule "ports-companion/libxml2"]
 	path = ports-companion/libxml2
 	url = https://github.com/qnx-ports/libxml2-companion.git
-[submodule "libyuv"]
+[submodule "ports-companion/libyuv"]
 	path = ports-companion/libyuv
 	url = https://github.com/qnx-ports/libyuv-companion.git
-[submodule "libzmq"]
+[submodule "ports-companion/libzmq"]
 	path = ports-companion/libzmq
 	url = https://github.com/qnx-ports/libzmq-companion.git
-[submodule "lighttpd1.4"]
+[submodule "ports-companion/lighttpd1.4"]
 	path = ports-companion/lighttpd1.4
 	url = https://github.com/qnx-ports/lighttpd1.4-companion.git
-[submodule "memory"]
+[submodule "ports-companion/memory"]
 	path = ports-companion/memory
 	url = https://github.com/qnx-ports/memory-companion.git
-[submodule "METIS"]
+[submodule "ports-companion/METIS"]
 	path = ports-companion/METIS
 	url = https://github.com/qnx-ports/METIS-companion.git
-[submodule "mosquitto"]
+[submodule "ports-companion/mosquitto"]
 	path = ports-companion/mosquitto
 	url = https://github.com/qnx-ports/mosquitto-companion.git
-[submodule "muslflt"]
+[submodule "ports-companion/muslflt"]
 	path = ports-companion/muslflt
 	url = https://github.com/qnx-ports/muslflt-companion.git
-[submodule "nanosvg"]
+[submodule "ports-companion/nanosvg"]
 	path = ports-companion/nanosvg
 	url = https://github.com/qnx-ports/nanosvg-companion.git
-[submodule "nghttp2"]
+[submodule "ports-companion/nghttp2"]
 	path = ports-companion/nghttp2
 	url = https://github.com/qnx-ports/nghttp2-companion.git
-[submodule "numpy"]
+[submodule "ports-companion/numpy"]
 	path = ports-companion/numpy
 	url = https://github.com/qnx-ports/numpy-companion.git
-[submodule "OpenBLAS"]
+[submodule "ports-companion/OpenBLAS"]
 	path = ports-companion/OpenBLAS
 	url = https://github.com/qnx-ports/OpenBLAS-companion.git
-[submodule "opencv"]
+[submodule "ports-companion/opencv"]
 	path = ports-companion/opencv
 	url = https://github.com/qnx-ports/opencv-companion.git
-[submodule "pandas"]
+[submodule "ports-companion/pandas"]
 	path = ports-companion/pandas
 	url = https://github.com/qnx-ports/pandas-companion.git
-[submodule "pcre2"]
+[submodule "ports-companion/pcre2"]
 	path = ports-companion/pcre2
 	url = https://github.com/qnx-ports/pcre2-companion.git
-[submodule "pdfium"]
+[submodule "ports-companion/pdfium"]
 	path = ports-companion/pdfium
 	url = https://github.com/qnx-ports/pdfium-companion.git
-[submodule "perl5"]
+[submodule "ports-companion/perl5"]
 	path = ports-companion/perl5
 	url = https://github.com/qnx-ports/perl5-companion.git
-[submodule "pixman"]
+[submodule "ports-companion/pixman"]
 	path = ports-companion/pixman
 	url = https://github.com/qnx-ports/pixman-companion.git
-[submodule "protobuf"]
+[submodule "ports-companion/protobuf"]
 	path = ports-companion/protobuf
 	url = https://github.com/qnx-ports/protobuf-companion.git
-[submodule "pugixml"]
+[submodule "ports-companion/pugixml"]
 	path = ports-companion/pugixml
 	url = https://github.com/qnx-ports/pugixml-companion.git
-[submodule "pytorch"]
+[submodule "ports-companion/pytorch"]
 	path = ports-companion/pytorch
 	url = https://github.com/qnx-ports/pytorch-companion.git
-[submodule "qt"]
+[submodule "ports-companion/qt"]
 	path = ports-companion/qt
 	url = https://github.com/qnx-ports/qt-companion.git
-[submodule "rapidjson"]
+[submodule "ports-companion/rapidjson"]
 	path = ports-companion/rapidjson
 	url = https://github.com/qnx-ports/rapidjson-companion.git
-[submodule "re2"]
+[submodule "ports-companion/re2"]
 	path = ports-companion/re2
 	url = https://github.com/qnx-ports/re2-companion.git
-[submodule "restbed"]
+[submodule "ports-companion/restbed"]
 	path = ports-companion/restbed
 	url = https://github.com/qnx-ports/restbed-companion.git
-[submodule "ros2"]
+[submodule "ports-companion/ros2"]
 	path = ports-companion/ros2
 	url = https://github.com/qnx-ports/ros2-companion.git
-[submodule "rust"]
+[submodule "ports-companion/rust"]
 	path = ports-companion/rust
 	url = https://github.com/qnx-ports/rust-companion.git
-[submodule "ruy"]
+[submodule "ports-companion/ruy"]
 	path = ports-companion/ruy
 	url = https://github.com/qnx-ports/ruy-companion.git
-[submodule "SDL"]
+[submodule "ports-companion/SDL"]
 	path = ports-companion/SDL
 	url = https://github.com/qnx-ports/SDL-companion.git
-[submodule "sleef"]
+[submodule "ports-companion/sleef"]
 	path = ports-companion/sleef
 	url = https://github.com/qnx-ports/sleef-companion.git
-[submodule "sqlite"]
+[submodule "ports-companion/sqlite"]
 	path = ports-companion/sqlite
 	url = https://github.com/qnx-ports/sqlite-companion.git
-[submodule "sqlite_orm"]
+[submodule "ports-companion/sqlite_orm"]
 	path = ports-companion/sqlite_orm
 	url = https://github.com/qnx-ports/sqlite_orm-companion.git
-[submodule "tensorflow"]
+[submodule "ports-companion/tensorflow"]
 	path = ports-companion/tensorflow
 	url = https://github.com/qnx-ports/tensorflow-companion.git
-[submodule "tftp-hpa"]
+[submodule "ports-companion/tftp-hpa"]
 	path = ports-companion/tftp-hpa
 	url = https://github.com/qnx-ports/tftp-hpa-companion.git
-[submodule "tinyxml2"]
+[submodule "ports-companion/tinyxml2"]
 	path = ports-companion/tinyxml2
 	url = https://github.com/qnx-ports/tinyxml2-companion.git
-[submodule "vim"]
+[submodule "ports-companion/vim"]
 	path = ports-companion/vim
 	url = https://github.com/qnx-ports/vim-companion.git
-[submodule "vsomeip"]
+[submodule "ports-companion/vsomeip"]
 	path = ports-companion/vsomeip
 	url = https://github.com/qnx-ports/vsomeip-companion.git
-[submodule "wayland"]
+[submodule "ports-companion/wayland"]
 	path = ports-companion/wayland
 	url = https://github.com/qnx-ports/wayland-companion.git
-[submodule "webrtc"]
+[submodule "ports-companion/webrtc"]
 	path = ports-companion/webrtc
 	url = https://github.com/qnx-ports/webrtc-companion.git
-[submodule "weston"]
+[submodule "ports-companion/weston"]
 	path = ports-companion/weston
 	url = https://github.com/qnx-ports/weston-companion.git
-[submodule "xkeyboard-config"]
+[submodule "ports-companion/xkeyboard-config"]
 	path = ports-companion/xkeyboard-config
 	url = https://github.com/qnx-ports/xkeyboard-config-companion.git
-[submodule "XNNPACK"]
+[submodule "ports-companion/XNNPACK"]
 	path = ports-companion/XNNPACK
 	url = https://github.com/qnx-ports/XNNPACK-companion.git
-[submodule "zlib"]
+[submodule "ports-companion/zlib"]
 	path = ports-companion/zlib
 	url = https://github.com/qnx-ports/zlib-companion.git
-[submodule "zstd"]
+[submodule "ports-companion/zstd"]
 	path = ports-companion/zstd
 	url = https://github.com/qnx-ports/zstd-companion.git
+[submodule "ports-companion/lldpd"]
+	path = ports-companion/lldpd
+	url = https://github.com/qnx-ports/lldpd-companion.git
