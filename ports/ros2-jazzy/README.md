@@ -36,7 +36,7 @@ sudo ln -sf /opt/cmake-3.22.0-linux-x86_64/bin/cmake /usr/local/bin/cmake
 # Set QNX_SDP_VERSION to be qnx800 for SDP 8.0 or qnx710 for SDP 7.1
 export QNX_SDP_VERSION=qnx800
 
-# Get boost library for vision_opencv
+# Get boost library if you want to include vision_opencv in your ros2 build
 cd ~/qnx_workspace
 git clone https://github.com/boostorg/boost.git && cd boost
 git checkout boost-1.82.0
@@ -58,9 +58,12 @@ cd ~/qnx_workspace
 PREFIX="/usr" QNX_PROJECT_ROOT="$(pwd)/googletest" make -C build-files/ports/googletest install -j4
 
 # Import ros2 packages
-cd ~/qnx_workspace/build-files/ports/ros2
+cd ~/qnx_workspace/build-files/ports/ros2-jazzy
 mkdir -p src
 vcs import src < ros2.repos
+
+# Import extra packages if desired
+vcs import src < ros2-extra.repos
 
 # Run required scripts
 ./scripts/colcon-ignore.sh
@@ -132,7 +135,7 @@ pip install -U \
 # source qnxsdp-env.sh
 source ~/qnx800/qnxsdp-env.sh
 
-# Get boost library for vision_opencv
+# Get boost library if you want to include vision_opencv in your ros2 build
 cd ~/qnx_workspace
 git clone https://github.com/boostorg/boost.git && cd boost
 git checkout boost-1.82.0
@@ -153,9 +156,12 @@ make -C build-files/ports/boost/ install QNX_PROJECT_ROOT="$(pwd)/boost" -j4
 PREFIX="/usr" QNX_PROJECT_ROOT="$(pwd)/googletest" make -C build-files/ports/googletest install -j4
 
 # Import ros2 packages
-cd ~/qnx_workspace/build-files/ports/ros2
+cd ~/qnx_workspace/build-files/ports/ros2-jazzy
 mkdir -p src
 vcs import src < ros2.repos
+
+# Import extra packages if desired
+vcs import src < ros2-extra.repos
 
 # Run scripts to ignore some packages and apply QNX patches
 ./scripts/colcon-ignore.sh
@@ -265,7 +271,7 @@ Tested Packages:
 - rosidl_typesupport_cpp
 - rosidl_typesupport_fastrtps_cpp
 
-**Note: Fast-DDS test are skipped in ros2 port. Instead the test results for Fast-DDS   can be found [here](https://github.com/qnx-ports/build-files/blob/main/ports/Fast-DDS/fdds.test.result))**
+**Note: Fast-DDS test are skipped in ros2 port. Instead the test results for Fast-DDS can be found [here](https://github.com/qnx-ports/build-files/blob/main/ports/Fast-DDS/fdds.test.result))**
 ```bash
 cd /data/home/qnxuser/opt/ros2/jazzy
 sh qnxtest.sh
