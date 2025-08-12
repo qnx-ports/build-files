@@ -33,6 +33,22 @@ index a4364cc9..49d353ed 100644
  
  find_package(pybind11_vendor REQUIRED)
  find_package(pybind11 REQUIRED)
+diff --git a/rosbag2_transport/src/rosbag2_transport/recorder.cpp b/rosbag2_transport/src/rosbag2_transport/recorder.cpp
+index d5d1f0b0..3a1f1f4e 100644
+--- a/rosbag2_transport/src/rosbag2_transport/recorder.cpp
++++ b/rosbag2_transport/src/rosbag2_transport/recorder.cpp
+@@ -421,7 +421,11 @@ void RecorderImpl::resume()
+ 
+ void RecorderImpl::toggle_paused()
+ {
++#if defined(__QNX__) && __QNX__ < 800
++  if (atomic_fetch_xor(&paused_, static_cast<unsigned char>(1))) {
++#else
+   if (atomic_fetch_xor(&paused_, 1)) {
++#endif
+     RCLCPP_INFO_STREAM(node->get_logger(), "Resuming recording.");
+   } else {
+     RCLCPP_INFO_STREAM(node->get_logger(), "Pausing recording.");
 diff --git a/zstd_vendor/CMakeLists.txt b/zstd_vendor/CMakeLists.txt
 index 9ec3c07a..c25cfae0 100644
 --- a/zstd_vendor/CMakeLists.txt

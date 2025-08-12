@@ -28,6 +28,7 @@ qnx_patch ./src/ros2/spdlog_vendor spdlog_vendor.patch
 qnx_patch ./src/ros2/ros2_tracing ros2_tracing.patch
 qnx_patch ./src/ros2/rcutils rcutils.patch
 qnx_patch ./src/ros2/rcpputils rcpputils.patch
+qnx_patch ./src/ros2/rcl_logging rcl_logging.patch
 
 qnx_patch ./src/eProsima/Fast-CDR fastcdr.patch
 qnx_patch ./src/eProsima/Fast-DDS fastrtps.patch
@@ -40,6 +41,9 @@ qnx_patch ./src/ros2/rosidl_typesupport rosidl_typesupport.patch
 qnx_patch ./src/ros2/rosidl_typesupport_fastrtps rosidl_typesupport_fastrtps.patch
 qnx_patch ./src/ament/ament_cmake ament_cmake.patch
 qnx_patch ./src/ament/google_benchmark_vendor google_benchmark_vendor.patch
+
+qnx_patch ./src/ros-perception/image_common image_common.patch
+qnx_patch ./src/ros-perception/point_cloud_transport point_cloud_transport.patch
 
 # Apply QNX patches for extra packages
 if [ -d ./src/ros-perception/vision_opencv ]; then
