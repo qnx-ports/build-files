@@ -1,5 +1,18 @@
+diff --git a/demo_nodes_cpp/CMakeLists.txt b/demo_nodes_cpp/CMakeLists.txt
+index 52c504b..9686bf4 100644
+--- a/demo_nodes_cpp/CMakeLists.txt
++++ b/demo_nodes_cpp/CMakeLists.txt
+@@ -41,6 +41,8 @@ endfunction()
+ # So we use the old custom allocator clang for now; we can eventually remove this.
+ if(CMAKE_CXX_COMPILER_ID MATCHES "Clang" AND ${CMAKE_CXX_COMPILER_VERSION} VERSION_LESS 16.0.0)
+   set(allocator_file allocator_tutorial_custom)
++elseif(QNX AND "$ENV{QNX_SDP_VERSION}" STREQUAL "qnx710")
++  set(allocator_file allocator_tutorial_custom)
+ else()
+   set(allocator_file allocator_tutorial_pmr)
+ endif()
 diff --git a/image_tools/package.xml b/image_tools/package.xml
-index 45ed648..dcfff08 100644
+index 6f9b32d..a4a2363 100644
 --- a/image_tools/package.xml
 +++ b/image_tools/package.xml
 @@ -14,13 +14,13 @@
@@ -19,7 +32,7 @@ index 45ed648..dcfff08 100644
    <exec_depend>rclcpp_components</exec_depend>
    <exec_depend>sensor_msgs</exec_depend>
 diff --git a/intra_process_demo/package.xml b/intra_process_demo/package.xml
-index c078448..dbdae86 100644
+index 292dde9..0e97e07 100644
 --- a/intra_process_demo/package.xml
 +++ b/intra_process_demo/package.xml
 @@ -15,12 +15,11 @@
