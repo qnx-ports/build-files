@@ -58,18 +58,23 @@ build(){
 
     cp -f ./scripts/qnxtest.sh install/${CPUVARDIR}
 
-    # Remove build files under test
-    find ./install/${CPUVARDIR}/test -name "CMakeFiles" -exec rm -rf {} +
-    find ./install/${CPUVARDIR}/test -name "*.o" -exec rm -rf {} +
-    find ./install/${CPUVARDIR}/test -name "Makefile" -exec rm -rf {} +
-    find ./install/${CPUVARDIR}/test -name "*.cmake" -exec rm -rf {} +
-    find ./install/${CPUVARDIR}/test -name "*.txt" -exec rm -rf {} +
-    find ./install/${CPUVARDIR}/test -name "*.make" -exec rm -rf {} +
-    find ./install/${CPUVARDIR}/test -name "ament_*" -exec rm -rf {} +
+    # Remove build files under test and install googletest
+    if [ -d "./install/${CPUVARDIR}/test" ]; then
+        echo "Cleaning test directory..."
+        find ./install/${CPUVARDIR}/test -name "CMakeFiles" -exec rm -rf {} +
+        find ./install/${CPUVARDIR}/test -name "*.o" -exec rm -rf {} +
+        find ./install/${CPUVARDIR}/test -name "Makefile" -exec rm -rf {} +
+        find ./install/${CPUVARDIR}/test -name "*.cmake" -exec rm -rf {} +
+        find ./install/${CPUVARDIR}/test -name "*.txt" -exec rm -rf {} +
+        find ./install/${CPUVARDIR}/test -name "*.make" -exec rm -rf {} +
+        find ./install/${CPUVARDIR}/test -name "ament_*" -exec rm -rf {} +
 
-    # Install googletest
-    cp -f ${QNX_TARGET}/${CPUVARDIR}/usr/lib/libgtest* ./install/${CPUVARDIR}/lib
-    cp -f ${QNX_TARGET}/${CPUVARDIR}/usr/lib/libgmock* ./install/${CPUVARDIR}/lib
+        echo "Installing googletest..."
+        cp -f ${QNX_TARGET}/${CPUVARDIR}/usr/lib/libgtest* ./install/${CPUVARDIR}/lib
+        cp -f ${QNX_TARGET}/${CPUVARDIR}/usr/lib/libgmock* ./install/${CPUVARDIR}/lib
+    else
+        echo "Test not installed"
+    fi
 
     # Zip and install jazzy
     mkdir -p ./opt/ros
