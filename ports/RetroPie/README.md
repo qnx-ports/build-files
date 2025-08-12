@@ -139,3 +139,5 @@ Last Updated 7/18/2025 M/D/Y
 |                |[FreeImage](../FreeImage/README.md)            |[GPLv3, FIPL](https://freeimage.sourceforge.io/license.html)|Multifaceted image library, needed by Emulation Station.|
 |                |[Lua](../lua/README.md)            |[MIT](https://www.lua.org/license.html)|Scripting language, needed by many games.|
 
+#### Special Thanks
+Special thanks to the [RetroPie Project](https://retropie.org.uk/) for being the inspiration and guide for this project. 

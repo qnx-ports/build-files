@@ -40,6 +40,7 @@ RAPIDJSON_SRC=${PWD}/../../../rapidjson
 FREEIMAGE_SRC=${PWD}/../../../FreeImage
 PUGIXML_SRC=${PWD}/../../../pugixml
 NANOSVG_SRC=${PWD}/../../../nanosvg
+VLC_SRC=${PWD}/../../../vlc
 
 LUA_SRC=${PWD}/../../../lua
 MUSLFLT_SRC=${PWD}/../../../muslflt
@@ -69,7 +70,7 @@ WKSP=${PWD}/../../../
 
 
 ##########################################################################################
-VERSION=0.2
+VERSION=0.3
 echo "========================="
 echo "[INFO]: Running build_install_all.sh v$VERSION"
 if [ ! "$DO_NOT_INSTALL" = "TRUE" ]; then
@@ -193,6 +194,10 @@ if [ ! -d "$NANOSVG_SRC" ]; then
     echo "[INFO]: Missing nanosvg source. Cloning..."
     git clone https://github.com/memononen/nanosvg.git $NANOSVG_SRC
 fi
+if [ ! -d "$VLC_SRC" ]; then
+    echo "[INFO]: Missing vlc source. Cloning..."
+    git clone https://github.com/qnx-ports/vlc.git $VLC_SRC
+fi
 
 ########### Additional Deps ###########
 if [ ! -d "$LUA_SRC" ]; then
@@ -206,10 +211,10 @@ if [ ! -d "$MUSLFLT_SRC" ]; then
 fi
 
 ########### Other ###########
-if [ ! -d "$HID_INPUT_PROCESSOR" ]; then
-    echo "[INFO]: Missing hid input to screen. Cloning..."
-    git clone https://github.com/JaiXJM-BB/qnx-xinput-screen.git $HID_INPUT_PROCESSOR
-fi
+# if [ ! -d "$HID_INPUT_PROCESSOR" ]; then
+#     echo "[INFO]: Missing hid input to screen. Cloning..."
+#     git clone https://github.com/JaiXJM-BB/qnx-xinput-screen.git $HID_INPUT_PROCESSOR
+# fi
 if [ ! -d "$USB_INPUT_PROCESSOR" ]; then
     echo "[INFO]: Missing hid input to screen. Cloning..."
     git clone https://gitlab.com/qnx/projects/usb-to-screen.git $USB_INPUT_PROCESSOR
@@ -475,8 +480,8 @@ fi
 
 ##########################################################################################
 #xinput
-cd $HID_INPUT_PROCESSOR
-make
+# cd $HID_INPUT_PROCESSOR
+# make
 cd $USB_INPUT_PROCESSOR
 make
 
@@ -484,8 +489,8 @@ cd ${TOP_LEVEL_BUILD_DIR}
 mkdir -p ${TOP_LEVEL_BUILD_DIR}/staging/aarch64le
 mkdir -p ${TOP_LEVEL_BUILD_DIR}/staging/x86_64
 
-cp $HID_INPUT_PROCESSOR/aarch64/le/hid_xinput_to_screen ${TOP_LEVEL_BUILD_DIR}/staging/aarch64le/hid_input_provider
-cp $HID_INPUT_PROCESSOR/x86_64/o/hid_xinput_to_screen ${TOP_LEVEL_BUILD_DIR}/staging/x86_64/hid_input_provider
+# cp $HID_INPUT_PROCESSOR/aarch64/le/hid_xinput_to_screen ${TOP_LEVEL_BUILD_DIR}/staging/aarch64le/hid_input_provider
+# cp $HID_INPUT_PROCESSOR/x86_64/o/hid_xinput_to_screen ${TOP_LEVEL_BUILD_DIR}/staging/x86_64/hid_input_provider
 
 cp $USB_INPUT_PROCESSOR/nto-aarch64-le/usb-to-screen ${TOP_LEVEL_BUILD_DIR}/staging/aarch64le/usb_input_provider
 cp $USB_INPUT_PROCESSOR/nto-x86_64-o/usb-to-screen ${TOP_LEVEL_BUILD_DIR}/staging/x86_64/usb_input_provider
