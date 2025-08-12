@@ -10,6 +10,18 @@ index 89be346..c7b025b 100644
    PATCHES patches
  )
  
+diff --git a/orocos_kdl_vendor/package.xml b/orocos_kdl_vendor/package.xml
+index 5ed7c71..edcc2d7 100644
+--- a/orocos_kdl_vendor/package.xml
++++ b/orocos_kdl_vendor/package.xml
+@@ -20,6 +20,7 @@
+ 
+   <!-- orocos_kdl depends on eigen -->
+   <depend>eigen</depend>
++  <depend>eigen3</depend>
+   <depend>eigen3_cmake_module</depend>
+   <depend>liborocos-kdl-dev</depend>
+ 
 diff --git a/python_orocos_kdl_vendor/CMakeLists.txt b/python_orocos_kdl_vendor/CMakeLists.txt
 index bd493da..b096d6c 100644
 --- a/python_orocos_kdl_vendor/CMakeLists.txt
