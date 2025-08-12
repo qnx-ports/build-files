@@ -1,7 +1,7 @@
 #!/bin/sh
 
 #
-#    Default basic prefix is /usr/local
+# Default basic prefix is /usr/local
 #
 BASIC_PREFIX="/usr/local"
 
@@ -22,36 +22,25 @@ PREFIX="${INSTALL_ROOT_nto}/${BASIC_PREFIX}"
 #
 EXEC_PREFIX="${INSTALL_ROOT_nto}/${cpudir}/${BASIC_PREFIX}"
 
-
-
-PKG_CONFIG_PATH="${EXEC_PREFIX}/lib/pkgconfig"
+#
+# export PKG_CONFIG_PATH variable to tell pkg-config
+# where to look for *.pc files
+#
+export PKG_CONFIG_PATH="${EXEC_PREFIX}/lib/pkgconfig"
 
 #
 #	Setup of essential configuration parameters
 #
 function hook_preconfigure {
-#
-# QNX specific changes are covered by prediefined '__QNX__'
-#       For examples: "fd_passing_stream_server" and "fd_passing_stream_client"
-#       For the testsuites:  unit/ip/multicast 
-#
+
 	CFLAGS="$CFLAGS"
 	CXXFLAGS="$CXXFLAGS"
 	CPPFLAGS="$CPPFLAGS -I${EXEC_PREFIX}/include"
 
-#
-#	Add socket library
-#
 	LDFLAGS="$LDFLAGS -L${EXEC_PREFIX}/lib -lsocket -lregex -lcheck"
 
-#
-#	Distributive directory
-#
 	DIST_BASE="${PWD}/${NESTED_LEVEL}"
 
-#
-#	Setup correct pathes for install and build make commands
-#
 	configure_opts="--srcdir=${DIST_BASE}"
 	configure_opts="${configure_opts} --prefix=${PREFIX}"
 	configure_opts="${configure_opts} --exec-prefix=${EXEC_PREFIX}"
@@ -78,9 +67,9 @@ function hook_configure {
 
 function hook_premake {
 	if [ "${make_cmds}" == "check" ] && [ "${TARGET_SYSNAME}" == "nto" ]; then
-		echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+        echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
         echo "! Test execution suppressed              !"
-		echo "! All tests have to be run on the target !"
+        echo "! All tests have to be run on the target !"
         echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
 		make_opts="${make_opts} TESTS=''"
 	fi
