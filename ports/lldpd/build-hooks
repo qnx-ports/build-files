@@ -22,6 +22,10 @@ PREFIX="${INSTALL_ROOT_nto}/${BASIC_PREFIX}"
 #
 EXEC_PREFIX="${INSTALL_ROOT_nto}/${cpudir}/${BASIC_PREFIX}"
 
+
+
+PKG_CONFIG_PATH="${EXEC_PREFIX}/lib/pkgconfig"
+
 #
 #	Setup of essential configuration parameters
 #
@@ -33,11 +37,12 @@ function hook_preconfigure {
 #
 	CFLAGS="$CFLAGS"
 	CXXFLAGS="$CXXFLAGS"
+	CPPFLAGS="$CPPFLAGS -I${EXEC_PREFIX}/include"
 
 #
 #	Add socket library
 #
-	LDFLAGS="$LDFLAGS -lsocket -lregex"
+	LDFLAGS="$LDFLAGS -L${EXEC_PREFIX}/lib -lsocket -lregex -lcheck"
 
 #
 #	Distributive directory
@@ -50,6 +55,7 @@ function hook_preconfigure {
 	configure_opts="--srcdir=${DIST_BASE}"
 	configure_opts="${configure_opts} --prefix=${PREFIX}"
 	configure_opts="${configure_opts} --exec-prefix=${EXEC_PREFIX}"
+	configure_opts="${configure_opts} --enable-min-macro"
 }
 
 #
@@ -59,7 +65,7 @@ function hook_configure {
     ${NESTED_LEVEL}/configure \
         ${ac_host:+"--host=${ac_host}"} \
         ${ac_build:+"--build=${ac_build}"} \
-        ${configure_opts:+"--enable-min-macro"} \
+        ${configure_opts} \
         ${ac_params:+${CC:+"CC=${CC}"}} \
         ${ac_params:+${CFLAGS:+"CFLAGS=-O2 ${CFLAGS}"}} \
         ${ac_params:+${CPPFLAGS:+"CPPFLAGS=${CPPFLAGS}"}} \
@@ -68,4 +74,14 @@ function hook_configure {
         ${ac_params:+${CXXFLAGS:+"CXXFLAGS=-O2 ${CXXFLAGS}"}} \
         ${ac_params:+${ac_autotools:+${ac_autotools}}} \
         || Error "configure failed";
+}
+
+function hook_premake {
+	if [ "${make_cmds}" == "check" ] && [ "${TARGET_SYSNAME}" == "nto" ]; then
+		echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+        echo "! Test execution suppressed              !"
+		echo "! All tests have to be run on the target !"
+        echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+		make_opts="${make_opts} TESTS=''"
+	fi
 }
