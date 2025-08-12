@@ -21,8 +21,6 @@ INSTALL_ROOT ?= $(INSTALL_ROOT_$(OS))
 #CMake config modules, etc.). Default is /usr/local
 PREFIX ?= /usr/local
 
-PYTORCH_VERSION = 2.3.1
-
 #choose Release or Debug
 CMAKE_BUILD_TYPE ?= Release
 
@@ -31,7 +29,7 @@ ALL_DEPENDENCIES = pytorch_mobile_all
 .PHONY: pytorch_mobile_all pytorch_mobile_all_clean sleef_host_tools_all sleef_host_tools_clean protobuf_host_install protobuf_host_tools_clean
 
 FLAGS   += -D_QNX_SOURCE -D__QNXNTO__
-LDFLAGS += -Wl,--build-id=md5
+LDFLAGS += -Wl,--build-id=md5 -lang-c++
 
 include $(MKFILES_ROOT)/qtargets.mk
 
@@ -47,6 +45,23 @@ BUILD_LITE_INTERPRETER ?= OFF
 SELECTED_OP_LIST ?=
 BUILD_TESTING ?= OFF
 TRACING_BASED ?= OFF
+
+
+ifeq ($(strip $(notdir $(QNX_TARGET))),qnx7)
+SDP = 7.1
+PYTORCH_VERSION = 1.13.0
+
+BUILD_TEST=$(BUILD_TESTING)
+BUILD_MOBILE_TEST=$(BUILD_TESTING)
+BUILD_MOBILE_BENCHMARK=$(BUILD_TESTING)
+else
+SDP = 8.0
+PYTORCH_VERSION = 2.3.1
+
+BUILD_TEST=$(BUILD_TESTING)
+BUILD_MOBILE_TEST=$(BUILD_TESTING)
+BUILD_MOBILE_BENCHMARK=OFF
+endif
 
 PREFIX_PATH := $(shell python -c 'import sysconfig, sys; sys.stdout.write(sysconfig.get_path("purelib"))')
 PYTHON_EXECUTABLE := $(shell python -c 'import sys; sys.stdout.write(sys.executable)')
@@ -84,13 +99,15 @@ CMAKE_ARGS =    -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
                 -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
                 -DBUILD_LITE_INTERPRETER=$(BUILD_LITE_INTERPRETER) \
                 -DSELECTED_OP_LIST=$(SELECTED_OP_LIST) \
-                -DBUILD_TEST=$(BUILD_TESTING) \
+                -DBUILD_TEST=$(BUILD_TEST) \
+                -DBUILD_MOBILE_TEST=$(BUILD_MOBILE_TEST) \
+                -DBUILD_MOBILE_BENCHMARK=$(BUILD_MOBILE_BENCHMARK) \
                 -DINSTALL_TEST=OFF \
                 -DBUILD_BINARY=OFF \
                 -DTRACING_BASED=$(TRACING_BASED) \
                 -DXNNPACK_ENABLE_ASSEMBLY=OFF \
                 -DBUILD_CUSTOM_PROTOBUFF=OFF \
-                -DBUILD_SHARED_LIBS=ON
+                -DBUILD_SHARED_LIBS=ON \
 
 ifeq ($(USE_LIGHTWEIGHT_DISPATCH),ON)
     CMAKE_ARGS +=   -DUSE_LIGHTWEIGHT_DISPATCH=ON \
@@ -111,10 +128,10 @@ MAKE_ARGS ?= -j $(firstword $(JLEVEL) 1)
 
 pytorch_mobile_all: sleef_host_tools_all protobuf_host_install
 	echo "make pytorch_mobile_all  $(NTO_DIR_NAME)"
+	echo "Building for PyTorch v${PYTORCH_VERSION} ON SDP ${SDP}."
 	mkdir -p build && \
 	cd build && \
 	cmake 	"${QNX_PROJECT_ROOT}" \
-		-DCMAKE_BUILD_TYPE=Release \
 		${CMAKE_ARGS} \
 		${PYTORCH_BUILD_FLAGS} \
 		-DCMAKE_PREFIX_PATH=$(PREFIX_PATH) \
