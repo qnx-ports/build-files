@@ -219,7 +219,7 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/data/home/qnxuser/opt/ros/jazzy/lib
 
 # Setup Environment
 cd /data/home/qnxuser/opt/ros/jazzy
-source setup.bash
+. setup.bash
 
 # List Packages
 ros2 pkg list
