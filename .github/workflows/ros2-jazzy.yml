@@ -74,7 +74,6 @@ jobs:
             export QNX_SDP_VERSION=qnx710
           fi
           source /usr/local/qnx/env/bin/activate
-          sudo ln -sf /opt/cmake-3.22.0-linux-x86_64/bin/cmake /usr/local/bin/cmake
           cd ~/workspace
           PREFIX="/usr" QNX_PROJECT_ROOT="$(pwd)/googletest" make -C build-files/ports/googletest install
           cd boost/tools/build
