@@ -1,5 +1,5 @@
 # Skip ARM v7 build for QNX 8.0
-ifneq (,$(findstring qnx800,$(QNX_TARGET)))
+ifneq (,$(or $(findstring qnx800,$(QNX_TARGET)),$(findstring qnx/800,$(QNX_TARGET))))
 install check:
 	@echo "ARM v7 build is not supported for QNX 8.0. skipping..."
 
