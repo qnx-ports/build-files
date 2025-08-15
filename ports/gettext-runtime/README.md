@@ -21,7 +21,7 @@ Pre-requisite: Install Docker on Ubuntu https://docs.docker.com/engine/install/u
 # Create a workspace
 mkdir -p ~/qnx_workspace && cd ~/qnx_workspace
 git clone https://github.com/qnx-ports/build-files.git
-wget https://ftp.gnu.org/pub/gnu/gettext/gettext-0.23.1.tar.gz && tar -xf gettext-0.23.1.tar.gz
+wget https://ftpmirror.gnu.org/gnu/gettext/gettext-0.23.1.tar.gz && tar -xf gettext-0.23.1.tar.gz
 
 # Optionally Build the Docker image and create a container
 cd build-files/docker
