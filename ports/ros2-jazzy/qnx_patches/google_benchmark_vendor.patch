@@ -1,0 +1,36 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 88722fe..c96e830 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -67,7 +67,9 @@ macro(build_benchmark)
+       ${extra_cmake_args}
+     PATCH_COMMAND
+       ${CMAKE_COMMAND} -E chdir <SOURCE_DIR> git apply -p1 --ignore-space-change --whitespace=nowarn
+-        ${CMAKE_CURRENT_SOURCE_DIR}/thread_safety_attributes.patch
++        ${CMAKE_CURRENT_SOURCE_DIR}/thread_safety_attributes.patch &&
++      ${CMAKE_COMMAND} -E chdir <SOURCE_DIR> git apply -p1 --ignore-space-change --whitespace=nowarn
++        ${CMAKE_CURRENT_SOURCE_DIR}/qnx_old_style_cast_fix.patch
+   )
+ 
+   # The external project will install to the build folder, but we'll install that on make install.
+diff --git a/qnx_old_style_cast_fix.patch b/qnx_old_style_cast_fix.patch
+new file mode 100644
+index 0000000..89fd974
+--- /dev/null
++++ b/qnx_old_style_cast_fix.patch
+@@ -0,0 +1,15 @@
++diff --git a/src/sysinfo.cc b/src/sysinfo.cc
++index 922e83a..ec9fd35 100644
++--- a/src/sysinfo.cc
+++++ b/src/sysinfo.cc
++@@ -771,8 +771,8 @@ double GetCPUCyclesPerSecond(CPUInfo::Scaling scaling) {
++   kstat_close(kc);
++   return clock_hz;
++ #elif defined(BENCHMARK_OS_QNX)
++-  return static_cast<double>((int64_t)(SYSPAGE_ENTRY(cpuinfo)->speed) *
++-                             (int64_t)(1000 * 1000));
+++  return static_cast<double>(static_cast<int64_t>(SYSPAGE_ENTRY(cpuinfo)->speed) *
+++                             static_cast<int64_t>(1000 * 1000));
++ #elif defined(BENCHMARK_OS_QURT)
++   // QuRT doesn't provide any API to query Hexagon frequency.
++   return 1000000000;
