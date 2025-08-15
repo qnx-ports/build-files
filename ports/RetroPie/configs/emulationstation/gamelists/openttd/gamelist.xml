@@ -1,0 +1,26 @@
+<gameList>
+	<game>
+		<path>./startopenttd.sh</path>
+		<image>~/.emulationstation/gamecovers/openttd.svg</image>
+		<name>OpenTTD</name>
+		<desc>OpenTTD is an open source reimplementation of the Microprose game Transport Tycoon Deluxe (TTD). As president of a start-up transportation company in (typically) 1950, you have a choice of building rail, road, air and maritime transportation routes to build up your transportation empire.</desc>
+		<players>1</players>
+		<rating>1</rating>
+		<genre>Simulation, Tycoon</genre>
+		<publisher>OpenTTD Team</publisher>
+		<developer>OpenTTD Team</developer>
+		<releasedate>20040314T000000</releasedate>
+	</game>
+	<game>
+		<path>./startserver.sh</path>
+		<image>~/.emulationstation/gamecovers/openttd.svg</image>
+		<name>OpenTTD Server</name>
+		<desc>Starts a headless (No GUI) OpenTTD Server.</desc>
+		<players>0</players>
+		<rating>1</rating>
+		<genre>Simulation, Tycoon</genre>
+		<publisher>OpenTTD Team</publisher>
+		<developer>OpenTTD Team</developer>
+		<releasedate>20040314T000000</releasedate>
+	</game>
+</gameList>
