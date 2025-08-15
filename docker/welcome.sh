@@ -11,9 +11,11 @@ echo "
 "
 
 # Setup environment variables
-echo "QNX Environment variables are set to:"
 source /usr/local/qnx/env/bin/activate
-source $HOME/$QNX_SDP_VERSION/qnxsdp-env.sh
+echo "QNX Environment variables are set to:"
+source $QNX_SDP/qnxsdp-env.sh
 export PATH=/usr/local/qnx/depot_tools:$PATH
-cd $HOME/qnx_workspace
+if [ -d "$QNX_WORKSPACE" ]; then
+    cd "$QNX_WORKSPACE"
+fi
 echo ""
