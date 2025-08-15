@@ -28,6 +28,7 @@ build(){
     export PYTHONPYCACHEPREFIX=/tmp
 
     rm -rf build/${CPUVARDIR}/foonathan_memory_vendor/
+    rm -rf build/${CPUVARDIR}/netifaces_vendor/
     rm -rf build/${CPUVARDIR}/numpy_vendor/
     rm -rf build/${CPUVARDIR}/opencv_vendor/
     rm -rf build/${CPUVARDIR}/yaml_cpp_vendor/

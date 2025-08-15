@@ -29,6 +29,7 @@ qnx_patch ./src/ros2/ros2_tracing ros2_tracing.patch
 qnx_patch ./src/ros2/rcutils rcutils.patch
 qnx_patch ./src/ros2/rcpputils rcpputils.patch
 qnx_patch ./src/ros2/rcl_logging rcl_logging.patch
+qnx_patch ./src/ros2/ros2cli ros2cli.patch
 
 qnx_patch ./src/eProsima/Fast-CDR fastcdr.patch
 qnx_patch ./src/eProsima/Fast-DDS fastrtps.patch
