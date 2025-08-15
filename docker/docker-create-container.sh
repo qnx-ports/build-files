@@ -1,18 +1,68 @@
 #!/bin/bash
 
-QNX_SDP_VERSION=${QNX_SDP_VERSION:-qnx800}
+# Set default values for variables
 
-if [ ! -d ${HOME}/${QNX_SDP_VERSION} ]; then
-    echo "ERROR: The SDP's path ${HOME}/${QNX_SDP_VERSION} is not available."
-    exit 1
+# Process command line
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        -v|--volume)
+            MOUNTS+=("$2")
+            shift
+            ;;
+        --mount-home)
+            _mount_home=yes
+            ;;
+        -s|--sdp)
+            QNX_SDP="$2"
+            shift
+            ;;
+        --sdp-version)
+            QNX_SDP_VERSION="$2"
+            shift
+            ;;
+        *)
+            echo "Unknown argument: $1"
+            exit 1
+            ;;
+    esac
+    shift
+done
+
+# Set defaults if an explicit value wasn't specified.
+QNX_SDP_VERSION=${QNX_SDP_VERSION:-qnx800}
+if [ -z "$QNX_SDP" ]; then
+    if [ -n "$QNX_TARGET" ]; then
+        QNX_SDP=$(realpath "${QNX_TARGET}/../..")
+    else
+        QNX_SDP=${HOME}/${QNX_SDP_VERSION}
+    fi
 fi
 
-echo "Using SDP from ${HOME}/${QNX_SDP_VERSION}"
+# Set up the mounts
+if [ "$_mount_home" == "yes" ]; then
+    MOUNTS+=("$HOME:$HOME")
+else
+    # Add the default mounts
+    MOUNTS+=(
+        "$QNX_SDP:$QNX_SDP"
+        "$HOME/.qnx:$HOME/.qnx"
+        "$HOME/qnx_workspace:$HOME/qnx_workspace"
+    )
+fi
+
+# Make sure the SDP is available
+if [ ! -d ${QNX_SDP} ]; then
+    echo "ERROR: The SDP's path ${QNX_SDP} is not available."
+    echo "       Explicitly set the path via the QNX_SDP environment variable,"
+    echo "       or the '-s/--sdp <path>' command line argument."
+    exit 1
+fi
+echo "Using SDP from ${QNX_SDP} with version ${QNX_SDP_VERSION}."
 
 docker run -it \
   --net=host \
   --privileged \
-  -v $HOME/.qnx:$HOME/.qnx \
-  -v $HOME/$QNX_SDP_VERSION:$HOME/$QNX_SDP_VERSION \
-  -v $HOME/qnx_workspace:$HOME/qnx_workspace \
-  "$QNX_SDP_VERSION:latest" /bin/bash --rcfile /usr/local/qnx/.qnxbashrc
+  --env QNX_SDP="$QNX_SDP" \
+  --env QNX_SDP_VERSION="$QNX_SDP_VERSION" \
+  "${MOUNTS[@]/#/-v}" \
+  "qnx-ports-docker:latest" /bin/bash --rcfile /usr/local/qnx/.qnxbashrc
