@@ -8,6 +8,7 @@
 **/nto-*/*
 !**/nto-*/Makefile
 !**/nto-*/GNUmakefile
+!**/nto-*/QNXmakefile
 # Libraries and symbols
 *.so
 *.a
