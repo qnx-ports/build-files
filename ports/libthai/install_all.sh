@@ -25,7 +25,7 @@ for NN in $(seq 0 ${DEP_COUNT}); do
 
 
         if ! QNX_PROJECT_ROOT="$(pwd)/${DEP_NAME_SRC[$NN]}" make -C "build-files/ports/${DEP_NAME[$NN]}/" install; then
-            echo "install_all.sh: Buidling ${DEP_NAME_SRC[$NN]} fails."
+            echo "install_all.sh: Building ${DEP_NAME_SRC[$NN]} fails."
             exit 1; 
         fi
     else

@@ -6,13 +6,11 @@ DEP_CLONE_CMD=("git clone -b R_2_6_4 https://github.com/libexpat/libexpat.git"
                "echo"
                "git clone -b VER-2-13-3 https://gitlab.freedesktop.org/freetype/freetype.git")
 
-wget https://ftpmirror.gnu.org/gnu/libiconv/libiconv-1.18.tar.gz && tar -xf libiconv-1.18.tar.gz
 DEP_COUNT=${#DEP_NAME[@]}
 DEP_COUNT=$(( DEP_COUNT - 1 ))
 
 if ! test -f $(pwd)/libiconv-1.18.tar.gz; then
     wget https://ftpmirror.gnu.org/gnu/libiconv/libiconv-1.18.tar.gz && tar -xf libiconv-1.18.tar.gz
-    exit 1
 fi
 
 if ! test -f $(pwd)/libiconv-1.18.tar.gz; then
@@ -36,7 +34,7 @@ for NN in $(seq 0 ${DEP_COUNT}); do
 
 
         if ! QNX_PROJECT_ROOT="$(pwd)/${DEP_NAME_SRC[$NN]}" make -C "build-files/ports/${DEP_NAME[$NN]}/" install; then
-            echo "install_all.sh: Buidling ${DEP_NAME_SRC[$NN]} fails."
+            echo "install_all.sh: Building ${DEP_NAME_SRC[$NN]} fails."
             exit 1; 
         fi
     else
