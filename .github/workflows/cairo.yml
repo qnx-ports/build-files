@@ -54,7 +54,7 @@ jobs:
     - name: Build cairo
       uses: addnab/docker-run-action@v3
       with:
-        image: ${{ matrix.qnx_env }}
+        image: ghcr.io/qnx-ports/sdp-build-env:latest
         options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
         shell: bash
         run: |
