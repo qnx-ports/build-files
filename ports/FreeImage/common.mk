@@ -46,7 +46,7 @@ CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DCMAKE_INSTALL_PREFIX="$(INSTALL_ROOT)" \
              -DCMAKE_INSTALL_LIBDIR="$(CPUVARDIR)/$(PREFIX)/lib" \
              -DCMAKE_INSTALL_BINDIR="$(CPUVARDIR)/$(PREFIX)/bin" \
-             -DCMAKE_INSTALL_INCLUDEDIR="$(CPUVARDIR)/$(PREFIX)/include" \
+             -DCMAKE_INSTALL_INCLUDEDIR="$(PREFIX)/include" \
              -DCMAKE_FIND_ROOT_PATH="$(CMAKE_FIND_ROOT_PATH)" \
              -DCMAKE_MODULE_PATH="$(CMAKE_MODULE_PATH)" \
              -DCMAKE_SYSTEM_PROCESSOR=$(CPUVARDIR) \
@@ -80,8 +80,8 @@ install check:
 	-cd build && cp libfreeimage.so $(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/lib/libfreeimage-3.18.0.so
 	-cp ../FreeImage.pc build/
 	-sed -i 's,%CPU%,$(CPUVARDIR),' build/FreeImage.pc
-	-cp build/FreeImage.pc $(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/lib/pkgconfig/
-	-cp build/FreeImage.pc $(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/lib/pkgconfig/freeimage.pc
+# 	-cp build/FreeImage.pc $(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/lib/pkgconfig/
+# 	-cp build/FreeImage.pc $(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/lib/pkgconfig/freeimage.pc
 	-mkdir -p $(INSTALL_ROOT)/$(PREFIX)/include/FreeImage/
 	-cp $(INSTALL_ROOT)/$(PREFIX)/include/freeimage/* $(INSTALL_ROOT)/$(PREFIX)/include/FreeImage/
 	@echo Done! Installed.

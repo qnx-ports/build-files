@@ -34,19 +34,3 @@ set(CMAKE_ASM_FLAGS "${CMAKE_ASM_FLAGS} -Vgcc_nto${CMAKE_SYSTEM_PROCESSOR} -std=
 
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Vgcc_nto${CMAKE_SYSTEM_PROCESSOR}_cxx -std=c++20 ${EXTRA_CMAKE_LINKER_FLAGS}" CACHE STRING "exe_linker_flags")
 set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Vgcc_nto${CMAKE_SYSTEM_PROCESSOR}_cxx -std=c++20 ${EXTRA_CMAKE_LINKER_FLAGS}" CACHE STRING "so_linker_flags")
-
-# For some reason, these aren't being seen...
-# Manually setting them for now.
-# include_directories("${QNX_TARGET}/usr/devs/include_${CPU}/machine")
-
-# include_directories("${QNX_TARGET}/usr/include")
-
-# include_directories("${QNX_TARGET}/usr/include/devs")
-# include_directories("${QNX_TARGET}/usr/include/devs/sys")
-# include_directories("${QNX_TARGET}/usr/include/devs/include_${CPU}")
-
-# include_directories("${QNX_TARGET}/usr/include/c++/12.2.0")
-# include_directories("${QNX_TARGET}/usr/include/c++/12.2.0/${CPU}-unknown-nto-qnx8.0.0")
-# include_directories("${QNX_TARGET}/usr/include/c++/12.2.0/${CPU}-pc-nto-qnx8.0.0")
-
-

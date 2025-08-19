@@ -56,7 +56,6 @@ endif
 CMAKE_FIND_ROOT_PATH := $(QNX_TARGET);$(QNX_TARGET)/$(CPUVARDIR);$(INSTALL_ROOT)/$(CPUVARDIR)
 CMAKE_MODULE_PATH    := $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/cmake;$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/lib/cmake
 CFLAGS               += $(FLAGS) -I$(INSTALL_ROOT)/$(PREFIX)/include -I$(QNX_TARGET)/$(PREFIX)/include 
-# -I$(QNX_TARGET)/include
 
 CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DCMAKE_INSTALL_PREFIX="$(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)" \
@@ -72,7 +71,6 @@ CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DOPTION_TOOLS_ONLY=OFF \
              -DCMAKE_BUILD_TYPE=RelWithdebInfo \
              -DHOST_BINARY_DIR=../build_native  
- #            -DOPTION_DEDICATED=ON
 
 CMAKE_ARGS_TOOLS = -DCMAKE_INSTALL_PREFIX="$(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)" \
                    -DCMAKE_FIND_ROOT_PATH="$(CMAKE_FIND_ROOT_PATH)" \
@@ -113,8 +111,8 @@ staged: OpenTTD_all
 	-cp $(QNX_TARGET)/$(CPUVARDIR)/usr/lib/*SDL* staging/lib
 	-cp $(QNX_TARGET)/$(CPUVARDIR)/usr/local/lib/*SDL* staging/lib
 # Yes, this is needed for the quick start image. Unfortunately it seems to have a slightly outdated std::chrono implementation.
-# Users will need to set their LD_LIBRARY_PATH accordingly or use the provided startopenttd.sh script
-#Optionally: Grab Graphics
+# Users will need to set their LD_LIBRARY_PATH accordingly or use the provided startopenttd.sh script.
+# Optional: Grab Graphics
 #	@curl https://cdn.openttd.org/opengfx-releases/7.1/opengfx-7.1-all.zip --output opengfx-7.1-all.zip
 # 	@unzip opengfx-7.1-all.zip
 # 	@cp opengfx-7.1.tar staging/baseset/

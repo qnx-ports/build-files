@@ -23,8 +23,8 @@ Once you have the required dependencies (SDL2 and the font package from QNX Soft
 
 ```bash
 #1. Make a working directory
-mkdir -p ~/working_dir
-cd ~/working_dir
+mkdir -p ~/qnx_workspace
+cd ~/qnx_workspace
 
 #2. Clone the required repos
 git clone https://github.com/qnx-ports/build-files
@@ -34,7 +34,7 @@ git clone https://github.com/qnx-ports/OpenTTD
 cd build-files/docker
 ./docker-build-qnx-image
 ./docker-create-container
-cd ~/working_dir
+cd ~/qnx_workspace
 
 #4. Build OpenTTD 
 cd build-files/ports/RetroPie/OpenTTD

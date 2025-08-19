@@ -28,7 +28,7 @@ Replace \<user\> and \<target\> appropriately.
 ```bash
 # 1. Navigate to staging and scp to target
 cd workspace/build-files/ports/RetroPie/staging/aarch64le
-ssh <user>@<target> "mkdir -p /data/home/root/retroarch/"
+ssh <user>@<target> "mkdir -p /data/home/<user>/retroarch/"
 scp -r * <user>@<target>:/data/home/<user>/retroarch/
 
 # 2. Run startup.sh on target

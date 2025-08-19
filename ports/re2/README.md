@@ -22,7 +22,7 @@ https://docs.docker.com/engine/install/
 ### *Steps:*
 1. Create a new workspace or navigate to a desired one
 ```bash
-mkdir re2_wksp && cd re2_wksp
+mkdir qnx_workspace && cd qnx_workspace
 ```
 
 2. Clone `re2`, `build_files`, and the required libraries. You can skip dependencies you already have installed in $QNX_TARGET.
@@ -50,7 +50,7 @@ git clone git@github.com:qnx-ports/re2.git
 cd build-files/docker
 ./docker-build-qnx-image.sh
 ./docker-create-container.sh
-cd ~/re2_wksp
+cd ~/qnx_workspace
 ```
 
 4. Source your SDP (Installed from QNX Software Center)

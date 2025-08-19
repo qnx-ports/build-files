@@ -21,7 +21,7 @@ Instructions for compiling are listed below.
 ### *Steps:*
 1. Create a new workspace or navigate to a desired one
 ```bash
-mkdir sdl_wksp && cd sdl_wksp
+mkdir qnx_workspace && cd qnx_workspace
 ```
 
 2. Clone `sdl` and `build_files`. 
@@ -47,7 +47,7 @@ git clone git@github.com:qnx-ports/SDL.git
 cd build-files/docker
 ./docker-build-qnx-image.sh
 ./docker-create-container.sh
-cd ~/sdl_wksp
+cd ~/qnx_workspace
 ```
 
 5. Source your SDP (installed from QNX Software Center)
@@ -59,14 +59,14 @@ source ~/qnx800/qnxsdp-env.sh
 
 6. Build the project in your workspace from Step 1
 ```bash
-QNX_PROJECT_ROOT="$(pwd)/SDL" make -C build-files/ports/SDL2 install -j4
+QNX_PROJECT_ROOT="$(pwd)/SDL" make -C build-files/ports/SDL install -j4
 
 # Or Build and compile tests into a staging directory:
-make -C build-files/ports/SDL2 SDL_test -j4
+make -C build-files/ports/SDL SDL_test -j4
 ```
 
 **NOTE**: Clean your build files before rebuilding.
 ```bash
 #From your workspace:
-make -C build-files/ports/SDl2 clean
+make -C build-files/ports/SDl clean
 ```

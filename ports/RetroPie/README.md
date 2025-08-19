@@ -6,14 +6,13 @@ This section serves as a home for our fork of **RetroPie** - an amalgamation of 
 **Supports:** QNX 8.0, aarch64 processors. \
 \
 **Licencing, Dependencies, Accreditations**: Please see [SCRIPTINFO.md](./SCRIPTINFO.md) section "Build/Install Manifest & Licenses" For a full list of upstream projects and links to their respective licenses. The original RetroPie is licensed under [GPL](https://retropie.org.uk/about/legal/).
-
 The main pieces of the Retro*Pie* (forgive my humor) are listed below, alongside their current port and build status.
 
 | | | |
 | --- | :---: | :---: |
-| RetroArch         | Supported via [Fork](https://github.com/qnx-ports/retroarch) | N/A |
-| Emulation Station | Supported via [Fork](https://github.com/qnx-ports/EmulationStation)        | N/A |
-| OpenTTD | Supported via [Fork](https://github.com/qnx-ports/OpenTTD)        | N/A |
+| RetroArch         | Supported via [Fork](https://github.com/qnx-ports/retroarch)        | N/A |
+| Emulation Station | Supported via [Fork](https://github.com/qnx-ports/EmulationStation) | N/A |
+| OpenTTD           | Supported via [Fork](https://github.com/qnx-ports/OpenTTD)          | N/A |
 
 A Full list of dependencies and their forks can be found later on this page.
 
@@ -31,10 +30,15 @@ To successfully build/install RetroPie on a QNX device, follow these steps:
 - curl
 - unzip
 - git
-- gcc and g++
-- autotools, including autopoint and gettext
+- gcc
+- g++ 
 - nasm 
 - yasm
+- An autotools installation, including:
+  - autoconf
+  - autopoint
+  - automake
+  - gettext
 
 1. **Ensure you have a QNX License.** If not, see how to get one here: [QNXE Free Non-Commercial License](https://www.qnx.com/products/everywhere/). You must also install the Wayland/Weston, Base Graphics, Vulkan SDK, and any board-specific (i.e. Quickstart Image or Raspberry Pi Board Support) packages from [QNX Software Centre](https://www.qnx.com/download/group.html?programid=29178).
 
@@ -71,7 +75,6 @@ scp -r staging/aarch64le/* <hostname>:/install/file/path/
 
 
 # RetroArch
-
 RetroArch is an emulator backend used for most of the gaming related content within RetroPie. \
 It works using a "Core" and "Content" system - Think of RetroArch as your TV, displaying content and sound. A "Core" is your game console - whichever you load or "Connect to the TV" handles input and what games you can play. Your "Content" is simply a collection of games or other stuff that you can play on the core.
 
@@ -96,7 +99,6 @@ cd RetroArch && make install
 
 
 # Emulation Station
-
 Emulation Station is a controller friendly, highly customizable frontend which we use to easily tie together all of the different parts of RetroPie.
 
 It's highly customizable via xml files. The presets for RetroPie for QNX can be found in the [configs folder in this directory](configs/emulationstation). These group different games and startup commands under submenus, can can also support video files.
@@ -104,11 +106,9 @@ It's highly customizable via xml files. The presets for RetroPie for QNX can be 
 Also important to note - some aspects of Emulation Station are installed under ~/.emulationstation by default, including these configurations and any themes. **Multiple installations of Retropie on one QNX User Profile may collide with each other because of this**.
 
 ## Theming
-
 We have a custom, QNX-Specific Emulation Station theme. It is available at [qnx-ports/es-theme-qnx](https://github.com/qnx-ports/es-theme-qnx). 
 
 # Dependency Manifest & Licenses
-
 The following projects are built and installed by build_install_all.sh. They are linked here alongside their license. \
 An * before a project's name indicates it being installed from upstream, i.e. a source not under QNX. \
 Last Updated 7/18/2025 M/D/Y
