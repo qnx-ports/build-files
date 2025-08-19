@@ -1,5 +1,5 @@
-DEP_NAME=(graphite libiconv gettext-runtime icu glib freetype cairo)
-DEP_NAME_SRC=(graphite libiconv-1.18 gettext-0.23.1 icu glib freetype cairo)
+DEP_NAME=(graphite libiconv icu glib freetype cairo gettext-runtime)
+DEP_NAME_SRC=(graphite libiconv-1.18 icu glib freetype cairo gettext-0.23.1)
 DEP_CLONE_CMD=("git clone -b 1.3.14 https://github.com/silnrsi/graphite.git"
                "echo"
                "echo"
