@@ -26,9 +26,9 @@ source ~/qnx800/qnxsdp-env.sh
 cd ~/qnx_workspace
 
 # Clone gnutls
-git clone https://github.com/gnutls/gnutls.git
+git clone https://github.com/qnx-ports/gnutls.git
 cd gnutls/
-git checkout tags/3.6.15
+git checkout qnx-3.6.15
 ./bootstrap
 cd ..
 
@@ -48,9 +48,9 @@ source ~/qnx800/qnxsdp-env.sh
 cd ~/qnx_workspace
 
 # Clone gnutls
-git clone https://github.com/gnutls/gnutls.git
+git clone https://github.com/qnx-ports/gnutls.git
 cd gnutls/
-git checkout tags/3.6.15
+git checkout qnx-3.6.15
 ./bootstrap
 cd ..
 
