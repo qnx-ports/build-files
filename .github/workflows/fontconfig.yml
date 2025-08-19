@@ -22,6 +22,7 @@ jobs:
       matrix:
         qnx_env: ["710", "800"]
     name: Build for QNX ${{ matrix.qnx_env }}
+    runs-on: self-hosted
     if: |
       (github.event_name == 'workflow_dispatch') ||
       (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
@@ -48,7 +49,7 @@ jobs:
  
     - name: Pull build environment
       run: |
-        docker pull ${{ matrix.qnx_env }}
+        docker pull ghcr.io/qnx-ports/sdp-build-env:latest
  
     - name: Build fontconfig
       uses: addnab/docker-run-action@v3

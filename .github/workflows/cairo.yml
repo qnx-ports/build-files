@@ -49,7 +49,7 @@ jobs:
  
     - name: Pull build environment
       run: |
-        docker pull ${{ matrix.qnx_env }}
+        docker pull ghcr.io/qnx-ports/sdp-build-env:latest
  
     - name: Build cairo
       uses: addnab/docker-run-action@v3
