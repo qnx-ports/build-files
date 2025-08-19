@@ -20,10 +20,8 @@ jobs:
   build:
     strategy:
       matrix:
-        qnx_env:
-          - ghcr.io/qnx-ports/sdp800-build-env:latest
-          - ghcr.io/qnx-ports/sdp-build-env:latest
-    runs-on: self-hosted
+        qnx_env: ["710", "800"]
+    name: Build for QNX ${{ matrix.qnx_env }}
     if: |
       (github.event_name == 'workflow_dispatch') ||
       (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
@@ -59,10 +57,10 @@ jobs:
         options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
         shell: bash
         run: |
-          if [[ "${{ matrix.qnx_env}}" == "ghcr.io/qnx-ports/sdp800-build-env:latest" ]]; then
-            source ~/qnx/800/qnxsdp-env.sh
-          else 
+          if [[ ${{ matrix.qnx_env }} == 710 ]]; then
             source ~/qnx/710/qnxsdp-env.sh
+          else
+            source ~/qnx/800/qnxsdp-env.sh
           fi
           cd ~/workspace
           chmod +x ./build-files/ports/fontconfig/install_all.sh 
