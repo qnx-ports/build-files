@@ -1,10 +1,23 @@
 #! /usr/bin/bash
 
+
+set -e
+
 DEP_NAME=(libdatrie)
 DEP_NAME_SRC=(libdatrie-0.2.13)
 DEP_CLONE_CMD=("echo")
 
-wget https://github.com/tlwg/libdatrie/releases/download/v0.2.13/libdatrie-0.2.13.tar.xz && tar -xf libdatrie-0.2.13.tar.xz
+
+if ! test -f $(pwd)/libdatrie-0.2.13.tar.xz; then
+    wget https://github.com/tlwg/libdatrie/releases/download/v0.2.13/libdatrie-0.2.13.tar.xz
+fi
+
+if ! test -f $(pwd)/libdatrie-0.2.13.tar.xz; then
+    echo " libdatrie-0.2.13.tar.xz is not fetched"
+    exit 1;
+fi
+
+tar -xf libdatrie-0.2.13.tar.xz
 
 DEP_COUNT=${#DEP_NAME[@]}
 DEP_COUNT=$(( DEP_COUNT - 1 ))

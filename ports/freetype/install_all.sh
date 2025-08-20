@@ -1,5 +1,8 @@
 #! /usr/bin/bash
 
+
+set -e
+
 DEP_NAME=(zlib brotli bzip2 libpng)
 DEP_NAME_SRC=(zlib brotli bzip2 libpng)
 DEP_CLONE_CMD=("git clone -b v1.3.1 https://github.com/madler/zlib.git"

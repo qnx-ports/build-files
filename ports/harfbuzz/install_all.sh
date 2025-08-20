@@ -1,15 +1,20 @@
+#! /usr/bin/bash
+
+
+set -e
+
 DEP_NAME=(graphite libiconv icu glib freetype cairo gettext-runtime)
 DEP_NAME_SRC=(graphite libiconv-1.18 icu glib freetype cairo gettext-0.23.1)
 DEP_CLONE_CMD=("git clone -b 1.3.14 https://github.com/silnrsi/graphite.git"
                "echo"
                "git clone -b release-76-1 https://github.com/unicode-org/icu.git"
-               "git clone -b 2.83.4 https://gitlab.gnome.org/GNOME/glib.git"
+               "git clone -b 2.84.3 https://gitlab.gnome.org/GNOME/glib.git"
                "git clone -b VER-2-13-3 https://gitlab.freedesktop.org/freetype/freetype.git"
                "git clone -b 1.18.2 https://gitlab.freedesktop.org/cairo/cairo.git"
                "echo")
 
 if ! test -f $(pwd)/libiconv-1.18.tar.gz; then
-    wget https://ftpmirror.gnu.org/gnu/libiconv/libiconv-1.18.tar.gz && tar -xf libiconv-1.18.tar.gz
+    wget https://ftpmirror.gnu.org/gnu/libiconv/libiconv-1.18.tar.gz
 fi
 
 if ! test -f $(pwd)/libiconv-1.18.tar.gz; then
@@ -17,14 +22,18 @@ if ! test -f $(pwd)/libiconv-1.18.tar.gz; then
     exit 1;
 fi
 
+tar -xf libiconv-1.18.tar.gz
+
 if ! test -f $(pwd)/gettext-0.23.1.tar.gz; then
-    wget https://ftpmirror.gnu.org/gnu/gettext/gettext-0.23.1.tar.gz && tar -xf gettext-0.23.1.tar.gz
+    wget https://ftpmirror.gnu.org/gnu/gettext/gettext-0.23.1.tar.gz
 fi
 
 if ! test -f $(pwd)/gettext-0.23.1.tar.gz; then
     echo "install_all.sh: gettext-0.23.1.tar.gz not fetched"
     exit 1;
 fi
+
+tar -xf gettext-0.23.1.tar.gz
 
 DEP_COUNT=${#DEP_NAME[@]}
 DEP_COUNT=$(( DEP_COUNT - 1 ))

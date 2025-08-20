@@ -1,5 +1,8 @@
 #! /usr/bin/bash
 
+
+set -e
+
 DEP_NAME=(libexpat libiconv freetype)
 DEP_NAME_SRC=(libexpat/expat libiconv-1.18 freetype)
 DEP_CLONE_CMD=("git clone -b R_2_6_4 https://github.com/libexpat/libexpat.git"
@@ -10,13 +13,15 @@ DEP_COUNT=${#DEP_NAME[@]}
 DEP_COUNT=$(( DEP_COUNT - 1 ))
 
 if ! test -f $(pwd)/libiconv-1.18.tar.gz; then
-    wget https://ftpmirror.gnu.org/gnu/libiconv/libiconv-1.18.tar.gz && tar -xf libiconv-1.18.tar.gz
+    wget https://ftpmirror.gnu.org/gnu/libiconv/libiconv-1.18.tar.gz
 fi
 
 if ! test -f $(pwd)/libiconv-1.18.tar.gz; then
     echo "libiconv-1.18.tar.gz is not fetched"
     exit 1;
 fi
+
+tar -xf libiconv-1.18.tar.gz
 
 for NN in $(seq 0 ${DEP_COUNT}); do
     if ! ${DEP_CLONE_CMD[$NN]}; then

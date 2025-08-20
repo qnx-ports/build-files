@@ -1,11 +1,14 @@
 #! /usr/bin/bash
 
+
+set -e
+
 DEP_NAME=(pixman freetype fontconfig glib)
 DEP_NAME_SRC=(pixman freetype fontconfig glib)
 DEP_CLONE_CMD=("git clone -b pixman-0.44.2 https://gitlab.freedesktop.org/pixman/pixman.git"
                "git clone -b VER-2-13-3 https://gitlab.freedesktop.org/freetype/freetype.git"
                "git clone -b 2.16.0 https://gitlab.freedesktop.org/fontconfig/fontconfig.git"
-               "git clone -b 2.83.4 https://gitlab.gnome.org/GNOME/glib.git")
+               "git clone -b 2.84.3 https://gitlab.gnome.org/GNOME/glib.git")
 
 DEP_COUNT=${#DEP_NAME[@]}
 DEP_COUNT=$(( DEP_COUNT - 1 ))
