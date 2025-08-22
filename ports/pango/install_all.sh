@@ -1,3 +1,7 @@
+#! /usr/bin/base
+
+set -e
+
 DEP_NAME=(fribidi libthai glib freetype fontconfig cairo harfbuzz)
 DEP_NAME_SRC=(fribidi libthai-0.1.29 glib freetype fontconfig cairo harfbuzz)
 DEP_CLONE_CMD=("git clone https://github.com/qnx-ports/fribidi.git"
@@ -11,13 +15,15 @@ DEP_CLONE_CMD=("git clone https://github.com/qnx-ports/fribidi.git"
 
 
 if ! test -f $(pwd)/libthai-0.1.29.tar.xz; then
-    wget https://github.com/tlwg/libthai/releases/download/v0.1.29/libthai-0.1.29.tar.xz && tar -xf libthai-0.1.29.tar.xz
+    wget https://github.com/tlwg/libthai/releases/download/v0.1.29/libthai-0.1.29.tar.xz
 fi
 
 if ! test -f $(pwd)/libthai-0.1.29.tar.xz; then
     echo "libthai-0.1.29.tar.xz is not fetched"
     exit 1;
 fi
+
+tar -xf libthai-0.1.29.tar.xz
 
 DEP_COUNT=${#DEP_NAME[@]}
 DEP_COUNT=$(( DEP_COUNT - 1 ))
