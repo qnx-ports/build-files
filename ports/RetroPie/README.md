@@ -56,6 +56,9 @@ Install these packages:
 - com.qnx.qnx800.target.screen.base.wfd_server (More screen utilities)
 - com.qnx.qnx800.target.screen.vulkansc (Vulkan-based rendering support)
 - com.qnx.qnx800.target.screen.vulkansc.sdk (Vulkan-based rendering support)
+- com.qnx.qnx800.target.screen.board.rpi4 (Rapsberry Pi 4 Rendering support)
+
+Note that some of these may already be installed for you.
 
 4. **Run build_install_all.sh with your target's ip and username.** Example seen below. More information on the build_install_all script can be found in SCRIPTINFO.md. You must have ssh set up for installation to target. 
 ```bash

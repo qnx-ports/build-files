@@ -68,5 +68,5 @@ make -C build-files/ports/SDL SDL_test -j4
 **NOTE**: Clean your build files before rebuilding.
 ```bash
 #From your workspace:
-make -C build-files/ports/SDl clean
+make -C build-files/ports/SDL clean
 ```
