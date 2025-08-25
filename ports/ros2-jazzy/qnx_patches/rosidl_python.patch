@@ -1,5 +1,5 @@
 diff --git a/rosidl_generator_py/cmake/rosidl_generator_py_generate_interfaces.cmake b/rosidl_generator_py/cmake/rosidl_generator_py_generate_interfaces.cmake
-index cfc424a..368df1a 100644
+index cfc424a..0b06b8f 100644
 --- a/rosidl_generator_py/cmake/rosidl_generator_py_generate_interfaces.cmake
 +++ b/rosidl_generator_py/cmake/rosidl_generator_py_generate_interfaces.cmake
 @@ -151,6 +151,11 @@ target_link_libraries(
@@ -14,3 +14,17 @@ index cfc424a..368df1a 100644
  target_include_directories(${_target_name_lib}
    PRIVATE
    ${CMAKE_CURRENT_BINARY_DIR}/rosidl_generator_c
+@@ -189,6 +194,13 @@ foreach(_typesupport_impl ${_typesupport_impls})
+   # TODO(sloretz) use target_compile_options when python extension passes -Wpedantic
+   set_target_properties(${_target_name} PROPERTIES COMPILE_OPTIONS "${_extension_compile_flags}")
+ 
++  if(QNX)
++    set_target_properties(${_target_name} PROPERTIES
++      PREFIX ""
++      SUFFIX "${PYTHON_MODULE_EXTENSION}"
++    )
++  endif()
++  
+   set_target_properties(${_target_name} PROPERTIES
+     LIBRARY_OUTPUT_DIRECTORY ${_output_path}
+     RUNTIME_OUTPUT_DIRECTORY ${_output_path})
