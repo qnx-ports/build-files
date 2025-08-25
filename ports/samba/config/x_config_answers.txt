@@ -1,0 +1,1155 @@
+Setting top to                           : '/home/nnarayanamurthy/test/qnx/smb4qnx/samba_byhand/dist'
+Setting out to                           : '/home/nnarayanamurthy/test/qnx/smb4qnx/samba_byhand/dist/bin'
+Checking for 'gcc' (C compiler)          : 'ntox86_64-gcc'
+Checking for program 'git'               : '/usr/bin/git'
+Checking for c flags '-MMD'              :  YES
+Checking for program 'gdb'               : '/usr/bin/gdb'
+Checking for header sys/utsname.h        :  YES
+Checking uname sysname type              : 'QNX'
+Checking uname machine type              : 'x86pc'
+Checking uname release type              : '7.0.X'
+Checking uname version type              : '2020/11/01-22:45:02EST'
+Checking for header stdio.h              :  YES
+Checking simple C program                :  OK
+Checking compiler accepts ['-Werror']    :  YES
+Checking linker accepts ['-Wl,-rpath,.'] :  YES
+Checking for rpath library support       : 'not found'
+Checking for -Wl,--version-script support : 'not found'
+Checking compiler accepts ['-fvisibility=hidden'] :  YES
+Checking for HAVE_VISIBILITY_ATTR                 :  OK
+Checking for library constructor support          :  OK
+Checking for library destructor support           :  OK
+Checking for __attribute__                        :  OK
+Checking compiler accepts ['-fPIC']               :  YES
+Checking for inline                               : 'inline'
+Checking for program 'pkg-config'                 : '/usr/bin/pkg-config'
+Checking for pkg-config version >= '0.0.0'        :  YES
+Checking compiler accepts ['-D__STDC_WANT_LIB_EXT1__=1'] :  YES
+Checking compiler accepts ['']                           :  YES
+Checking for header sys/types.h                          :  YES
+Checking for header sys/stat.h                           :  YES
+Checking for header stdlib.h                             :  YES
+Checking for header stddef.h                             :  YES
+Checking for header memory.h                             :  YES
+Checking for header string.h                             :  YES
+Checking for header strings.h                            :  YES
+Checking for header inttypes.h                           :  YES
+Checking for header stdint.h                             :  YES
+Checking for header unistd.h                             :  YES
+Checking for header minix/config.h                       :  NO
+Checking for header ctype.h                              :  YES
+Checking for header standards.h                          :  NO
+Checking for header stdbool.h                            :  YES
+Checking for header stdarg.h                             :  YES
+Checking for header vararg.h                             :  NO
+Checking for header limits.h                             :  YES
+Checking for header assert.h                             :  YES
+Checking getconf LFS_CFLAGS                              : 'not found'
+Checking for large file support without additional flags :  OK
+Checking for header sys/time.h                           :  YES
+Checking for header time.h                               :  YES
+Checking for header endian.h                             :  NO
+Checking for header sys/endian.h                         :  NO
+Checking for HAVE_LITTLE_ENDIAN                          : 'not found'
+Checking for HAVE_BIG_ENDIAN                             : 'not found'
+Checking for HAVE_LITTLE_ENDIAN - runtime                :  OK
+Checking for HAVE_BIG_ENDIAN - runtime                   : NO
+Checking for header signal.h                             :  YES
+Checking if signal handlers return int                   : 'not found'
+Checking for variable __FUNCTION__                       :  OK
+Checking for va_copy                                     :  OK
+Checking for HAVE__VA_ARGS__MACRO                        :  OK
+Checking for header linux/types.h                        :  NO
+Checking for header crypt.h                              :  NO
+Checking for header locale.h                             :  YES
+Checking for header acl/libacl.h                         :  NO
+Checking for header compat.h                             :  NO
+Checking for header attr/xattr.h                         :  NO
+Checking for header dustat.h                             :  NO
+Checking for header fcntl.h                              :  YES
+Checking for header fnmatch.h                            :  YES
+Checking for header glob.h                               :  YES
+Checking for header history.h                            :  NO
+Checking for header krb5.h                               :  NO
+Checking for header langinfo.h                           :  YES
+Checking for header libaio.h                             :  NO
+Checking for header ndir.h                               :  NO
+Checking for header pwd.h                                :  YES
+Checking for header shadow.h                             :  YES
+Checking for header sys/acl.h                            :  YES
+Checking for header sys/attributes.h                     :  NO
+Checking for header attr/attributes.h                    :  NO
+Checking for header sys/capability.h                     :  NO
+Checking for header sys/dir.h                            :  YES
+Checking for header sys/epoll.h                          :  NO
+Checking for header port.h                               :  NO
+Checking for header sys/fcntl.h                          :  NO
+Checking for header sys/filio.h                          :  NO
+Checking for header sys/filsys.h                         :  NO
+Checking for header sys/fs/s5param.h                     :  NO
+Checking for header sys/id.h                             :  NO
+Checking for header sys/ioctl.h                          :  YES
+Checking for header sys/ipc.h                            :  YES
+Checking for header sys/mman.h                           :  YES
+Checking for header sys/mode.h                           :  NO
+Checking for header sys/ndir.h                           :  NO
+Checking for header sys/priv.h                           :  NO
+Checking for header sys/resource.h                       :  YES
+Checking for header sys/security.h                       :  NO
+Checking for header sys/shm.h                            :  NO
+Checking for header sys/statfs.h                         :  NO
+Checking for header sys/statvfs.h                        :  YES
+Checking for header sys/termio.h                         :  YES
+Checking for header sys/vfs.h                            :  NO
+Checking for header sys/xattr.h                          :  NO
+Checking for header termio.h                             :  NO
+Checking for header termios.h                            :  YES
+Checking for header sys/file.h                           :  YES
+Checking for header sys/ucontext.h                       :  NO
+Checking for header sys/wait.h                           :  YES
+Checking for declaration of malloc                       :  OK
+Checking for header grp.h                                :  YES
+Checking for header sys/select.h                         :  YES
+Checking for header setjmp.h                             :  YES
+Checking for header utime.h                              :  YES
+Checking for header sys/syslog.h                         :  NO
+Checking for header syslog.h                             :  YES
+Checking for header sys/mount.h                          :  YES
+Checking for header mntent.h                             :  NO
+Checking for header stropts.h                            :  NO
+Checking for header unix.h                               :  YES
+Checking for header sys/param.h                          :  YES
+Checking for header sys/socket.h                         :  YES
+Checking for header netinet/in.h                         :  YES
+Checking for header netdb.h                              :  YES
+Checking for header arpa/inet.h                          :  YES
+Checking for header netinet/in_systm.h                   :  YES
+Checking for header netinet/ip.h                         :  YES
+Checking for header netinet/tcp.h                        :  YES
+Checking for header netinet/in_ip.h                      :  NO
+Checking for header sys/sockio.h                         :  YES
+Checking for header sys/un.h                             :  YES
+Checking for header sys/uio.h                            :  YES
+Checking for header ifaddrs.h                            :  YES
+Checking for header direct.h                             :  NO
+Checking for header dirent.h                             :  YES
+Checking for header windows.h                            :  NO
+Checking for header winsock2.h                           :  NO
+Checking for header ws2tcpip.h                           :  NO
+Checking for header errno.h                              :  YES
+Checking for header getopt.h                             :  YES
+Checking for header iconv.h                              :  YES
+Checking for header nss.h                                :  NO
+Checking for header sasl/sasl.h                          :  NO
+Checking for inotify_init                                :  OK
+Checking for header security/pam_appl.h                  :  YES
+Checking for header zlib.h                               :  YES
+Checking for header asm/unistd.h                         :  NO
+Checking for header aio.h                                :  YES
+Checking for header sys/unistd.h                         :  NO
+Checking for header alloca.h                             :  YES
+Checking for header float.h                              :  YES
+Checking for header rpc/rpc.h                            :  YES
+Checking for header rpc/nettype.h                        :  YES
+Checking for tirpc rpc headers in default system path    : 'not found'
+Checking for header rpcsvc/yp_prot.h                     :  NO
+Checking for libnsl                                      : 'not found'
+Checking for header rpcsvc/nis.h                         :  NO
+Checking for header rpcsvc/ypclnt.h                      :  NO
+Checking for header sys/sysctl.h                         :  YES
+Checking for header sys/fileio.h                         :  NO
+Checking for header sys/filesys.h                        :  NO
+Checking for header sys/dustat.h                         :  NO
+Checking for header sys/sysmacros.h                      :  YES
+Checking for header xfs/libxfs.h                         :  NO
+Checking for header netgroup.h                           :  NO
+Checking for header valgrind.h                           :  NO
+Checking for header valgrind/valgrind.h                  :  YES
+Checking for header valgrind/memcheck.h                  :  YES
+Checking for header valgrind/helgrind.h                  :  YES
+Checking for header nss_common.h                         :  NO
+Checking for header nsswitch.h                           :  YES
+Checking for header ns_api.h                             :  NO
+Checking for header sys/extattr.h                        :  NO
+Checking for header sys/ea.h                             :  NO
+Checking for header sys/proplist.h                       :  NO
+Checking for header sys/cdefs.h                          :  YES
+Checking for header utmp.h                               :  YES
+Checking for header utmpx.h                              :  NO
+Checking for header lastlog.h                            :  NO
+Checking for header syscall.h                            :  NO
+Checking for header sys/syscall.h                        :  NO
+Checking for header sys/atomic.h                         :  NO
+Checking for header stdatomic.h                          :  YES
+Checking for header libgen.h                             :  YES
+Checking compiler accepts -Wno-format-truncation         :  YES
+Checking compiler accepts -Wno-unused-function           :  YES
+Checking compiler accepts -Wno-strict-overflow           :  YES
+Checking for header sys/prctl.h                          :  NO
+Checking for prctl syscall                               : 'not found'
+Checking for O_DIRECT flag to open(2)                    : 'not found'
+Checking for long long                                   :  OK
+Checking for intptr_t                                    :  OK
+Checking for uintptr_t                                   :  OK
+Checking for ptrdiff_t                                   :  OK
+Checking for comparison_fn_t                             : 'not found'
+Checking for _Bool                                       :  OK
+Checking for bool                                        :  OK
+Checking for int8_t                                      :  OK
+Checking for uint8_t                                     :  OK
+Checking for int16_t                                     :  OK
+Checking for uint16_t                                    :  OK
+Checking for int32_t                                     :  OK
+Checking for uint32_t                                    :  OK
+Checking for int64_t                                     :  OK
+Checking for uint64_t                                    :  OK
+Checking for size_t                                      :  OK
+Checking for ssize_t                                     :  OK
+Checking for ino_t                                       :  OK
+Checking for loff_t                                      : 'not found'
+Checking for offset_t                                    : 'not found'
+Checking for volatile int                                :  OK
+Checking for uint_t                                      :  OK
+Checking for blksize_t                                   :  OK
+Checking for blkcnt_t                                    :  OK
+Checking if size of bool == 1                            :  OK
+Checking if size of char == 1                            :  OK
+Checking if size of int == 1                             : 'not found'
+Checking if size of int == 2                             : 'not found'
+Checking if size of int == 4                             :  OK
+Checking if size of long long == 1                       : 'not found'
+Checking if size of long long == 2                       : 'not found'
+Checking if size of long long == 4                       : 'not found'
+Checking if size of long long == 8                       :  OK
+Checking if size of long == 1                            : 'not found'
+Checking if size of long == 2                            : 'not found'
+Checking if size of long == 4                            : 'not found'
+Checking if size of long == 8                            :  OK
+Checking if size of short == 1                           : 'not found'
+Checking if size of short == 2                           :  OK
+Checking if size of size_t == 1                          : 'not found'
+Checking if size of size_t == 2                          : 'not found'
+Checking if size of size_t == 4                          : 'not found'
+Checking if size of size_t == 8                          :  OK
+Checking if size of ssize_t == 1                         : 'not found'
+Checking if size of ssize_t == 2                         : 'not found'
+Checking if size of ssize_t == 4                         : 'not found'
+Checking if size of ssize_t == 8                         :  OK
+Checking if size of int8_t == 1                          :  OK
+Checking if size of uint8_t == 1                         :  OK
+Checking if size of int16_t == 1                         : 'not found'
+Checking if size of int16_t == 2                         :  OK
+Checking if size of uint16_t == 1                        : 'not found'
+Checking if size of uint16_t == 2                        :  OK
+Checking if size of int32_t == 1                         : 'not found'
+Checking if size of int32_t == 2                         : 'not found'
+Checking if size of int32_t == 4                         :  OK
+Checking if size of uint32_t == 1                        : 'not found'
+Checking if size of uint32_t == 2                        : 'not found'
+Checking if size of uint32_t == 4                        :  OK
+Checking if size of int64_t == 1                         : 'not found'
+Checking if size of int64_t == 2                         : 'not found'
+Checking if size of int64_t == 4                         : 'not found'
+Checking if size of int64_t == 8                         :  OK
+Checking if size of uint64_t == 1                        : 'not found'
+Checking if size of uint64_t == 2                        : 'not found'
+Checking if size of uint64_t == 4                        : 'not found'
+Checking if size of uint64_t == 8                        :  OK
+Checking if size of void* == 1                           : 'not found'
+Checking if size of void* == 2                           : 'not found'
+Checking if size of void* == 4                           : 'not found'
+Checking if size of void* == 8                           :  OK
+Checking if size of off_t == 1                           : 'not found'
+Checking if size of off_t == 2                           : 'not found'
+Checking if size of off_t == 4                           : 'not found'
+Checking if size of off_t == 8                           :  OK
+Checking if size of dev_t == 1                           : 'not found'
+Checking if size of dev_t == 2                           : 'not found'
+Checking if size of dev_t == 4                           :  OK
+Checking if size of ino_t == 1                           : 'not found'
+Checking if size of ino_t == 2                           : 'not found'
+Checking if size of ino_t == 4                           : 'not found'
+Checking if size of ino_t == 8                           :  OK
+Checking if size of time_t == 1                          : 'not found'
+Checking if size of time_t == 2                          : 'not found'
+Checking if size of time_t == 4                          : 'not found'
+Checking if size of time_t == 8                          :  OK
+Checking for socklen_t                                   :  OK
+Checking for struct ifaddrs                              :  OK
+Checking for struct addrinfo                             :  OK
+Checking for struct sockaddr                             :  OK
+Checking for HAVE_STRUCT_SOCKADDR_IN6                    :  OK
+Checking for struct sockaddr_storage                     :  OK
+Checking for sa_family_t                                 :  OK
+Checking for sig_atomic_t                                :  OK
+Checking for sigsetmask                                  :  OK
+Checking for siggetmask                                  : 'not found'
+Checking for sigprocmask                                 :  OK
+Checking for sigblock                                    :  OK
+Checking for sigaction                                   :  OK
+Checking for sigset                                      : 'not found'
+Checking for inet_ntoa                                   :  OK
+Checking for inet_aton                                   :  OK
+Checking for inet_ntop                                   :  OK
+Checking for inet_pton                                   :  OK
+Checking for connect                                     :  OK
+Checking for gethostbyname                               :  OK
+Checking for getaddrinfo                                 :  OK
+Checking for getnameinfo                                 :  OK
+Checking for freeaddrinfo                                :  OK
+Checking for gai_strerror                                :  OK
+Checking for socketpair                                  :  OK
+Checking for memset_s                                    :  OK
+Checking for memset_explicit                             : 'not found'
+Checking for volatile memory protection                  :  OK
+Checking for variable IPV6_V6ONLY                        :  OK
+Checking for header net/if.h                             :  YES
+Checking for HAVE_IPV6                                   :  OK
+Checking for __sync_fetch_and_add compiler builtin       :  OK
+Checking for atomic_add_32 compiler builtin              : 'not found'
+Checking for atomic_thread_fence(memory_order_seq_cst) in stdatomic.h :  OK
+Checking for fallthrough attribute                                    : 'not found'
+Checking for strdup                                                   :  OK
+Checking for memmem                                                   : 'not found'
+Checking for printf                                                   :  OK
+Checking for memset                                                   :  OK
+Checking for memcpy                                                   :  OK
+Checking for memmove                                                  :  OK
+Checking for strcpy                                                   :  OK
+Checking for strncpy                                                  :  OK
+Checking for bzero                                                    :  OK
+Checking for shl_load                                                 : 'not found'
+Checking for shl_unload                                               : 'not found'
+Checking for shl_findsym                                              : 'not found'
+Checking for pipe                                                     :  OK
+Checking for strftime                                                 :  OK
+Checking for srandom                                                  :  OK
+Checking for random                                                   :  OK
+Checking for srand                                                    :  OK
+Checking for rand                                                     :  OK
+Checking for usleep                                                   :  OK
+Checking for setbuffer                                                :  OK
+Checking for lstat                                                    :  OK
+Checking for getpgrp                                                  :  OK
+Checking for utime                                                    :  OK
+Checking for utimes                                                   :  OK
+Checking for setuid                                                   :  OK
+Checking for seteuid                                                  :  OK
+Checking for setreuid                                                 :  OK
+Checking for setresuid                                                : 'not found'
+Checking for setgid                                                   :  OK
+Checking for setegid                                                  :  OK
+Checking for setregid                                                 :  OK
+Checking for setresgid                                                : 'not found'
+Checking for chroot                                                   :  OK
+Checking for strerror                                                 :  OK
+Checking for vsyslog                                                  :  OK
+Checking for setlinebuf                                               :  OK
+Checking for mktime                                                   :  OK
+Checking for ftruncate                                                :  OK
+Checking for chsize                                                   : 'not found'
+Checking for rename                                                   :  OK
+Checking for waitpid                                                  :  OK
+Checking for wait4                                                    :  OK
+Checking for initgroups                                               :  OK
+Checking for pread                                                    :  OK
+Checking for pwrite                                                   :  OK
+Checking for strndup                                                  : 'not found'
+Checking for strcasestr                                               :  OK
+Checking for strsep                                                   :  OK
+Checking for strtok_r                                                 :  OK
+Checking for mkdtemp                                                  :  OK
+Checking for dup2                                                     :  OK
+Checking for dprintf                                                  : 'not found'
+Checking for vdprintf                                                 : 'not found'
+Checking for isatty                                                   :  OK
+Checking for chown                                                    :  OK
+Checking for lchown                                                   :  OK
+Checking for link                                                     :  OK
+Checking for readlink                                                 :  OK
+Checking for symlink                                                  :  OK
+Checking for realpath                                                 :  OK
+Checking for snprintf                                                 :  OK
+Checking for vsnprintf                                                :  OK
+Checking for asprintf                                                 : 'not found'
+Checking for vasprintf                                                : 'not found'
+Checking for setenv                                                   :  OK
+Checking for unsetenv                                                 :  OK
+Checking for strnlen                                                  :  OK
+Checking for strtoull                                                 :  OK
+Checking for __strtoull                                               : 'not found'
+Checking for strtouq                                                  : 'not found'
+Checking for strtoll                                                  :  OK
+Checking for __strtoll                                                : 'not found'
+Checking for strtoq                                                   : 'not found'
+Checking for memalign                                                 :  OK
+Checking for posix_memalign                                           :  OK
+Checking for fmemopen                                                 : 'not found'
+Checking for getdelim                                                 : 'not found'
+Checking for getline                                                  : 'not found'
+Checking for header malloc.h                                          :  YES
+Checking for declaration of memalign                                  :  OK
+Checking for posix_fallocate-capable libc                             :  OK
+Checking for posix_fallocate                                          :  OK
+Checking for prctl                                                    : 'not found'
+Checking for dirname                                                  :  OK
+Checking for basename                                                 :  OK
+Checking for strlcpy                                                  :  OK
+Checking for strlcat                                                  :  OK
+Checking for getpeereid                                               :  OK
+Checking for library setproctitle                                     :  NO
+Checking for setproctitle                                             : 'not found'
+Checking for library bsd                                              :  NO
+Checking for setproctitle                                             : 'not found'
+Checking for setproctitle_init                                        : 'not found'
+Checking for library bsd                                              :  NO
+Checking for setproctitle_init                                        : 'not found'
+Checking for closefrom                                                : 'not found'
+Checking for library bsd                                              :  NO
+Checking for closefrom                                                : 'not found'
+Checking whether we can use SO_PEERCRED to get socket credentials     : 'not found'
+Checking correct behavior of strtoll                                  :  OK
+Checking for if_nametoindex                                           :  OK
+Checking for strerror_r                                               :  OK
+Checking for getdirentries                                            : 'not found'
+Checking for getdents                                                 : 'not found'
+Checking for syslog                                                   :  OK
+Checking for gai_strerror                                             :  OK
+Checking for get_current_dir_name                                     : 'not found'
+Checking for timegm                                                   :  OK
+Checking for getifaddrs                                               :  OK
+Checking for freeifaddrs                                              :  OK
+Checking for mmap                                                     :  OK
+Checking for setgroups                                                :  OK
+Checking for syscall                                                  : 'not found'
+Checking for setsid                                                   :  OK
+Checking for getgrent_r                                               : 'not found'
+Checking for getgrgid_r                                               :  OK
+Checking for getgrnam_r                                               :  OK
+Checking for getgrouplist                                             :  OK
+Checking for getpagesize                                              :  OK
+Checking for getpwent_r                                               :  OK
+Checking for getpwnam_r                                               :  OK
+Checking for getpwuid_r                                               :  OK
+Checking for epoll_create                                             : 'not found'
+Checking for port_create                                              : 'not found'
+Checking for getprogname                                              : 'not found'
+Checking for getxattr                                                 : 'not found'
+Checking for library attr                                             :  NO
+Checking for getxattr                                                 : 'not found'
+Checking for attr_listf                                               : 'not found'
+Checking for library attr                                             :  NO
+Checking for attr_listf                                               : 'not found'
+Checking for extattr_list_fd                                          : 'not found'
+Checking for flistea                                                  : 'not found'
+Checking for attropen                                                 : 'not found'
+Checking for dlopen                                                   :  OK
+Checking for dlsym                                                    :  OK
+Checking for dlerror                                                  :  OK
+Checking for dlclose                                                  :  OK
+Checking for declaration of dlopen                                    :  OK
+Checking C prototype for dlopen                                       : 'not found'
+Checking for fdatasync                                                :  OK
+Checking for declaration of fdatasync                                 :  OK
+Checking for clock_gettime                                            :  OK
+Checking whether the clock_gettime clock ID CLOCK_MONOTONIC is available :  OK
+Checking whether the clock_gettime clock ID CLOCK_PROCESS_CPUTIME_ID is available :  OK
+Checking whether the clock_gettime clock ID CLOCK_REALTIME is available           :  OK
+Checking for struct timespec                                                      :  OK
+Checking for header arpa/nameser.h                                                :  YES
+Checking for header resolv.h                                                      :  YES
+Checking for res_search                                                           :  OK
+Checking for header libintl.h                                                     :  YES
+Checking for library intl                                                         :  YES
+Checking for declaration of dgettext                                              :  OK
+Checking for declaration of gettext                                               :  OK
+Checking for declaration of bindtextdomain                                        :  OK
+Checking for declaration of textdomain                                            :  OK
+Checking for declaration of bind_textdomain_codeset                               :  OK
+Checking for bindtextdomain                                                       : 'not found'
+Checking for textdomain                                                           : 'not found'
+Checking for bind_textdomain_codeset                                              : 'not found'
+Checking for bindtextdomain                                                       : 'not found'
+Checking for textdomain                                                           : 'not found'
+Checking for bind_textdomain_codeset                                              : 'not found'
+Checking for dgettext                                                             : 'not found'
+Checking for gettext                                                              : 'not found'
+Checking for dgettext                                                             : 'not found'
+Checking for gettext                                                              : 'not found'
+Checking for dgettext in intl                                                     :  OK
+Checking for gettext in intl                                                      :  OK
+Checking for bindtextdomain in intl                                               :  OK
+Checking for textdomain in intl                                                   :  OK
+Checking for bind_textdomain_codeset in intl                                      :  OK
+Checking for pthread_create                                                       :  OK
+Checking for pthread_attr_init                                                    :  OK
+Checking for pthread_mutexattr_setrobust                                          :  OK
+Checking for declaration of PTHREAD_MUTEX_ROBUST                                  :  OK
+Checking for pthread_mutex_consistent                                             :  OK
+Checking for __thread local storage                                               :  OK
+Checking for crypt                                                                :  OK
+Checking for crypt_r                                                              : 'not found'
+Checking for library crypt                                                        :  NO
+Checking for crypt_r                                                              : 'not found'
+Checking for crypt_rn                                                             : 'not found'
+Checking for library crypt                                                        :  NO
+Checking for crypt_rn                                                             : 'not found'
+Checking for header readline.h                                                    :  NO
+Checking for header readline/readline.h                                           :  YES
+Checking for header readline/history.h                                            :  YES
+Checking for HAVE_DECL_RL_EVENT_HOOK                                              : 'not found'
+Checking for variable program_invocation_short_name                               : 'not found'
+Checking for declaration of snprintf                                              :  OK
+Checking for declaration of vsnprintf                                             :  OK
+Checking for declaration of asprintf                                              : 'not found'
+Checking for declaration of asprintf (as enum)                                    : 'not found'
+Checking for declaration of vasprintf                                             : 'not found'
+Checking for declaration of vasprintf (as enum)                                   : 'not found'
+Checking for declaration of errno                                                 :  OK
+Checking for declaration of EWOULDBLOCK                                           :  OK
+Checking for declaration of environ                                               :  OK
+Checking for declaration of getgrent_r                                            : 'not found'
+Checking for declaration of getgrent_r (as enum)                                  : 'not found'
+Checking for declaration of getpwent_r                                            :  OK
+Checking for declaration of pread                                                 :  OK
+Checking for declaration of pwrite                                                :  OK
+Checking for declaration of setenv                                                :  OK
+Checking for declaration of setresgid                                             : 'not found'
+Checking for declaration of setresgid (as enum)                                   : 'not found'
+Checking for declaration of setresuid                                             : 'not found'
+Checking for declaration of setresuid (as enum)                                   : 'not found'
+Checking for eventfd                                                              : 'not found'
+Checking for header poll.h                                                        :  YES
+Checking for poll                                                                 :  OK
+Checking for strptime                                                             :  OK
+Checking for declaration of strptime                                              :  OK
+Checking for working strptime                                                     : 'not found'
+Checking for declaration of gettimeofday                                          :  OK
+Checking C prototype for gettimeofday                                             : 'not found'
+Checking C prototype for gettimeofday                                             :  OK
+Checking for C99 vsnprintf                                                        : 'not found'
+Checking for HAVE_SHARED_MMAP                                                     :  OK
+Checking for HAVE_MREMAP                                                          : 'not found'
+Checking for HAVE_INCOHERENT_MMAP                                                 :  OK
+Checking for HAVE_IMMEDIATE_STRUCTURES                                            :  OK
+Checking for HAVE_MKDIR_MODE                                                      :  OK
+Checking for member st_mtim.tv_nsec in struct stat                                :  OK
+Checking for member st_rdev in struct stat                                        :  OK
+Checking for member st_rdev in struct stat                                        :  OK
+Checking for member ss_family in struct sockaddr_storage                          :  OK
+Checking for member __ss_family in struct sockaddr_storage                        : 'not found'
+Checking for member sa_len in struct sockaddr                                     :  OK
+Checking for member sin_len in struct sockaddr_in                                 :  OK
+Checking for member sin6_len in struct sockaddr_in6                               :  OK
+Checking for HAVE_UNIXSOCKET                                                      :  OK
+Checking for HAVE_SECURE_MKSTEMP                                                  :  OK
+Checking for HAVE_IFACE_GETIFADDRS                                                : 'not found'
+Checking for HAVE_IFACE_AIX                                                       : 'not found'
+Checking for HAVE_IFACE_IFCONF                                                    : 'not found'
+Checking for HAVE_IFACE_IFREQ                                                     : 'not found'
+Checking for declaration of getpwent_r                                            :  OK
+Checking C prototype for getpwent_r                                               : 'not found'
+Checking for declaration of getgrent_r                                            : 'not found'
+Checking for declaration of getgrent_r (as enum)                                  : 'not found'
+Checking C prototype for getpwent_r                                               : 'not found'
+Checking for declaration of getgrent_r                                            : 'not found'
+Checking for declaration of getgrent_r (as enum)                                  : 'not found'
+Checking for strerror_r                                                           :  OK
+Checking for XSI (rather than GNU) prototype for strerror_r                       :  OK
+Checking for HAVE_FUSE_FUSE_LOWLEVEL_H                                            : 'not found'
+Checking for program 'i386-mingw32-gcc'                                           : 'not found'
+Checking for program 'i386-mingw32msvc-gcc'                                       : 'not found'
+Checking for program 'i386-w64-mingw32-gcc'                                       : 'not found'
+Checking for program 'i586-mingw32-gcc'                                           : 'not found'
+Checking for program 'i586-mingw32msvc-gcc'                                       : 'not found'
+Checking for program 'i586-w64-mingw32-gcc'                                       : 'not found'
+Checking for program 'i686-mingw32-gcc'                                           : 'not found'
+Checking for program 'i686-mingw32msvc-gcc'                                       : 'not found'
+Checking for program 'i686-w64-mingw32-gcc'                                       : 'not found'
+Checking for program 'x86_64-mingw32-gcc'                                         : 'not found'
+Checking for program 'x86_64-mingw32msvc-gcc'                                     : 'not found'
+Checking for program 'x86_64-w64-mingw32-gcc'                                     : 'not found'
+Checking for program 'amd64-mingw32-gcc'                                          : 'not found'
+Checking for program 'amd64-mingw32msvc-gcc'                                      : 'not found'
+Checking for program 'amd64-w64-mingw32-gcc'                                      : 'not found'
+Checking for program 'perl'                                                       : '/usr/bin/perl'
+Checking for program 'perl'                                                       : '/usr/bin/perl'
+Checking for minimum perl version 5.0.0                                           : '5.26.1'
+Checking for perl $Config{vendorprefix}:                                          : '/usr'
+Checking for perl $Config{vendorarch}:                                            : '/usr/lib/x86_64-linux-gnu/perl5/5.26'
+PERL_ARCH_INSTALL_DIR:                                                            : '/usr/lib/x86_64-linux-gnu/perl5/5.26'
+Checking for perl $Config{vendorlib}:                                             : '/usr/share/perl5'
+PERL_LIB_INSTALL_DIR:                                                             : '/usr/share/perl5'
+PERL_INC:                                                                         : '['/etc/perl', '/usr/local/lib/x86_64-linux-gnu/perl/5.26.1', '/usr/local/share/perl/5.26.1', '/usr/lib/x86_64-linux-gnu/perl5/5.26', '/usr/share/perl5', '/usr/lib/x86_64-linux-gnu/perl/5.26', '/usr/share/perl/5.26', '/usr/local/lib/site_perl', '/usr/lib/x86_64-linux-gnu/perl-base']'
+Checking for program 'xsltproc'                                                   : 'not found'
+Checking for program 'python3'                                                    : '/usr/bin/python3'
+Checking for program 'python'                                                     : '/usr/bin/python3'
+Checking for program 'python3'                                                    : '/usr/bin/python3'
+Checking for python version >= 2.6.0                                              : '3.6.9'
+python headers                                                                    : 'Check disabled due to --disable-python'
+Dynconfig[BINDIR]:                                                                : '/usr/bin'
+Dynconfig[SBINDIR]:                                                               : '/usr/sbin'
+Dynconfig[LIBDIR]:                                                                : '/usr/lib'
+Dynconfig[LIBEXECDIR]:                                                            : '/usr/libexec'
+Dynconfig[DATADIR]:                                                               : '/usr/share'
+Dynconfig[LOCALEDIR]:                                                             : '/usr/share/locale'
+Dynconfig[PYTHONDIR]:                                                             : '/usr/lib/python3/dist-packages'
+Dynconfig[PYTHONARCHDIR]:                                                         : '/usr/lib/python3/dist-packages'
+Dynconfig[PERL_LIB_INSTALL_DIR]:                                                  : '/usr/share/perl5'
+Dynconfig[PERL_ARCH_INSTALL_DIR]:                                                 : '/usr/lib/x86_64-linux-gnu/perl5/5.26'
+Dynconfig[INCLUDEDIR]:                                                            : '/usr/include/samba-4.0'
+Dynconfig[SCRIPTSBINDIR]:                                                         : '/usr/sbin'
+Dynconfig[SETUPDIR]:                                                              : '/usr/share/samba/setup'
+Dynconfig[PKGCONFIGDIR]:                                                          : '/usr/lib/pkgconfig'
+Dynconfig[CODEPAGEDIR]:                                                           : '/usr/share/samba/codepages'
+Dynconfig[PRIVATELIBDIR]:                                                         : '/usr/lib/samba'
+Dynconfig[MODULESDIR]:                                                            : '/usr/lib/samba'
+Dynconfig[PAMMODULESDIR]:                                                         : '/usr/lib/security'
+Dynconfig[CONFIGDIR]:                                                             : '/usr/etc/samba'
+Dynconfig[PRIVATE_DIR]:                                                           : '/usr/var/lib/samba/private'
+Dynconfig[BINDDNS_DIR]:                                                           : '/usr/var/lib/samba/bind-dns'
+Dynconfig[LOCKDIR]:                                                               : '/usr/var/lock/samba'
+Dynconfig[PIDDIR]:                                                                : '/usr/var/run/samba'
+Dynconfig[STATEDIR]:                                                              : '/usr/var/lib/samba'
+Dynconfig[CACHEDIR]:                                                              : '/usr/var/cache/samba'
+Dynconfig[LOGFILEBASE]:                                                           : '/usr/var/log/samba'
+Dynconfig[SOCKET_DIR]:                                                            : '/usr/var/run/samba'
+Dynconfig[PRIVILEGED_SOCKET_DIR]:                                                 : '/usr/var/lib/samba'
+Dynconfig[WINBINDD_SOCKET_DIR]:                                                   : '/usr/var/run/samba/winbindd'
+Dynconfig[NMBDSOCKETDIR]:                                                         : '/usr/var/run/samba/nmbd'
+Dynconfig[NTP_SIGND_SOCKET_DIR]:                                                  : '/usr/var/lib/samba/ntp_signd'
+Dynconfig[NCALRPCDIR]:                                                            : '/usr/var/run/samba/ncalrpc'
+Dynconfig[CONFIGFILE]:                                                            : '/usr/etc/samba/smb.conf'
+Dynconfig[LMHOSTSFILE]:                                                           : '/usr/etc/samba/lmhosts'
+Dynconfig[SMB_PASSWD_FILE]:                                                       : '/usr/var/lib/samba/private/smbpasswd'
+Checking for third party Python module iso8601                                    : 'bundled'
+Checking for longjmp                                                              :  OK
+Checking for siglongjmp                                                           :  OK
+Checking for system cmocka (>=1.1.3)                                              : 'not found'
+Checking for system popt                                                          : 'not found'
+Checking for header popt.h                                                        :  NO
+Checking for stpcpy                                                               :  OK
+Checking for library iconv                                                        :  YES
+Checking for system z (>=1.2.3)                                                   :  YES
+Checking for library z                                                            :  YES
+Checking for zlibVersion in z                                                     :  OK
+Checking for system z (>=1.2.3)                                                   :  OK
+Checking for system tdb (>=1.4.2)                                                 : 'not found'
+Checking for program 'xsltproc'                                                   : 'not found'
+Checking for program 'python3'                                                    : '/usr/bin/python3'
+Checking for program 'python'                                                     : '/usr/bin/python3'
+Checking for program 'python3'                                                    : '/usr/bin/python3'
+Checking for python version >= 2.6.0                                              : '3.6.9'
+python headers                                                                    : 'Check disabled due to --disable-python'
+Checking linker accepts -Wl,-no-undefined                                         :  YES
+Checking linker accepts ['-undefined', 'dynamic_lookup']                          :  NO
+Checking for program 'xsltproc'                                                   : 'not found'
+Checking for header sys/auxv.h                                                    :  YES
+Checking for getauxval                                                            : 'not found'
+Checking linker accepts -Wl,-no-undefined                                         :  YES
+Checking linker accepts ['-undefined', 'dynamic_lookup']                          :  NO
+Checking for program 'python3'                                                    : '/usr/bin/python3'
+Checking for program 'python'                                                     : '/usr/bin/python3'
+Checking for program 'python3'                                                    : '/usr/bin/python3'
+Checking for python version >= 2.6.0                                              : '3.6.9'
+python headers                                                                    : 'Check disabled due to --disable-python'
+Checking for system talloc (>=2.2.0)                                              : 'not found'
+Checking for epoll_create                                                         : 'not found'
+Checking value of NSIG                                                            : '57'
+Checking value of _NSIG                                                           : '57'
+Checking value of SIGRTMAX                                                        : '56'
+Checking value of SIGRTMIN                                                        : '41'
+Checking for program 'python3'                                                    : '/usr/bin/python3'
+Checking for program 'python'                                                     : '/usr/bin/python3'
+Checking for program 'python3'                                                    : '/usr/bin/python3'
+Checking for python version >= 2.6.0                                              : '3.6.9'
+python headers                                                                    : 'Check disabled due to --disable-python'
+Checking linker accepts -Wl,-no-undefined                                         :  YES
+Checking linker accepts ['-undefined', 'dynamic_lookup']                          :  NO
+Checking for program 'xsltproc'                                                   : 'not found'
+Checking for program 'python3'                                                    : '/usr/bin/python3'
+Checking for program 'python'                                                     : '/usr/bin/python3'
+Checking for program 'python3'                                                    : '/usr/bin/python3'
+Checking for python version >= 2.6.0                                              : '3.6.9'
+python headers                                                                    : 'Check disabled due to --disable-python'
+Checking for a 64-bit host to support lmdb                                        :  OK
+Checking linker accepts -Wl,-no-undefined                                         :  YES
+Checking linker accepts ['-undefined', 'dynamic_lookup']                          :  NO
+Checking linker accepts ['-Wl,--wrap=test']                                       :  YES
+Checking for u_char                                                               :  OK
+Checking for u_int32_t                                                            : 'not found'
+Checking for header err.h                                                         :  YES
+Checking for header sys/bswap.h                                                   :  NO
+Checking for header sys/stropts.h                                                 :  NO
+Checking for header sys/timeb.h                                                   :  YES
+Checking for header sys/times.h                                                   :  YES
+Checking for header timezone.h                                                    :  NO
+Checking for header ttyname.h                                                     :  NO
+Checking for header netinet/in6.h                                                 :  NO
+Checking for header netinet6/in6.h                                                :  NO
+Checking for header curses.h                                                      :  YES
+Checking for header term.h                                                        :  YES
+Checking for header termcap.h                                                     :  YES
+Checking for atexit                                                               :  OK
+Checking for cgetent                                                              : 'not found'
+Checking for getprogname                                                          : 'not found'
+Checking for setprogname                                                          : 'not found'
+Checking for gethostname                                                          :  OK
+Checking for putenv                                                               :  OK
+Checking for rcmd                                                                 :  OK
+Checking for readv                                                                :  OK
+Checking for sendmsg                                                              :  OK
+Checking for setitimer                                                            :  OK
+Checking for strlwr                                                               :  OK
+Checking for strncasecmp                                                          :  OK
+Checking for strptime                                                             :  OK
+Checking for strsep                                                               :  OK
+Checking for strsep_copy                                                          : 'not found'
+Checking for strtok_r                                                             :  OK
+Checking for strupr                                                               :  OK
+Checking for swab                                                                 :  OK
+Checking for umask                                                                :  OK
+Checking for uname                                                                :  OK
+Checking for unsetenv                                                             :  OK
+Checking for closefrom                                                            : 'not found'
+Checking for err                                                                  :  OK
+Checking for warn                                                                 :  OK
+Checking for errx                                                                 :  OK
+Checking for warnx                                                                :  OK
+Checking for flock                                                                :  OK
+Checking for writev                                                               :  OK
+Checking for hstrerror                                                            :  OK
+Checking for socket                                                               :  OK
+Checking for getipnodebyname                                                      : 'not found'
+Checking for gethostent                                                           :  OK
+Checking for gethostent_r                                                         :  OK
+Checking for sethostent                                                           :  OK
+Checking for endhostent                                                           :  OK
+Checking for getipnodebyaddr                                                      : 'not found'
+Checking for freehostent                                                          : 'not found'
+Checking for gethostbyname_r                                                      :  OK
+Checking for gethostbyaddr                                                        :  OK
+Checking for library socket                                                       :  YES
+Checking for getipnodebyname in socket nsl                                        : 'not found'
+Checking for getipnodebyaddr in socket nsl                                        : 'not found'
+Checking for freehostent in socket nsl                                            : 'not found'
+Checking for iruserok                                                             :  OK
+Checking for bswap16                                                              : 'not found'
+Checking for bswap32                                                              : 'not found'
+Checking for header sys/termios.h                                                 :  NO
+Checking for struct winsize                                                       :  OK
+Checking for member ws_xpixel in struct winsize                                   :  OK
+Checking for member ws_ypixel in struct winsize                                   :  OK
+Checking for variable h_errno                                                     :  OK
+Checking for declaration of h_errno                                               :  OK
+Checking for res_nsearch                                                          :  OK
+Checking for res_ndestroy                                                         :  OK
+Checking for dns_search                                                           : 'not found'
+Checking for dn_expand                                                            :  OK
+Checking for library resolv                                                       :  NO
+Checking for dns_search                                                           : 'not found'
+Checking for variable _res                                                        :  OK
+Checking for declaration of _res                                                  :  OK
+Checking for dirfd                                                                :  OK
+Checking for declaration of dirfd                                                 : 'not found'
+Checking for declaration of dirfd (as enum)                                       : 'not found'
+Checking for member dd_fd in DIR                                                  : 'not found'
+Checking for GnuTLS >= 3.2.0                                                      :  YES
+Checking for gnutls_privkey_export_x509 in gnutls                                 : 'not found'
+Checking for gnutls_x509_crt_set_subject_unique_id in gnutls                      : 'not found'
+Checking for gnutls_pkcs7_get_embedded_data_oid in gnutls                         : 'not found'
+Checking for gnutls_aead_cipher_init in gnutls                                    : 'not found'
+Checking for header linux/fcntl.h                                                 :  NO
+Checking for declaration of F_SETLEASE                                            : 'not found'
+Checking for declaration of F_SETLEASE (as enum)                                  : 'not found'
+Checking for declaration of SA_SIGINFO                                            :  OK
+Checking for backtrace                                                            : 'not found'
+Checking for backtrace_symbols                                                    : 'not found'
+Checking for library execinfo                                                     :  NO
+Checking for backtrace                                                            : 'not found'
+Checking for backtrace_symbols                                                    : 'not found'
+Checking for header libunwind.h                                                   :  NO
+Checking for member f_frsize in struct statvfs                                    :  OK
+Checking for statvfs (SVR4)                                                       :  OK
+Checking for *bsd style statfs with statfs.f_iosize                               : 'not found'
+Checking if f_fsid is an integer                                                  :  OK
+Checking whether statvfs.f_flag exists                                            :  OK
+Checking whether statvfs.f_flags exists                                           : 'not found'
+Checking for header gpfs.h                                                        :  NO
+Checking for iconv_open in iconv                                                  :  OK
+Checking errno of iconv for illegal multibyte sequence                            :  OK
+Checking for pam_start                                                            : 'not found'
+Checking for library pam                                                          :  YES
+Checking for pam_start in pam                                                     :  OK
+Checking for header security/pam_modules.h                                        :  YES
+Checking for header pam/pam_modules.h                                             :  NO
+Checking for header nss_dbdefs.h                                                  :  NO
+Checking for member ipnode.af_family in union nss_XbyY_key                        : 'not found'
+Checking for member pw_comment in struct passwd                                   :  OK
+Checking for member pw_age in struct passwd                                       :  OK
+Checking for header usersec.h                                                     :  NO
+Checking for member method_attrlist in struct secmethod_table                     : 'not found'
+Checking for member method_version in struct secmethod_table                      : 'not found'
+Checking for library ncurses                                                      :  YES
+Checking for tgetent in ncurses                                                   :  OK
+for compiling <readline/readline.h> with strict prototypes                        : 'not found'
+for workaround to <readline/readline.h> strict prototypes issue                   : 'not found'
+Checking for rl_completion_t                                                      : 'not found'
+Checking for CPPFunction                                                          :  OK
+Checking for library readline                                                     :  YES
+Checking for rl_completion_matches in readline                                    :  OK
+Checking for history_list in readline                                             : 'not found'
+Checking for SHA1_Update                                                          :  OK
+perl module Parse::Yapp::Driver 1.05                                              :  OK
+Checking for program 'yapp'                                                       : '/usr/bin/yapp'
+Checking linker accepts -Wl,--export-dynamic                                      :  YES
+Checking for header linux/falloc.h                                                :  NO
+Checking for header linux/ioctl.h                                                 :  NO
+Checking for getcwd                                                               :  OK
+Checking for fchown                                                               :  OK
+Checking for chmod                                                                :  OK
+Checking for fchmod                                                               :  OK
+Checking for mknod                                                                :  OK
+Checking for strtol                                                               :  OK
+Checking for strchr                                                               :  OK
+Checking for strupr                                                               :  OK
+Checking for chflags                                                              : 'not found'
+Checking for getrlimit                                                            :  OK
+Checking for fsync                                                                :  OK
+Checking for fdatasync                                                            :  OK
+Checking for setpgid                                                              :  OK
+Checking for setsid                                                               :  OK
+Checking for glob                                                                 :  OK
+Checking for strpbrk                                                              :  OK
+Checking for crypt16                                                              : 'not found'
+Checking for getauthuid                                                           : 'not found'
+Checking for innetgr                                                              : 'not found'
+Checking for initgroups                                                           :  OK
+Checking for select                                                               :  OK
+Checking for poll                                                                 :  OK
+Checking for rdchk                                                                :  OK
+Checking for getgrnam                                                             :  OK
+Checking for getgrent                                                             :  OK
+Checking for pathconf                                                             :  OK
+Checking for setpriv                                                              : 'not found'
+Checking for setgidx                                                              : 'not found'
+Checking for setuidx                                                              : 'not found'
+Checking for setgroups                                                            :  OK
+Checking for syscall                                                              : 'not found'
+Checking for sysconf                                                              :  OK
+Checking for atexit                                                               :  OK
+Checking for grantpt                                                              :  OK
+Checking for posix_openpt                                                         :  OK
+Checking for fallocate                                                            : 'not found'
+Checking for fseeko                                                               :  OK
+Checking for setluid                                                              : 'not found'
+Checking for getpwnam                                                             :  OK
+Checking for fdopendir                                                            : 'not found'
+Checking for fstatat                                                              :  OK
+Checking for getpwent_r                                                           :  OK
+Checking for setenv                                                               :  OK
+Checking for clearenv                                                             :  OK
+Checking for strcasecmp                                                           :  OK
+Checking for fcvt                                                                 : 'not found'
+Checking for fcvtl                                                                : 'not found'
+Checking for syslog                                                               :  OK
+Checking for vsyslog                                                              :  OK
+Checking for timegm                                                               :  OK
+Checking for setlocale                                                            :  OK
+Checking for lutimes                                                              : 'not found'
+Checking for futimes                                                              : 'not found'
+Checking for utimensat                                                            :  OK
+Checking for futimens                                                             :  OK
+Checking for mlock                                                                :  OK
+Checking for munlock                                                              :  OK
+Checking for mlockall                                                             :  OK
+Checking for munlockall                                                           :  OK
+Checking for memalign                                                             :  OK
+Checking for posix_memalign                                                       :  OK
+Checking for hstrerror                                                            :  OK
+Checking for yp_get_default_domain in nsl                                         : 'not found'
+Checking for library resolv                                                       :  NO
+Checking for _dn_expand                                                           :  OK
+Checking for __dn_expand                                                          : 'not found'
+Checking for declaration of fdatasync                                             :  OK
+Checking for declaration of readahead                                             : 'not found'
+Checking for declaration of readahead (as enum)                                   : 'not found'
+Checking for HAVE_LINUX_SPLICE                                                    : 'not found'
+Checking for kernel change notify support                                         : 'not found'
+Checking for Linux kernel oplocks                                                 : NO
+Checking for kernel share modes                                                   : 'not found'
+Checking for header fam.h                                                         :  NO
+Checking for member st_blocks in struct stat                                      :  OK
+Checking for member st_blksize in struct stat                                     :  OK
+Checking for member st_flags in struct stat                                       : 'not found'
+Checking for header replace.h                                                     :  NO
+Checking whether blkcnt_t is 32 bit                                               : 'not found'
+Checking whether blkcnt_t is 64 bit                                               :  OK
+Checking for library cap                                                          :  NO
+Checking for cap_get_proc                                                         : 'not found'
+Checking for broken nisplus include files                                         :  OK
+Checking if the compiler will optimize out functions                              :  OK
+Checking for LL suffix on long long integers                                      :  OK
+Checking for _acl                                                                 : 'not found'
+Checking for __acl                                                                : 'not found'
+Checking for atexit                                                               :  OK
+Checking for _chdir                                                               : 'not found'
+Checking for __chdir                                                              : 'not found'
+Checking for chflags                                                              : 'not found'
+Checking for chmod                                                                :  OK
+Checking for _close                                                               : 'not found'
+Checking for __close                                                              : 'not found'
+Checking for _closedir                                                            : 'not found'
+Checking for __closedir                                                           : 'not found'
+Checking for crypt16                                                              : 'not found'
+Checking for devnm                                                                : 'not found'
+Checking for dirfd                                                                :  OK
+Checking for DNSServiceRegister                                                   : 'not found'
+Checking for _dup                                                                 : 'not found'
+Checking for __dup                                                                : 'not found'
+Checking for _dup2                                                                : 'not found'
+Checking for __dup2                                                               : 'not found'
+Checking for endmntent                                                            : 'not found'
+Checking for execl                                                                :  OK
+Checking for _facl                                                                : 'not found'
+Checking for __facl                                                               : 'not found'
+Checking for _fchdir                                                              : 'not found'
+Checking for __fchdir                                                             : 'not found'
+Checking for fchmod                                                               :  OK
+Checking for fchown                                                               :  OK
+Checking for _fcntl                                                               : 'not found'
+Checking for __fcntl                                                              : 'not found'
+Checking for fcvt                                                                 : 'not found'
+Checking for fcvtl                                                                : 'not found'
+Checking for fdatasync                                                            :  OK
+Checking for _fork                                                                :  OK
+Checking for __fork                                                               : 'not found'
+Checking for fseeko                                                               :  OK
+Checking for _fstat                                                               : 'not found'
+Checking for __fstat                                                              : 'not found'
+Checking for fsync                                                                :  OK
+Checking for futimens                                                             :  OK
+Checking for futimes                                                              : 'not found'
+Checking for __fxstat                                                             : 'not found'
+Checking for getauthuid                                                           : 'not found'
+Checking for getcwd                                                               :  OK
+Checking for _getcwd                                                              : 'not found'
+Checking for __getcwd                                                             : 'not found'
+Checking for getdents                                                             : 'not found'
+Checking for __getdents                                                           : 'not found'
+Checking for getdirentries                                                        : 'not found'
+Checking for getgrent                                                             :  OK
+Checking for getgrnam                                                             :  OK
+Checking for getgrouplist                                                         :  OK
+Checking for getgrset                                                             : 'not found'
+Checking for getmntent                                                            : 'not found'
+Checking for getpagesize                                                          :  OK
+Checking for getpwanam                                                            : 'not found'
+Checking for getpwent_r                                                           :  OK
+Checking for getrlimit                                                            :  OK
+Checking for glob                                                                 :  OK
+Checking for grantpt                                                              :  OK
+Checking for hstrerror                                                            :  OK
+Checking for initgroups                                                           :  OK
+Checking for innetgr                                                              : 'not found'
+Checking for llseek                                                               : 'not found'
+Checking for _llseek                                                              : 'not found'
+Checking for __llseek                                                             : 'not found'
+Checking for _lseek                                                               : 'not found'
+Checking for __lseek                                                              : 'not found'
+Checking for _lstat                                                               : 'not found'
+Checking for __lstat                                                              : 'not found'
+Checking for lutimes                                                              : 'not found'
+Checking for __lxstat                                                             : 'not found'
+Checking for memalign                                                             :  OK
+Checking for mknod                                                                :  OK
+Checking for mlock                                                                :  OK
+Checking for mlockall                                                             :  OK
+Checking for munlock                                                              :  OK
+Checking for munlockall                                                           :  OK
+Checking for _open                                                                : 'not found'
+Checking for __open                                                               : 'not found'
+Checking for _opendir                                                             : 'not found'
+Checking for __opendir                                                            : 'not found'
+Checking for pathconf                                                             :  OK
+Checking for poll                                                                 :  OK
+Checking for posix_memalign                                                       :  OK
+Checking for pread                                                                :  OK
+Checking for _pread                                                               : 'not found'
+Checking for __pread                                                              : 'not found'
+Checking for pwrite                                                               :  OK
+Checking for _pwrite                                                              : 'not found'
+Checking for __pwrite                                                             : 'not found'
+Checking for rdchk                                                                :  OK
+Checking for _read                                                                : 'not found'
+Checking for __read                                                               : 'not found'
+Checking for _readdir                                                             : 'not found'
+Checking for __readdir                                                            : 'not found'
+Checking for _seekdir                                                             : 'not found'
+Checking for __seekdir                                                            : 'not found'
+Checking for select                                                               :  OK
+Checking for setenv                                                               :  OK
+Checking for setgidx                                                              : 'not found'
+Checking for setgroups                                                            :  OK
+Checking for setlocale                                                            :  OK
+Checking for setluid                                                              : 'not found'
+Checking for setmntent                                                            : 'not found'
+Checking for setpgid                                                              :  OK
+Checking for setpriv                                                              : 'not found'
+Checking for setsid                                                               :  OK
+Checking for setuidx                                                              : 'not found'
+Checking for _stat                                                                : 'not found'
+Checking for __stat                                                               : 'not found'
+Checking for statvfs                                                              :  OK
+Checking for strcasecmp                                                           :  OK
+Checking for strchr                                                               :  OK
+Checking for strpbrk                                                              :  OK
+Checking for strsignal                                                            :  OK
+Checking for strtol                                                               :  OK
+Checking for strupr                                                               :  OK
+Checking for sysconf                                                              :  OK
+Checking for sysctl                                                               :  OK
+Checking for sysctlbyname                                                         :  OK
+Checking for __sys_llseek                                                         : 'not found'
+Checking for syslog                                                               :  OK
+Checking for _telldir                                                             : 'not found'
+Checking for __telldir                                                            : 'not found'
+Checking for timegm                                                               :  OK
+Checking for utimensat                                                            :  OK
+Checking for vsyslog                                                              :  OK
+Checking for _write                                                               : 'not found'
+Checking for __write                                                              : 'not found'
+Checking for __xstat                                                              : 'not found'
+Checking if can we convert from CP850 to UCS-2LE                                  :  OK
+Checking if can we convert from UTF-8 to UCS-2LE                                  :  OK
+Checking for library acl                                                          :  NO
+Checking for acl_get_file                                                         :  OK
+Checking for POSIX ACL support                                                    :  OK
+Checking whether acl_get_perm_np() is available                                   :  OK
+Checking for variable ACL_EVERYONE                                                : 'not found'
+Checking for dirfd                                                                :  OK
+vfs_fileid checking for statfs() and struct statfs.f_fsid                         : 'not found'
+Checking whether lseek supports hole/data seeking                                 : 'not found'
+Checking whether Linux readahead is available                                     : 'not found'
+Checking for declaration of readahead                                             : 'not found'
+Checking for openat                                                               : 'not found'
+Checking if we can use msg_control for passing file descriptors                   :  OK
+Checking if we can use msg_accrights for passing file descriptors                 : 'not found'
+Checking for program 'awk'                                                        : '/usr/bin/awk'
+Checking for header asm/types.h                                                   :  NO
+Checking for major macro                                                          :  OK
+Checking for minor macro                                                          :  OK
+Checking for member d_off in struct dirent                                        : 'not found'
+Checking for program 'cups-config'                                                : '/usr/bin/cups-config'
+Checking for ''                                                                   :  YES
+Checking for header cups/cups.h                                                   :  NO
+Checking for header cups/language.h                                               :  NO
+Checking for library cups                                                         :  NO
+Checking for httpConnect                                                          : 'not found'
+Checking for httpConnectEncrypt                                                   : 'not found'
+Checking for pututline                                                            :  OK
+Checking for pututxline                                                           : 'not found'
+Checking for updwtmp                                                              : 'not found'
+Checking for updwtmpx                                                             : 'not found'
+Checking for getutmpx                                                             : 'not found'
+Checking for getutxent                                                            : 'not found'
+Checking for member ut_name in struct utmp                                        :  OK
+Checking for member ut_user in struct utmp                                        :  OK
+Checking for member ut_id in struct utmp                                          :  OK
+Checking for member ut_host in struct utmp                                        : 'not found'
+Checking for member ut_time in struct utmp                                        :  OK
+Checking for member ut_tv in struct utmp                                          : 'not found'
+Checking for member ut_type in struct utmp                                        :  OK
+Checking for member ut_pid in struct utmp                                         :  OK
+Checking for member ut_exit.e_exit in struct utmp                                 :  OK
+Checking for member ut_syslen in struct utmpx                                     : 'not found'
+Checking for member ut_host in struct utmpx                                       : 'not found'
+Checking whether pututline returns pointer                                        : 'not found'
+Checking if size of ((struct utmp *)NULL)->ut_line == 1                           : 'not found'
+Checking if size of ((struct utmp *)NULL)->ut_line == 2                           : 'not found'
+Checking if size of ((struct utmp *)NULL)->ut_line == 4                           : 'not found'
+Checking if size of ((struct utmp *)NULL)->ut_line == 8                           : 'not found'
+Checking if size of ((struct utmp *)NULL)->ut_line == 16                          :  OK
+Checking for header avahi-common/watch.h                                          :  NO
+Checking for header avahi-client/client.h                                         :  NO
+Checking for library avahi-client                                                 :  NO
+Checking for avahi_client_new                                                     : 'not found'
+Checking for library avahi-common                                                 :  NO
+Checking for avahi_strerror                                                       : 'not found'
+Checking whether Linux should use 32-bit credential calls                         : 'not found'
+Checking whether we can use Linux thread-specific credentials                     : 'not found'
+Checking whether setreuid is available                                            :  OK
+Checking whether Linux netlink is available                                       : 'not found'
+Checking whether fcntl locking is available                                       :  OK
+Checking whether fcntl lock supports open file description locks                  : 'not found'
+Checking for member st_mtim.tv_nsec in struct stat                                :  OK
+Checking for member st_mtimensec in struct stat                                   : 'not found'
+Checking for member st_mtimespec.tv_nsec in struct stat                           : 'not found'
+Checking for member st_mtime_n in struct stat                                     : 'not found'
+Checking for member st_umtime in struct stat                                      : 'not found'
+Checking for member st_birthtime in struct stat                                   : 'not found'
+Checking for member st_birthtimespec.tv_nsec in struct stat                       : 'not found'
+Checking for member st_birthtimensec in struct stat                               : 'not found'
+Checking whether posix_fadvise is available                                       :  OK
+Checking whether sysconf(_SC_NGROUPS_MAX) is available                            :  OK
+Checking whether sysconf(_SC_NPROC_ONLN) is available                             : 'not found'
+Checking whether sysconf(_SC_NPROCESSORS_ONLN) is available                       :  OK
+Checking whether sysconf(_SC_PAGESIZE) is available                               :  OK
+Checking whether to use the Darwin-specific initgroups system call                : 'not found'
+Checking whether struct utimbuf is available                                      :  OK
+Checking whether we have the struct sigevent                                      :  OK
+Checking for member sigev_value.sival_ptr in struct sigevent                      :  OK
+Checking for member sigev_value.sigval_ptr in struct sigevent                     : 'not found'
+Checking for the maximum value of the 'time_t' type                               :  OK
+Checking whether the macro for makedev is available                               : 'not found'
+Checking whether the realpath function allows a NULL argument                     :  OK
+Checking for ftruncate extend                                                     :  OK
+Checking for library sendfile                                                     :  NO
+Checking for header sys/sendfile.h                                                :  NO
+Checking for linux sendfile support                                               : 'not found'
+getcwd takes a NULL argument                                                      :  OK
+Checking for library gen                                                          :  NO
+Checking for getspnam                                                             :  OK
+Checking for header sched.h                                                       :  YES
+for Linux unshare(CLONE_FS)                                                       : 'not found'
+Checking for mallinfo()                                                           :  OK
+Checking whether seekdir returns void                                             :  OK
+Checking for header linux/fs.h                                                    :  NO
+Checking for dbus                                                                 :  NO
+Checking for header dbus/dbus.h                                                   :  NO
+Checking for library dbus-1                                                       :  NO
+Checking for header ftw.h                                                         :  YES
+Checking for nftw                                                                 :  OK
+Checking for library crypto                                                       :  YES
+Checking for DES_pcbc_encrypt in crypto                                           :  OK
+Checking for glib-2.0                                                             :  YES
+Checking for header glib.h                                                        :  YES
+Checking for library glib-2.0                                                     :  NO
+Checking for 'tracker-sparql-2.0'                                                 : 'not found'
+Checking for 'tracker-sparql-1.0'                                                 : 'not found'
+Checking for 'tracker-sparql-0.16'                                                : 'not found'
+Checking for 'tracker-sparql-0.14'                                                : 'not found'
+Checking for program 'bison'                                                      : '/home/nnarayanamurthy/qnx_700/host/linux/x86_64/usr/bin/bison'
+Using bison version                                                               : 'bison (GNU Bison) 2.4.1'
+Checking for program 'flex'                                                       : '/home/nnarayanamurthy/qnx_700/host/linux/x86_64/usr/bin/flex'
+Using flex version                                                                : 'flex 2.5.35'
+Checking for header rpc/types.h                                                   :  YES
+Checking for header rpc/xdr.h                                                     :  YES
+Checking for library nscd                                                         :  NO
+Checking for nscd_flush_cache                                                     : 'not found'
+Checking for openpty                                                              :  OK
+Checking for header linux/sockios.h                                               :  NO
+Checking for header linux/ethtool.h                                               :  NO
+Checking for system libtasn1 (>=3.8)                                              :  YES
+Checking for program 'asn1Parser'                                                 : '/usr/bin/asn1Parser'
+Checking linker accepts -Wl,-no-undefined                                         :  YES
+Checking linker accepts ['-undefined', 'dynamic_lookup']                          :  NO
+-lc not needed                                                                    : '-lc is unnecessary'
+Checking configure summary                                                        :  OK
+Checking compiler for PIE support                                                 :  YES
+Checking compiler for full RELRO support                                          :  YES
+Checking if compiler accepts -fstack-protector-strong                             :  YES
+Checking if compiler accepts -fstack-clash-protection                             :  NO
+Checking compiler accepts ['-Wfatal-errors']                                      :  YES
+rpath library support: NO
+-Wl,--version-script support: NO
