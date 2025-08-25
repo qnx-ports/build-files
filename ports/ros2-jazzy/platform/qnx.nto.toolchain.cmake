@@ -62,7 +62,7 @@ else()
   set(PYTHON_VERSION_QNX 3.8)
   set(PYTHON_VERSION_QNX_ABI 38)
 endif()
-set(PYTHON_SOABI cpython-38)
+set(PYTHON_SOABI cpython-${PYTHON_VERSION_QNX_ABI})
 # find the host python then override the include and library directories to link against the target cross compiled binaries
 if(CMAKE_VERSION VERSION_GREATER_EQUAL "3.12")
   find_package(Python3 ${PYTHON_VERSION_QNX} COMPONENTS Interpreter REQUIRED)

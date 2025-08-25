@@ -212,7 +212,7 @@ export TMPDIR=/data
 python3 -m ensurepip
 # Add pip to PATH
 export PATH=$PATH:/data/home/qnxuser/.local/bin
-pip3 install packaging pyyaml lark -t /data/home/qnxuser/.local/lib/python3.11/site-packages/
+pip3 install argcomplete packaging pyyaml lark -t /data/home/qnxuser/.local/lib/python3.11/site-packages/
 export PYTHONPATH=$PYTHONPATH:/data/home/qnxuser/opt/ros/jazzy/lib/python3.11/site-packages/:/data/home/qnxuser/opt/ros/jazzy/usr/lib/python3.11/site-packages/:/data/home/qnxuser/.local/lib/python3.11/site-packages/
 export COLCON_PYTHON_EXECUTABLE=/system/bin/python3
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/data/home/qnxuser/opt/ros/jazzy/lib
