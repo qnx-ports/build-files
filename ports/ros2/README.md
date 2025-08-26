@@ -12,17 +12,7 @@ We recommend that you use Docker to build ros2 for QNX to ensure the build envir
 
 CMake version of 3.22.0 is recommended.
 
-If python3 on the target is located at `/usr/bin/python3` instead of `/system/xbin/python3`, uncomment the following line in `build-ros2.sh`.
-
-```code
-#grep -rinl "\#\!$PYTHON3_PATH" ./opt/ros/humble | xargs -d '\n' sed -i '1 i #!/usr/bin/python3'
-grep -rinl "\#\!$PYTHON3_PATH" ./opt/ros/humble | xargs -d '\n' sed -i '1 i #!/system/xbin/python3'
-```
-
 The build may fail on an unclean project. To get successive builds to succeed you may need to first remove untracked files (see `git clean`).
-
-Use `$(nproc)` instead of `4` after `JLEVEL=` and `-j` if you want to use the maximum number of cores to build this project.
-32GB of RAM is recommended for using `JLEVEL=$(nproc)` or `-j$(nproc)`.
 
 ```bash
 # Create a workspace
@@ -36,9 +26,6 @@ cd build-files/docker
 ./docker-create-container.sh
 
 # Now you are in the Docker container
-
-# Use CMake version of 3.22.0
-sudo ln -sf /opt/cmake-3.22.0-linux-x86_64/bin/cmake /usr/local/bin/cmake
 
 # Set QNX_SDP_VERSION to be qnx800 for SDP 8.0 or qnx710 for SDP 7.1
 export QNX_SDP_VERSION=qnx800
@@ -76,8 +63,11 @@ vcs import src < ros2.repos
 # Specify a specific architecture you want to build it for. Otherwise, it will build for both x86_64 and aarch64
 export CPU=aarch64
 
+# Specify the python path on the target
+export QNX_PYTHON3_PATH=/system/bin/python3
+
 # Build ros2
-QNX_PYTHON3_PATH=/system/bin/python3 ./scripts/build-ros2.sh
+./scripts/build-ros2.sh
 ```
 
 After the build completes, ros2_humble.tar.gz will be created at QNX_TARGET/CPUVARDIR/ros2_humble.tar.gz
@@ -167,8 +157,11 @@ export LD_PRELOAD=$LD_PRELOAD:/usr/lib/x86_64-linux-gnu/libzstd.so
 # Specify a specific architecture you want to build it for. Otherwise, it will build for both x86_64 and aarch64
 export CPU=aarch64
 
+# Specify the python path on the target
+export QNX_PYTHON3_PATH=/system/bin/python3
+
 # Build ros2
-QNX_PYTHON3_PATH=/system/bin/python3 ./scripts/build-ros2.sh
+./scripts/build-ros2.sh
 ```
 
 # How to run tests
