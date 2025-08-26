@@ -200,8 +200,12 @@ export PYTHONPATH=$PYTHONPATH:/data/home/qnxuser/opt/ros/humble/lib/python3.11/s
 export COLCON_PYTHON_EXECUTABLE=/system/bin/python3
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/data/home/qnxuser/opt/ros/humble/lib
 
-# Start the python3 interpretor on Raspberry Pi
-python3
+# Setup Environment
+cd /data/home/qnxuser/opt/ros/humble
+. setup.bash
+
+# List Packages
+ros2 pkg list
 ```
 
 ### Running the Listner Talker Demo on RPI4
@@ -209,16 +213,12 @@ python3
 Run listener in a terminal:
 
 ```bash
-cd /data/home/qnxuser/opt/ros/humble
-. /data/home/qnxuser/opt/ros/humble/setup.bash
 ros2 run demo_nodes_cpp listener
 ```
 
 Run talker in another terminal:
 
 ```bash
-cd /data/home/qnxuser/opt/ros/humble
-. /data/home/qnxuser/opt/ros/humble/setup.bash
 ros2 run demo_nodes_cpp talker
 ```
 
@@ -226,8 +226,6 @@ ros2 run demo_nodes_cpp talker
 
 Launch the dummy robot demo node on RPI4.
 ```bash
-cd /data/home/qnxuser/opt/ros/humble
-. /data/home/qnxuser/opt/ros/humble/setup.bash
 ros2 launch dummy_robot_bringup dummy_robot_bringup.launch.py
 ```
 
