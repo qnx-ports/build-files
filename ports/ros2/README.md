@@ -60,6 +60,9 @@ vcs import src < ros2.repos
 ./scripts/colcon-ignore.sh
 ./scripts/patch.sh
 
+# Set LD_PRELOAD to the host libzstd.so for x86_64 SDP 7.1 builds
+export LD_PRELOAD=$LD_PRELOAD:/usr/lib/x86_64-linux-gnu/libzstd.so
+
 # Specify a specific architecture you want to build it for. Otherwise, it will build for both x86_64 and aarch64
 export CPU=aarch64
 
