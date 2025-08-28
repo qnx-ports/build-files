@@ -4,19 +4,19 @@ Supports QNX7.1 and QNX8.0
 
 ## Version notice
 
-**!!!** Please ensure that you are not using Meson from its master branch, it is currently causing issues right now.
+**!!!** Please ensure that you are not using Meson from its master branch, it has some issues with glib.
 
-glib currently has 2 different building profiles and only one of them should be installed on both the target and host system.
+glib has 2 different building profiles and only one of them should be installed on both the target and the host system.
 
 # glib (2.84.3) for QNX (Recommanded)
 
 **NOTE**: currently both x86_64 and aarch64le are supported
 
-Current these versions are tested:
+Currently these versions are tested:
 + 2.84.3
 + 2.84.1 
 
-See test reports in `tests/`. They remain the same as the other version
+See test reports in `tests/`. They remain the same as the other versions
 
 ## Dependencies notice
 
@@ -56,9 +56,9 @@ QNX_PROJECT_ROOT="$(pwd)/glib" JLEVEL=4 make -C build-files/ports/glib install
 
 # glib for QNX 
 
-**NOTE**: currently only aarch64le is supported.
+**NOTE**: Only aarch64le is supported.
 
-Current these versions are tested:
+Currently these versions are tested:
 + 2.82.0
 
 See test reports in `tests/`.
