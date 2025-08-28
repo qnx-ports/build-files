@@ -19,6 +19,10 @@ jobs:
 
   build:
     runs-on: self-hosted
+    strategy:
+      matrix:
+        qnx_env: [710, 800]
+    name: Build for QNX ${{ matrix.qnx_env }}
     if: |
       (github.event_name == 'workflow_dispatch') ||
       (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
@@ -52,19 +56,24 @@ jobs:
 
     - name: Pull build environment
       run: |
-        docker pull ghcr.io/qnx-ports/sdp800-build-env:latest
+        docker pull ghcr.io/qnx-ports/sdp-build-env:latest
 
     - name: Build ros2
       uses: addnab/docker-run-action@v3
       with:
-        image: ghcr.io/qnx-ports/sdp800-build-env:latest
+        image: ghcr.io/qnx-ports/sdp-build-env:latest
         options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
         shell: bash
         run: |
-          source ~/qnx/800/qnxsdp-env.sh
+          if [[ "${{ matrix.qnx_env}}" == "800" ]]; then
+            source ~/qnx/800/qnxsdp-env.sh
+            export QNX_SDP_VERSION=qnx800
+          else 
+            source ~/qnx/710/qnxsdp-env.sh
+            export QNX_SDP_VERSION=qnx710
+          fi
           source /usr/local/qnx/env/bin/activate
           cd ~/workspace
-          export QNX_SDP_VERSION=qnx800
           PREFIX="/usr" QNX_PROJECT_ROOT="$(pwd)/googletest" make -C build-files/ports/googletest install
           cd boost/tools/build
           git apply ../../../build-files/ports/boost/tools_qnx.patch
@@ -73,6 +82,8 @@ jobs:
           cd ~/workspace
           QNX_PROJECT_ROOT="$(pwd)/boost" make -C build-files/ports/boost install
           cd build-files/ports/ros2
+          export LD_PRELOAD=$LD_PRELOAD:/usr/lib/x86_64-linux-gnu/libzstd.so
+          export QNX_PYTHON3_PATH=/system/bin/python3
           mkdir -p src
           vcs import src < ros2.repos
           ./scripts/colcon-ignore.sh
