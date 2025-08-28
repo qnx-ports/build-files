@@ -1,0 +1,22 @@
+diff --git a/cmake/install.cmake b/cmake/install.cmake
+index be47c54a1..3a4c64a0f 100644
+--- a/cmake/install.cmake
++++ b/cmake/install.cmake
+@@ -137,11 +137,13 @@ install(EXPORT protobuf-targets
+   NAMESPACE protobuf::
+   COMPONENT protobuf-export)
+ 
+-install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_INSTALL_CMAKEDIR}/
+-  DESTINATION "${CMAKE_INSTALL_CMAKEDIR}"
+-  COMPONENT protobuf-export
+-  PATTERN protobuf-targets.cmake EXCLUDE
++if(NOT QNX)
++  install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_INSTALL_CMAKEDIR}/
++    DESTINATION "${CMAKE_INSTALL_CMAKEDIR}"
++    COMPONENT protobuf-export
++    PATTERN protobuf-targets.cmake EXCLUDE
+ )
++endif()
+ 
+ option(protobuf_INSTALL_EXAMPLES "Install the examples folder" OFF)
+ if(protobuf_INSTALL_EXAMPLES)

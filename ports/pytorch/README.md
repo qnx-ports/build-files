@@ -40,6 +40,9 @@ cd ~/qnx_workspace/build-files/ports/pytorch
 cd ~/qnx_workspace
 export BUILD_PYTORCH_MOBILE_WITH_HOST_TOOLCHAIN=1
 BUILD_TESTING=ON BUILD_LITE_INTERPRETER=ON QNX_PROJECT_ROOT="$(pwd)/pytorch" make -C build-files/ports/pytorch  install JLEVEL=4
+# Build full pytorch instead
+# unset BUILD_PYTORCH_MOBILE_WITH_HOST_TOOLCHAIN
+# BUILD_PYTHON=OFF BUILD_CAFFE2=OFF QNX_PROJECT_ROOT="$(pwd)/pytorch" make -C build-files/ports/pytorch  install JLEVEL=4
 ```
 
 ## Build Pytorch Mobile on Host
@@ -73,6 +76,9 @@ cd ~/qnx_workspace/build-files/ports/pytorch
 cd ~/qnx_workspace
 export BUILD_PYTORCH_MOBILE_WITH_HOST_TOOLCHAIN=1
 BUILD_TESTING=ON BUILD_LITE_INTERPRETER=ON QNX_PROJECT_ROOT="$(pwd)/pytorch" make -C build-files/ports/pytorch  install JLEVEL=4
+# Build full pytorch instead
+# unset BUILD_PYTORCH_MOBILE_WITH_HOST_TOOLCHAIN
+# BUILD_PYTHON=OFF BUILD_CAFFE2=OFF QNX_PROJECT_ROOT="$(pwd)/pytorch" make -C build-files/ports/pytorch  install JLEVEL=4
 ```
 
 ## Pytorch Mobile Build Options

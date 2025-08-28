@@ -1,0 +1,18 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 134523e7..0f2fc78f 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -30,6 +30,13 @@ function(get_filelist name outputvar)
+   set(${outputvar} ${_tempvar} PARENT_SCOPE)
+ endfunction()
+ 
++if(QNX)
++  # Suppress "maybe-uninitialized" and "alloc-size-larger-than" warnings
++  add_compile_options(
++      -Wno-maybe-uninitialized
++      -Wno-alloc-size-larger-than
++  )
++endif()
+ 
+ ################################################################################
+ # FBGEMM C++ Setup

@@ -1,0 +1,34 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index a5ddc49..59cb0bc 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -43,7 +43,7 @@ ENDIF()
+ 
+ IF(NOT CMAKE_SYSTEM_NAME)
+   MESSAGE(FATAL_ERROR "CMAKE_SYSTEM_NAME not defined")
+-ELSEIF(NOT CMAKE_SYSTEM_NAME MATCHES "^(Darwin|Linux|Android)$")
++ELSEIF(NOT CMAKE_SYSTEM_NAME MATCHES "^(Darwin|Linux|Android|QNX)$")
+   MESSAGE(FATAL_ERROR "Unrecognized CMAKE_SYSTEM_NAME = ${CMAKE_SYSTEM_NAME}")
+ ENDIF()
+ 
+diff --git a/src/qnnpack/math.h b/src/qnnpack/math.h
+index 8242354..0fd293a 100644
+--- a/src/qnnpack/math.h
++++ b/src/qnnpack/math.h
+@@ -14,6 +14,16 @@
+ #undef max
+ #endif
+ 
++#ifdef __QNX__
++#ifdef min
++#undef min
++#endif
++
++#ifdef max
++#undef max
++#endif
++#endif
++
+ inline static size_t min(size_t a, size_t b) {
+   return a < b ? a : b;
+ }
