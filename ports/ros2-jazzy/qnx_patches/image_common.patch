@@ -1,0 +1,15 @@
+diff --git a/image_transport/CMakeLists.txt b/image_transport/CMakeLists.txt
+index 089d5a1..4f42355 100644
+--- a/image_transport/CMakeLists.txt
++++ b/image_transport/CMakeLists.txt
+@@ -57,7 +57,9 @@ target_link_libraries(${PROJECT_NAME}_plugins PRIVATE
+ add_executable(list_transports src/list_transports.cpp)
+ target_link_libraries(list_transports
+   ${PROJECT_NAME}
+-  pluginlib::pluginlib)
++  pluginlib::pluginlib
++  $<$<AND:$<BOOL:${QNX}>,$<STREQUAL:$ENV{QNX_SDP_VERSION},qnx710>>:c++fs>
++)
+ 
+ # # Build republish
+ add_library(republish_node SHARED
