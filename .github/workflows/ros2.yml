@@ -86,6 +86,7 @@ jobs:
           export QNX_PYTHON3_PATH=/system/bin/python3
           mkdir -p src
           vcs import src < ros2.repos
+          vcs import src < ros2-extra.repos
           ./scripts/colcon-ignore.sh
           ./scripts/patch.sh
           ./scripts/build-ros2.sh

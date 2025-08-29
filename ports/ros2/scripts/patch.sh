@@ -40,6 +40,11 @@ qnx_patch ./src/ros2/rosidl_typesupport rosidl_typesupport.patch
 qnx_patch ./src/ros2/rosidl_typesupport_fastrtps rosidl_typesupport_fastrtps.patch
 qnx_patch ./src/ament/ament_cmake ament_cmake.patch
 
-qnx_patch ./src/ros-perception/vision_opencv vision_opencv.patch
+# Apply QNX patches for extra packages
+if [ -d ./src/ros-perception/vision_opencv ]; then
+    qnx_patch ./src/ros-perception/vision_opencv vision_opencv.patch
+else
+    echo "vision_opencv not installed. Skipping patch."
+fi
 
 echo "Packages patched with QNX changes"

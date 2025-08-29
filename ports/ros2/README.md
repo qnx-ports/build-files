@@ -30,7 +30,7 @@ cd build-files/docker
 # Set QNX_SDP_VERSION to be qnx800 for SDP 8.0 or qnx710 for SDP 7.1
 export QNX_SDP_VERSION=qnx800
 
-# Get boost library for vision_opencv
+# Get boost library if you want to include vision_opencv in your ros2 build
 cd ~/qnx_workspace
 git clone https://github.com/boostorg/boost.git && cd boost
 git checkout boost-1.82.0
@@ -56,11 +56,14 @@ cd ~/qnx_workspace/build-files/ports/ros2
 mkdir -p src
 vcs import src < ros2.repos
 
+# Import extra packages if desired
+vcs import src < ros2-extra.repos
+
 # Run required scripts
 ./scripts/colcon-ignore.sh
 ./scripts/patch.sh
 
-# Set LD_PRELOAD to the host libzstd.so for x86_64 SDP 7.1 builds
+# Set LD_PRELOAD to the host libzstd.so for x86_64 builds
 export LD_PRELOAD=$LD_PRELOAD:/usr/lib/x86_64-linux-gnu/libzstd.so
 
 # Specify a specific architecture you want to build it for. Otherwise, it will build for both x86_64 and aarch64
@@ -125,7 +128,7 @@ pip install -U \
 # source qnxsdp-env.sh
 source ~/qnx800/qnxsdp-env.sh
 
-# Get boost library for vision_opencv
+# Get boost library if you want to include vision_opencv in your ros2 build
 cd ~/qnx_workspace
 git clone https://github.com/boostorg/boost.git && cd boost
 git checkout boost-1.82.0
@@ -150,11 +153,14 @@ cd ~/qnx_workspace/build-files/ports/ros2
 mkdir -p src
 vcs import src < ros2.repos
 
+# Import extra packages if desired
+vcs import src < ros2-extra.repos
+
 # Run scripts to ignore some packages and apply QNX patches
 ./scripts/colcon-ignore.sh
 ./scripts/patch.sh
 
-# Set LD_PRELOAD to the host libzstd.so for x86_64 SDP 7.1 builds
+# Set LD_PRELOAD to the host libzstd.so for x86_64 builds
 export LD_PRELOAD=$LD_PRELOAD:/usr/lib/x86_64-linux-gnu/libzstd.so
 
 # Specify a specific architecture you want to build it for. Otherwise, it will build for both x86_64 and aarch64
