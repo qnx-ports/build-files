@@ -60,8 +60,8 @@ jobs:
         run: |
           if [[ "${{ matrix.qnx_env}}" == "ghcr.io/qnx-ports/sdp800-build-env:latest" ]]; then
              source ~/qnx/800/qnxsdp-env.sh
-           else 
+          else 
              source ~/qnx/710/qnxsdp-env.sh
-           fi
+          fi
           cd ~/workspace
           OSLIST="nto" QNX_PROJECT_ROOT="$(pwd)/FreeImage" make -C build-files/ports/FreeImage install 
