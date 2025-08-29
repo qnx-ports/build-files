@@ -411,7 +411,3 @@ repositories:
     type: git
     url: https://github.com/ros2/yaml_cpp_vendor.git
     version: 8.0.2
-  ros-perception/vision_opencv:
-    type: git
-    url: https://github.com/ros-perception/vision_opencv.git
-    version: 3.2.1
