@@ -1,0 +1,65 @@
+name: aws-c-common
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/aws-c-common.yml"
+      - "ports/aws-c-common/**"
+  pull_request:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/aws-c-common.yml"
+      - "ports/aws-c-common/**"
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        qnx_env: ["710", "800"]
+    name: Build for QNX ${{ matrix.qnx_env }}
+    runs-on: self-hosted
+    if: |
+      (github.event_name == 'workflow_dispatch') ||
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'aws-c-common'))
+    steps:
+      - name: Checkout build-files
+        uses: actions/checkout@v4
+        with:
+          path: build-files
+
+      - name: Checkout aws-c-common
+        uses: actions/checkout@v4
+        with:
+          repository: qnx-ports/aws-c-common
+          path: aws-c-common
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{github.actor}}
+          password: ${{secrets.GITHUB_TOKEN}}
+
+      - name: Pull build environment
+        run: |
+          docker pull ghcr.io/qnx-ports/sdp-build-env:latest
+
+      - name: Build aws-c-common
+        uses: addnab/docker-run-action@v3
+        with:
+          image: ghcr.io/qnx-ports/sdp-build-env:latest
+          options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
+          shell: bash
+          run: |
+            if [[ ${{ matrix.qnx_env }} == 710 ]]; then
+              source ~/qnx/710/qnxsdp-env.sh
+            else
+              source ~/qnx/800/qnxsdp-env.sh
+            fi
+            cd ~/workspace
+            make -C build-files/ports/aws-c-common install
