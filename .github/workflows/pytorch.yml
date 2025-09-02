@@ -44,8 +44,8 @@ jobs:
       uses: docker/login-action@v3
       with:
         registry: ghcr.io
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
+        username: ${{github.actor}}
+        password: ${{secrets.GITHUB_TOKEN}}
 
     - name: Pull build environment
       run: |
@@ -55,7 +55,7 @@ jobs:
       uses: addnab/docker-run-action@v3
       with:
         image: ghcr.io/qnx-ports/sdp800-build-env:latest
-        options: -u root -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
+        options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
         shell: bash
         run: |
           cd ~/workspace
