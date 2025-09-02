@@ -56,7 +56,6 @@ jobs:
         run: |
           cd ~/workspace
           chmod -R u+rw pytorch
-          chown -R $(whoami):$(whoami) pytorch
           WORKSPACE=$PWD
           source ~/qnx/800/qnxsdp-env.sh
           source /usr/local/qnx/env/bin/activate
