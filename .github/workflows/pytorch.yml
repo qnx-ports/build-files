@@ -63,6 +63,6 @@ jobs:
           cd $WORKSPACE/build-files/ports/pytorch
           ./scripts/patch.sh $WORKSPACE/pytorch
           cd $WORKSPACE
-          chmod -R u+rw ./pytorch
+          find ./pytorch/third_party -type d -name ".git" -prune -o -exec chmod u+rw {} +
           export BUILD_PYTORCH_MOBILE_WITH_HOST_TOOLCHAIN=1
           BUILD_TESTING=ON BUILD_LITE_INTERPRETER=ON QNX_PROJECT_ROOT="$(pwd)/pytorch" make -C build-files/ports/pytorch install
