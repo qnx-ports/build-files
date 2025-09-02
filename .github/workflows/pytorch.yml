@@ -31,10 +31,14 @@ jobs:
 
     - name: Checkout pytorch
       uses: actions/checkout@v4
+      with:
+        repository: qnx-ports/pytorch
+        path: pytorch
+        submodules: recursive
 
     - name: Patch pytorch and create directories
       run: |
-        cd ~/workspace
+        cd ${{ github.workspace }}
         WORKSPACE=$PWD
         cd $WORKSPACE/build-files/ports/pytorch
         ./scripts/patch.sh $WORKSPACE/pytorch
