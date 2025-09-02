@@ -31,15 +31,15 @@ jobs:
 
     - name: Checkout pytorch
       uses: actions/checkout@v4
-      with:
-        repository: qnx-ports/pytorch
-        path: pytorch
-        submodules: recursive
-        run: |
-          cd ~/workspace
-          WORKSPACE=$PWD
-          ./scripts/patch.sh $WORKSPACE/pytorch
 
+    - name: Patch pytorch and create directories
+      run: |
+        cd ~/workspace
+        WORKSPACE=$PWD
+        cd $WORKSPACE/build-files/ports/pytorch
+        ./scripts/patch.sh $WORKSPACE/pytorch
+        mkdir -p $WORKSPACE/pytorch/host/protobuf/build
+        mkdir -p $WORKSPACE/pytorch/host/sleef/bin
 
     - name: Login to GitHub Container Registry
       uses: docker/login-action@v3
