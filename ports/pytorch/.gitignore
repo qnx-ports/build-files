@@ -1,1 +1,7 @@
-host/
+host/*
+!host/protobuf/
+!host/protobuf/build/
+!host/protobuf/build/placeholder
+!host/sleef/
+!host/sleef/bin/
+!host/sleef/bin/placeholder
