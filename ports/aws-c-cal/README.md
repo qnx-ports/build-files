@@ -27,10 +27,12 @@ cd build-files/docker
 source ~/qnx800/qnxsdp-env.sh
 cd ~/qnx_workspace
 
-# Clone aws-c-cal
+# Clone aws-c-cal and aws-c-common
 git clone https://github.com/awslabs/aws-c-cal.git
+git clone https://github.com/qnx-ports/aws-c-common.git
 
-# Build aws-c-cal
+# Build libraries
+make -C build-files/ports/aws-c-common install -j4
 make -C build-files/ports/aws-c-cal install -j4
 ```
 
@@ -41,10 +43,12 @@ make -C build-files/ports/aws-c-cal install -j4
 mkdir -p ~/qnx_workspace && cd qnx_workspace
 git clone https://github.com/qnx-ports/build-files.git
 git clone https://github.com/awslabs/aws-c-cal.git
+git clone https://github.com/qnx-ports/aws-c-common.git
 
 # Source environment
 source ~/qnx800/qnxsdp-env.sh
 
-# Build aws-c-cal
+# Build libraries
+make -C build-files/ports/aws-c-common install -j4
 make -C build-files/ports/aws-c-cal install -j4
 ```
