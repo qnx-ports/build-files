@@ -37,8 +37,8 @@ jobs:
 
     - name: Fix submodule permissions
       run: |
-        sudo chown -R $(whoami):$(whoami) ${{ github.workspace }}/pytorch
-        sudo chmod -R u+rw ${{ github.workspace }}/pytorch
+        chown -R $(whoami):$(whoami) ${{ github.workspace }}/pytorch
+        chmod -R u+rw ${{ github.workspace }}/pytorch
 
     - name: Login to GitHub Container Registry
       uses: docker/login-action@v3
