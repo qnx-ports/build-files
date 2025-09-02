@@ -34,7 +34,6 @@ jobs:
         repository: qnx-ports/pytorch
         path: pytorch
         submodules: recursive
-        token: ${{ secrets.SUBMODULE_ACCESS_TOKEN }}
 
     - name: Fix submodule permissions
       run: |
