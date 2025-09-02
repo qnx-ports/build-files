@@ -21,7 +21,7 @@ INSTALL_ROOT ?= $(INSTALL_ROOT_$(OS))
 #This prefix path may be exposed to the source code,
 #the linker, or package discovery config files (.pc,
 #CMake config modules, etc.). Default is /usr/local
-PREFIX ?= /usr/local
+PREFIX ?= usr/local
 
 #choose Release or Debug
 CMAKE_BUILD_TYPE ?= Release
