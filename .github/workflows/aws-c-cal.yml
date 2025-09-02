@@ -32,6 +32,12 @@ jobs:
         with:
           path: build-files
 
+      - name: Checkout aws-c-common
+        uses: actions/checkout@4
+        with:
+          repository: qnx-ports/aws-c-common
+          path: aws-c-common
+
       - name: Checkout aws-c-cal
         uses: actions/checkout@v4
         with:
@@ -48,6 +54,7 @@ jobs:
       - name: Pull build environment
         run: |
           docker pull ghcr.io/qnx-ports/sdp-build-env:latest
+
       - name: Build aws-c-cal
         uses: addnab/docker-run-action@v3
         with:
@@ -61,4 +68,5 @@ jobs:
               source ~/qnx/800/qnxsdp-env.sh
             fi
             cd ~/workspace
+            make -C build-files/ports/aws-c-common install
             make -C build-files/ports/aws-c-cal install
