@@ -70,4 +70,6 @@ jobs:
           cd $WORKSPACE/build-files/ports/pytorch
           cd $WORKSPACE
           export BUILD_PYTORCH_MOBILE_WITH_HOST_TOOLCHAIN=1
+          echo "@@@@@@@@chachoi"
+          ls /home/runner/workspace/build-files/ports/pytorch/host/sleef/bin
           BUILD_TESTING=ON BUILD_LITE_INTERPRETER=ON QNX_PROJECT_ROOT="$(pwd)/pytorch" make -C build-files/ports/pytorch install
