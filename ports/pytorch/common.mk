@@ -134,7 +134,6 @@ pytorch_mobile_all_clean:
 
 # Sleef tools are needed on the host to autogenerate source code for libsleef
 sleef_host_tools_all:
-	mkdir -p $(PROJECT_ROOT)/host/sleef/bin
 	$(HOSTCC) -o $(PROJECT_ROOT)/host/sleef/bin/mkalias  $(QNX_PROJECT_ROOT)/third_party/sleef/src/libm/mkalias.c
 	$(HOSTCC) -o $(PROJECT_ROOT)/host/sleef/bin/mkrename  $(QNX_PROJECT_ROOT)/third_party/sleef/src/libm/mkrename.c
 	$(HOSTCC) -o $(PROJECT_ROOT)/host/sleef/bin/mkrename_gnuabi  $(QNX_PROJECT_ROOT)/third_party/sleef/src/libm/mkrename_gnuabi.c
@@ -147,7 +146,6 @@ sleef_host_tools_clean:
 # Protobuf is needed as a host tool as well as a target dependency.
 # It has to be the same version as the dependency included in libtorch thirdparty source code.
 protobuf_host_install:
-	mkdir -p $(PROJECT_ROOT)/host/protobuf/build
 	cd $(PROJECT_ROOT)/host/protobuf/build && \
 	cmake $(HOSTCMAKE_ARGS) $(QNX_PROJECT_ROOT)/third_party/protobuf/cmake && \
 	make all $(MAKE_ARGS) && \

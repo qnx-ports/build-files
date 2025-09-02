@@ -38,6 +38,8 @@ cd ~/qnx_workspace/build-files/ports/pytorch
 
 # Build pytorch mobile w/ lite interpreter
 cd ~/qnx_workspace
+mkdir -p $(pwd)/pytorch/host/protobuf/build
+mkdir -p $(pwd)/pytorch/host/sleef/bin
 export BUILD_PYTORCH_MOBILE_WITH_HOST_TOOLCHAIN=1
 BUILD_TESTING=ON BUILD_LITE_INTERPRETER=ON QNX_PROJECT_ROOT="$(pwd)/pytorch" make -C build-files/ports/pytorch  install JLEVEL=4
 # Build full pytorch instead
@@ -74,6 +76,8 @@ cd ~/qnx_workspace/build-files/ports/pytorch
 
 # Build pytorch mobile w/ lite interpreter
 cd ~/qnx_workspace
+mkdir -p $(pwd)/pytorch/host/protobuf/build
+mkdir -p $(pwd)/pytorch/host/sleef/bin
 export BUILD_PYTORCH_MOBILE_WITH_HOST_TOOLCHAIN=1
 BUILD_TESTING=ON BUILD_LITE_INTERPRETER=ON QNX_PROJECT_ROOT="$(pwd)/pytorch" make -C build-files/ports/pytorch  install JLEVEL=4
 # Build full pytorch instead
