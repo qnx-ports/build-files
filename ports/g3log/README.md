@@ -1,4 +1,4 @@
-# dlt-daemon [![Build](https://github.com/qnx-ports/build-files/actions/workflows/dlt-daemon.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/dlt-daemon.yml)
+# g3log [![Build](https://github.com/qnx-ports/build-files/actions/workflows/g3log.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/g3log.yml)
 
 **NOTE**: QNX ports are only supported from a Linux host operating system
 
@@ -19,9 +19,9 @@ cd build-files/docker
 
 # Now you are in the Docker container
 
-# Clone dlt-daemon
+# Clone g3log
 cd ~/qnx_workspace
-git clone --recurse-submodules https://github.com/qnx-ports/dlt-daemon.git
+git clone --recurse-submodules https://github.com/qnx-ports/g3log.git
 ```
 
 # Or setup Ubuntu host
@@ -29,13 +29,13 @@ git clone --recurse-submodules https://github.com/qnx-ports/dlt-daemon.git
 # Clone the repos
 mkdir -p ~/qnx_workspace && cd qnx_workspace
 git clone https://github.com/qnx-ports/build-files.git
-git clone --recurse-submodules https://github.com/qnx-ports/dlt-daemon.git
+git clone --recurse-submodules https://github.com/qnx-ports/g3log.git
 ```
 
-# Compile dlt-daemon and its tests for QNX
+# Compile g3log and its tests for QNX
 ```bash
 # source qnxsdp-env.sh
 source ~/qnx800/qnxsdp-env.sh
-# Build dlt-daemon
-BUILD_TESTING="ON" make -C build-files/ports/dlt-daemon install JLEVEL=$(nproc) [INSTALL_ROOT_nto=PATH_TO_YOUR_STAGING_AREA USE_INSTALL_ROOT=true]
+# Build g3log
+BUILD_TESTING="ON" make -C build-files/ports/g3log install JLEVEL=$(nproc) [INSTALL_ROOT_nto=PATH_TO_YOUR_STAGING_AREA USE_INSTALL_ROOT=true]
 ```
