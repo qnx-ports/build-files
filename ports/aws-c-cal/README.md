@@ -42,8 +42,8 @@ make -C build-files/ports/aws-c-cal install -j4
 # Clone the repos
 mkdir -p ~/qnx_workspace && cd qnx_workspace
 git clone https://github.com/qnx-ports/build-files.git
-git clone https://github.com/awslabs/aws-c-cal.git
 git clone https://github.com/qnx-ports/aws-c-common.git
+git clone https://github.com/awslabs/aws-c-cal.git
 
 # Source environment
 source ~/qnx800/qnxsdp-env.sh
