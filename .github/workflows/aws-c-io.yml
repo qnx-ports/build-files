@@ -32,6 +32,12 @@ jobs:
         with:
           path: build-files
 
+      - name: Checkout epoll
+        uses: actions/checkout@v4
+        with:
+          repository: qnx-ports/epoll
+          path: epoll
+
       - name: Checkout aws-c-common
         uses: actions/checkout@v4
         with:
@@ -80,6 +86,7 @@ jobs:
               source ~/qnx/800/qnxsdp-env.sh
             fi
             cd ~/workspace
+            make -C build-files/ports/epoll install
             make -C build-files/ports/aws-c-common install
             make -C build-files/ports/s2n-tls install
             make -C build-files/ports/aws-c-cal install
