@@ -1,21 +1,8 @@
 diff --git a/rosidl_generator_py/cmake/rosidl_generator_py_generate_interfaces.cmake b/rosidl_generator_py/cmake/rosidl_generator_py_generate_interfaces.cmake
-index a6d8263..aca67d1 100644
+index a6d8263..12550ba 100644
 --- a/rosidl_generator_py/cmake/rosidl_generator_py_generate_interfaces.cmake
 +++ b/rosidl_generator_py/cmake/rosidl_generator_py_generate_interfaces.cmake
-@@ -17,7 +17,11 @@ find_package(rosidl_runtime_c REQUIRED)
- find_package(rosidl_typesupport_c REQUIRED)
- find_package(rosidl_typesupport_interface REQUIRED)
- 
--find_package(PythonInterp 3.6 REQUIRED)
-+if(CMAKE_VERSION VERSION_GREATER_EQUAL "3.12")
-+  find_package(Python3 REQUIRED COMPONENTS Interpreter Development NumPy)
-+else()
-+  find_package(PythonInterp 3.6 REQUIRED)
-+endif()
- 
- find_package(python_cmake_module REQUIRED)
- find_package(PythonExtra MODULE REQUIRED)
-@@ -176,6 +180,11 @@ target_link_libraries(
+@@ -176,6 +176,11 @@ target_link_libraries(
    ${_target_name_lib}
    ${PythonExtra_LIBRARIES}
  )
@@ -27,7 +14,7 @@ index a6d8263..aca67d1 100644
  target_include_directories(${_target_name_lib}
    PRIVATE
    ${CMAKE_CURRENT_BINARY_DIR}/rosidl_generator_c
-@@ -188,7 +197,7 @@ find_file(_numpy_h numpy/numpyconfig.h
+@@ -188,7 +193,7 @@ find_file(_numpy_h numpy/numpyconfig.h
    PATHS ${PythonExtra_INCLUDE_DIRS}
  )
  
@@ -36,7 +23,7 @@ index a6d8263..aca67d1 100644
    # add include directory for numpy headers
    set(_python_code
      "import numpy"
-@@ -209,6 +218,10 @@ if(APPLE OR WIN32 OR NOT _numpy_h)
+@@ -209,6 +214,10 @@ if(APPLE OR WIN32 OR NOT _numpy_h)
    target_include_directories(${_target_name_lib} PUBLIC "${_output}")
  endif()
  
