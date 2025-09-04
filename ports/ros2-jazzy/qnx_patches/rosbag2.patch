@@ -33,6 +33,115 @@ index a4364cc9..49d353ed 100644
  
  find_package(pybind11_vendor REQUIRED)
  find_package(pybind11 REQUIRED)
+diff --git a/rosbag2_transport/include/rosbag2_transport/player_service_client.hpp b/rosbag2_transport/include/rosbag2_transport/player_service_client.hpp
+index ec23f574..41bb8ffc 100644
+--- a/rosbag2_transport/include/rosbag2_transport/player_service_client.hpp
++++ b/rosbag2_transport/include/rosbag2_transport/player_service_client.hpp
+@@ -54,15 +54,33 @@ public:
+   /// \param message - Serialized message
+   /// \return Shared pointer to the byte array with deserialized service event if success,
+   /// otherwise nullptr
++#if defined(__QNX__) && __QNX__ < 800
++  std::shared_ptr<uint8_t> deserialize_service_event(const rcl_serialized_message_t & message);
++#else
+   std::shared_ptr<uint8_t[]> deserialize_service_event(const rcl_serialized_message_t & message);
++#endif
+ 
+   std::tuple<PlayerServiceClient::ServiceEventType, PlayerServiceClient::ClientGidType>
+-  get_service_event_type_and_client_gid(const std::shared_ptr<uint8_t[]> type_erased_service_event);
++  get_service_event_type_and_client_gid(
++#if defined(__QNX__) && __QNX__ < 800
++    const std::shared_ptr<uint8_t> type_erased_service_event);
++#else
++    const std::shared_ptr<uint8_t[]> type_erased_service_event);
++#endif
+ 
+   bool is_service_event_include_request_message(
++#if defined(__QNX__) && __QNX__ < 800
++    const std::shared_ptr<uint8_t> type_erased_service_event);
++#else
+     const std::shared_ptr<uint8_t[]> type_erased_service_event);
++#endif
+ 
+-  void async_send_request(const std::shared_ptr<uint8_t[]> type_erased_service_event);
++  void async_send_request(
++#if defined(__QNX__) && __QNX__ < 800
++    const std::shared_ptr<uint8_t> type_erased_service_event);
++#else
++    const std::shared_ptr<uint8_t[]> type_erased_service_event);
++#endif
+ 
+   /// Wait until sent service requests will receive responses from service servers.
+   /// \param timeout - Timeout in fraction of seconds to wait for.
+diff --git a/rosbag2_transport/src/rosbag2_transport/player_service_client.cpp b/rosbag2_transport/src/rosbag2_transport/player_service_client.cpp
+index 90f0dc64..5ee28051 100644
+--- a/rosbag2_transport/src/rosbag2_transport/player_service_client.cpp
++++ b/rosbag2_transport/src/rosbag2_transport/player_service_client.cpp
+@@ -101,15 +101,28 @@ const std::string & PlayerServiceClient::get_service_name()
+   return service_name_;
+ }
+ 
++#if defined(__QNX__) && __QNX__ < 800
++std::shared_ptr<uint8_t>
++#else
+ std::shared_ptr<uint8_t[]>
++#endif
+ PlayerServiceClient::deserialize_service_event(const rcl_serialized_message_t & message)
+ {
++#if defined(__QNX__) && __QNX__ < 800
++  auto type_erased_service_event = std::shared_ptr<uint8_t>(
++    new uint8_t[service_event_members_->size_of_],
++    [fini_function = this->service_event_members_->fini_function](uint8_t * msg) {
++      fini_function(msg);
++      delete[] msg;
++    });
++#else
+   auto type_erased_service_event = std::shared_ptr<uint8_t[]>(
+     new uint8_t[service_event_members_->size_of_],
+     [fini_function = this->service_event_members_->fini_function](uint8_t * msg) {
+       fini_function(msg);
+       delete[] msg;
+     });
++#endif
+ 
+   service_event_members_->init_function(
+     type_erased_service_event.get(), rosidl_runtime_cpp::MessageInitialization::ZERO);
+@@ -124,7 +137,11 @@ PlayerServiceClient::deserialize_service_event(const rcl_serialized_message_t &
+ 
+ std::tuple<PlayerServiceClient::ServiceEventType, PlayerServiceClient::ClientGidType>
+ PlayerServiceClient::get_service_event_type_and_client_gid(
++#if defined(__QNX__) && __QNX__ < 800
++  const std::shared_ptr<uint8_t> type_erased_service_event)
++#else
+   const std::shared_ptr<uint8_t[]> type_erased_service_event)
++#endif
+ {
+   if (type_erased_service_event) {
+     // members_[0]: service_info, members_[1]: request[<=1], members_[2]: response[<=1]
+@@ -142,7 +159,11 @@ PlayerServiceClient::get_service_event_type_and_client_gid(
+ }
+ 
+ bool PlayerServiceClient::is_service_event_include_request_message(
++#if defined(__QNX__) && __QNX__ < 800
++  const std::shared_ptr<uint8_t> type_erased_service_event)
++#else
+   const std::shared_ptr<uint8_t[]> type_erased_service_event)
++#endif
+ {
+   if (type_erased_service_event) {
+     // members_[0]: service_info, members_[1]: request[<=1], members_[2]: response[<=1]
+@@ -158,7 +179,11 @@ bool PlayerServiceClient::is_service_event_include_request_message(
+ }
+ 
+ void PlayerServiceClient::async_send_request(
++#if defined(__QNX__) && __QNX__ < 800
++  const std::shared_ptr<uint8_t> type_erased_service_event)
++#else
+   const std::shared_ptr<uint8_t[]> type_erased_service_event)
++#endif
+ {
+   // members_[0]: service_info, members_[1]: request[<=1], members_[2]: response[<=1]
+   const auto & request_member = service_event_members_->members_[1];
 diff --git a/rosbag2_transport/src/rosbag2_transport/recorder.cpp b/rosbag2_transport/src/rosbag2_transport/recorder.cpp
 index d5d1f0b0..3a1f1f4e 100644
 --- a/rosbag2_transport/src/rosbag2_transport/recorder.cpp
