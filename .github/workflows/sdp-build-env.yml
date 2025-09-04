@@ -88,8 +88,8 @@ jobs:
 
         # Point baseline paths to their respective place on the runner.
         WORKSPACE=${{ github.workspace }}
-        sed -i "s/$WORKSPACE/\/home\/runner/" $WORKSPACE/.qnx/qconfig/com.qnx.qnx710_1.xml
-        sed -i "s/$WORKSPACE/\/home\/runner/" $WORKSPACE/.qnx/qconfig/com.qnx.qnx800_1.xml
+        sed -i "s|$WORKSPACE|/home/runner|" $WORKSPACE/.qnx/qconfig/com.qnx.qnx710_1.xml
+        sed -i "s|$WORKSPACE|/home/runner|" $WORKSPACE/.qnx/qconfig/com.qnx.qnx800_1.xml
 
         docker cp ${{ github.workspace }}/qnx tmp:/home/runner
         docker cp ${{ github.workspace }}/.qnx tmp:/home/runner
