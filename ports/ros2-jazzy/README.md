@@ -1,4 +1,4 @@
-# ROS2 jazzy [![Build](https://github.com/qnx-ports/build-files/actions/workflows/ros2.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/ros2.yml)
+# ROS2 jazzy [![Build](https://github.com/qnx-ports/build-files/actions/workflows/ros2-jazzy.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/ros2-jazzy.yml)
 
 **NOTE**: QNX ports are only supported from a Linux host operating system
 
