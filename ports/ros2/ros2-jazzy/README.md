@@ -110,7 +110,7 @@ pip install -U \
   pip \
   empy \
   lark \
-  Cython \
+  Cython==0.29.35 \
   wheel \
   colcon-common-extensions \
   vcstool \
