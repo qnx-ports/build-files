@@ -66,7 +66,7 @@ jobs:
         ${{ github.workspace }}/qnx/qnxsoftwarecenter/qnxsoftwarecenter_clt -syncLicenseKeys -myqnx.user="$MYQNX_USER" -myqnx.password="$MYQNX_PASSWORD" -addLicenseKey $SDP800_LICENSE_KEY
         cp -r ~/.qnx/license ${{ github.workspace }}/.qnx
         echo "Downloading QNX SDP 8.0 ..."
-        ${{ github.workspace }}/qnx/qnxsoftwarecenter/qnxsoftwarecenter_clt -mirror -cleanInstall -destination ${{ github.workspace }}/qnx/800 -installBaseline com.qnx.qnx800 -myqnx.user="$MYQNX_USER" -myqnx.password="$MYQNX_PASSWORD"
+        ${{ github.workspace }}/qnx/qnxsoftwarecenter/qnxsoftwarecenter_clt -mirror -cleanInstall -destination ${{ github.workspace }}/qnx/800 -installBaseline com.qnx.qnx800 -installPackage com.qnx.qnx800.target.qemuvirt -myqnx.user="$MYQNX_USER" -myqnx.password="$MYQNX_PASSWORD"
 
 
     - name: Login to GitHub Container Registry
