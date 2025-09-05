@@ -1,8 +1,8 @@
-# ROS2 Humble [![Build](https://github.com/qnx-ports/build-files/actions/workflows/ros2.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/ros2.yml)
+# ROS2 jazzy [![Build](https://github.com/qnx-ports/build-files/actions/workflows/ros2-jazzy.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/ros2-jazzy.yml)
 
 **NOTE**: QNX ports are only supported from a Linux host operating system
 
-ROS2 Humble for QNX
+ROS2 jazzy for QNX
 
 # Compile the port for QNX in a Docker container
 
@@ -52,7 +52,7 @@ cd ~/qnx_workspace
 PREFIX="/usr" QNX_PROJECT_ROOT="$(pwd)/googletest" make -C build-files/ports/googletest install -j4
 
 # Import ros2 packages
-cd ~/qnx_workspace/build-files/ports/ros2
+cd ~/qnx_workspace/build-files/ports/ros2/ros2-jazzy
 mkdir -p src
 vcs import src < ros2.repos
 
@@ -72,11 +72,14 @@ export CPU=aarch64
 # Specify the python path on the target
 export QNX_PYTHON3_PATH=/system/bin/python3
 
+# If you would like to build test
+export QNX_TESTING=ON
+
 # Build ros2
 ./scripts/build-ros2.sh
 ```
 
-After the build completes, ros2_humble.tar.gz will be created at QNX_TARGET/CPUVARDIR/ros2_humble.tar.gz
+After the build completes, ros2_jazzy.tar.gz will be created at QNX_TARGET/CPUVARDIR/ros2_jazzy.tar.gz
 
 ## Build on host without using Docker
 
@@ -107,7 +110,7 @@ pip install -U \
   pip \
   empy \
   lark \
-  Cython \
+  Cython==0.29.35 \
   wheel \
   colcon-common-extensions \
   vcstool \
@@ -149,7 +152,7 @@ make -C build-files/ports/boost/ install QNX_PROJECT_ROOT="$(pwd)/boost" -j4
 PREFIX="/usr" QNX_PROJECT_ROOT="$(pwd)/googletest" make -C build-files/ports/googletest install -j4
 
 # Import ros2 packages
-cd ~/qnx_workspace/build-files/ports/ros2
+cd ~/qnx_workspace/build-files/ports/ros2/ros2-jazzy
 mkdir -p src
 vcs import src < ros2.repos
 
@@ -169,19 +172,22 @@ export CPU=aarch64
 # Specify the python path on the target
 export QNX_PYTHON3_PATH=/system/bin/python3
 
+# If you would like to build test
+export QNX_TESTING=ON
+
 # Build ros2
 ./scripts/build-ros2.sh
 ```
 
-# How to run tests
+# How to run examples and tests
 
-Use scp to move ros2_humble.tar.gz to the target (note, mDNS is configured from
+Use scp to move ros2_jazzy.tar.gz to the target (note, mDNS is configured from
 /boot/qnx_config.txt and uses qnxpi.local by default)
 
 ```bash
 TARGET_HOST=<target-ip-address-or-hostname>
 
-scp ros2_humble.tar.gz qnxuser@$TARGET_HOST:/data/home/qnxuser
+scp ros2_jazzy.tar.gz qnxuser@$TARGET_HOST:/data/home/qnxuser
 ```
 
 ```bash
@@ -189,7 +195,7 @@ scp ros2_humble.tar.gz qnxuser@$TARGET_HOST:/data/home/qnxuser
 ssh qnxuser@$TARGET_HOST
 
 cd /data/home/qnxuser
-tar -xvzf ./ros2_humble.tar.gz
+tar -xvzf ./ros2_jazzy.tar.gz
 ```
 
 ### Prepare Target
@@ -204,13 +210,13 @@ export TMPDIR=/data
 python3 -m ensurepip
 # Add pip to PATH
 export PATH=$PATH:/data/home/qnxuser/.local/bin
-pip3 install packaging pyyaml lark -t /data/home/qnxuser/.local/lib/python3.11/site-packages/
-export PYTHONPATH=$PYTHONPATH:/data/home/qnxuser/opt/ros/humble/lib/python3.11/site-packages/:/data/home/qnxuser/opt/ros/humble/usr/lib/python3.11/site-packages/:/data/home/qnxuser/.local/lib/python3.11/site-packages/
+pip3 install argcomplete packaging pyyaml lark -t /data/home/qnxuser/.local/lib/python3.11/site-packages/
+export PYTHONPATH=$PYTHONPATH:/data/home/qnxuser/opt/ros/jazzy/lib/python3.11/site-packages/:/data/home/qnxuser/opt/ros/jazzy/usr/lib/python3.11/site-packages/:/data/home/qnxuser/.local/lib/python3.11/site-packages/
 export COLCON_PYTHON_EXECUTABLE=/system/bin/python3
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/data/home/qnxuser/opt/ros/humble/lib
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/data/home/qnxuser/opt/ros/jazzy/lib
 
 # Setup Environment
-cd /data/home/qnxuser/opt/ros/humble
+cd /data/home/qnxuser/opt/ros/jazzy
 . setup.bash
 
 # List Packages
@@ -220,7 +226,6 @@ ros2 pkg list
 ### Running the Listner Talker Demo on RPI4
 
 Run listener in a terminal:
-
 ```bash
 ros2 run demo_nodes_cpp listener
 ```
@@ -235,22 +240,40 @@ ros2 run demo_nodes_cpp talker
 
 Launch the dummy robot demo node on RPI4.
 ```bash
-ros2 launch dummy_robot_bringup dummy_robot_bringup.launch.py
+ros2 launch dummy_robot_bringup dummy_robot_bringup_launch.py
 ```
 
-Install ROS2 Humble on your Ubuntu host.
+Install ROS2 jazzy on your Ubuntu host.
 
 There is no QNX port for rviz2.
 
-Follow the instructions at https://docs.ros.org/en/humble/Installation/Ubuntu-Install-Debians.html.
+Follow the instructions at https://docs.ros.org/en/jazzy/Installation/Ubuntu-Install-Debians.html.
 
 Start rviz2
+
+Please refer to https://docs.ros.org/en/jazzy/Tutorials/Demos/dummy-robot-demo.html for more details about the dummy robot demo.
+
 ```bash
 source <ROS2_INSTALL_FOLDER>/setup.bash
 rviz2
 ```
 
-Please refer to https://docs.ros.org/en/humble/Tutorials/Demos/dummy-robot-demo.html for more details about the dummy robot demo.
+### Running QNX test
+Tested Packages:
+- Fast-CDR
+- Fast-DDS
+- libstatistics_collector
+- rcpputils
+- rmw
+- rosidl_runtime_c
+- rosidl_typesupport_cpp
+- rosidl_typesupport_fastrtps_cpp
+
+**Note: Fast-DDS test are skipped in ros2 port. Instead the test results for Fast-DDS can be found [here](https://github.com/qnx-ports/build-files/blob/main/ports/Fast-DDS/fdds.test.result))**
+```bash
+cd /data/home/qnxuser/opt/ros2/jazzy
+sh qnxtest.sh
+```
 
 # How to build your own node
 

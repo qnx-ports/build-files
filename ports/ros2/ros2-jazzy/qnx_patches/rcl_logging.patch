@@ -1,0 +1,15 @@
+diff --git a/rcl_logging_spdlog/CMakeLists.txt b/rcl_logging_spdlog/CMakeLists.txt
+index 82d4d27..043e461 100644
+--- a/rcl_logging_spdlog/CMakeLists.txt
++++ b/rcl_logging_spdlog/CMakeLists.txt
+@@ -33,7 +33,9 @@ add_library(${PROJECT_NAME} src/rcl_logging_spdlog.cpp)
+ target_link_libraries(${PROJECT_NAME} PRIVATE
+   rcpputils::rcpputils
+   rcutils::rcutils
+-  spdlog::spdlog)
++  spdlog::spdlog
++  $<$<AND:$<BOOL:${QNX}>,$<STREQUAL:$ENV{QNX_SDP_VERSION},qnx710>>:c++fs>
++)
+ target_link_libraries(${PROJECT_NAME} PUBLIC
+   rcl_logging_interface::rcl_logging_interface)
+ 
