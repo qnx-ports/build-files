@@ -7,13 +7,13 @@ on:
       - main
     paths:
       - '.github/workflows/ros2-jazzy.yml'
-      - 'ports/ros2-jazzy/**'
+      - 'ports/ros2/ros2-jazzy/**'
   pull_request:
     branches:
       - main
     paths:
       - '.github/workflows/ros2-jazzy.yml'
-      - 'ports/ros2-jazzy/**'
+      - 'ports/ros2/ros2-jazzy/**'
 
 jobs:
 
@@ -81,7 +81,7 @@ jobs:
           cd boost/libs/asio && git apply ../../../build-files/ports/boost/asio_1.82.0_qnx.patch
           cd ~/workspace
           QNX_PROJECT_ROOT="$(pwd)/boost" make -C build-files/ports/boost install
-          cd build-files/ports/ros2-jazzy
+          cd build-files/ports/ros2/ros2-jazzy
           export LD_PRELOAD=$LD_PRELOAD:/usr/lib/x86_64-linux-gnu/libzstd.so
           export QNX_TESTING=ON
           export QNX_PYTHON3_PATH=/system/bin/python3

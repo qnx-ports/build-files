@@ -6,14 +6,14 @@ on:
     branches:
       - main
     paths:
-      - '.github/workflows/ros2.yml'
-      - 'ports/ros2/**'
+      - '.github/workflows/ros2-humble.yml'
+      - 'ports/ros2/ros2-humble/**'
   pull_request:
     branches:
       - main
     paths:
-      - '.github/workflows/ros2.yml'
-      - 'ports/ros2/**'
+      - '.github/workflows/ros2-humble.yml'
+      - 'ports/ros2/ros2-humble/**'
 
 jobs:
 
@@ -26,7 +26,7 @@ jobs:
     if: |
       (github.event_name == 'workflow_dispatch') ||
       (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
-      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'ros2'))
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'ros2-humble'))
     steps:
     - name: Checkout build-files
       uses: actions/checkout@v4
@@ -81,7 +81,7 @@ jobs:
           cd boost/libs/asio && git apply ../../../build-files/ports/boost/asio_1.82.0_qnx.patch
           cd ~/workspace
           QNX_PROJECT_ROOT="$(pwd)/boost" make -C build-files/ports/boost install
-          cd build-files/ports/ros2
+          cd build-files/ports/ros2/ros2-humble
           export LD_PRELOAD=$LD_PRELOAD:/usr/lib/x86_64-linux-gnu/libzstd.so
           export QNX_PYTHON3_PATH=/system/bin/python3
           mkdir -p src
