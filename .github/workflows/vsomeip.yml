@@ -18,6 +18,10 @@ on:
 jobs:
 
   build:
+    strategy:
+      matrix:
+        qnx_env: [710, 800]
+    name: Build for QNX ${{ matrix.qnx_env }}
     runs-on: self-hosted
     if: |
       (github.event_name == 'workflow_dispatch') ||
@@ -59,16 +63,20 @@ jobs:
 
     - name: Pull build environment
       run: |
-        docker pull ghcr.io/qnx-ports/sdp800-build-env:latest
+        docker pull ghcr.io/qnx-ports/sdp-build-env:latest
 
     - name: Build vsomeip
       uses: addnab/docker-run-action@v3
       with:
-        image: ghcr.io/qnx-ports/sdp800-build-env:latest
+        image: ghcr.io/qnx-ports/sdp-build-env:latest
         options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
         shell: bash
         run: |
-          source ~/qnx/800/qnxsdp-env.sh
+          if [ "${{ matrix.qnx_env }}" == "710" ]; then
+            source ~/qnx/710/qnxsdp-env.sh
+          else
+            source ~/qnx/800/qnxsdp-env.sh
+          fi
           cd ~/workspace
           WORKSPACE=$PWD
           export GTEST_ROOT=/home/runner/workspace/googletest
