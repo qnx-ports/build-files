@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<?xml-model
+  href="http://download.ros.org/schema/package_format2.xsd"
+  schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="2">
+  <name>bullet3_vendor</name>
+  <version>2.89.0</version>
+  <description>
+    Wrapper around bullet3, it provides a fixed CMake module and an ExternalProject build of it.
+  </description>
+  <maintainer email="asobhy@blackberry.com">Ahmed Sobhy</maintainer>
+  <license>zlib</license>  <!-- the contents of this package are under zlib license-->
+  <license>zlib</license>
+  <url type="website">https://pybullet.org/wordpress/</url>
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

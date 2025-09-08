@@ -1,0 +1,15 @@
+diff --git a/point_cloud_transport/CMakeLists.txt b/point_cloud_transport/CMakeLists.txt
+index 415c236..c3ab762 100644
+--- a/point_cloud_transport/CMakeLists.txt
++++ b/point_cloud_transport/CMakeLists.txt
+@@ -82,7 +82,9 @@ rclcpp_components_register_node(pc_republish_node
+ add_executable(list_transports src/list_transports.cpp)
+ target_link_libraries(list_transports PRIVATE
+   ${PROJECT_NAME}
+-  pluginlib::pluginlib)
++  pluginlib::pluginlib
++  $<$<AND:$<BOOL:${QNX}>,$<STREQUAL:$ENV{QNX_SDP_VERSION},qnx710>>:c++fs>
++)
+ 
+ # Install plugin descriptions
+ pluginlib_export_plugin_description_file(${PROJECT_NAME} default_plugins.xml)
