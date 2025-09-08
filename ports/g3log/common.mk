@@ -8,7 +8,7 @@ include $(MKFILES_ROOT)/qmacros.mk
 NAME=g3log
 LDFLAGS += -lregex
 CFLAGS += -std=c++17
-QNX_PROJECT_ROOT ?= $(PRODUCT_ROOT)/../../g3log/
+QNX_PROJECT_ROOT ?= $(PRODUCT_ROOT)/../../$(NAME)/
 
 #$(INSTALL_ROOT_$(OS)) is pointing to $QNX_TARGET
 #by default, unless it was manually re-routed to
@@ -22,14 +22,14 @@ INSTALL_ROOT ?= $(INSTALL_ROOT_$(OS))
 #This prefix path may be exposed to the source code,
 #the linker, or package discovery config files (.pc,
 #CMake config modules, etc.). Default is /usr/local
-PREFIX ?= /usr/local
+PREFIX ?= usr/local
 
 #choose Release or Debug
 CMAKE_BUILD_TYPE ?= Release
 
 #override 'all' target to bypass the default QNX build system
-ALL_DEPENDENCIES = g3log_all
-.PHONY: g3log_all install check clean
+ALL_DEPENDENCIES = $(NAME)_all
+.PHONY: $(NAME)_all install check clean
 
 CFLAGS += $(FLAGS)
 LDFLAGS += -Wl,--build-id=md5 -Wl,--allow-shlib-undefined
@@ -66,28 +66,22 @@ CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DCMAKE_CXX_COMPILER_TARGET=gcc_nto$(CPUVARDIR) \
              -DCMAKE_C_COMPILER_TARGET=gcc_nto$(CPUVARDIR) \
              -DCMAKE_INSTALL_PREFIX="$(PREFIX)" \
-             -DCMAKE_STAGING_PREFIX="$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)" \
+             -DCMAKE_INSTALL_LIBDIR="$(CPUVARDIR)/$(PREFIX)/lib" \
+             -DCMAKE_INSTALL_BINDIR="$(CPUVARDIR)/$(PREFIX)/bin" \
+             -DCMAKE_INSTALL_INCLUDEDIR="$(PREFIX)/include" \
              -DCMAKE_MODULE_PATH="$(CMAKE_MODULE_PATH)" \
              -DCMAKE_FIND_ROOT_PATH="$(CMAKE_FIND_ROOT_PATH)" \
              -DCMAKE_BUILD_TYPE=$(CMAKE_BUILD_TYPE) \
-             -DWITH_DLT_INSTALLED_TESTS=$(BUILD_TESTING) \
-             -DWITH_DLT_UNIT_TESTS=$(BUILD_TESTING) \
-             -DWITH_DLT_QNX_SYSTEM=ON \
-             -DWITH_DLT_CXX11_EXT=ON \
-             -DDLT_IPC=UNIX_SOCKET \
-             -DWITH_DLT_ADAPTOR=ON \
-             -DWITH_DLT_USE_IPv6=OFF \
-             -DWITH_LIB_SHORT_VERSION=ON
 
 MAKE_ARGS ?= -j $(firstword $(JLEVEL) 1)
 
 ifndef NO_TARGET_OVERRIDE
-g3log_all:
+$(NAME)_all:
 	@mkdir -p build
 	cd build && cmake $(CMAKE_ARGS) $(QNX_PROJECT_ROOT)
 	@cd build && make VERBOSE=1 all $(MAKE_ARGS)
 
-install check: g3log_all
+install check: $(NAME)_all
 	@echo Installing...
 	@cd build && make VERBOSE=1 install $(MAKE_ARGS)
 	@echo Done.
