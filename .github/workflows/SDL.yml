@@ -26,7 +26,7 @@ jobs:
     if: |
       (github.event_name == 'workflow_dispatch') ||
       (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
-      (github.event_name == 'pull_request' && (contains(github.event.pull_request.title, 'SDL') || contains(github.event.pull_request.title, 'SDL')))
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'SDL'))
     steps:
     - name: Checkout build-files
       uses: actions/checkout@v4
@@ -40,12 +40,6 @@ jobs:
         path: SDL
         ref: qnx_2.0.5
     
-    - name: Checkout googletest
-      uses: actions/checkout@v4
-      with:
-        repository: qnx-ports/googletest
-        path: googletest
-
     - name: Login to GitHub Container Registry
       uses: docker/login-action@v3
       with:
