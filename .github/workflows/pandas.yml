@@ -73,6 +73,7 @@ jobs:
           source /usr/local/qnx/env/bin/activate
           QNX_PROJECT_ROOT="$(pwd)/numpy" make -C build-files/ports/numpy install
           pip3 install Cython==3.0.5
+          pip3 install versioneer
           QNX_PROJECT_ROOT="$(pwd)/pandas" make -C build-files/ports/pandas install
 
 
