@@ -44,12 +44,12 @@ jobs:
 
     - name: Pull build environment
       run: |
-        docker pull ghcr.io/qnx-ports/sdp800-build-env:latest
+        docker pull ghcr.io/qnx-ports/sdp-build-env:latest
 
     - name: Build cJSON
       uses: addnab/docker-run-action@v3
       with:
-        image: ghcr.io/qnx-ports/sdp800-build-env:latest
+        image: ghcr.io/qnx-ports/sdp-build-env:latest
         options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
         shell: bash
         run: |
