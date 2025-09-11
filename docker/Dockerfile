@@ -581,6 +581,7 @@ RUN cd /usr/local/qnx && \
 	pytest \
 	pybind11 \
 	requests \
+	versioneer \
 	meson==1.3.0
 
 WORKDIR /home/${USER_NAME}
