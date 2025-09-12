@@ -20,9 +20,8 @@ jobs:
     runs-on: self-hosted
     strategy:
       matrix:
-        qnx_env:
-          - ghcr.io/qnx-ports/sdp800-build-env:latest
-          - ghcr.io/qnx-ports/sdp-build-env:latest
+        qnx_env: ["710", "800"]
+    name: Build for QNX ${{ matrix.qnx_env }}
     if: |
       (github.event_name == 'workflow_dispatch') ||
       (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
@@ -50,21 +49,21 @@ jobs:
 
     - name: Pull build environment
       run: |
-        docker pull ${{ matrix.qnx_env }}
+        docker pull ghcr.io/qnx-ports/sdp-build-env:latest
 
     - name: Build qt
       uses: addnab/docker-run-action@v3
       with:
-        image: ${{ matrix.qnx_env }}
+        image: ghcr.io/qnx-ports/sdp-build-env:latest
         options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
         shell: bash
         run: |
           cd workspace
           WORKSPACE=$PWD
-          if [[ "${{ matrix.qnx_env}}" == "ghcr.io/qnx-ports/sdp800-build-env:latest" ]]; then
-            source ~/qnx/800/qnxsdp-env.sh
-          else 
+          if [ "${{ matrix.qnx_env }}" == "710" ]; then
             source ~/qnx/710/qnxsdp-env.sh
+          else
+            source ~/qnx/800/qnxsdp-env.sh
           fi
           cd build-files/ports/qt/nto-aarch64-le
           cp -r qt5 ../nto-x86_64-o
