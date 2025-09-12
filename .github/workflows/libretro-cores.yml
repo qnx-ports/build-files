@@ -42,12 +42,12 @@ jobs:
             password: ${{secrets.GITHUB_TOKEN}}
         - name: Pull build environment
           run: |
-            docker pull ghcr.io/qnx-ports/sdp800-build-env:latest
+            docker pull ghcr.io/qnx-ports/sdp-build-env:latest
     
         - name: Build libretro-2048
           uses: addnab/docker-run-action@v3
           with:
-            image: ghcr.io/qnx-ports/sdp800-build-env:latest
+            image: ghcr.io/qnx-ports/sdp-build-env:latest
             options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
             shell: bash
             run: |
@@ -82,12 +82,12 @@ jobs:
             password: ${{secrets.GITHUB_TOKEN}}
         - name: Pull build environment
           run: |
-            docker pull ghcr.io/qnx-ports/sdp800-build-env:latest
+            docker pull ghcr.io/qnx-ports/sdp-build-env:latest
     
         - name: Build libretro-mrboom
           uses: addnab/docker-run-action@v3
           with:
-            image: ghcr.io/qnx-ports/sdp800-build-env:latest
+            image: ghcr.io/qnx-ports/sdp-build-env:latest
             options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
             shell: bash
             run: |
@@ -121,12 +121,12 @@ jobs:
             password: ${{secrets.GITHUB_TOKEN}}
         - name: Pull build environment
           run: |
-            docker pull ghcr.io/qnx-ports/sdp800-build-env:latest
+            docker pull ghcr.io/qnx-ports/sdp-build-env:latest
     
         - name: Build libretro-mrboom
           uses: addnab/docker-run-action@v3
           with:
-            image: ghcr.io/qnx-ports/sdp800-build-env:latest
+            image: ghcr.io/qnx-ports/sdp-build-env:latest
             options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
             shell: bash
             run: |
@@ -160,12 +160,12 @@ jobs:
             password: ${{secrets.GITHUB_TOKEN}}
         - name: Pull build environment
           run: |
-            docker pull ghcr.io/qnx-ports/sdp800-build-env:latest
+            docker pull ghcr.io/qnx-ports/sdp-build-env:latest
     
         - name: Build libretro-mrboom
           uses: addnab/docker-run-action@v3
           with:
-            image: ghcr.io/qnx-ports/sdp800-build-env:latest
+            image: ghcr.io/qnx-ports/sdp-build-env:latest
             options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
             shell: bash
             run: |
