@@ -32,7 +32,7 @@ ALL_DEPENDENCIES = $(NAME)_all
 .PHONY: $(NAME)_all install check clean
 
 CFLAGS += $(FLAGS)
-LDFLAGS += -Wl,--build-id=md5 -Wl,--allow-shlib-undefined
+LDFLAGS += -Wl,--build-id=md5
 
 include $(MKFILES_ROOT)/qtargets.mk
 

@@ -2,6 +2,10 @@
 
 **NOTE**: QNX ports are only supported from a Linux host operating system
 
+Crash analysis tools already exist in QNX like pidin stack, dumpcrash, or gdb to analyze crashes.
+
+These are more powerful and integrated with the OS. Thus disabled the stacktrace from g3log.
+
 Use `$(nproc)` instead of `4` after `JLEVEL=` if you want to use the maximum number of cores to build this project.
 
 # Setup a Docker container
@@ -25,8 +29,8 @@ git clone https://github.com/qnx-ports/g3log.git
 git clone https://github.com/qnx-ports/googletest.git
 
 #Build googletest
-make -C build-files/ports/googletest install
-make -C build-files/ports/g3log.git install
+QNX_PROJECT_ROOT=$(pwd)/googletest make -C build-files/ports/googletest install
+make -C build-files/ports/g3log install
 
 ```
 
@@ -47,7 +51,7 @@ git clone https://github.com/qnx-ports/googletest.git
 source ~/qnx800/qnxsdp-env.sh
 
 #Build googletest
-make -C build-files/ports/googletest install
+QNX_PROJECT_ROOT=$(pwd)/googletest make -C build-files/ports/googletest install
 
 # Build g3log
 BUILD_TESTING="ON" make -C build-files/ports/g3log install JLEVEL=$(nproc) [INSTALL_ROOT_nto=PATH_TO_YOUR_STAGING_AREA USE_INSTALL_ROOT=true]
@@ -56,11 +60,17 @@ BUILD_TESTING="ON" make -C build-files/ports/g3log install JLEVEL=$(nproc) [INST
 # Running tests
 
 ```bash
+#copy the dependency libraries for testing
+
+scp build-files/ports/g3log/nto-x86_64-o/build/libg3log.so.2   qnxuser@$TARGET_HOST:/data/home/qnxuser/
+
+scp qnx800/target/qnx/x86_64/usr/local/lib/libgtest.so.1.13.0  qnx800/target/qnx/x86_64/usr/local/lib/libgtest_main.so.1.13.0 qnxuser@$TARGET_HOST:/data/home/qnxuser/
+
 #copy all the test binaries from the build folder (ex:build-files/ports/g3log/nto-aarch64-le/build/test_concept_sink)
 #to target and execute those.
 
 scp build-files/ports/g3log/nto-aarch64-le/build/test_concept_sink qnxuser@$TARGET_HOST:/data/home/qnxuser/
-
+ 
 ./test_concept_sink
 
 ```
