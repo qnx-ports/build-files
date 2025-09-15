@@ -47,7 +47,8 @@ build(){
             -DCMAKE_BUILD_TYPE="Release" \
             -DTHIRDPARTY=FORCE \
             --no-warn-unused-cli \
-            -DCPU=${CPU}
+            -DCPU=${CPU} \
+            -DEIGEN3_INCLUDE_DIR="${PWD}/install/${CPUVARDIR}/include/eigen3" \
 
     # Temporary workaround for numpy naming its so's x86_64-linux-gnu.so
     find ./install/${CPUVARDIR} -name "*cpython-*-x86_64-linux-gnu.so" | xargs rename -f "s/-x86_64-linux-gnu//g"
