@@ -16,7 +16,6 @@ on:
       - 'ports/g3log/**'
 
 jobs:
-
   build:
   strategy:
       matrix:
@@ -38,6 +37,12 @@ jobs:
       with:
         repository: qnx-ports/g3log
         path: g3log
+
+    - name: Checkout googletest
+      uses: actions/checkout@v4
+      with:
+        repository: qnx-ports/googletest
+        path: googletest
 
     - name: Login to GitHub Container Registry
       uses: docker/login-action@v3
@@ -63,4 +68,6 @@ jobs:
               source ~/qnx/800/qnxsdp-env.sh
             fi
             cd ~/workspace
+            QNX_PROJECT_ROOT="$(pwd)/googletest" make -C build-files/ports/googletest install 
             make -C build-files/ports/g3log install
+          
