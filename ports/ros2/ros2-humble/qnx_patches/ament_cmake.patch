@@ -1,3 +1,40 @@
+diff --git a/ament_cmake_core/cmake/core/ament_package.cmake b/ament_cmake_core/cmake/core/ament_package.cmake
+index 3188875..665fbf9 100644
+--- a/ament_cmake_core/cmake/core/ament_package.cmake
++++ b/ament_cmake_core/cmake/core/ament_package.cmake
+@@ -133,23 +133,28 @@ function(_ament_package)
+ 
+   # generate CMake config file
+   stamp("${ament_cmake_core_DIR}/core/templates/nameConfig.cmake.in")
++
++  set(_ament_config_name ${PROJECT_NAME})
++  if(${PROJECT_NAME} STREQUAL "eigen3")
++    set(_ament_config_name "Eigen3")
++  endif()
+   configure_file(
+     ${ament_cmake_core_DIR}/core/templates/nameConfig.cmake.in
+-    ${CMAKE_CURRENT_BINARY_DIR}/ament_cmake_core/${PROJECT_NAME}Config.cmake
++    ${CMAKE_CURRENT_BINARY_DIR}/ament_cmake_core/${_ament_config_name}Config.cmake
+     @ONLY
+   )
+   # generate CMake config-version file
+   stamp("${ament_cmake_core_DIR}/core/templates/nameConfig-version.cmake.in")
+   configure_file(
+     ${ament_cmake_core_DIR}/core/templates/nameConfig-version.cmake.in
+-    ${CMAKE_CURRENT_BINARY_DIR}/ament_cmake_core/${PROJECT_NAME}Config-version.cmake
++    ${CMAKE_CURRENT_BINARY_DIR}/ament_cmake_core/${_ament_config_name}Config-version.cmake
+     @ONLY
+   )
+ 
+   # install CMake config and config-version files
+   install(FILES
+-    ${CMAKE_CURRENT_BINARY_DIR}/ament_cmake_core/${PROJECT_NAME}Config.cmake
+-    ${CMAKE_CURRENT_BINARY_DIR}/ament_cmake_core/${PROJECT_NAME}Config-version.cmake
++    ${CMAKE_CURRENT_BINARY_DIR}/ament_cmake_core/${_ament_config_name}Config.cmake
++    ${CMAKE_CURRENT_BINARY_DIR}/ament_cmake_core/${_ament_config_name}Config-version.cmake
+     DESTINATION share/${PROJECT_NAME}/cmake
+   )
+
 diff --git a/ament_cmake_core/cmake/core/python.cmake b/ament_cmake_core/cmake/core/python.cmake
 index 5820821..c992ece 100644
 --- a/ament_cmake_core/cmake/core/python.cmake

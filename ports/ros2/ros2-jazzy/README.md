@@ -216,8 +216,9 @@ export COLCON_PYTHON_EXECUTABLE=/system/bin/python3
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/data/home/qnxuser/opt/ros/jazzy/lib
 
 # Setup Environment
-cd /data/home/qnxuser/opt/ros/jazzy
-. setup.bash
+. opt/ros/jazzy/setup.bash
+# or use the full path to source if the command above fails
+# . /data/home/qnxuser/opt/ros/jazzy/setup.bash
 
 # List Packages
 ros2 pkg list

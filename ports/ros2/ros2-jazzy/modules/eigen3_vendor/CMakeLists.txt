@@ -37,9 +37,9 @@ macro(build_eigen3)
   # The external project will install to the build folder, but we'll install that on make install.
   install(
     DIRECTORY
-      ${CMAKE_CURRENT_BINARY_DIR}/eigen3_install/
+      ${CMAKE_CURRENT_BINARY_DIR}/eigen3_install/include/Eigen
     DESTINATION
-      ${CMAKE_INSTALL_PREFIX}
+      ${CMAKE_INSTALL_PREFIX}/include/eigen3
   )
 
 endmacro()

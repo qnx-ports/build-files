@@ -80,7 +80,7 @@ set(PYTHONLIBS_FOUND)
 set(PYTHON_MODULE_EXTENSION .cpython-${PYTHON_VERSION_QNX_ABI}.so)
 set(PYTHON_IS_DEBUG FALSE)
 #######################################################################
-set(Eigen3_INCLUDE_DIRS ${CMAKE_INSTALL_PREFIX}/include)
+set(Eigen3_INCLUDE_DIRS ${CMAKE_INSTALL_PREFIX}/include/eigen3)
 set(EIGEN3_FOUND TRUE)
 set(Eigen3_FOUND TRUE)
 #######################################################################

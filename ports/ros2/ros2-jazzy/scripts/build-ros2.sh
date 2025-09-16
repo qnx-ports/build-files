@@ -50,7 +50,7 @@ build(){
             --no-warn-unused-cli \
             -DCPU=${CPU} \
             -DSECURITY=ON \
-            -DEIGEN3_INCLUDE_DIR="${PWD}/install/${CPUVARDIR}/include"
+            -DEIGEN3_INCLUDE_DIR="${PWD}/install/${CPUVARDIR}/include/eigen3" \
 
     # Temporary workaround for numpy naming its so's x86_64-linux-gnu.so
     find ./install/${CPUVARDIR} -name "*cpython-*-x86_64-linux-gnu.so" | xargs rename -f "s/-x86_64-linux-gnu//g"
