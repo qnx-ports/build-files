@@ -51,7 +51,7 @@ source ~/qnx800/qnxsdp-env.sh
 QNX_PROJECT_ROOT=$(pwd)/googletest make -C build-files/ports/googletest install JLEVEL=4
 
 # Build g3log
-BUILD_TESTING="ON" make -C build-files/ports/g3log install JLEVEL=4
+make -C build-files/ports/g3log install JLEVEL=4
 
 ```
 
