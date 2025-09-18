@@ -54,24 +54,32 @@ CMAKE_MODULE_PATH := $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/cmake;$(INSTALL_RO
 #Headers from INSTALL_ROOT need to be made available by default
 #because CMake and pkg-config do not necessary add it automatically
 #if the include path is "default"
-CFLAGS += -I$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/include
+CFLAGS += -I$(INSTALL_ROOT)/$(PREFIX)/include \
+          -I$(INSTALL_ROOT)/$(PREFIX)/include \
+          -D_QNX_SOURCE
 
-BUILD_TESTING ?= OFF
+LDFLAGS += -Wl,--build-id=md5
+
+ADD_G3LOG_UNIT_TEST ?= OFF
+ADD_FATAL_EXAMPLE ?= OFF
+INSTALL_G3LOG_TESTS ?= OFF
 
 CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DCMAKE_SYSTEM_PROCESSOR=$(CPUVARDIR) \
-             -DCMAKE_C_FLAGS="$(CFLAGS)" \
              -DCMAKE_CXX_FLAGS="$(CFLAGS)" \
              -DCMAKE_EXE_LINKER_FLAGS="$(LDFLAGS)" \
              -DCMAKE_CXX_COMPILER_TARGET=gcc_nto$(CPUVARDIR) \
              -DCMAKE_C_COMPILER_TARGET=gcc_nto$(CPUVARDIR) \
-             -DCMAKE_INSTALL_PREFIX="$(PREFIX)" \
+             -DCMAKE_INSTALL_PREFIX="$(INSTALL_ROOT)" \
              -DCMAKE_INSTALL_LIBDIR="$(CPUVARDIR)/$(PREFIX)/lib" \
              -DCMAKE_INSTALL_BINDIR="$(CPUVARDIR)/$(PREFIX)/bin" \
              -DCMAKE_INSTALL_INCLUDEDIR="$(PREFIX)/include" \
              -DCMAKE_MODULE_PATH="$(CMAKE_MODULE_PATH)" \
              -DCMAKE_FIND_ROOT_PATH="$(CMAKE_FIND_ROOT_PATH)" \
-             -DCMAKE_BUILD_TYPE=$(CMAKE_BUILD_TYPE) 
+             -DCMAKE_BUILD_TYPE=$(CMAKE_BUILD_TYPE) \
+             -DADD_G3LOG_UNIT_TEST=$(ADD_G3LOG_UNIT_TEST) \
+             -DADD_FATAL_EXAMPLE=$(ADD_FATAL_EXAMPLE) \
+             -DINSTALL_G3LOG_TESTS=$(INSTALL_G3LOG_TESTS)
 
 MAKE_ARGS ?= -j $(firstword $(JLEVEL) 1)
 
