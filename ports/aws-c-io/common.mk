@@ -54,7 +54,7 @@ CFLAGS += $(FLAGS) -I$(QNX_TARGET)/$(PREFIX)/include \
                    -I$(INSTALL_ROOT)/$(PREFIX)/include \
                    -D_QNX_SOURCE
 
-LDFLAGS += -Wl,--build-id=md5
+LDFLAGS += -Wl,--build-id=md5 -lepoll
 
 BUILD_SHARED_LIBS ?= ON
 
