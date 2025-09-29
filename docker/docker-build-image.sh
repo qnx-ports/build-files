@@ -1,10 +1,15 @@
 #!/bin/bash
 
-QNX_SDP_VERSION=${QNX_SDP_VERSION:-qnx800}
+rm -rf SDP
+git clone https://github.com/qnx-ports/SDP.git
 
-echo "Using SDP from ${HOME}/${QNX_SDP_VERSION}"
+if [ $# -ne 0 ]; then
+  git -C SDP checkout $1
+fi
 
-docker build -t $QNX_SDP_VERSION \
+QNX_SDP_VERSION=$(git -C SDP describe --tags --always)
+
+DOCKER_BUILDKIT=1 docker build --secret id=mycreds,src=creds.txt -t qnx_osg:$QNX_SDP_VERSION \
   --build-arg USER_NAME="$(id --user --name | awk '{print $1;}')" \
   --build-arg GROUP_NAME="$(id --group --name | awk '{print $1;}')" \
   --build-arg USER_ID="$(id --user | awk '{print $1;}')" \

@@ -2,7 +2,8 @@
 
 When you're trying to build multiple QNX projects (demo apps, QNX ports, and your own programs), it can be challenging to maintain a perfect development environment with all of the right dependencies available. This open-source Docker-based build environment aims to simplify building projects by helping you to create a clean and consistent build environment on your host.
 
-The Dockerfile creates an Ubuntu container and pre-installs many common dependencies needed for project building. It also mounts your home directory into the container so folders such as your QNX license and SDP installation (`~/.qnx` and `~/qnx800` by default), plus any projects you are building, will be available to the build environment in the container. (If your QNX installation location is customized, you may wish to edit `docker-create-container.sh` to mount a more appropriate directory.)
+The Dockerfile creates an Ubuntu container and pre-installs many common dependencies needed for project building. It also mounts the qnx_workspace directory (from your home) into the container, so any projects you are building, will be available to the build environment in the container.
+It also adds an SDP installation, so you are ready to go!
 
 Feel free to modify the Dockerfile and scripts for your own usage, and please consider contributing suggested changes or issues to this repo for the benefit of others in the community!
 
@@ -12,6 +13,8 @@ Before starting:
 
 1. Install Docker: https://docs.docker.com/engine/install/ubuntu/
 2. If on Linux, make sure to complete the post-installation steps: https://docs.docker.com/engine/install/linux-postinstall/
+3. Download QNX Software Center for Linux from myQNX and copy the file into the docker build-files/docker subfolder.
+4. Edit the **creds.txt** file and store there your myQNX credentials. This is required for downloading the SDP. After the docker image is ready, you may delete the file. The generated docker image will not include your credentials, however your SDP license will be a part of the image.
 
 ## Example usage
 
@@ -20,13 +23,13 @@ First, clone this repo and build the Docker image:
 ```bash
 $ mkdir -p ~/qnx_workspace && cd ~/qnx_workspace
 $ git clone https://github.com/qnx-ports/build-files.git && cd build-files/docker
-$ ./docker-build-qnx-image.sh
+$ ./docker-build-image.sh 8.0.3
 ```
 
-Next, create a container:
+Next, run a container:
 
 ```bash
-$ ./docker-create-container.sh
+$ ./docker-run-container.sh
 
 ******************************************************************
 *
@@ -48,6 +51,14 @@ MAKEFLAGS=-I/home/username/qnx800/target/qnx/usr/include
 > ***Note:*** Please be aware that your user account password inside the Docker container is `password` by default, and not the same as your user account password in your host terminal.
 
 The QNX toolchain is activated for you when the Docker container starts. When you see `[QNX]` in the prompt, you are interacting with the shell in the Docker container.
+
+#### Non-interactive mode
+
+If can also use the docker image in a non-interactive way, for example to let it compile your project.
+Below example with create and run a container based on the docker image for SDP 8.0.3 and build check library for the aarch64 architecture. After the work is done, the container will be automatically deleted.
+
+docker run --rm -it --net=host --privileged -v $HOME/qnx_workspace:$HOME/qnx_workspace qnx_osg:**8.0.3** "source /usr/local/qnx/.qnxbashrc && **CPULIST=aarch64 make** -C build-files/ports/**check**"
+
 
 #### Working with Python virtual environments
 

@@ -1,3 +1,17 @@
+FROM ubuntu:22.04 AS qnx_sdp_docker_image
+
+COPY qnx-setup-*-linux.run /root/qnx-setup-linux.run
+COPY SDP/patchset.plist /root/patchset.plist
+
+RUN chmod +x /root/qnx-setup-linux.run && \
+    mkdir -p /qnx && \
+    /root/qnx-setup-linux.run --tar xvf -C /qnx
+
+RUN --mount=type=secret,id=mycreds /qnx/qnxsoftwarecenter/qnxsoftwarecenter_clt \
+    -myqnx.user "$(cut -d: -f1 /run/secrets/mycreds)" \
+    -myqnx.password "$(cut -d: -f2 /run/secrets/mycreds)" \
+    -syncLicenseKeys -activateAll -cleanInstall -importAndInstall /root/patchset.plist -destination /root/qnxsdp
+
 # Use latest LTS for ubuntu
 FROM ubuntu:22.04
 
@@ -12,9 +26,9 @@ ARG DEBIAN_FRONTEND=noninteractive
 # Set locale
 RUN apt-get clean && apt update && apt install -y locales software-properties-common
 RUN locale-gen en_US en_US.UTF-8
-ENV LC_ALL en_US.UTF-8
-ENV LANG en_US.UTF-8
-ENV LANGUAGE en_US.UTF-8
+ENV LC_ALL=en_US.UTF-8
+ENV LANG=en_US.UTF-8
+ENV LANGUAGE=en_US.UTF-8
 
 # Add ROS2 apt repository
 RUN apt update && apt install -y curl gnupg2 lsb-release && \
@@ -534,7 +548,7 @@ ARG USER_ID
 ARG GROUP_ID
 ARG QNX_SDP_VERSION
 
-ENV QNX_SDP_VERSION=$QNX_SDP_VERSION
+ENV QNX_SDP_VERSION=qnx$QNX_SDP_VERSION
 
 ENV PS1='[QNX] (\u) \w$ '
 
@@ -591,4 +605,8 @@ COPY --chown=${USER_NAME}:${GROUP_NAME} ".qnxbashrc" "/usr/local/qnx"
 COPY --chown=${USER_NAME}:${GROUP_NAME} ".git-completion.bash" "/usr/local/qnx"
 COPY --chown=${USER_NAME}:${GROUP_NAME} "welcome.sh" "/usr/local/qnx"
 
-CMD /bin/bash --rcfile /usr/local/qnx/.qnxbashrc
+COPY --from=qnx_sdp_docker_image --chown=${USER_NAME}:${GROUP_NAME} /root/qnxsdp /home/${USER_NAME}/$QNX_SDP_VERSION
+COPY --from=qnx_sdp_docker_image --chown=${USER_NAME}:${GROUP_NAME} /root/.qnx /home/${USER_NAME}/.qnx
+
+ENTRYPOINT ["/bin/bash", "-c" ]
+CMD ["bash --rcfile /usr/local/qnx/.qnxbashrc"]
