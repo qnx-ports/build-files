@@ -51,5 +51,28 @@ QNX_PROJECT_ROOT="$(pwd)/oneTBB" make -C build-files/ports/oneTBB JLEVEL=4 insta
 
 # How to run tests
 
-Test executables are built under the build folder and can be installed to
-/data/home/qnxuser/bin on the target, but we don't currently verify them.
+Install test runtime dependencies to the target.
+```bash
+scp $QNX_TARGET/aarch64le/lib/libgomp.so* qnxuser@$TARGET_HOST:/data/home/qnxuser/lib
+scp -r ~/qnx_workspace/build-files/ports/oneTBB/nto-aarch64-le/build/qcc_12.2_cxx14_64_release/* qnxuser@$TARGET_HOST:/data/home/qnxuser
+
+scp -r ~/qnx_workspace/oneTBB qnxuser@$TARGET_HOST:/data/home/qnxuser
+```
+
+Execute the tests on the target.
+```bash
+# ssh into the target
+ssh qnxuser@$TARGET_HOST
+
+export TBBROOT=/data/home/qnxuser/oneTBB
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/data/home/qnxuser
+export C_INCLUDE_PATH=$C_INCLUDE_PATH:$TBBROOT/include
+export CPLUS_INCLUDE_PATH=$CPLUS_INCLUDE_PATH:$TBBROOT/include
+export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/data/home/qnxuser/pkgconfig
+
+# Run tests
+cd /data/home/qnxuser
+for test in $(ls | grep -E "^(test_|conformance_)") ; do
+    ./$test | tee -a log.txt
+done
+```
