@@ -7,6 +7,8 @@ NAME=protobuf
 
 QNX_PROJECT_ROOT ?= $(PRODUCT_ROOT)/../../protobuf/
 
+BUILD_SHARED_LIBS ?= ON
+
 #$(INSTALL_ROOT_$(OS)) is pointing to $QNX_TARGET
 #by default, unless it was manually re-routed to
 #a staging area by setting both INSTALL_ROOT_nto
@@ -65,7 +67,7 @@ CMAKE_COMMON_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cma
                     -DEXTRA_CMAKE_CXX_FLAGS="$(CFLAGS)" \
                     -DEXTRA_CMAKE_ASM_FLAGS="$(FLAGS)" \
                     -DEXTRA_CMAKE_LINKER_FLAGS="$(LDFLAGS)" \
-                    -DBUILD_SHARED_LIBS=1 \
+                    -DBUILD_SHARED_LIBS=$(BUILD_SHARED_LIBS) \
                     -Dprotobuf_USE_EXTERNAL_GTEST=OFF \
                     -Dprotobuf_INSTALL=ON \
                     -Dprotobuf_ABSOLUTE_TEST_PLUGIN_PATH=OFF

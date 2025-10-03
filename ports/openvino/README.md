@@ -1,12 +1,12 @@
-# oneTBB [![Build](https://github.com/qnx-ports/build-files/actions/workflows/oneTBB.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/oneTBB.yml)
+# openvino [![Build](https://github.com/qnx-ports/build-files/actions/workflows/openvino.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/openvino.yml)
 
 **Note**: QNX ports are only supported from a **Linux host** operating system
 
 ## PRE-REQUISITE
 **NOTE**: An installation of google test on your **SDP** is required. Please follow the build instruction for `googletest` with `gmock` and make sure it is installed to the same SDP folder that you will source below.
 
-Use `$(nproc)` instead of `4` after `JLEVEL=` and `-j` if you want to use the maximum number of cores to build this project.
-32GB of RAM is recommended for using `JLEVEL=$(nproc)` or `-j$(nproc)`.
+Use `4` instead of `4` after `JLEVEL=` and `-j` if you want to use the maximum number of cores to build this project.
+32GB of RAM is recommended for using `JLEVEL=4` or `-j4`.
 
 # Compile the port for QNX in a Docker container
 
@@ -23,16 +23,34 @@ cd build-files/docker
 
 # Now you are in the Docker container
 
-# source qnxsdp-env.sh in
-source ~/qnx800/qnxsdp-env.sh
+# Install git lfs
+curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | sudo bash
+sudo apt install git-lfs
 
+# Clone protobuf
 cd ~/qnx_workspace
+git clone --recurse-submodules https://github.com/qnx-ports/protobuf.git
 
-# Clone oneTBB
-git clone https://github.com/qnx-ports/oneTBB.git
+# Clone flatbuffers
+git clone https://github.com/google/flatbuffers.git --branch v25.9.23
 
-# Build oneTBB
-QNX_PROJECT_ROOT="$(pwd)/oneTBB" make -C build-files/ports/oneTBB JLEVEL=4 install
+# Clone ComputeLibrary
+git clone https://github.com/qnx-ports/ComputeLibrary.git
+
+# Clone openvino
+git clone https://github.com/qnx-ports/openvino.git
+
+# Build protobuf
+BUILD_SHARED_LIBS=OFF make -C build-files/ports/protobuf install JLEVEL=4
+
+# Build flatbuffers
+make -C build-files/ports/flatbuffers INSTALL_ROOT_linux="$(pwd)/build-files/ports/flatbuffers/host_flatc" USE_INSTALL_ROOT=true JLEVEL=4 install
+
+# Build ComputeLibrary
+BUILD_EXAMPLES=OFF BUILD_TESTING=OFF BUILD_SHARED_LIBS=OFF QNX_PROJECT_ROOT="$(pwd)/ComputeLibrary" make -C build-files/ports/ComputeLibrary install -j4
+
+# Build openvino
+QNX_PROJECT_ROOT="$(pwd)/openvino" make -C build-files/ports/openvino JLEVEL=4 install
 ```
 
 # Compile the port for QNX on Ubuntu host
@@ -40,13 +58,29 @@ QNX_PROJECT_ROOT="$(pwd)/oneTBB" make -C build-files/ports/oneTBB JLEVEL=4 insta
 # Clone the repos
 mkdir -p ~/qnx_workspace && cd qnx_workspace
 git clone https://github.com/qnx-ports/build-files.git
-git clone https://github.com/qnx-ports/oneTBB.git
+git clone https://github.com/qnx-ports/openvino.git
+git clone --recurse-submodules https://github.com/qnx-ports/protobuf.git
+git clone https://github.com/google/flatbuffers.git --branch v25.9.23
+git clone https://github.com/qnx-ports/ComputeLibrary.git
 
 # source qnxsdp-env.sh
 source ~/qnx800/qnxsdp-env.sh
 
-# Build
-QNX_PROJECT_ROOT="$(pwd)/oneTBB" make -C build-files/ports/oneTBB JLEVEL=4 install
+# Install git lfs
+curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | sudo bash
+sudo apt install git-lfs
+
+# Build protobuf
+BUILD_SHARED_LIBS=OFF make -C build-files/ports/protobuf install JLEVEL=4
+
+# Build flatbuffers
+make -C build-files/ports/flatbuffers INSTALL_ROOT_linux="$(pwd)/build-files/ports/flatbuffers/host_flatc" USE_INSTALL_ROOT=true JLEVEL=4 install
+
+# Build ComputeLibrary
+BUILD_EXAMPLES=OFF BUILD_TESTING=OFF BUILD_SHARED_LIBS=OFF QNX_PROJECT_ROOT="$(pwd)/ComputeLibrary" make -C build-files/ports/ComputeLibrary install -j4
+
+# Build openvino
+make -C build-files/ports/openvino JLEVEL=4 install
 ```
 
 # How to run tests

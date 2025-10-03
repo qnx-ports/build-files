@@ -4,14 +4,13 @@ endif
 include $(QCONFIG)
 include $(MKFILES_ROOT)/qmacros.mk
 
-NAME=openvino
+NAME=flatbuffers
 
-QNX_PROJECT_ROOT ?= $(PRODUCT_ROOT)/../../openvino
+QNX_PROJECT_ROOT ?= $(PRODUCT_ROOT)/../../
 
 BUILD_TESTING ?= ON
 
 HOST_PROTOC_PATH ?= $(PROJECT_ROOT)/../protobuf/host_protoc
-HOST_FLATC_PATH ?= $(PROJECT_ROOT)/../flatbuffers/host_flatc/
 
 #$(INSTALL_ROOT_$(OS)) is pointing to $QNX_TARGET
 #by default, unless it was manually re-routed to
@@ -42,8 +41,6 @@ CPPFLAGS += -D_QNX_SOURCE
 LDFLAGS += -lgomp
 
 include $(MKFILES_ROOT)/qtargets.mk
-
-PYTHON_EXECUTABLE = $(shell which python3)
 
 #Search paths for all of CMake's find_* functions --
 #headers, libraries, etc.
@@ -78,19 +75,9 @@ CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DEXTRA_CMAKE_ASM_FLAGS="$(ASFLAGS)" \
              -DEXTRA_CMAKE_LINKER_FLAGS="$(LDFLAGS)" \
              -DBUILD_SHARED_LIBS=ON \
+             -DFLATBUFFERS_BUILD_SHAREDLIB=ON \
              -DBUILD_TESTING=$(BUILD_TESTING) \
-             -DENABLE_BEH_TESTS=$(BUILD_TESTING) \
-             -DENABLE_FUNCTIONAL_TESTS=$(BUILD_TESTING) \
-             -DARM_COMPUTE_INCLUDE_DIR="$(INSTALL_ROOT)/$(PREFIX)/include" \
-             -DARM_COMPUTE_LIB_DIR="$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/lib" \
-             -DENABLE_SYSTEM_PROTOBUF=ON \
-             -DPROTOC_EXECUTABLE="$(HOST_PROTOC_PATH)/protoc" \
-             -DProtobuf_PROTOC_EXECUTABLE="$(HOST_PROTOC_PATH)/protoc" \
-             -DProtobuf_DIR="$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/lib/cmake/protobuf" \
-             -DENABLE_SYSTEM_FLATBUFFERS=ON \
-             -DFlatbuffers_DIR="$(HOST_FLATC_PATH)/usr/lib/cmake/flatbuffers" \
-             -DCMAKE_FIND_PACKAGE_PREFER_CONFIG=ON \
-             -DPYTHON_EXECUTABLE="$(PYTHON_EXECUTABLE)" \
+             -DFLATBUFFERS_BUILD_FLATC=OFF \
              -DCPU=$(CPU) \
              -DEXT=$(EXT)
 
