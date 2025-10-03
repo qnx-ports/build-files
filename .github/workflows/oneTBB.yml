@@ -64,4 +64,4 @@ jobs:
             source ~/qnx/800/qnxsdp-env.sh
           fi
           cd ~/workspace
-          QNX_PROJECT_ROOT="$(pwd)/oneTBB" JLEVEL=$(nproc) make -C build-files/ports/oneTBB install
+          make -C build-files/ports/oneTBB install
