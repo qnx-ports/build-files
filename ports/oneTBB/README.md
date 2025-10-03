@@ -32,7 +32,7 @@ cd ~/qnx_workspace
 git clone https://github.com/qnx-ports/oneTBB.git
 
 # Build oneTBB
-QNX_PROJECT_ROOT="$(pwd)/oneTBB" make -C build-files/ports/oneTBB JLEVEL=4 install
+make -C build-files/ports/oneTBB JLEVEL=4 install
 ```
 
 # Compile the port for QNX on Ubuntu host
@@ -46,7 +46,7 @@ git clone https://github.com/qnx-ports/oneTBB.git
 source ~/qnx800/qnxsdp-env.sh
 
 # Build
-QNX_PROJECT_ROOT="$(pwd)/oneTBB" make -C build-files/ports/oneTBB JLEVEL=4 install
+make -C build-files/ports/oneTBB JLEVEL=4 install
 ```
 
 # How to run tests
@@ -73,6 +73,6 @@ export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/data/home/qnxuser/pkgconfig
 # Run tests
 cd /data/home/qnxuser
 for test in $(ls | grep -E "^(test_|conformance_)") ; do
-    ./$test | tee -a log.txt
+    ./$test 2>&1 | tee -a log.txt
 done
 ```

@@ -6,7 +6,7 @@ include $(MKFILES_ROOT)/qmacros.mk
 
 NAME=oneTBB
 
-QNX_PROJECT_ROOT ?= $(PRODUCT_ROOT)/../../
+QNX_PROJECT_ROOT ?= $(PRODUCT_ROOT)/../../$(NAME)
 
 BUILD_TESTING ?= ON
 
