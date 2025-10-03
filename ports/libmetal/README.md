@@ -51,7 +51,7 @@ make -C build-files/ports/libmetal install JLEVEL=4
 # How to run tests
 
 **NOTE**: Custom QNX Image on RPi4 is used to perform the tests and report results.
-The usual QNXE RPi4 image can be used but expect device.c test to fail on it, since custom bootup device initialization is required for it.
+The usual QNXE RPi4 image can be used but expect device.c test to maybe expect fail on it, since custom bootup device initialization followed by populating the device with `EXPECTED_ID 0x10` is required.
 
 **NOTE**: To create custom RPi4 image with bootup reserved named physical regions, install the RPi4 BSP (com.qnx.qnx800.bsp.hw.raspberrypi_bcm2711_rpi4) from QNX Software Centre and customize in `bcm2711_init_raminfo.c`.
 
