@@ -18,7 +18,6 @@ on:
 jobs:
   build:
     strategy:
-      fail-fast: false
       matrix:
         qnx_env: ["710", "800"]
     name: Build for QNX ${{ matrix.qnx_env }}
@@ -63,4 +62,4 @@ jobs:
               source ~/qnx/800/qnxsdp-env.sh
             fi
             cd ~/workspace
-            QNX_PROJECT_ROOT="$(pwd)/OpenBLAS" make -C build-files/ports/OpenBLAS install
+            make -C build-files/ports/OpenBLAS install

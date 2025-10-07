@@ -33,7 +33,7 @@ cd ~/qnx_workspace
 git clone https://github.com/qnx-ports/OpenBLAS.git
 
 # Build OpenBLAS
-QNX_PROJECT_ROOT="$(pwd)/OpenBLAS" make -C build-files/ports/OpenBLAS/ install -j4
+make -C build-files/ports/OpenBLAS/ install -j4
 ```
 
 # Compile the port for QNX on Ubuntu host
@@ -49,7 +49,7 @@ source ~/qnx800/qnxsdp-env.sh
 cd ~/qnx_workspace
 
 # Build OpenBLAS
-QNX_PROJECT_ROOT="$(pwd)/OpenBLAS" make -C build-files/ports/OpenBLAS/ install -j4
+make -C build-files/ports/OpenBLAS/ install -j4
 ```
 
 # How to run tests
