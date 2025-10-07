@@ -30,7 +30,7 @@ CMAKE_BUILD_TYPE ?= Release
 ALL_DEPENDENCIES = protobuf_all
 .PHONY: protobuf_all install check clean
 
-CFLAGS += $(FLAGS) -D_XOPEN_SOURCE=700 -D_QNX_SOURCE
+CFLAGS += $(FLAGS) -D_XOPEN_SOURCE=700 -D_QNX_SOURCE -fPIC
 
 #Search paths for all of CMake's find_* functions --
 #headers, libraries, etc.

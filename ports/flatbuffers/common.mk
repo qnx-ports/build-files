@@ -36,7 +36,7 @@ GENERATE_PINFO_FILES ?= TRUE
 ALL_DEPENDENCIES = $(NAME)_all
 .PHONY: $(NAME)_all install check clean
 
-CPPFLAGS += -D_QNX_SOURCE
+CPPFLAGS += -D_QNX_SOURCE -fPIC
 
 LDFLAGS += -lgomp
 
