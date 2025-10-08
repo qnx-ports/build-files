@@ -159,5 +159,6 @@ Click on a port below to navigate to its `README.md` for build and test instruct
 | [webrtc](https://github.com/qnx-ports/build-files/blob/main/ports/webrtc/README.md) | [![Build](https://github.com/qnx-ports/build-files/actions/workflows/webrtc.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/webrtc.yml) |
 | [XNNPACK](https://github.com/qnx-ports/build-files/blob/main/ports/XNNPACK/README.md) | [![Build](https://github.com/qnx-ports/build-files/actions/workflows/XNNPACK.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/XNNPACK.yml) |
 | [zlib](https://github.com/qnx-ports/build-files/blob/main/ports/zlib/README.md) | [![Build](https://github.com/qnx-ports/build-files/actions/workflows/zlib.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/zlib.yml) |
+| [g3log](https://github.com/qnx-ports/build-files/blob/main/ports/g3log/README.md) | [![Build](https://github.com/qnx-ports/build-files/actions/workflows/g3log.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/g3log.yml) |
 ---
 
