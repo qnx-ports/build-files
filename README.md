@@ -41,7 +41,7 @@ Click on a port below to navigate to its `README.md` for build and test instruct
 | [up-cpp](https://github.com/qnx-ports/build-files/blob/main/conan/recipes/up-cpp/README.md) | 1.0.0-rc0;1.0.0;<br>1.0.1-rc1;1.0.1 | [![Build](https://github.com/qnx-ports/build-files/actions/workflows/conan-up-cpp.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/conan-up-cpp.yml) |
 | [up-transport-zenoh-cpp](https://github.com/qnx-ports/build-files/blob/main/conan/recipes/up-transport-zenoh-cpp/README.md) | 1.0.0-rc3 | [![Build](https://github.com/qnx-ports/build-files/actions/workflows/conan-up-transport-zenoh-cpp.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/conan-up-transport-zenoh-cpp.yml) |
 | [zenoh-cpp](https://github.com/qnx-ports/build-files/blob/main/conan/recipes/zenoh-cpp/README.md) | 1.0.0-rc5;1.2.1;1.4.0 | [![Build](https://github.com/qnx-ports/build-files/actions/workflows/conan-zenoh-cpp.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/conan-zenoh-cpp.yml) |
-| [zenoh-pico](https://github.com/qnx-ports/build-files/blob/main/conan/recipes/zenoh-pico/README.md) | 1.0.0-rc5;1.2.1;1.4.0 | [![Build](https://github.com/qnx-ports/build-files/actions/workflows/conan-zenoh-pico.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/conan-zenoh-pico.yml) |
+| [zenoh-pico](https://github.com/qnx-ports/build-files/blob/main/conan/recipes/zenoh-pico/README.md) | 1.0.0-rc5;1.2.1;<br>1.4.0;1.5.0 | [![Build](https://github.com/qnx-ports/build-files/actions/workflows/conan-zenoh-pico.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/conan-zenoh-pico.yml) |
 ---
 
 ## Port Status
