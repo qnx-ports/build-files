@@ -34,9 +34,9 @@ export CONAN_ROOT=$(realpath ~/zenohd_workspace/build-files/conan)
 # Install release Zenoh router into conan cache
 ```bash
 #
-# <version-number>: 1.2.1
+# <version-number>: 1.5.0, 1.2.1
 #
-conan create --version=1.2.1 $CONAN_ROOT/recipes/zenoh-router/binary
+conan create --version=1.5.0 $CONAN_ROOT/recipes/zenoh-router/binary
 ```
 
 # Deploy Zenoh router
@@ -49,9 +49,9 @@ export ZENOHD_STAGE=$(realpath ~/zenohd_workspace/stage_zenohd)
 
 # Copy zenohd to stage folder
 #
-# <version-number>: 1.2.1
+# <version-number>: 1.5.0, 1.2.1
 #
-conan install --requires=zenoh-router/1.2.1 -d=direct_deploy --deployer-folder=$ZENOHD_STAGE
+conan install --requires=zenoh-router/1.5.0 -d=direct_deploy --deployer-folder=$ZENOHD_STAGE
 ```
 
 # Start Zenoh Router
