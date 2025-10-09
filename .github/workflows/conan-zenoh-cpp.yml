@@ -61,3 +61,5 @@ jobs:
           conan create -pr:h=$QNX_CONAN_ROOT/tools/profiles/nto-8.0-x86_64 --version=1.2.1 $QNX_CONAN_ROOT/recipes/zenoh-cpp/release
           conan create -pr:h=$QNX_CONAN_ROOT/tools/profiles/nto-8.0-x86_64 --version=1.4.0 $QNX_CONAN_ROOT/recipes/zenoh-pico/release
           conan create -pr:h=$QNX_CONAN_ROOT/tools/profiles/nto-8.0-x86_64 --version=1.4.0 $QNX_CONAN_ROOT/recipes/zenoh-cpp/release
+          conan create -pr:h=$QNX_CONAN_ROOT/tools/profiles/nto-8.0-x86_64 --version=1.5.0 $QNX_CONAN_ROOT/recipes/zenoh-pico/release
+          conan create -pr:h=$QNX_CONAN_ROOT/tools/profiles/nto-8.0-x86_64 --version=1.5.0 $QNX_CONAN_ROOT/recipes/zenoh-cpp/release
