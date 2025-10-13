@@ -81,7 +81,7 @@ jobs:
               -cpu host \
               -m 1G \
               -drive file=output/disk-qemu.vmdk,if=ide,id=drv0 \
-              -netdev user,id=net0,hostfwd=tcp::5500:-22 \
+              -netdev user,id=net0,hostfwd=tcp::5500-:22 \
               -device virtio-net-pci,netdev=net0 \
               -kernel output/ifs.bin \
               -object rng-random,filename=/dev/urandom,id=rng0 \
