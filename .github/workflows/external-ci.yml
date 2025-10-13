@@ -78,7 +78,7 @@ jobs:
               mkqnximage --build --python=yes
               qemu-system-x86_64 \
               -smp 2 \
-              -cpu host \
+              -cpu max \
               -m 1G \
               -drive file=output/disk-qemu.vmdk,if=ide,id=drv0 \
               -netdev user,id=net0,hostfwd=tcp::5500-:22 \
