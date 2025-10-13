@@ -57,6 +57,8 @@ jobs:
             echo "password" | sudo -S pip3 install conan
             echo "password" | sudo -S apt update
             echo "password" | sudo -S apt install qemu-system-x86 qemu-kvm virt-manager libvirt-clients bridge-utils libvirt-daemon-system sshpass -y
+            kvm --version
+            lsmod | grep kvm
             conan --version
             type -a conan
             conan profile detect
