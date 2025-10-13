@@ -33,6 +33,7 @@ jobs:
       - name: Checkout aws-c-common
         uses: actions/checkout@v4
         with:
+          repository: qnx-ports/aws-c-common
           path: aws-c-common
 
       - name: Login to GitHub Container Registry
