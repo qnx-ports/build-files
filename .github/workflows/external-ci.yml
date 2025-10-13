@@ -96,6 +96,7 @@ jobs:
               cd ~/workspace
               sshpass -p qnxuser scp -P 5500 -o StrictHostKeyChecking=no stage_cmake/direct_deploy/cmake/bin/ctest qnxuser@localhost:~/
               sshpass -p qnxuser ssh -p 5500 -o StrictHostKeyChecking=no qnxuser@localhost
+              ls
               cd tests
               ../ctest
               exit
