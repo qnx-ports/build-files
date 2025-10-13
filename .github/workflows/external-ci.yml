@@ -75,7 +75,7 @@ jobs:
               ls -la
               CPULIST="x86_64" ALLOW_CROSS_COMPILED_TESTS=ON BUILD_TESTING=ON make -C build-files/ports/aws-c-common install
               mkdir -p test_image && cd test_image
-              mkqnximage --build --python=yes
+              mkqnximage --build
               qemu-system-x86_64 \
               -smp 2 \
               -cpu max \
@@ -87,14 +87,15 @@ jobs:
               -object rng-random,filename=/dev/urandom,id=rng0 \
               -device virtio-rng-pci,rng=rng0 \
               -monitor none \
+              -display none \
               -pidfile output/qemu.pid \
               -daemonize
               cd ~/workspace/build-files/ports/aws-c-common/nto-x86_64-o/build
-              sshpass -p qnxuser scp -P 5500 libaws-c-common* qnxuser@localhost:~/
-              sshpass -p qnxuser scp -P 5500 -r tests qnxuser@localhost:~/
+              sshpass -p qnxuser scp -P 5500 -o StrictHostKeyChecking=no libaws-c-common* qnxuser@localhost:~/
+              sshpass -p qnxuser scp -P 5500 -o StrictHostKeyChecking=no -r tests qnxuser@localhost:~/
               cd ~/workspace
-              sshpass -p qnxuser scp -P 5500 stage_cmake/direct_deploy/cmake/bin/ctest qnxuser@localhost:~/
-              sshpass -p qnxuser ssh -p 5500 qnxuser@localhost
+              sshpass -p qnxuser scp -P 5500 -o StrictHostKeyChecking=no stage_cmake/direct_deploy/cmake/bin/ctest qnxuser@localhost:~/
+              sshpass -p qnxuser ssh -p 5500 -o StrictHostKeyChecking=no qnxuser@localhost
               cd tests
               ../ctest
               exit
