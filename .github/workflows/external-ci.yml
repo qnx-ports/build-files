@@ -4,12 +4,12 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - main:
+      - main
     paths:
       - ".github/workflows/external-ci.yml"
   pull_request:
     branches:
-      - main:
+      - main
     paths:
       - ".github/workflows/external-ci.yml"
 
