@@ -54,10 +54,11 @@ jobs:
           shell: bash
           run: |
             echo "password" | sudo -S pip3 install conan
-            echo "password" | sudo -S apt get update
+            echo "password" | sudo -S apt update
             echo "password" | sudo -S apt install qemu-system-x86 qemu-kvm virt-manager libvirt-clients bridge-utils libvirt-daemon-system sshpass -y
             conan --version
             type -a conan
+            conan profile detect
             if [[ ${{ matrix.qnx_env }} == 710 ]]; then
               source ~/qnx/710/qnxsdp-env.sh
             else
@@ -70,7 +71,7 @@ jobs:
               export QNX_STAGE_CMAKE=$(realpath ~/workspace/stage_cmake)
               conan install -pr:h=$QNX_CONAN_ROOT/tools/profiles/nto-8.0-x86_64 --requires=cmake/3.31.7 -d=direct_deploy --deployer-folder=$QNX_STAGE_CMAKE
               cd ~/workspace
-              ls
+              ls -la
               ALLOW_CROSS_COMPILED_TESTS=ON BUILD_TESTING=ON make -C build-files/ports/aws-c-common install
               mkdir -p test_image & cd test_image
               mkqnximage --build --python=yes
