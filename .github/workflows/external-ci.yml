@@ -53,6 +53,8 @@ jobs:
           options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
           shell: bash
           run: |
+            sudo pip3 install conan
+            sudo apt install qemu-system-x86 qemu-kvm virt-manager libvirt-clients bridge-utils libvirt-daemon-system sshpass -y
             if [[ ${{ matrix.qnx_env }} == 710 ]]; then
               source ~/qnx/710/qnxsdp-env.sh
             else
@@ -64,9 +66,10 @@ jobs:
               mkdir stage_cmake
               export QNX_STAGE_CMAKE=$(realpath ~/workspace/stage_cmake)
               conan install -pr:h=$QNX_CONAN_ROOT/tools/profiles/nto-8.0-x86_64 --requires=cmake/3.31.7 -d=direct_deploy --deployer-folder=$QNX_STAGE_CMAKE
+              cd ~/workspace
               CPULIST="x86_64" ALLOW_CROSS_COMPILED_TESTS=ON BUILD_TESTING=ON make -C build-files/ports/aws-c-common install
               mkdir -p test_image & cd test_image
-              mkqnximage --build
+              mkqnximage --build --python=yes
               qemu-system-x86_64 \
               -smp 4 \
               --enable-kvm \
@@ -83,11 +86,11 @@ jobs:
               -pidfile output/qemu.pid \
               -daemonize
               cd ~/workspace/build-files/ports/aws-c-common/nto-x86_64-o/build
-              scp -P 5500 libaws-c-common* qnxuser@localhost:~/
-              scp -P 5500 -r tests qnxuser@localhost:~/
+              sshpass -p qnxuser scp -P 5500 libaws-c-common* qnxuser@localhost:~/
+              sshpass -p qnxuser scp -P 5500 -r tests qnxuser@localhost:~/
               cd ~/workspace
-              scp -P 5500 stage_cmake/direct_deploy/cmake/bin/ctest qnxuser@localhost:~/
-              ssh -p 5500 qnxuser@localhost
+              sshpass -p qnxuser scp -P 5500 stage_cmake/direct_deploy/cmake/bin/ctest qnxuser@localhost:~/
+              sshpass -p qnxuser ssh -p 5500 qnxuser@localhost
               cd tests
               ../ctest
               exit
