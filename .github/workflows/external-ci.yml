@@ -54,7 +54,7 @@ jobs:
           shell: bash
           run: |
             pip3 install conan
-            apt install qemu-system-x86 qemu-kvm virt-manager libvirt-clients bridge-utils libvirt-daemon-system sshpass -y
+            echo "password" | sudo -S apt install qemu-system-x86 qemu-kvm virt-manager libvirt-clients bridge-utils libvirt-daemon-system sshpass -y
             if [[ ${{ matrix.qnx_env }} == 710 ]]; then
               source ~/qnx/710/qnxsdp-env.sh
             else
@@ -67,14 +67,14 @@ jobs:
               export QNX_STAGE_CMAKE=$(realpath ~/workspace/stage_cmake)
               conan install -pr:h=$QNX_CONAN_ROOT/tools/profiles/nto-8.0-x86_64 --requires=cmake/3.31.7 -d=direct_deploy --deployer-folder=$QNX_STAGE_CMAKE
               cd ~/workspace
-              CPULIST="x86_64" ALLOW_CROSS_COMPILED_TESTS=ON BUILD_TESTING=ON make -C build-files/ports/aws-c-common install
+              ALLOW_CROSS_COMPILED_TESTS=ON BUILD_TESTING=ON make -C build-files/ports/aws-c-common install
               mkdir -p test_image & cd test_image
               mkqnximage --build --python=yes
               qemu-system-x86_64 \
-              -smp 4 \
+              -smp 2 \
               --enable-kvm \
               -cpu host \
-              -m 2G \
+              -m 1G \
               -drive file=output/disk-qemu.vmdk,if=ide,id=drv0 \
               -netdev user,id=net0,hostfwd=tcp::5500:-22 \
               -device virtio-net-pci,netdev=net0 \
