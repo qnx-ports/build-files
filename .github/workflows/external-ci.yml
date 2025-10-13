@@ -53,8 +53,8 @@ jobs:
           options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
           shell: bash
           run: |
-            sudo pip3 install conan
-            sudo apt install qemu-system-x86 qemu-kvm virt-manager libvirt-clients bridge-utils libvirt-daemon-system sshpass -y
+            pip3 install conan
+            apt install qemu-system-x86 qemu-kvm virt-manager libvirt-clients bridge-utils libvirt-daemon-system sshpass -y
             if [[ ${{ matrix.qnx_env }} == 710 ]]; then
               source ~/qnx/710/qnxsdp-env.sh
             else
