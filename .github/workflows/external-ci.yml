@@ -87,7 +87,6 @@ jobs:
               -kernel output/ifs.bin \
               -object rng-random,filename=/dev/urandom,id=rng0 \
               -device virtio-rng-pci,rng=rng0 \
-              -nographic \
               -monitor none \
               -pidfile output/qemu.pid \
               -daemonize
