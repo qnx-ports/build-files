@@ -1,0 +1,94 @@
+name: Build and test aws-c-common
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main:
+    paths:
+      - ".github/workflows/external-ci.yml"
+  pull_request:
+    branches:
+      - main:
+    paths:
+      - ".github/workflows/external-ci.yml"
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        qnx_env: ["710", "800"]
+    name: Build for QNX ${{ matrix.qnx_env }}
+    runs-on: self-hosted
+    if: |
+      (github.event_name == 'workflow_dispatch') ||
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'external-ci'))
+    steps:
+      - name: Checkout build-files
+        uses: actions/checkout@v4
+        with:
+          path: build-files
+
+      - name: Checkout aws-c-common
+        uses: actions/checkout@v4
+        with:
+          path: aws-c-common
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{github.actor}}
+          password: ${{secrets.GITHUB_TOKEN}}
+
+      - name: Pull build environment
+        run: |
+          docker pull ghcr.io/qnx-ports/sdp-build-env:latest
+
+      - name: Test external CI
+        uses: addnab/docker-run-action@v3
+        with:
+          image: ghcr.io/qnx-ports/sdp-build-env:latest
+          options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
+          shell: bash
+          run: |
+            if [[ ${{ matrix.qnx_env }} == 710 ]]; then
+              source ~/qnx/710/qnxsdp-env.sh
+            else
+              source ~/qnx/800/qnxsdp-env.sh
+              cd ~/workspace
+              export QNX_CONAN_ROOT=$(realpath ~/workspace/build-files/conan)
+              conan config install $QNX_CONAN_ROOT/tools/qnx-8.0-extension/settings_user.yml
+              conan create -pr:h=$QNX_CONAN_ROOT/tools/profiles/nto-8.0-x86_64 --version=3.31.7 $QNX_CONAN_ROOT/recipes/cmake/3.x.x
+              mkdir stage_cmake
+              export QNX_STAGE_CMAKE=$(realpath ~/workspace/stage_cmake)
+              conan install -pr:h=$QNX_CONAN_ROOT/tools/profiles/nto-8.0-x86_64 --requires=cmake/3.31.7 -d=direct_deploy --deployer-folder=$QNX_STAGE_CMAKE
+              CPULIST="x86_64" ALLOW_CROSS_COMPILED_TESTS=ON BUILD_TESTING=ON make -C build-files/ports/aws-c-common install
+              mkdir -p test_image & cd test_image
+              mkqnximage --build
+              qemu-system-x86_64 \
+              -smp 4 \
+              --enable-kvm \
+              -cpu host \
+              -m 2G \
+              -drive file=output/disk-qemu.vmdk,if=ide,id=drv0 \
+              -netdev user,id=net0,hostfwd=tcp::5500:-22 \
+              -device virtio-net-pci,netdev=net0 \
+              -kernel output/ifs.bin \
+              -object rng-random,filename=/dev/urandom,id=rng0 \
+              -device virtio-rng-pci,rng=rng0 \
+              -nographic \
+              -monitor none \
+              -pidfile output/qemu.pid \
+              -daemonize
+              cd ~/workspace/build-files/ports/aws-c-common/nto-x86_64-o/build
+              scp -P 5500 libaws-c-common* qnxuser@localhost:~/
+              scp -P 5500 -r tests qnxuser@localhost:~/
+              cd ~/workspace
+              scp -P 5500 stage_cmake/direct_deploy/cmake/bin/ctest qnxuser@localhost:~/
+              ssh -p 5500 qnxuser@localhost
+              cd tests
+              ../ctest
+              exit
+            fi
