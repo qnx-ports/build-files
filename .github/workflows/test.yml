@@ -66,13 +66,11 @@ jobs:
             echo -e "Host *\n\tServerAliveInterval 60\n\tServerAliveCountMax 5" > ~/.ssh/config
             echo "test file created on user Linux" > testfile
             sshpass -p qnxuser scp -v -P 5500 -o StrictHostKeyChecking=no testfile qnxuser@localhost:~/
-            sshpass -p qnxuser ssh -vvvv -p 5500 -o StrictHostKeyChecking=no qnxuser@localhost "echo testfile"
+            sshpass -p qnxuser ssh -vvvv -p 5500 -o StrictHostKeyChecking=no qnxuser@localhost "cat testfile"
             echo $?
-            sshpass -p qnxuser ssh -vvvv -p 5500 -o StrictHostKeyChecking=no qnxuser@localhost "ls -la ~/testfile"
+            sshpass -p qnxuser ssh -vvvv -p 5500 -o StrictHostKeyChecking=no qnxuser@localhost 'echo "this new file is created in QNX QEMU" > touch new_testfile'
             echo $?
-            sshpass -p qnxuser ssh -vvvv -p 5500 -o StrictHostKeyChecking=no qnxuser@localhost "touch new_testfile"
-            echo $?
-            sshpass -p qnxuser ssh -vvvv -p 5500 -o StrictHostKeyChecking=no qnxuser@localhost "sshpass -p password scp -P 22 -o StrictHostKeyChecking=no new_testfile qnxuser@localhost:~/"
+            sshpass -p qnxuser ssh -p 5500 -o StrictHostKeyChecking=no qnxuser@localhost "cat newtestfile"
             echo $?
             ls
             exit
