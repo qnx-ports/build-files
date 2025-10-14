@@ -67,5 +67,6 @@ jobs:
             echo "test file created on user Linux" > testfile
             sshpass -p qnxuser scp -v -P 5500 -o StrictHostKeyChecking=no testfile qnxuser@localhost:~/
             sshpass -p qnxuser ssh -vvvv -p 5500 -o StrictHostKeyChecking=no qnxuser@localhost "echo testfile"
+            echo $?
             ls
             exit
