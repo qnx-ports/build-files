@@ -1,0 +1,30 @@
+package = "abseil-cpp"
+timeout = 3600
+jobs = ${{nproc}}
+
+[googletest]
+path = "build/build/bin/absl*test*"
+[[googletest.skipped]]
+name = "build/build/bin/absl_log_stripping_test"
+norun = false
+[[googletest.skipped.suites]]
+name = "StrippingTest"
+file = "abseil-cpp/absl/log/stripping_test.cc"
+[[googletest.skipped.suites.cases]]
+name = "Control"
+line = "256"
+[[googletest.skipped.suites.cases]]
+name = "Literal"
+line = "273"
+[[googletest.skipped.suites.cases]]
+name = "LiteralInExpression"
+line = "289"
+[[googletest.skipped.suites.cases]]
+name = "Fatal"
+line = "307"
+[[googletest.skipped.suites.cases]]
+name = "Level"
+line = "369"
+[[googletest.skipped.suites.cases]]
+name = "Check"
+line = "392"
