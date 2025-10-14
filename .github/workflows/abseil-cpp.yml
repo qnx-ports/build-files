@@ -99,7 +99,9 @@ jobs:
         else
           source ~/qnx/710/qnxsdp-env.sh
         fi
-        touch build-files/ports/muslflt/nto-arm/*/Makefile.dnm
+        touch build-files/ports/muslflt/nto-arm/a.le.v7/Makefile.dnm
+        touch build-files/ports/muslflt/nto-arm/o.le.v7/Makefile.dnm
+        touch build-files/ports/muslflt/nto-arm/so.le.v7/Makefile.dnm
         if [[ ${{ matrix.qnx_env }} == 800 ]]; then
           touch build-files/ports/googletest/nto-arm-le-v7/Makefile.dnm
           touch build-files/ports/abseil-cpp/nto-arm-le-v7/Makefile.dnm
