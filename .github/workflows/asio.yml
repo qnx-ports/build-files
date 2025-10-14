@@ -27,19 +27,18 @@ jobs:
     - name: Checkout build-files
       uses: actions/checkout@v4
       with:
-        path: ~/workspace/build-files
+        path: build-files
 
     - name: Checkout asio
       uses: actions/checkout@v4
       with:
         repository: qnx-ports/asio
-        path: ~/workspace/asio
+        path: asio
 
     - name: Build asio
       shell: bash
       run: |
         source ~/qnx/800/qnxsdp-env.sh
-        cd ~/workspace
         cd asio/asio
         ./autogen.sh
         cd -
