@@ -70,5 +70,9 @@ jobs:
             echo $?
             sshpass -p qnxuser ssh -vvvv -p 5500 -o StrictHostKeyChecking=no qnxuser@localhost "ls -la ~/testfile"
             echo $?
+            sshpass -p qnxuser ssh -vvvv -p 5500 -o StrictHostKeyChecking=no qnxuser@localhost "touch new_testfile"
+            echo $?
+            sshpass -p qnxuser ssh -vvvv -p 5500 -o StrictHostKeyChecking=no qnxuser@localhost "sshpass -p password scp -P 22 -o StrictHostKeyChecking=no new_testfile qnxuser@localhost:~/"
+            echo $?
             ls
             exit
