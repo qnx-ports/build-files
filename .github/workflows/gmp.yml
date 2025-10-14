@@ -63,4 +63,4 @@ jobs:
               source ~/qnx/800/qnxsdp-env.sh
             fi
             cd ~/workspace
-            make -C build-files/ports/gmp install
+            QNX_PROJECT_ROOT="$(pwd)/gmp" make -C build-files/ports/gmp install
