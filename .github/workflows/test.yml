@@ -68,5 +68,7 @@ jobs:
             sshpass -p qnxuser scp -v -P 5500 -o StrictHostKeyChecking=no testfile qnxuser@localhost:~/
             sshpass -p qnxuser ssh -vvvv -p 5500 -o StrictHostKeyChecking=no qnxuser@localhost "echo testfile"
             echo $?
+            sshpass -p qnxuser ssh -vvvv -p 5500 -o StrictHostKeyChecking=no qnxuser@localhost "ls -la ~/testfile"
+            echo $?
             ls
             exit
