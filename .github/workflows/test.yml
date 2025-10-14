@@ -70,7 +70,7 @@ jobs:
             echo $?
             sshpass -p qnxuser ssh -vvvv -p 5500 -o StrictHostKeyChecking=no qnxuser@localhost 'echo "this new file is created in QNX QEMU" > touch new_testfile'
             echo $?
-            sshpass -p qnxuser ssh -p 5500 -o StrictHostKeyChecking=no qnxuser@localhost "cat newtestfile"
+            sshpass -p qnxuser ssh -p 5500 -o StrictHostKeyChecking=no qnxuser@localhost "cat new_testfile"
             echo $?
             ls
             exit
