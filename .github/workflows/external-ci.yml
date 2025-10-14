@@ -96,7 +96,7 @@ jobs:
               cd ~/workspace
               sshpass -p qnxuser scp -P 5500 -o StrictHostKeyChecking=no stage_cmake/direct_deploy/cmake/bin/ctest qnxuser@localhost:~/
               sshpass -p qnxuser ssh -p 5500 -o StrictHostKeyChecking=no qnxuser@localhost "ls -la"
-              sshpass -p qnxuser ssh -p 5500 -o StrictHostKeyChecking=no qnxuser@localhost "cd tests; ../ctest 2>&1 > ../results.log"
+              sshpass -p qnxuser ssh -p 5500 -o StrictHostKeyChecking=no qnxuser@localhost "export LD_LIBRARY_PATH=/data/home/qnxuser; cd tests; ../ctest 2>&1 > ../results.log"
               sshpass -p qnxuser ssh -p 5500 -o StrictHostKeyChecking=no qnxuser@localhost "cat results.log"
               exit
             fi
