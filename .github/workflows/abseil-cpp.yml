@@ -99,9 +99,9 @@ jobs:
         else
           source ~/qnx/710/qnxsdp-env.sh
         fi
+        touch build-files/ports/muslflt/nto-arm/*/Makefile.dnm
         if [[ ${{ matrix.qnx_env }} == 800 ]]; then
           touch build-files/ports/googletest/nto-arm-le-v7/Makefile.dnm
-          touch build-files/ports/muslflt/nto-arm-le-v7/Makefile.dnm
           touch build-files/ports/abseil-cpp/nto-arm-le-v7/Makefile.dnm
         fi
         BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/googletest" make -C build-files/ports/googletest PREFIX=system INSTALL_ROOT_nto=$PWD/stage USE_INSTALL_ROOT=true install
