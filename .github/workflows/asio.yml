@@ -39,6 +39,7 @@ jobs:
       shell: bash
       run: |
         source ~/qnx/800/qnxsdp-env.sh
+        mkdir workspace
         cd ~/workspace
         cd asio/asio
         ./autogen.sh

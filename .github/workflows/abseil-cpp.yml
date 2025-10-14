@@ -74,7 +74,7 @@ jobs:
       with:
         repository: qnx-ports/test-tools
         path: test-tools
-        token: ${{secrets.GITHUB_TOKEN}}
+        token: ${{secrets.GCO_TOKEN}}
 
     - name: Attempt restore of runtime-deps
       if: |
