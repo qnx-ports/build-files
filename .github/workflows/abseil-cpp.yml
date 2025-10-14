@@ -99,7 +99,6 @@ jobs:
         else
           source ~/qnx/710/qnxsdp-env.sh
         fi
-        cd ~/workspace
         if [[ ${{ matrix.qnx_env }} == 800 ]]; then
           touch build-files/ports/googletest/nto-arm-le-v7/Makefile.dnm
           touch build-files/ports/muslflt/nto-arm-le-v7/Makefile.dnm
