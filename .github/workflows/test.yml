@@ -40,6 +40,8 @@ jobs:
           options: -v ${{github.workspace}}:/home/runner/workspace -e MAKEFLAGS=${{env.MAKEFLAGS}}
           shell: bash
           run: |
+            set -x
+            cd ~/workspace
             source ~/qnx/800/qnxsdp-env.sh
             echo "password" | sudo -S apt update
             echo "password" | sudo -S apt install qemu-system-x86 qemu-kvm virt-manager libvirt-clients bridge-utils libvirt-daemon-system sshpass -y
@@ -60,6 +62,7 @@ jobs:
             -pidfile output/qemu.pid \
             -daemonize
             cd ..
+            cat ~/.ssh/config
             touch testfile
             sshpass -p qnxuser scp -vvvv -P 5500 -o StrictHostKeyChecking=no qnxuser@localhost:~/
             sshpass -p qnxuser ssh -vvvv -p 5500 -o StrictHostKeyChecking=no qnxuser@localhost
