@@ -45,8 +45,7 @@ function hook_configure {
         --host="${machine}" \
         --includedir="${INSTALL_ROOT_nto}${BASIC_PREFIX}/include" \
         --enable-public-key \
-        --disable-openssl   \
-        --disable-doc   # disabling doc as CI was faling to create documentation
+        --disable-openssl
 }
 
 function hook_make {
