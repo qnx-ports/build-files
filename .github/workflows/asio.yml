@@ -3,7 +3,7 @@ name: asio
 permissions:
   contents: write
   checks: write
-  issues: write
+
 
 on:
   workflow_dispatch:
@@ -26,8 +26,8 @@ jobs:
     runs-on: ubuntu-22.04-common
     if: |
       ((github.event_name == 'workflow_dispatch') ||
-      (github.event_name == 'push') ||
-      (github.event_name == 'pull_request'))
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'asio')))
     steps:
     - name: Checkout build-files
       uses: actions/checkout@v4

@@ -1,5 +1,10 @@
 name: gtk
 
+permissions:
+  contents: write
+  checks: write
+
+
 on:
   workflow_dispatch:
   push:
@@ -17,11 +22,11 @@ on:
 
 jobs:
   build:
-    runs-on: self-hosted
+    runs-on: ubuntu-22.04-common
     if: |
-      (github.event_name == 'workflow_dispatch') ||
+      ((github.event_name == 'workflow_dispatch') ||
       (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
-      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'gtk'))
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'gtk')))
     steps:
     - name: Checkout build-files
       uses: actions/checkout@v4
@@ -41,24 +46,8 @@ jobs:
         path: meson
         ref: 1.3.1
 
-    - name: Login to GitHub Container Registry
-      uses: docker/login-action@v3
-      with:
-        registry: ghcr.io
-        username: ${{github.actor}}
-        password: ${{secrets.GITHUB_TOKEN}}
-
-    - name: Pull build environment
-      run: |
-        docker pull ghcr.io/qnx-ports/sdp-build-env:latest
-
     - name: Build gtk
-      uses: addnab/docker-run-action@v3
-      with:
-        image: ghcr.io/qnx-ports/sdp-build-env:latest
-        options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
-        shell: bash
-        run: |
-          source ~/qnx/800/qnxsdp-env.sh
-          cd workspace
-          QNX_PROJECT_ROOT="$(pwd)/gtk" make INSTALL_ROOT_nto=/tmp/staging USE_INSTALL_ROOT=true -C build-files/ports/gtk JLEVEL=$(nproc) install
+      shell: bash
+      run: |
+        source ~/qnx/800/qnxsdp-env.sh
+        QNX_PROJECT_ROOT="$(pwd)/gtk" make INSTALL_ROOT_nto=/tmp/staging USE_INSTALL_ROOT=true -C build-files/ports/gtk JLEVEL=$(nproc) install

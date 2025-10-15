@@ -1,5 +1,10 @@
 name: ros2 jazzy
 
+permissions:
+  contents: write
+  checks: write
+
+
 on:
   workflow_dispatch:
   push:
@@ -18,15 +23,15 @@ on:
 jobs:
 
   build:
-    runs-on: self-hosted
+    runs-on: ubuntu-22.04-common
     strategy:
       matrix:
         qnx_env: [710, 800]
     name: Build for QNX ${{ matrix.qnx_env }}
     if: |
-      (github.event_name == 'workflow_dispatch') ||
+      ((github.event_name == 'workflow_dispatch') ||
       (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
-      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'ros2'))
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'ros2')))
     steps:
     - name: Checkout build-files
       uses: actions/checkout@v4
@@ -47,47 +52,32 @@ jobs:
         ref: boost-1.82.0
         submodules: recursive
 
-    - name: Login to GitHub Container Registry
-      uses: docker/login-action@v3
-      with:
-        registry: ghcr.io
-        username: ${{github.actor}}
-        password: ${{secrets.GITHUB_TOKEN}}
-
-    - name: Pull build environment
-      run: |
-        docker pull ghcr.io/qnx-ports/sdp-build-env:latest
-
     - name: Build ros2-jazzy
-      uses: addnab/docker-run-action@v3
-      with:
-        image: ghcr.io/qnx-ports/sdp-build-env:latest
-        options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
-        shell: bash
-        run: |
-          if [[ "${{ matrix.qnx_env}}" == "800" ]]; then
-            source ~/qnx/800/qnxsdp-env.sh
-            export QNX_SDP_VERSION=qnx800
-          else 
-            source ~/qnx/710/qnxsdp-env.sh
-            export QNX_SDP_VERSION=qnx710
-          fi
-          source /usr/local/qnx/env/bin/activate
-          cd ~/workspace
-          PREFIX="/usr" QNX_PROJECT_ROOT="$(pwd)/googletest" make -C build-files/ports/googletest install
-          cd boost/tools/build
-          git apply ../../../build-files/ports/boost/tools_qnx.patch
-          cd ~/workspace
-          cd boost/libs/asio && git apply ../../../build-files/ports/boost/asio_1.82.0_qnx.patch
-          cd ~/workspace
-          QNX_PROJECT_ROOT="$(pwd)/boost" make -C build-files/ports/boost install
-          cd build-files/ports/ros2/ros2-jazzy
-          export LD_PRELOAD=$LD_PRELOAD:/usr/lib/x86_64-linux-gnu/libzstd.so
-          export QNX_TESTING=ON
-          export QNX_PYTHON3_PATH=/system/bin/python3
-          mkdir -p src
-          vcs import src < ros2.repos
-          vcs import src < ros2-extra.repos 
-          ./scripts/colcon-ignore.sh
-          ./scripts/patch.sh
-          ./scripts/build-ros2.sh
+      shell: bash
+      run: |
+        if [[ "${{ matrix.qnx_env}}" == "800" ]]; then
+          source ~/qnx/800/qnxsdp-env.sh
+          export QNX_SDP_VERSION=qnx800
+        else 
+          source ~/qnx/710/qnxsdp-env.sh
+          export QNX_SDP_VERSION=qnx710
+        fi
+        source /usr/local/qnx/env/bin/activate
+        WORKSPACE=$PWD
+        PREFIX="/usr" QNX_PROJECT_ROOT="$(pwd)/googletest" make -C build-files/ports/googletest install
+        cd boost/tools/build
+        git apply ../../../build-files/ports/boost/tools_qnx.patch
+        cd WORKSPACE
+        cd boost/libs/asio && git apply ../../../build-files/ports/boost/asio_1.82.0_qnx.patch
+        cd WORKSPACE
+        QNX_PROJECT_ROOT="$(pwd)/boost" make -C build-files/ports/boost install
+        cd build-files/ports/ros2/ros2-jazzy
+        export LD_PRELOAD=$LD_PRELOAD:/usr/lib/x86_64-linux-gnu/libzstd.so
+        export QNX_TESTING=ON
+        export QNX_PYTHON3_PATH=/system/bin/python3
+        mkdir -p src
+        vcs import src < ros2.repos
+        vcs import src < ros2-extra.repos 
+        ./scripts/colcon-ignore.sh
+        ./scripts/patch.sh
+        ./scripts/build-ros2.sh
