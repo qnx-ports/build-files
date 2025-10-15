@@ -84,7 +84,7 @@ jobs:
       id: restore-stage
       uses: actions/cache/restore@v4
       env:
-        cache-name: "abseil-cpp_20240116.0_${{ matrix.qnx_env }}"
+        cache-name: "abseil-cpp_20240116.0_1_${{ matrix.qnx_env }}"
       with:
         key: ${{ runner.os }}-build-${{ env.cache-name }}
         path: |
