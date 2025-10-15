@@ -3,7 +3,7 @@ name: abseil-cpp
 permissions:
   contents: write
   checks: write
-  issues: read
+  issues: write
 
 on:
   workflow_dispatch:

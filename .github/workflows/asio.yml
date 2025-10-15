@@ -1,5 +1,10 @@
 name: asio
 
+permissions:
+  contents: write
+  checks: write
+  issues: write
+
 on:
   workflow_dispatch:
   push:
