@@ -48,6 +48,7 @@ jobs:
       with:
         repository: qnx-ports/abseil-cpp
         path: abseil-cpp
+        ref: qnx_20240116.0
 
     - name: Checkout muslflt
       uses: actions/checkout@v4

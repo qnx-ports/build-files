@@ -49,7 +49,7 @@ git clone https://github.com/qnx-ports/muslflt.git
 QNX_PROJECT_ROOT="$(pwd)/muslflt" make -C build-files/ports/muslflt/ INSTALL_ROOT_nto=<staging-install-folder> USE_INSTALL_ROOT=true install -j4
 
 # Clone abseil-cpp
-git clone https://github.com/qnx-ports/abseil-cpp.git
+git clone https://github.com/qnx-ports/abseil-cpp.git --branch qnx_20240116.0
 
 # Build abseil-cpp
 QNX_PROJECT_ROOT="$(pwd)/abseil-cpp" make -C build-files/ports/abseil-cpp INSTALL_ROOT_nto=<staging-install-folder> USE_INSTALL_ROOT=true JLEVEL=4 install
@@ -60,7 +60,7 @@ QNX_PROJECT_ROOT="$(pwd)/abseil-cpp" make -C build-files/ports/abseil-cpp INSTAL
 # Clone the repos
 mkdir -p ~/qnx_workspace && cd qnx_workspace
 git clone https://github.com/qnx-ports/build-files.git
-git clone https://github.com/qnx-ports/abseil-cpp.git
+git clone https://github.com/qnx-ports/abseil-cpp.git --branch qnx_20240116.0
 git clone https://github.com/qnx-ports/googletest.git
 git clone https://github.com/qnx-ports/muslflt.git
 
