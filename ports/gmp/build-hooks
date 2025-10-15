@@ -5,7 +5,7 @@ NESTED_LEVEL="${QNX_PROJECT_ROOT:-../../..}"  # fallback to `../../..` if variab
 
 # Default prefix
 BASIC_PREFIX="/usr/local"
-EXEC_PREFIX="/${cpudir}/${BASIC_PREFIX}"
+EXEC_PREFIX="/${cpudir}${BASIC_PREFIX}"
 
 function hook_preconfigure {
     echo "hook_preconfigure - running autoreconf in ${NESTED_LEVEL}"
@@ -32,7 +32,7 @@ function hook_configure {
         --prefix=${BASIC_PREFIX} \
         --exec-prefix=${EXEC_PREFIX} \
         --host=${machine} \
-        --includedir=${INSTALL_ROOT_HDR} \
+        --includedir=${INSTALL_ROOT_nto}${BASIC_PREFIX}/include \
         --disable-openssl \
         --disable-srp-authentication \
         --disable-psk-authentication \
