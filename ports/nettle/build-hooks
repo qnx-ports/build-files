@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Path from build dir to source root
-NESTED_LEVEL="${QNX_PROJECT_ROOT:-../../..}"  # adjust if needed
+NESTED_LEVEL="${QNX_PROJECT_ROOT:-../../..}"
 
 # Default prefix inside QNX target sysroot
 BASIC_PREFIX="/usr/local"
@@ -17,7 +17,6 @@ function hook_preconfigure {
     export DESTDIR="${INSTALL_ROOT_nto}"
 
     # Ensure pkg-config points to QNX target .pc files
-    export PKG_CONFIG_PATH="${INSTALL_ROOT_nto}/${cpudir}${BASIC_PREFIX}/lib/pkgconfig:${INSTALL_ROOT_nto}/${cpudir}/usr/lib/pkgconfig"
     export PKG_CONFIG_LIBDIR="${INSTALL_ROOT_nto}/${cpudir}${BASIC_PREFIX}/lib/pkgconfig"
 
     # Ensure compiler flags can find QNX includes and libs
@@ -26,6 +25,9 @@ function hook_preconfigure {
 
     export LDFLAGS="-L${INSTALL_ROOT_nto}/${cpudir}${BASIC_PREFIX}/lib \
                     -L${INSTALL_ROOT_nto}/${cpudir}/usr/lib ${LDFLAGS}"
+    
+    # Set CFLAGS that configure will use
+    export CFLAGS="-O2 -Wall"
 
     # Optional: regenerate configure (only if missing)
     if [ ! -x "${NESTED_LEVEL}/configure" ]; then
@@ -35,35 +37,27 @@ function hook_preconfigure {
 
 function hook_configure {
     echo "hook_configure - running configure"
-	if [ "${TARGET_SYSNAME}" == "nto" ]; then
 
-        "${NESTED_LEVEL}/configure" \
-            --srcdir="${NESTED_LEVEL}" \
-            --prefix="${BASIC_PREFIX}" \
-            --exec-prefix="${EXEC_PREFIX}" \
-            --host="${machine}" \
-            --includedir="${INSTALL_ROOT_HDR}" \
-            --enable-public-key \
-            --disable-openssl \
-            PKG_CONFIG_LIBDIR="${PKG_CONFIG_LIBDIR}" \
-            CFLAGS="-O2 -Wall" \
-            CPPFLAGS="${CPPFLAGS}" \
-            LDFLAGS="${LDFLAGS}" 
-    fi
+    "${NESTED_LEVEL}/configure" \
+        --srcdir="${NESTED_LEVEL}" \
+        --prefix="${BASIC_PREFIX}" \
+        --exec-prefix="${EXEC_PREFIX}" \
+        --host="${machine}" \
+        --includedir="${INSTALL_ROOT_nto}${BASIC_PREFIX}/include" \
+        --enable-public-key \
+        --disable-openssl
 }
 
 function hook_make {
     echo "hook_make - running make ${make_cmds}"
 
-    if [ "${TARGET_SYSNAME}" == "nto" ]; then
-        INSTALL_ROOT="${INSTALL_ROOT_nto}"
+    INSTALL_ROOT="${INSTALL_ROOT_nto}"
 
-        if [ "${make_cmds}" = "install" ]; then
-            make ${JLEVEL:+-j${JLEVEL}} install || exit 1
-            # Clean up .la files
-            find "${INSTALL_ROOT_nto}" -name "*.la" -exec rm -f {} \;
-        else
-            make ${JLEVEL:+-j${JLEVEL}} ${make_cmds} || exit 1
-        fi
+    if [ "${make_cmds}" = "install" ]; then
+        make ${JLEVEL:+-j${JLEVEL}} install || exit 1
+        # Clean up .la files
+        find "${INSTALL_ROOT_nto}" -name "*.la" -exec rm -f {} \;
+    else
+        make ${JLEVEL:+-j${JLEVEL}} ${make_cmds} || exit 1
     fi
 }
