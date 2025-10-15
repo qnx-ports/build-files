@@ -3,7 +3,7 @@ name: abseil-cpp
 permissions:
   contents: write
   checks: write
-  issues: write
+
 
 on:
   workflow_dispatch:
@@ -147,4 +147,3 @@ jobs:
       if: ${{ always() }}
       with:
         report_paths: 'results/*.xml'
-        comment: true
