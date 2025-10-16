@@ -7,12 +7,6 @@ permissions:
 
 on:
   workflow_dispatch:
-    inputs:
-      requireRebuild:
-        description: Require rebuild
-        required: false
-        default: false
-        type: boolean
   push:
     branches:
       - main
@@ -69,7 +63,6 @@ jobs:
         path: check-tools
         ref: 752117d3e12f0ae53f7c3673696e171f9e0d5e7a
 
-
     - name: Checkout test-tools
       uses: actions/checkout@v4
       with:
@@ -77,22 +70,7 @@ jobs:
         path: test-tools
         token: ${{secrets.GCO_TOKEN}}
 
-    - name: Attempt restore of runtime-deps
-      if: |
-        ${{(github.event_name != 'workflow_dispatch') ||
-        !inputs.requireRebuild}}
-      id: restore-stage
-      uses: actions/cache/restore@v4
-      env:
-        cache-name: "abseil-cpp_20240116.0_1_${{ matrix.qnx_env }}"
-      with:
-        key: ${{ runner.os }}-build-${{ env.cache-name }}
-        path: |
-          ${{ github.workspace }}/stage
-          ${{ github.workspace }}/build-files
-
     - name: Build abseil-cpp
-      if: ${{ steps.restore-stage.outputs.cache-hit != 'true' }}
       shell: bash
       run: |
         if [[ ${{ matrix.qnx_env }} == 800 ]]; then
@@ -110,15 +88,6 @@ jobs:
         BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/googletest" make -C build-files/ports/googletest PREFIX=system INSTALL_ROOT_nto=$PWD/stage USE_INSTALL_ROOT=true install
         QNX_PROJECT_ROOT="$(pwd)/muslflt" make -C build-files/ports/muslflt/ PREFIX=system INSTALL_ROOT_nto=$PWD/stage USE_INSTALL_ROOT=true install
         QNX_SEVEN_COMPAT="true" BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/abseil-cpp" make -C build-files/ports/abseil-cpp PREFIX=system INSTALL_ROOT_nto=$PWD/stage USE_INSTALL_ROOT=true install
-
-    - name: Cache runtime-deps
-      if: ${{ (matrix.qnx_env == '800') }}
-      uses: actions/cache/save@v4
-      with:
-        key: ${{ steps.restore-stage.outputs.cache-primary-key }}
-        path: |
-          ${{ github.workspace }}/stage
-          ${{ github.workspace }}/build-files
 
     - name: Setup python env
       if: ${{ (matrix.qnx_env == '800') }}
