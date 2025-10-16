@@ -36,7 +36,7 @@ line = "392"
 name = "CheckOp"
 line = "418"
 [[googletest.skipped.suites.cases]]
-name = "CheckOpStr"
+name = "CheckStrOp"
 line = "446"
 [[googletest.skipped.suites.cases]]
 name = "CheckOk"
@@ -74,7 +74,7 @@ line = "1470"
 [[googletest.skipped]]
 name = "build/build/bin/absl_random_uniform_real_distribution_test"
 [[googletest.skipped.suites]]
-name = "UniformRealDistributionTest"
+name = "UniformRealDistributionTest/*"
 file = "abseil-cpp/absl/random/uniform_real_distribution_test.cc"
 [[googletest.skipped.suites.cases]]
 name = "ParamSerializeTest"
