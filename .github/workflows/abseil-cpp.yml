@@ -116,3 +116,4 @@ jobs:
       if: ${{ always() }}
       with:
         report_paths: 'results/*.xml'
+        check_name: (${{ matrix.qnx_env }}) Test Report
