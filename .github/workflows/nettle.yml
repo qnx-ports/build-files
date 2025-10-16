@@ -50,16 +50,6 @@ jobs:
         run: |
           docker pull ghcr.io/qnx-ports/sdp-build-env:latest
 
-      - name: Install Texinfo in container
-        uses: addnab/docker-run-action@v3
-        with:
-          image: ghcr.io/qnx-ports/sdp-build-env:latest
-          options: -v ${{ github.workspace }}:/home/runner/workspace
-          shell: bash
-          run: |
-            apt-get update
-            apt-get install -y texinfo
-
       - name: Build nettle
         uses: addnab/docker-run-action@v3
         with:
