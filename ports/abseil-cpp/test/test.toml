@@ -74,7 +74,19 @@ line = "1470"
 [[googletest.skipped]]
 name = "build/build/bin/absl_random_uniform_real_distribution_test"
 [[googletest.skipped.suites]]
-name = "UniformRealDistributionTest/*"
+name = "UniformRealDistributionTest/0"
+file = "abseil-cpp/absl/random/uniform_real_distribution_test.cc"
+[[googletest.skipped.suites.cases]]
+name = "ParamSerializeTest"
+line = "73"
+[[googletest.skipped.suites]]
+name = "UniformRealDistributionTest/1"
+file = "abseil-cpp/absl/random/uniform_real_distribution_test.cc"
+[[googletest.skipped.suites.cases]]
+name = "ParamSerializeTest"
+line = "73"
+[[googletest.skipped.suites]]
+name = "UniformRealDistributionTest/2"
 file = "abseil-cpp/absl/random/uniform_real_distribution_test.cc"
 [[googletest.skipped.suites.cases]]
 name = "ParamSerializeTest"
