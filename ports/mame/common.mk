@@ -10,8 +10,15 @@ NAME=mame
 QNX_PROJECT_ROOT    ?= $(PRODUCT_ROOT)/../../$(NAME)
 PREFIX              ?= usr/local
 
-PKG_CONFIG_PATH = $(QNX_TARGET)/$(CPUVARDIR)/usr/lib/pkgconfig:$(INSTALL_ROOT)/$(CPUVARDIR)/usr/lib/pkgconfig
+BUILD_TESTING       ?= 0
 
+$(NAME)_INSTALL_DIR=$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)
+
+#Setup pkg-config dir
+export PKG_CONFIG_PATH=
+PKG_CONFIG_LIBDIR_IN = $($(NAME)_INSTALL_DIR)/lib/pkgconfig:$($(NAME)_INSTALL_DIR)/share/pkgconfig
+PKG_CONFIG_TARGET_IN = $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/pkgconfig:$(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/share/pkgconfig
+export PKG_CONFIG_LIBDIR = $(PKG_CONFIG_LIBDIR_IN):$(PKG_CONFIG_TARGET_IN)
 
 ## Set up QNX recursive makefile specifics.
 .PHONY: $(NAME)_all install clean
@@ -23,13 +30,23 @@ include $(MKFILES_ROOT)/qtargets.mk
 ##########Post-Target Def###########
 
 TARGETOS=qnx
+SDL_INSTALL_ROOT=$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)
+USE_QTDEBUG=0
+
+MAKE_ARGS ?= -j $(firstword $(JLEVEL) 1)
 
 $(NAME)_all:
 	@echo ===============
 	@echo Building $(NAME)...
 	@echo ===============
 	@mkdir -p build
-	@cd build && PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) TARGETOS=$(TARGETOS) make -C $(QNX_PROJECT_ROOT) qnx_$(CPU)
+	@cd build && \
+		BUILDDIR=$(pwd) \
+		TESTS=$(BUILD_TESTING) \
+		TARGETOS=$(TARGETOS) \
+		SDL_INSTALL_ROOT=$(SDL_INSTALL_ROOT) \
+		USE_QTDEBUG=0 \
+		make -C $(QNX_PROJECT_ROOT) qnx_$(CPU_ALIAS) $(MAKE_ARGS)
 
 
 install: $(NAME)_all
@@ -37,3 +54,4 @@ install: $(NAME)_all
 
 clean:
 	@rm -rf build
+	@make -C $(QNX_PROJECT_ROOT) clean

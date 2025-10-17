@@ -1,3 +1,3 @@
 include ../common.mk
 
-CPU=arm64
+CPU_ALIAS=arm64
