@@ -1,5 +1,10 @@
 name: libretro_cores
 
+permissions:
+  contents: write
+  checks: write
+
+
 on:
   workflow_dispatch:
   push:
@@ -17,11 +22,11 @@ on:
 
 jobs:
     libretro_2048:
-        runs-on: self-hosted
+        runs-on: ubuntu-22.04-common
         if: |
-          (github.event_name == 'workflow_dispatch') ||
+          ((github.event_name == 'workflow_dispatch') ||
           (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
-          (github.event_name == 'pull_request' && (contains(github.event.pull_request.title, 'libretro-cores') || contains(github.event.pull_request.title, '2048')))
+          (github.event_name == 'pull_request' && (contains(github.event.pull_request.title, 'libretro-cores') || contains(github.event.pull_request.title, '2048'))))
         steps:
         - name: Checkout build-files
           uses: actions/checkout@v4
@@ -34,33 +39,18 @@ jobs:
             repository: libretro/libretro-2048
             path: libretro-2048
     
-        - name: Login to GitHub Container Registry
-          uses: docker/login-action@v3
-          with:
-            registry: ghcr.io
-            username: ${{github.actor}}
-            password: ${{secrets.GITHUB_TOKEN}}
-        - name: Pull build environment
-          run: |
-            docker pull ghcr.io/qnx-ports/sdp800-build-env:latest
-    
         - name: Build libretro-2048
-          uses: addnab/docker-run-action@v3
-          with:
-            image: ghcr.io/qnx-ports/sdp800-build-env:latest
-            options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
-            shell: bash
-            run: |
-              source ~/qnx/800/qnxsdp-env.sh
-              cd ~/workspace
-              PREFIX="/usr/local" make -C build-files/ports/RetroPie/libretro-cores/2048  -j$(nproc)
+          shell: bash
+          run: |
+            source ~/qnx/800/qnxsdp-env.sh
+            PREFIX="/usr/local" make -C build-files/ports/RetroPie/libretro-cores/2048  -j$(nproc)
     
     libretro_mrboom:
-        runs-on: self-hosted
+        runs-on: ubuntu-22.04-common
         if: |
-          (github.event_name == 'workflow_dispatch') ||
+          ((github.event_name == 'workflow_dispatch') ||
           (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
-          (github.event_name == 'pull_request' && (contains(github.event.pull_request.title, 'libretro-cores') || contains(github.event.pull_request.title, 'mrboom')))
+          (github.event_name == 'pull_request' && (contains(github.event.pull_request.title, 'libretro-cores') || contains(github.event.pull_request.title, 'mrboom'))))
         steps:
         - name: Checkout build-files
           uses: actions/checkout@v4
@@ -74,33 +64,18 @@ jobs:
             path: mrboom-libretro
             submodules: recursive
     
-        - name: Login to GitHub Container Registry
-          uses: docker/login-action@v3
-          with:
-            registry: ghcr.io
-            username: ${{github.actor}}
-            password: ${{secrets.GITHUB_TOKEN}}
-        - name: Pull build environment
-          run: |
-            docker pull ghcr.io/qnx-ports/sdp800-build-env:latest
-    
         - name: Build libretro-mrboom
-          uses: addnab/docker-run-action@v3
-          with:
-            image: ghcr.io/qnx-ports/sdp800-build-env:latest
-            options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
-            shell: bash
-            run: |
-              source ~/qnx/800/qnxsdp-env.sh
-              cd ~/workspace
-              PREFIX="/usr/local" make -C build-files/ports/RetroPie/libretro-cores/mrboom  -j$(nproc)
+          shell: bash
+          run: |
+            source ~/qnx/800/qnxsdp-env.sh
+            PREFIX="/usr/local" make -C build-files/ports/RetroPie/libretro-cores/mrboom  -j$(nproc)
 
     libretro_test:
-        runs-on: self-hosted
+        runs-on: ubuntu-22.04-common
         if: |
-          (github.event_name == 'workflow_dispatch') ||
+          ((github.event_name == 'workflow_dispatch') ||
           (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
-          (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'libretro-cores'))
+          (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'libretro-cores')))
         steps:
         - name: Checkout build-files
           uses: actions/checkout@v4
@@ -113,31 +88,16 @@ jobs:
             repository: libretro/libretro-samples
             path: libretro-samples
     
-        - name: Login to GitHub Container Registry
-          uses: docker/login-action@v3
-          with:
-            registry: ghcr.io
-            username: ${{github.actor}}
-            password: ${{secrets.GITHUB_TOKEN}}
-        - name: Pull build environment
-          run: |
-            docker pull ghcr.io/qnx-ports/sdp800-build-env:latest
-    
         - name: Build libretro-mrboom
-          uses: addnab/docker-run-action@v3
-          with:
-            image: ghcr.io/qnx-ports/sdp800-build-env:latest
-            options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
-            shell: bash
-            run: |
-              source ~/qnx/800/qnxsdp-env.sh
-              cd ~/workspace
-              PREFIX="/usr/local" make -C build-files/ports/RetroPie/libretro-cores/test  -j$(nproc)
+          shell: bash
+          run: |
+            source ~/qnx/800/qnxsdp-env.sh
+            PREFIX="/usr/local" make -C build-files/ports/RetroPie/libretro-cores/test  -j$(nproc)
 
     libretro_retro8:
-        runs-on: self-hosted
+        runs-on: ubuntu-22.04-common
         if: |
-          (github.event_name == 'workflow_dispatch') ||
+          ((github.event_name == 'workflow_dispatch') ||
           (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
           (github.event_name == 'pull_request' && (contains(github.event.pull_request.title, 'libretro-cores') || contains(github.event.pull_request.title, 'retro8')))
         steps:
@@ -152,25 +112,10 @@ jobs:
             repository: Jakz/retro8
             path: retro8
     
-        - name: Login to GitHub Container Registry
-          uses: docker/login-action@v3
-          with:
-            registry: ghcr.io
-            username: ${{github.actor}}
-            password: ${{secrets.GITHUB_TOKEN}}
-        - name: Pull build environment
-          run: |
-            docker pull ghcr.io/qnx-ports/sdp800-build-env:latest
-    
         - name: Build libretro-mrboom
-          uses: addnab/docker-run-action@v3
-          with:
-            image: ghcr.io/qnx-ports/sdp800-build-env:latest
-            options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
-            shell: bash
-            run: |
-              source ~/qnx/800/qnxsdp-env.sh
-              cd ~/workspace
-              PREFIX="/usr/local" make -C build-files/ports/RetroPie/libretro-cores/retro8  -j$(nproc)
+          shell: bash
+          run: |
+            source ~/qnx/800/qnxsdp-env.sh
+            PREFIX="/usr/local" make -C build-files/ports/RetroPie/libretro-cores/retro8  -j$(nproc)
 
-    
+  

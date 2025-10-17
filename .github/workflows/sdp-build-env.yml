@@ -17,11 +17,11 @@ on:
 
 jobs:
   build-sdp-image:
-    runs-on: self-hosted
+    runs-on: ubuntu-22.04-common
     if: |
-      (github.event_name == 'workflow_dispatch') ||
+      ((github.event_name == 'workflow_dispatch') ||
       (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
-      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'sdp-build-env'))
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'sdp-build-env')))
     permissions:
       contents: read
       packages: write

@@ -1,5 +1,10 @@
 name: perl5
 
+permissions:
+  contents: write
+  checks: write
+
+
 on:
   workflow_dispatch:
   push:
@@ -18,11 +23,11 @@ on:
 jobs:
 
   build:
-    runs-on: self-hosted
+    runs-on: ubuntu-22.04-common
     if: |
-      (github.event_name == 'workflow_dispatch') ||
+      ((github.event_name == 'workflow_dispatch') ||
       (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
-      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'perl5'))
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'perl5')))
     steps:
     - name: Checkout build-files
       uses: actions/checkout@v4
@@ -41,26 +46,10 @@ jobs:
         repository: qnx-ports/perl-cross
         path: perl-cross
 
-    - name: Login to GitHub Container Registry
-      uses: docker/login-action@v3
-      with:
-        registry: ghcr.io
-        username: ${{github.actor}}
-        password: ${{secrets.GITHUB_TOKEN}}
-
-    - name: Pull build environment
-      run: |
-        docker pull ghcr.io/qnx-ports/sdp800-build-env:latest
-
     - name: Build perl5
-      uses: addnab/docker-run-action@v3
-      with:
-        image: ghcr.io/qnx-ports/sdp800-build-env:latest
-        options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
-        shell: bash
-        run: |
-          source ~/qnx/800/qnxsdp-env.sh
-          cd ~/workspace
-          rsync -a --force --exclude='.git*' ./perl-cross/ ./perl5/
-          make -C build-files/ports/perl5 JLEVEL=4
-          make -C build-files/ports/perl5 install
+      shell: bash
+      run: |
+        source ~/qnx/800/qnxsdp-env.sh
+        rsync -a --force --exclude='.git*' ./perl-cross/ ./perl5/
+        make -C build-files/ports/perl5 JLEVEL=4
+        make -C build-files/ports/perl5 install

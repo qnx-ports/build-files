@@ -1,4 +1,9 @@
 name: oneTBB
+
+permissions:
+  contents: write
+  checks: write
+
  
 on:
   workflow_dispatch:
@@ -22,11 +27,11 @@ jobs:
       matrix:
         qnx_env: ["710", "800"]
     name: Build for QNX ${{ matrix.qnx_env }}
-    runs-on: self-hosted
+    runs-on: ubuntu-22.04-common
     if: |
-      (github.event_name == 'workflow_dispatch') ||
+      ((github.event_name == 'workflow_dispatch') ||
       (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
-      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'oneTBB'))
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'oneTBB')))
     steps:
     - name: Checkout build-files
       uses: actions/checkout@v4
@@ -40,28 +45,12 @@ jobs:
         path: oneTBB
         ref: qnx-v2022.3.0-rc1
  
-    - name: Login to GitHub Container Registry
-      uses: docker/login-action@v3
-      with:
-        registry: ghcr.io
-        username: ${{github.actor}}
-        password: ${{secrets.GITHUB_TOKEN}}
- 
-    - name: Pull build environment
-      run: |
-        docker pull ghcr.io/qnx-ports/sdp-build-env:latest
- 
     - name: Build oneTBB
-      uses: addnab/docker-run-action@v3
-      with:
-        image: ghcr.io/qnx-ports/sdp-build-env:latest
-        options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
-        shell: bash
-        run: |
-          if [ "${{ matrix.qnx_env }}" == "710" ]; then
-            source ~/qnx/710/qnxsdp-env.sh
-          else
-            source ~/qnx/800/qnxsdp-env.sh
-          fi
-          cd ~/workspace
-          make -C build-files/ports/oneTBB install
+      shell: bash
+      run: |
+        if [ "${{ matrix.qnx_env }}" == "710" ]; then
+          source ~/qnx/710/qnxsdp-env.sh
+        else
+          source ~/qnx/800/qnxsdp-env.sh
+        fi
+        make -C build-files/ports/oneTBB install
