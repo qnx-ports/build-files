@@ -17,7 +17,7 @@ git clone https://github.com/qnx-ports/build-files
 git clone https://github.com/qnx-ports/mame
 git clone https://github.com/qnx-ports/SDL
 
-# Build the Docker image and create a container
+# Optionally build the Docker image and create a container
 cd build-files/docker
 ./docker-build-qnx-image.sh
 ./docker-create-container.sh
@@ -28,4 +28,5 @@ cd build-files/docker
 QNX_PROJECT_ROOT="$(pwd)/SDL" make -C build-files/ports/SDL install -j4
 
 # Build mame
+make -C build-files/ports/mame install -j4
 ```
