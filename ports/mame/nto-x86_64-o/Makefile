@@ -1,3 +1,3 @@
 include ../common.mk
 
-CPU=x64
+CPU_ALIAS=x64
