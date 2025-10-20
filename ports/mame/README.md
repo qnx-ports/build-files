@@ -8,7 +8,8 @@
 
 ## Build and Install
 
-As a prerequisite, you must have a QNX SDP 8.0 installation.
+As a prerequisite, you must have a QNX SDP 8.0 installation. We do not currently
+support QNX SDP 7.1.
 ```bash
 mkdir qnx_workspace
 cd qnx_workspace
