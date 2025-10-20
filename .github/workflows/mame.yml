@@ -59,6 +59,5 @@ jobs:
         else
           source ~/qnx/800/qnxsdp-env.sh
         fi
-        cd ~/workspace
         PREFIX="usr/local" QNX_PROJECT_ROOT="$(pwd)/SDL" make -C build-files/ports/SDL install -j$(nproc)
         PREFIX="usr/local" QNX_PROJECT_ROOT="$(pwd)/mame" make -C build-files/ports/mame install -j$(nproc)
