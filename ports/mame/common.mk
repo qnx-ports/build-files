@@ -30,7 +30,7 @@ include $(MKFILES_ROOT)/qtargets.mk
 ##########Post-Target Def###########
 
 TARGETOS=qnx
-ARCHOPTS="-D_QNX_SOURCE"
+ARCHOPTS="-D_QNX_SOURCE -Werror=format-overflow"
 
 SDL_INSTALL_ROOT=$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)
 USE_QTDEBUG=0
