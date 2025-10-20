@@ -35,8 +35,6 @@ ARCHOPTS="-D_QNX_SOURCE"
 SDL_INSTALL_ROOT=$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)
 USE_QTDEBUG=0
 
-MAKE_ARGS ?= -j $(firstword $(JLEVEL) 1)
-
 $(NAME)_all:
 	@echo ===============
 	@echo Building $(NAME)...
@@ -50,7 +48,7 @@ $(NAME)_all:
 		SDL_INSTALL_ROOT=$(SDL_INSTALL_ROOT) \
 		USE_QTDEBUG=0 \
 		VERBOSE=1 \
-		make -C $(QNX_PROJECT_ROOT) qnx_$(CPU_ALIAS) $(MAKE_ARGS)
+		make -C $(QNX_PROJECT_ROOT) qnx_$(CPU_ALIAS)
 
 
 install: $(NAME)_all

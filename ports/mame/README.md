@@ -28,5 +28,5 @@ cd build-files/docker
 QNX_PROJECT_ROOT="$(pwd)/SDL" make -C build-files/ports/SDL install -j4
 
 # Build mame
-make -C build-files/ports/mame install -j4
+make -C build-files/ports/mame install
 ```
