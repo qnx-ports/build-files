@@ -1,0 +1,64 @@
+name: mame
+
+permissions:
+  contents: write
+  checks: write
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/mame.yml'
+      - 'ports/mame/**'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/mame.yml'
+      - 'ports/mame/**'
+
+jobs:
+
+  build:
+    strategy:
+      matrix:
+        qnx_env: [710, 800]
+    name: Build for QNX ${{ matrix.qnx_env }}
+    runs-on: ubuntu-22.04-common
+    if: |
+      (github.event_name == 'workflow_dispatch') ||
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'mame'))
+    steps:
+    - name: Checkout build-files
+      uses: actions/checkout@v4
+      with:
+        path: build-files
+
+    - name: Checkout SDL
+      uses: actions/checkout@v4
+      with:
+        repository: qnx-ports/SDL
+        path: SDL
+        ref: qnx_2.0.5
+
+    - name: Checkout mame
+      uses: actions/checkout@v4
+      with:
+        repository: qnx-ports/mame
+        path: mame
+        ref: qnx-mame0281
+
+    - name: Build mame
+      shell: bash
+      run: |
+        if [ "${{ matrix.qnx_env }}" == "710" ]; then
+          source ~/qnx/710/qnxsdp-env.sh
+        else
+          source ~/qnx/800/qnxsdp-env.sh
+        fi
+        cd ~/workspace
+        PREFIX="usr/local" QNX_PROJECT_ROOT="$(pwd)/SDL" make -C build-files/ports/SDL install -j$(nproc)
+        PREFIX="usr/local" QNX_PROJECT_ROOT="$(pwd)/mame" make -C build-files/ports/mame install -j$(nproc)
