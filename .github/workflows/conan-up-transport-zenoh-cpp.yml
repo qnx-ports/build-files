@@ -44,7 +44,8 @@ jobs:
         export QNX_CONAN_ROOT=$(realpath ./build-files/conan)
         conan config install $QNX_CONAN_ROOT/tools/qnx-8.0-extension/settings_user.yml
         conan create --version=3.21.12 --build=missing $QNX_CONAN_ROOT/recipes/protobuf/all
-        conan create --version=1.2.1 $CONAN_ROOT/recipes/zenoh-router/binary
+        conan create --version=1.2.1 $QNX_CONAN_ROOT/recipes/zenoh-router/binary
+        conan create --version=1.5.0 $QNX_CONAN_ROOT/recipes/zenoh-router/binary
         source ~/qnx/800/qnxsdp-env.sh
         conan create -pr:h=$QNX_CONAN_ROOT/tools/profiles/nto-8.0-x86_64 --version=3.21.12 --build=missing $QNX_CONAN_ROOT/recipes/protobuf/all
         conan create -pr:h=$QNX_CONAN_ROOT/tools/profiles/nto-8.0-x86_64 --version=1.14.0 $QNX_CONAN_ROOT/recipes/gtest/all
