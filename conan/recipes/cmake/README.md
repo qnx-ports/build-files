@@ -57,6 +57,12 @@ cd ~/qnx_workspace
 conan create -pr:h=$QNX_CONAN_ROOT/tools/profiles/<profile-name> --version=<version-number> $QNX_CONAN_ROOT/recipes/cmake/3.x.x
 ```
 
+# Setup QNX qemu target
+```bash
+#build and run qemu QNX image for testing
+mkqnximage --type=qemu --arch=x86_64 --clean --run --force  --python=yes --ram=6G --data-size=8196 --data-inodes=400000
+```
+
 # Deploy cmake on QNX target
 ```bash
 cd ~/qnx_workspace
@@ -105,11 +111,6 @@ conan install -pr:h=$QNX_CONAN_ROOT/tools/profiles/<profile-name> --version=3.31
 cmake --preset conan-release
 
 cmake --build build_tests/Release -- -j
-```
-# Setup QNX qemu target
-```bash
-#build and run qemu QNX image for testing
-mkqnximage --type=qemu --arch=x86_64 --clean --run --force  --python=yes --ram=6G --data-size=8196 --data-inodes=400000
 ```
 
 # Run tests on QNX target
