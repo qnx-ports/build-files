@@ -76,8 +76,7 @@ CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DWITH_EXAMPLES=$(WITH_EXAMPLES) \
              -DBLAS_LIBRARIES=$(QNX_TARGET)/$(CPUVARDIR)/usr/local/lib \
              -DBLAS_INCLUDE_DIR=$(QNX_TARGET)/$(CPUVARDIR)/usr/local/include \
-             -DMPFR_LIBRARIES=/home/hyarasi/qnx710_1/target/qnx7/aarch64le/usr/local/lib \
-             -DMPFR_INCLUDE_DIR=/home/hyarasi/qnx710_1/target/qnx7/aarch64le/usr/local/include \
+             -DCMAKE_PREFIX_PATH=$(QNX_TARGET)/$(CPUVARDIR)/usr/local/lib \
              -DSUITESPARSE_USE_FORTRAN=OFF
 
 MAKE_ARGS ?= -j $(firstword $(JLEVEL) 1)
@@ -85,19 +84,21 @@ MAKE_ARGS ?= -j $(firstword $(JLEVEL) 1)
 ifndef NO_TARGET_OVERRIDE
 
 $(NAME)_all:
-	@mkdir -p build
-	@cd build && cmake $(CMAKE_ARGS) $(QNX_PROJECT_ROOT)
-	@cd build && make VERBOSE=1 all $(MAKE_ARGS)
+	@export PKG_CONFIG_PATH=$(QNX_TARGET)/$(CPUVARDIR)/usr/local/lib/pkgconfig; \
+	mkdir -p build; \
+	cd build && cmake $(CMAKE_ARGS) $(QNX_PROJECT_ROOT); \
+	make VERBOSE=1 all $(MAKE_ARGS)
 
 install check: $(NAME)_all
-	@echo Installing...
-	@cd build && make VERBOSE=1 install $(MAKE_ARGS)
-	@echo Done.
+	@export PKG_CONFIG_PATH=$(QNX_TARGET)/$(CPUVARDIR)/usr/local/lib/pkgconfig; \
+	echo Installing...; \
+	cd build && make VERBOSE=1 install $(MAKE_ARGS); \
+	echo Done.
 
 clean iclean spotless:
 	rm -rf build
 
 uninstall:
-	rm -rf $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/suitesparse*
+	rm -rf $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/suitesparse*; \
 	rm -rf $(QNX_TARGET)/$(PREFIX)/include/suitesparse
 endif
