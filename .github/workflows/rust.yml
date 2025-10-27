@@ -1,0 +1,50 @@
+name: rust
+
+permissions:
+  contents: write
+  checks: write
+
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/rust.yml'
+      - 'ports/rust/**'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/rust.yml'
+      - 'ports/rust/**'
+
+jobs:
+
+  build:
+    runs-on: ubuntu-22.04-common
+    if: |
+      ((github.event_name == 'workflow_dispatch') ||
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'rust')))
+    steps:
+    - name: Checkout build-files
+      uses: actions/checkout@v4
+      with:
+        path: build-files
+
+    - name: Checkout rust
+      uses: actions/checkout@v4
+      with:
+        repository: qnx-ports/rust
+        path: rust
+
+    - name: Build rust
+      shell: bash
+      run: |
+        # install rustup
+        curl --proto '=https' --tlsv1.2 https://sh.rustup.rs -sSf | sh -s -- -y
+        source ~/.cargo/env
+        source ~/qnx/800/qnxsdp-env.sh
+        ls -la
