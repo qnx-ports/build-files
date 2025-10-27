@@ -50,6 +50,5 @@ jobs:
         source ~/qnx/800/qnxsdp-env.sh
         cat build-files/ports/rust/qnx800-config.toml > rust/config.toml
         cd ./rust
-        cat config.toml
-        #./x.py install
-        #rustup toolchain link qnx-800 stage/host/linux/x86_64/usr/
+        ./x.py install
+        rustup toolchain link qnx-800 stage/host/linux/x86_64/usr/
