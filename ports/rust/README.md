@@ -30,7 +30,7 @@ mkdir -p ~/workspace && cd ~/workspace
 git clone https://github.com/qnx-ports/build-files.git
 
 # Clone the rust 1.90.0 for QNX8.0/7.1 - with some fixes from qnx-ports/rust
-git clone --branch=1.90.0 https://github.com/qnx-ports/rust.git
+git clone --branch=qnx-1.90.0 https://github.com/qnx-ports/rust.git
 # Or rust 1.82.0 for QNX7.1 -- IMPORTANT: QNX.8.0 is not supported
 git clone --branch=1.82.0 https://github.com/rust-lang/rust.git
 cd rust
