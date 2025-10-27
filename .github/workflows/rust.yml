@@ -48,6 +48,6 @@ jobs:
         source ~/.cargo/env
         # build qnx8.0 targets
         source ~/qnx/800/qnxsdp-env.sh
-        cat build-files/ports/rust/qnx800-config.toml > /rust/config.toml
+        cat build-files/ports/rust/qnx800-config.toml > rust/config.toml
         ./rust/x.py install
         rustup toolchain link qnx-800 rust/stage/host/linux/x86_64/usr/
