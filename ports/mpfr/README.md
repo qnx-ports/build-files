@@ -1,3 +1,6 @@
+# Compile the port for QNX on Ubuntu host
+
+```bash
 # Clone the repos
 mkdir -p ~/qnx_workspace && cd qnx_workspace
 git clone https://github.com/qnx-ports/build-files.git
