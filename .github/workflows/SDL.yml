@@ -52,5 +52,5 @@ jobs:
         else
           source ~/qnx/800/qnxsdp-env.sh
         fi
-        PREFIX="usr/local" QNX_PROJECT_ROOT="$(pwd)/SDL" make -C build-files/ports/SDL install -j$(nproc)
+        ENABLE_AUDIO="no" PREFIX="usr/local" QNX_PROJECT_ROOT="$(pwd)/SDL" make -C build-files/ports/SDL install -j$(nproc)
 

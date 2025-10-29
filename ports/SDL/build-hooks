@@ -5,6 +5,8 @@ DIST_BASE=${QNX_PROJECT_ROOT:-"${PWD}/../../../../SDL"}
 INSTALL_ROOT=$(eval "echo \${INSTALL_ROOT_${TARGET_SYSNAME}}")
 INSTALL_PREFIX=${PREFIX:-"usr/local"}
 
+ENABLE_AUDIO=${ENABLE_AUDIO:-"yes"}
+
 function hook_preconfigure
 {
   # Override srcdir
