@@ -30,10 +30,9 @@ include $(MKFILES_ROOT)/qtargets.mk
 ##########Post-Target Def###########
 
 TARGETOS=qnx
-ARCHOPTS="-D_QNX_SOURCE -Wno-error=format-overflow"
+ARCHOPTS="-D_QNX_SOURCE -DSDL_DISABLE_IMMINTRIN_H -Wno-error=format-overflow -Wno-error=alloc-size-larger-than= -Wno-error=parentheses -Wno-error=pointer-arith"
 
 SDL_INSTALL_ROOT=$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)
-USE_QTDEBUG=0
 
 $(NAME)_all:
 	@echo ===============
@@ -46,7 +45,11 @@ $(NAME)_all:
 		TARGETOS=$(TARGETOS) \
 		ARCHOPTS=$(ARCHOPTS) \
 		SDL_INSTALL_ROOT=$(SDL_INSTALL_ROOT) \
+		JLEVEL=$(JLEVEL) \
 		USE_QTDEBUG=0 \
+		NO_USE_XINPUT=1 \
+		NO_X11=1 \
+		USE_SYSTEM_LIB_ZLIB=1 \
 		VERBOSE=1 \
 		make -C $(QNX_PROJECT_ROOT) qnx_$(CPU_ALIAS)
 

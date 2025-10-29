@@ -5,6 +5,7 @@
 **Website:** https://www.mamedev.org/ \
 **Supports:** QNX 8.0 on aarch64le and x86_64
 
+**NOTE** MAME supports excludes MIDI audio.
 
 ## Build and Install
 
@@ -17,6 +18,7 @@ cd qnx_workspace
 git clone https://github.com/qnx-ports/build-files
 git clone https://github.com/qnx-ports/mame
 git clone https://github.com/qnx-ports/SDL
+git clone https://github.com/qnx-ports/SDL_ttf
 
 # Optionally build the Docker image and create a container
 cd build-files/docker
@@ -27,6 +29,9 @@ cd build-files/docker
 
 # Build SDL2
 QNX_PROJECT_ROOT="$(pwd)/SDL" make -C build-files/ports/SDL install -j4
+
+# Build SDL2
+QNX_PROJECT_ROOT="$(pwd)/SDL_ttf" make -C build-files/ports/SDL_ttf install -j4
 
 # Build mame
 make -C build-files/ports/mame install
