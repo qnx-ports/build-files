@@ -21,6 +21,7 @@ git clone -b qnx-release-2.0.14 https://github.com/qnx-ports/SDL.git
 git clone https://github.com/qnx-ports/SDL_ttf
 git clone -b 1.7.0 https://github.com/mesonbuild/meson.git
 git clone -b VER-2-13-3 https://gitlab.freedesktop.org/freetype/freetype.git
+git clone -b 2.16.0 https://gitlab.freedesktop.org/fontconfig/fontconfig.git
 
 # Optionally build the Docker image and create a container
 cd build-files/docker
@@ -35,6 +36,9 @@ make -C build-files/ports/SDL JLEVEL=4 install
 # Build freetype2
 ./build-files/ports/freetype/install_all.sh
 QNX_PROJECT_ROOT="$(pwd)/freetype" JLEVEL=4 make -C build-files/ports/freetype install
+
+# Build fontconfig
+QNX_PROJECT_ROOT="$(pwd)/fontconfig" JLEVEL=4 make -C build-files/ports/fontconfig install
 
 # Build SDL_ttf
 make -C build-files/ports/SDL_ttf JLEVEL=4 install

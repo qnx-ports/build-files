@@ -58,6 +58,13 @@ jobs:
         path: freetype
         ref: VER-2-13-3
 
+    - name: Checkout fontconfig
+      uses: actions/checkout@v4
+      with:
+        repository: fontconfig/fontconfig
+        path: fontconfig
+        ref: 2.16.0
+
     - name: Checkout meson
       uses: actions/checkout@v4
       with:
@@ -85,6 +92,10 @@ jobs:
         chmod +x build-files/ports/freetype/install_all.sh
         JLEVEL=$(nproc) ./build-files/ports/freetype/install_all.sh
         JLEVEL=$(nproc) QNX_PROJECT_ROOT="$(pwd)/freetype" make -C build-files/ports/freetype install
+
+        chmod +x ./build-files/ports/fontconfig/install_all.sh 
+        JLEVEL=$(nproc) ./build-files/ports/fontconfig/install_all.sh
+        JLEVEL=$(nproc) QNX_PROJECT_ROOT="$(pwd)/fontconfig" make -C build-files/ports/fontconfig install
 
         PREFIX="usr/local" QNX_PROJECT_ROOT="$(pwd)/SDL_ttf" make -C build-files/ports/SDL_ttf install -j$(nproc)
 
