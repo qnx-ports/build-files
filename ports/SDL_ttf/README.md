@@ -31,6 +31,22 @@ cd ~/qnx_workspace
 # Clone SDL_ttf
 git clone https://github.com/qnx-ports/SDL_ttf.git
 
+# Clone SDL
+git clone -b qnx-release-2.0.14 https://github.com/qnx-ports/SDL.git
+
+# Clone meson
+git clone -b 1.7.0 https://github.com/mesonbuild/meson.git
+
+# Clone freetype
+git clone -b VER-2-13-3 https://gitlab.freedesktop.org/freetype/freetype.git
+
+# Build SDL2
+make -C build-files/ports/SDL JLEVEL=4 install
+
+# Build freetype2
+./build-files/ports/freetype/install_all.sh
+QNX_PROJECT_ROOT="$(pwd)/freetype" JLEVEL=4 make -C build-files/ports/freetype install
+
 # Build SDL_ttf
 make -C build-files/ports/SDL_ttf JLEVEL=4 install
 ```
@@ -41,10 +57,20 @@ make -C build-files/ports/SDL_ttf JLEVEL=4 install
 mkdir -p ~/qnx_workspace && cd qnx_workspace
 git clone https://github.com/qnx-ports/build-files.git
 git clone https://github.com/qnx-ports/SDL_ttf.git
+git clone -b qnx-release-2.0.14 https://github.com/qnx-ports/SDL.git
+git clone -b 1.7.0 https://github.com/mesonbuild/meson.git
+git clone -b VER-2-13-3 https://gitlab.freedesktop.org/freetype/freetype.git
 
 # source qnxsdp-env.sh
 source ~/qnx800/qnxsdp-env.sh
 
-# Build
+# Build SDL2
+make -C build-files/ports/SDL JLEVEL=4 install
+
+# Build freetype2
+./build-files/ports/freetype/install_all.sh
+QNX_PROJECT_ROOT="$(pwd)/freetype" JLEVEL=4 make -C build-files/ports/freetype install
+
+# Build SDL_ttf
 make -C build-files/ports/SDL_ttf JLEVEL=4 install
 ```

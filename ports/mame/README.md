@@ -17,8 +17,10 @@ cd qnx_workspace
 # Grab source and build files
 git clone https://github.com/qnx-ports/build-files
 git clone https://github.com/qnx-ports/mame
-git clone https://github.com/qnx-ports/SDL
+git clone -b qnx-release-2.0.14 https://github.com/qnx-ports/SDL.git
 git clone https://github.com/qnx-ports/SDL_ttf
+git clone -b 1.7.0 https://github.com/mesonbuild/meson.git
+git clone -b VER-2-13-3 https://gitlab.freedesktop.org/freetype/freetype.git
 
 # Optionally build the Docker image and create a container
 cd build-files/docker
@@ -28,10 +30,14 @@ cd build-files/docker
 # Now you are in a docker container
 
 # Build SDL2
-QNX_PROJECT_ROOT="$(pwd)/SDL" make -C build-files/ports/SDL install -j4
+make -C build-files/ports/SDL JLEVEL=4 install
 
-# Build SDL2
-QNX_PROJECT_ROOT="$(pwd)/SDL_ttf" make -C build-files/ports/SDL_ttf install -j4
+# Build freetype2
+./build-files/ports/freetype/install_all.sh
+QNX_PROJECT_ROOT="$(pwd)/freetype" JLEVEL=4 make -C build-files/ports/freetype install
+
+# Build SDL_ttf
+make -C build-files/ports/SDL_ttf JLEVEL=4 install
 
 # Build mame
 make -C build-files/ports/mame install

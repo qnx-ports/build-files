@@ -51,6 +51,20 @@ jobs:
         path: SDL
         ref: qnx-release-2.0.14
 
+    - name: Checkout freetype
+      uses: actions/checkout@v4
+      with:
+        repository: freetype/freetype
+        path: freetype
+        ref: VER-2-13-3
+
+    - name: Checkout meson
+      uses: actions/checkout@v4
+      with:
+        repository: mesonbuild/meson
+        path: meson
+        ref: 1.7.0
+
     - name: Build SDL_ttf
       shell: bash
       run: |
@@ -60,5 +74,10 @@ jobs:
           source ~/qnx/800/qnxsdp-env.sh
         fi
         ENABLE_AUDIO="no" PREFIX="usr/local" QNX_PROJECT_ROOT="$(pwd)/SDL" make -C build-files/ports/SDL install -j$(nproc)
+
+        chmod +x build-files/ports/freetype/install_all.sh
+        JLEVEL=$(nproc) ./build-files/ports/freetype/install_all.sh
+        JLEVEL=$(nproc) QNX_PROJECT_ROOT="$(pwd)/freetype" make -C build-files/ports/freetype install
+
         PREFIX="usr/local" QNX_PROJECT_ROOT="$(pwd)/SDL_ttf" make -C build-files/ports/SDL_ttf install -j$(nproc)
 
