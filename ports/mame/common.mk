@@ -31,6 +31,7 @@ include $(MKFILES_ROOT)/qtargets.mk
 
 TARGETOS=qnx
 ARCHOPTS="-D_QNX_SOURCE -DSDL_DISABLE_IMMINTRIN_H -Wno-error=format-overflow -Wno-error=alloc-size-larger-than= -Wno-error=parentheses -Wno-error=pointer-arith"
+LDOPTS="-L$(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib -L$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/lib"
 
 SDL_INSTALL_ROOT=$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)
 
@@ -44,6 +45,7 @@ $(NAME)_all:
 		TESTS=$(BUILD_TESTING) \
 		TARGETOS=$(TARGETOS) \
 		ARCHOPTS=$(ARCHOPTS) \
+		LDOPTS=$(LDOPTS) \
 		SDL_INSTALL_ROOT=$(SDL_INSTALL_ROOT) \
 		JLEVEL=$(JLEVEL) \
 		USE_QTDEBUG=0 \
