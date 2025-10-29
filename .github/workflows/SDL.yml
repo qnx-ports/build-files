@@ -4,7 +4,6 @@ permissions:
   contents: write
   checks: write
 
-
 on:
   workflow_dispatch:
   push:
@@ -43,7 +42,7 @@ jobs:
       with:
         repository: qnx-ports/SDL
         path: SDL
-        ref: qnx_2.0.5
+        ref: qnx-release-2.0.14
 
     - name: Build SDL
       shell: bash
@@ -53,5 +52,5 @@ jobs:
         else
           source ~/qnx/800/qnxsdp-env.sh
         fi
-        PREFIX="/usr/local" QNX_PROJECT_ROOT="$(pwd)/SDL" make -C build-files/ports/SDL install -j$(nproc)
+        PREFIX="usr/local" QNX_PROJECT_ROOT="$(pwd)/SDL" make -C build-files/ports/SDL install -j$(nproc)
 
