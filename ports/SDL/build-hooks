@@ -27,7 +27,7 @@ function hook_preconfigure
   configure_opts="${configure_opts} --enable-wayland-shared=no"
   configure_opts="${configure_opts} --enable-video-wayland=no"
   configure_opts="${configure_opts} --enable-joystick=yes"
-  configure_opts="${configure_opts} --enable-audio=yes"
+  configure_opts="${configure_opts} --enable-audio=${ENABLE_AUDIO}"
   export STRIP="${machine}-strip"
 }
 
