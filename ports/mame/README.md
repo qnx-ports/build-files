@@ -40,5 +40,5 @@ QNX_PROJECT_ROOT="$(pwd)/freetype" JLEVEL=4 make -C build-files/ports/freetype i
 make -C build-files/ports/SDL_ttf JLEVEL=4 install
 
 # Build mame
-make -C build-files/ports/mame install
+make -C build-files/ports/mame JLEVEL=4 install
 ```

@@ -88,4 +88,4 @@ jobs:
 
         PREFIX="usr/local" QNX_PROJECT_ROOT="$(pwd)/SDL_ttf" make -C build-files/ports/SDL_ttf install -j$(nproc)
 
-        PREFIX="usr/local" QNX_PROJECT_ROOT="$(pwd)/mame" make -C build-files/ports/mame install -j$(nproc)
+        PREFIX="usr/local" QNX_PROJECT_ROOT="$(pwd)/mame" make -C build-files/ports/mame JLEVEL=$(nproc) install
