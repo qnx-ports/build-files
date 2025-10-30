@@ -51,4 +51,4 @@ jobs:
           else
             source ~/qnx/710/qnxsdp-env.sh
           fi
-          JLEVEL=$(nproc) QNX_PROJECT_ROOT="$(pwd)/nettle" make -C build-files/ports/nettle install
+          QNX_PROJECT_ROOT="$(pwd)/nettle" make -C build-files/ports/nettle install
