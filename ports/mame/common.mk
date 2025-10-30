@@ -51,6 +51,7 @@ $(NAME)_all:
 		USE_QTDEBUG=0 \
 		NO_USE_XINPUT=1 \
 		NO_X11=1 \
+		NO_USE_MIDI=1 \
 		USE_SYSTEM_LIB_ZLIB=1 \
 		VERBOSE=1 \
 		make -C $(QNX_PROJECT_ROOT) qnx_$(CPU_ALIAS)
