@@ -4,139 +4,131 @@ permissions:
   contents: write
   checks: write
 
-
 on:
   workflow_dispatch:
   push:
     branches:
       - main
     paths:
-      - '.github/workflows/gtsam.yml'
-      - 'ports/gtsam/**'
+      - ".github/workflows/gtsam.yml"
+      - "ports/gtsam/**"
   pull_request:
     branches:
       - main
     paths:
-      - '.github/workflows/gtsam.yml'
-      - 'ports/gtsam/**'
+      - ".github/workflows/gtsam.yml"
+      - "ports/gtsam/**"
 
 jobs:
-
   build-4_1_1:
     runs-on: ubuntu-22.04-common
     if: |
       ((github.event_name == 'workflow_dispatch' ||
       (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
-      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'gtsam')))
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'gtsam'))
     steps:
-    - name: Checkout build-files
-      uses: actions/checkout@v4
-      with:
-        path: build-files
+      - name: Checkout build-files
+        uses: actions/checkout@v4
+        with:
+          path: build-files
 
-    - name: Checkout boost
-      uses: actions/checkout@v4
-      with:
-        repository: boostorg/boost
-        path: boost
-        ref: boost-1.82.0
-        submodules: recursive
-    
-    - name: Checkout gtsam
-      uses: actions/checkout@v4
-      with:
-        repository: qnx-ports/gtsam
-        path: gtsam
+      - name: Checkout boost
+        uses: actions/checkout@v4
+        with:
+          repository: boostorg/boost
+          path: boost
+          ref: boost-1.82.0
+          submodules: recursive
 
-    - name: Build gtsam
-      shell: bash
-      run: |
-        source ~/qnx/800/qnxsdp-env.sh
-        WORKSPACE=$PWD
-        cd boost/tools/build
-        git apply $WORKSPACE/build-files/ports/boost/tools_qnx.patch
-        cd $WORKSPACE
-        echo "HEY LEO - MAKEFLAGS:"
-        echo $MAKEFLAGS
-        PREFIX="/usr/local" QNX_PROJECT_ROOT="$(pwd)/boost" make -C build-files/ports/boost install -j$(nproc)
-        PREFIX="/usr/local" QNX_PROJECT_ROOT="$(pwd)/gtsam" INSTALL_TESTS="false" make -C build-files/ports/gtsam install -j$(nproc)
+      - name: Checkout gtsam
+        uses: actions/checkout@v4
+        with:
+          repository: qnx-ports/gtsam
+          path: gtsam
+
+      - name: Build gtsam
+        shell: bash
+        run: |
+          source ~/qnx/800/qnxsdp-env.sh
+          WORKSPACE=$PWD
+          cd boost/tools/build
+          git apply $WORKSPACE/build-files/ports/boost/tools_qnx.patch
+          cd $WORKSPACE
+          PREFIX="/usr/local" QNX_PROJECT_ROOT="$(pwd)/boost" make -C build-files/ports/boost install -j$(nproc)
+          PREFIX="/usr/local" QNX_PROJECT_ROOT="$(pwd)/gtsam" INSTALL_TESTS="false" make -C build-files/ports/gtsam install -j$(nproc)
 
   build-4_3a0develop:
     runs-on: ubuntu-22.04-common
     if: |
       ((github.event_name == 'workflow_dispatch' ||
       (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
-      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'gtsam')))
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'gtsam'))
     steps:
-    - name: Checkout build-files
-      uses: actions/checkout@v4
-      with:
-        path: build-files
+      - name: Checkout build-files
+        uses: actions/checkout@v4
+        with:
+          path: build-files
 
-    - name: Checkout boost
-      uses: actions/checkout@v4
-      with:
-        repository: boostorg/boost
-        path: boost
-        ref: boost-1.82.0
-        submodules: recursive
-    
-    - name: Checkout gtsam
-      uses: actions/checkout@v4
-      with:
-        repository: qnx-ports/gtsam
-        path: gtsam
-        ref: 'qnx_4.3a0'
+      - name: Checkout boost
+        uses: actions/checkout@v4
+        with:
+          repository: boostorg/boost
+          path: boost
+          ref: boost-1.82.0
+          submodules: recursive
 
-    - name: Build gtsam
-      shell: bash
-      run: |
-        source ~/qnx/800/qnxsdp-env.sh
-        WORKSPACE=$PWD
-        cd boost/tools/build
-        git apply $WORKSPACE/build-files/ports/boost/tools_qnx.patch
-        cd $WORKSPACE
-        echo "HEY LEO - MAKEFLAGS:"
-        echo $MAKEFLAGS
-        PREFIX="/usr/local" QNX_PROJECT_ROOT="$(pwd)/boost" make -C build-files/ports/boost install -j$(nproc)
-        PREFIX="/usr/local" QNX_PROJECT_ROOT="$(pwd)/gtsam" INSTALL_TESTS="false" make -C build-files/ports/gtsam install -j$(nproc)
+      - name: Checkout gtsam
+        uses: actions/checkout@v4
+        with:
+          repository: qnx-ports/gtsam
+          path: gtsam
+          ref: "qnx_4.3a0"
+
+      - name: Build gtsam
+        shell: bash
+        run: |
+          source ~/qnx/800/qnxsdp-env.sh
+          WORKSPACE=$PWD
+          cd boost/tools/build
+          git apply $WORKSPACE/build-files/ports/boost/tools_qnx.patch
+          cd $WORKSPACE
+          PREFIX="/usr/local" QNX_PROJECT_ROOT="$(pwd)/boost" make -C build-files/ports/boost install -j$(nproc)
+          PREFIX="/usr/local" QNX_PROJECT_ROOT="$(pwd)/gtsam" INSTALL_TESTS="false" make -C build-files/ports/gtsam install -j$(nproc)
 
   build-upstream:
     runs-on: ubuntu-22.04-common
     if: |
       ((github.event_name == 'workflow_dispatch') ||
       (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
-      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'gtsam')))
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'gtsam'))
     steps:
-    - name: Checkout build-files
-      uses: actions/checkout@v4
-      with:
-        path: build-files
+      - name: Checkout build-files
+        uses: actions/checkout@v4
+        with:
+          path: build-files
 
-    - name: Checkout boost
-      uses: actions/checkout@v4
-      with:
-        repository: boostorg/boost
-        path: boost
-        ref: boost-1.82.0
-        submodules: recursive
-    
-    - name: Checkout gtsam
-      uses: actions/checkout@v4
-      with:
-        repository: borglab/gtsam
-        path: gtsam
-        ref: 'develop'
+      - name: Checkout boost
+        uses: actions/checkout@v4
+        with:
+          repository: boostorg/boost
+          path: boost
+          ref: boost-1.82.0
+          submodules: recursive
 
-    - name: Build gtsam
-      shell: bash
-      run: |
-        source ~/qnx/800/qnxsdp-env.sh
-        WORKSPACE=$PWD
-        cd boost/tools/build
-        git apply $WORKSPACE/build-files/ports/boost/tools_qnx.patch
-        cd $WORKSPACE
-        echo "HEY LEO - MAKEFLAGS:"
-        echo $MAKEFLAGS
-        PREFIX="/usr/local" QNX_PROJECT_ROOT="$(pwd)/boost" make -C build-files/ports/boost install -j$(nproc)
-        PREFIX="/usr/local" QNX_PROJECT_ROOT="$(pwd)/gtsam" INSTALL_TESTS="false" make -C build-files/ports/gtsam install -j$(nproc)
+      - name: Checkout gtsam
+        uses: actions/checkout@v4
+        with:
+          repository: borglab/gtsam
+          path: gtsam
+          ref: "develop"
+
+      - name: Build gtsam
+        shell: bash
+        run: |
+          source ~/qnx/800/qnxsdp-env.sh
+          WORKSPACE=$PWD
+          cd boost/tools/build
+          git apply $WORKSPACE/build-files/ports/boost/tools_qnx.patch
+          cd $WORKSPACE
+          QNX_PROJECT_ROOT="$(pwd)/boost" make -C build-files/ports/boost install
+          QNX_PROJECT_ROOT="$(pwd)/gtsam" INSTALL_TESTS="false" make -C build-files/ports/gtsam install
