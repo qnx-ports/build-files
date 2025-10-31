@@ -4,56 +4,62 @@ permissions:
   contents: write
   checks: write
 
-
 on:
   workflow_dispatch:
   push:
     branches:
       - main
     paths:
-      - '.github/workflows/METIS.yml'
-      - 'ports/METIS/**'
+      - ".github/workflows/METIS.yml"
+      - "ports/METIS/**"
   pull_request:
     branches:
       - main
     paths:
-      - '.github/workflows/METIS.yml'
-      - 'ports/METIS/**'
+      - ".github/workflows/METIS.yml"
+      - "ports/METIS/**"
 
 jobs:
-
   build:
+    strategy:
+      matrix:
+        qnx_env: ["710", "800"]
+    name: Build for QNX ${{ matrix.qnx_env }}
     runs-on: ubuntu-22.04-common
     if: |
       ((github.event_name == 'workflow_dispatch') ||
       (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
       (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'METIS')))
     steps:
-    - name: Checkout build-files
-      uses: actions/checkout@v4
-      with:
-        path: build-files
+      - name: Checkout build-files
+        uses: actions/checkout@v4
+        with:
+          path: build-files
 
-    - name: Checkout GKlib
-      uses: actions/checkout@v4
-      with:
-        repository: KarypisLab/GKlib
-        path: GKlib
-        ref: 8bd6bad750b2b0d90800c632cf18e8ee93ad72d7
-        submodules: recursive
+      - name: Checkout GKlib
+        uses: actions/checkout@v4
+        with:
+          repository: KarypisLab/GKlib
+          path: GKlib
+          ref: 8bd6bad750b2b0d90800c632cf18e8ee93ad72d7
+          submodules: recursive
 
-    - name: Checkout METIS
-      uses: actions/checkout@v4
-      with:
-        repository: qnx-ports/METIS
-        path: METIS
+      - name: Checkout METIS
+        uses: actions/checkout@v4
+        with:
+          repository: qnx-ports/METIS
+          path: METIS
 
-    - name: Build metis
-      shell: bash
-      run: |
-        source ~/qnx/800/qnxsdp-env.sh
-        WORKSPACE=$PWD
-        cd $WORKSPACE/GKlib
-        git apply ../build-files/ports/METIS/patches/GKlib.patch
-        cd $WORKSPACE
-        GKLIB_SRC="$(pwd)/GKlib" QNX_PROJECT_ROOT="$(pwd)/METIS" make -C build-files/ports/METIS install
+      - name: Build metis
+        shell: bash
+        run: |
+          if [[ ${{ matrix.qnx_env }} == 710 ]]; then
+            source ~/qnx/710/qnxsdp-env.sh
+          else
+            source ~/qnx/800/qnxsdp-env.sh
+          fi
+          WORKSPACE=$PWD
+          cd $WORKSPACE/GKlib
+          git apply ../build-files/ports/METIS/patches/GKlib.patch
+          cd $WORKSPACE
+          make -C build-files/ports/METIS install

@@ -3,7 +3,8 @@ QCONFIG=qconfig.mk
 endif
 include $(QCONFIG)
 
-QNX_PROJECT_ROOT ?= $(PRODUCT_ROOT)/../../
+QNX_PROJECT_ROOT ?= $(PRODUCT_ROOT)/../../METIS
+GKLIB_SRC ?= $(PRODUCT_ROOT)/../../GKlib
 
 #where to install METIS:
 #$(INSTALL_ROOT_$(OS)) is pointing to $QNX_TARGET
@@ -31,21 +32,23 @@ IDXWIDTH  = "\#define IDXTYPEWIDTH 32"
 REALWIDTH = "\#define REALTYPEWIDTH 32"
 
 FLAGS   += -g -D_QNX_SOURCE
-LDFLAGS += -lregex
+LDFLAGS_GKLIB += -lregex
+LDFLAGS_METIS += -lregex -lGKlib
 
 CMAKE_ARGS_GENERIC = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
                      -DCMAKE_BUILD_TYPE=$(CMAKE_BUILD_TYPE) \
                      -DCMAKE_MODULE_PATH=$(PROJECT_ROOT) \
                      -DEXTRA_CMAKE_C_FLAGS="$(FLAGS)" \
                      -DEXTRA_CMAKE_CXX_FLAGS="$(FLAGS)" \
-                     -DEXTRA_CMAKE_LINKER_FLAGS="$(LDFLAGS)" \
                      -DCPUVARDIR=$(CPUVARDIR) \
                      -DGCC_VER=${GCC_VER} \
                      -DBUILD_SHARED_LIBS=ON \
 
 CMAKE_ARGS_GKLIB = -DCMAKE_INSTALL_PREFIX=$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX) \
+                   -DEXTRA_CMAKE_LINKER_FLAGS="$(LDFLAGS_GKLIB)"
 
 CMAKE_ARGS_METIS = -DGKLIB_PATH=$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX) \
+                   -DEXTRA_CMAKE_LINKER_FLAGS="$(LDFLAGS_METIS)" \
                    -DCMAKE_INSTALL_PREFIX=$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX) \
                    -DCMAKE_INSTALL_BINDIR=$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/bin \
                    -DCMAKE_INSTALL_INCLUDEDIR=$(INSTALL_ROOT)/$(PREFIX)/include \
