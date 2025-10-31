@@ -53,7 +53,8 @@ CMAKE_MODULE_PATH := $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/cmake;$(INSTALL_RO
 CFLAGS += $(FLAGS) \
           -I$(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/include \
           -I$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/include \
-          -D_QNX_SOURCE
+          -I$(QNX_TARGET)/$(PREFIX)/include \
+          -D_QNX_SOURCE -fno-tree-vectorize
 
 LDFLAGS += -Wl,--build-id=md5
 
