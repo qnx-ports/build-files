@@ -39,7 +39,6 @@ CMAKE_ARGS_GENERIC = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cm
                      -DCMAKE_MODULE_PATH=$(PROJECT_ROOT) \
                      -DEXTRA_CMAKE_C_FLAGS="$(FLAGS)" \
                      -DEXTRA_CMAKE_CXX_FLAGS="$(FLAGS)" \
-                     -DEXTRA_CMAKE_LINKER_FLAGS="$(LDFLAGS)" \
                      -DCPUVARDIR=$(CPUVARDIR) \
                      -DGCC_VER=${GCC_VER} \
                      -DBUILD_SHARED_LIBS=ON \
