@@ -21,10 +21,6 @@ on:
 
 jobs:
   build-4_1_1:
-    strategy:
-      matrix:
-        qnx_env: ["710", "800"]
-    name: Build for QNX ${{ matrix.qnx_env }}
     runs-on: ubuntu-22.04-common
     if: |
       (github.event_name == 'workflow_dispatch') ||
@@ -53,11 +49,7 @@ jobs:
       - name: Build gtsam
         shell: bash
         run: |
-          if [[ ${{ matrix.qnx_env }} == 710 ]]; then
-            source ~/qnx/710/qnxsdp-env.sh
-          else
-            source ~/qnx/800/qnxsdp-env.sh
-          fi
+          source ~/qnx/800/qnxsdp-env.sh
           WORKSPACE=$PWD
           cd boost/tools/build
           git apply $WORKSPACE/build-files/ports/boost/tools_qnx.patch
@@ -66,10 +58,6 @@ jobs:
           PREFIX="/usr/local" QNX_PROJECT_ROOT="$(pwd)/gtsam" INSTALL_TESTS="false" make -C build-files/ports/gtsam install -j$(nproc)
 
   build-4_3a0develop:
-    strategy:
-      matrix:
-        qnx_env: ["710", "800"]
-    name: Build for QNX ${{ matrix.qnx_env }}
     runs-on: ubuntu-22.04-common
     if: |
       (github.event_name == 'workflow_dispatch') ||
@@ -99,11 +87,7 @@ jobs:
       - name: Build gtsam
         shell: bash
         run: |
-          if [[ ${{ matrix.qnx_env }} == 710 ]]; then
-            source ~/qnx/710/qnxsdp-env.sh
-          else
-            source ~/qnx/800/qnxsdp-env.sh
-          fi
+          source ~/qnx/800/qnxsdp-env.sh
           WORKSPACE=$PWD
           cd boost/tools/build
           git apply $WORKSPACE/build-files/ports/boost/tools_qnx.patch
@@ -112,10 +96,6 @@ jobs:
           PREFIX="/usr/local" QNX_PROJECT_ROOT="$(pwd)/gtsam" INSTALL_TESTS="false" make -C build-files/ports/gtsam install -j$(nproc)
 
   build-upstream:
-    strategy:
-      matrix:
-        qnx_env: ["710", "800"]
-    name: Build for QNX ${{ matrix.qnx_env }}
     runs-on: ubuntu-22.04-common
     if: |
       (github.event_name == 'workflow_dispatch') ||
@@ -145,11 +125,7 @@ jobs:
       - name: Build gtsam
         shell: bash
         run: |
-          if [[ ${{ matrix.qnx_env }} == 710 ]]; then
-            source ~/qnx/710/qnxsdp-env.sh
-          else
-            source ~/qnx/800/qnxsdp-env.sh
-          fi
+          source ~/qnx/800/qnxsdp-env.sh
           WORKSPACE=$PWD
           cd boost/tools/build
           git apply $WORKSPACE/build-files/ports/boost/tools_qnx.patch
