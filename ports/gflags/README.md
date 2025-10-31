@@ -1,22 +1,26 @@
 # gflags [![Build](https://github.com/qnx-ports/build-files/actions/workflows/gflags.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/gflags.yml)
 
 ### Tested for QNX 7.1 and 8.0 SDPs
+
 Cross-compiled on Ubuntu 24.04 for:
+
 - QNX 8.0 aarch64le on Raspberry Pi 4
 - QNX 7.1 x86_64 on qemu
 
 Instructions for compiling and running tests are listed below.
 
 # Compile gflags for SDP 7.1/8.0 on an Ubuntu Host or in a Docker Container
+
 Optional step requires Docker: https://docs.docker.com/engine/install/
 
 1. Create a new workspace or navigate to a desired one
+
 ```bash
 mkdir gflags_wksp && cd gflags_wksp
 ```
 
-
 2. Clone the `gflags` and `build_files` repos
+
 ```bash
 #Pick one:
 #Via HTTPS
@@ -28,7 +32,8 @@ git clone git@github.com:qnx-ports/build-files.git
 git clone git@github.com:gflags/gflags.git
 ```
 
-3. *Optional* Build the Docker image and create a container
+3. _Optional_ Build the Docker image and create a container
+
 ```bash
 cd build-files/docker
 ./docker-build-qnx-image.sh
@@ -36,6 +41,7 @@ cd build-files/docker
 ```
 
 4. Source your SDP (Installed from QNX Software Center)
+
 ```bash
 #QNX 8.0 will be in the directory ~/qnx800/
 #QNX 7.1 will be in the directory ~/qnx710/
@@ -43,13 +49,14 @@ source ~/qnx800/qnxsdp-env.sh
 ```
 
 5. Build the project in your workspace from Step 1
+
 ```bash
 
 #Navigate back to gflags_wksp
 #The docker container will put you in your home directory
 cd <path-to-workspace>
 
-PREFIX="/usr" OSLIST="nto" QNX_PROJECT_ROOT="$(pwd)/gflags" make -C build-files/ports/gflags install -j4
+make -C build-files/ports/gflags install -j4
 
 ```
 
@@ -61,11 +68,13 @@ make -C build-files/ports/gflags clean
 ```
 
 # Running Tests on a Target
+
 Some distributions of QNX have critical directories stored in a read-only partition (`/`, `/system`, `/etc`, etc). Included in these are the default `bin` and `lib` directories. The instructions below install said libraries in a separate lib folder for this reason.
 
-
 ### Installing in home directory
+
 1. Installation
+
 ```bash
 #Set your target's IP here
 TARGET_IP_ADDRESS=<target-ip-address-or-hostname>
@@ -91,6 +100,7 @@ scp $PATH_TO_YOUR_WORKSPACE/build-files/ports/gflags/qnxtest.sh $TARGET_USER_FOR
 ```
 
 2. Running Tests
+
 ```bash
 #SSH into target
 ssh qnxuser@<target-ip-address-or-hostname>

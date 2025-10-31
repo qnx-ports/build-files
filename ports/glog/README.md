@@ -68,8 +68,8 @@ git clone git@github.com:qnx-ports/gflags.git
 
 
 ## Building
-PREFIX="/usr/local" QNX_PROJECT_ROOT="$(pwd)/googletest" make -C build-files/ports/googletest install -j4
-PREFIX="/usr/local" QNX_PROJECT_ROOT="$(pwd)/gflags" make -C build-files/ports/gflags install -j4
+make -C build-files/ports/googletest install -j4
+make -C build-files/ports/gflags install -j4
 ```
 
 6. Build the project in your workspace from Step 1
@@ -79,7 +79,7 @@ PREFIX="/usr/local" QNX_PROJECT_ROOT="$(pwd)/gflags" make -C build-files/ports/g
 #The docker container will put you in your home directory
 cd <path-to-workspace>
 
-PREFIX="/usr/local" QNX_PROJECT_ROOT="$(pwd)/glog" make -C build-files/ports/glog install -j4
+make -C build-files/ports/glog install -j4
 ```
 
 **NOTE**: Prior to rebuilding, it is good practice to clean your build files. This is REQUIRED when switching between SDP variations (i.e. 8.0 -> 7.1)

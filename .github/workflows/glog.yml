@@ -57,7 +57,11 @@ jobs:
       - name: Build glog
         shell: bash
         run: |
-          source ~/qnx/800/qnxsdp-env.sh
-          PREFIX="/usr/local" QNX_PROJECT_ROOT="$(pwd)/googletest" make -C build-files/ports/googletest install
-          PREFIX="/usr/local" QNX_PROJECT_ROOT="$(pwd)/gflags" make -C build-files/ports/gflags install
-          PREFIX="/usr/local" QNX_PROJECT_ROOT="$(pwd)/glog" make -C build-files/ports/glog install
+          if [[ ${{ matrix.qnx_env }} == 710 ]]; then
+            source ~/qnx/710/qnxsdp-env.sh
+          else
+            source ~/qnx/800/qnxsdp-env.sh
+          fi
+          make -C build-files/ports/googletest install
+          make -C build-files/ports/gflags install
+          make -C build-files/ports/glog install
