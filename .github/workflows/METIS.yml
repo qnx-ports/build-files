@@ -62,4 +62,4 @@ jobs:
           cd $WORKSPACE/GKlib
           git apply ../build-files/ports/METIS/patches/GKlib.patch
           cd $WORKSPACE
-          GKLIB_SRC="$(pwd)/GKlib" QNX_PROJECT_ROOT="$(pwd)/METIS" make -C build-files/ports/METIS install
+          make -C build-files/ports/METIS install
