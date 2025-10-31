@@ -23,7 +23,7 @@ jobs:
   libretro_2048:
     runs-on: ubuntu-22.04-common
     if: |
-      ((github.event_name == 'workflow_dispatch') ||
+      (github.event_name == 'workflow_dispatch') ||
       (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
       (github.event_name == 'pull_request' && (contains(github.event.pull_request.title, 'libretro-cores') || contains(github.event.pull_request.title, '2048')))
     steps:
@@ -47,7 +47,7 @@ jobs:
   libretro_mrboom:
     runs-on: ubuntu-22.04-common
     if: |
-      ((github.event_name == 'workflow_dispatch') ||
+      (github.event_name == 'workflow_dispatch') ||
       (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
       (github.event_name == 'pull_request' && (contains(github.event.pull_request.title, 'libretro-cores') || contains(github.event.pull_request.title, 'mrboom')))
     steps:
@@ -72,9 +72,9 @@ jobs:
   libretro_test:
     runs-on: ubuntu-22.04-common
     if: |
-      ((github.event_name == 'workflow_dispatch') ||
+      (github.event_name == 'workflow_dispatch') ||
       (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
-      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'libretro-cores')))
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'libretro-cores'))
     steps:
       - name: Checkout build-files
         uses: actions/checkout@v4
@@ -96,7 +96,7 @@ jobs:
   libretro_retro8:
     runs-on: ubuntu-22.04-common
     if: |
-      ((github.event_name == 'workflow_dispatch') ||
+      (github.event_name == 'workflow_dispatch') ||
       (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
       (github.event_name == 'pull_request' && (contains(github.event.pull_request.title, 'libretro-cores') || contains(github.event.pull_request.title, 'retro8')))
     steps:
