@@ -58,7 +58,10 @@ $(NAME)_all:
 
 
 install: $(NAME)_all
-	@echo Install not yet supported.
+	@echo ===============
+	@echo Installing $(NAME)...
+	@echo ===============
+	@install -m755 $(QNX_PROJECT_ROOT)/mame $(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)
 
 clean:
 	@rm -rf build
