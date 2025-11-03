@@ -18,5 +18,5 @@ tar -xf mpfr-4.2.2.tar.xz
 mv mpfr-4.2.2 mpfr
 
 # Build mpfr
-QNX_PROJECT_ROOT="$(pwd)/mpfr" make -C build-files/ports/mpfr clean 
-QNX_PROJECT_ROOT="$(pwd)/mpfr make -C build-files/ports/mpfr install JLEVEL=4
+QNX_PROJECT_ROOT="$(pwd)/mpfr" make -C build-files/ports/mpfr clean
+QNX_PROJECT_ROOT="$(pwd)/mpfr" make -C build-files/ports/mpfr install JLEVEL=4
