@@ -63,6 +63,19 @@ install: $(NAME)_all
 	@echo ===============
 	install -m755 $(QNX_PROJECT_ROOT)/mame $(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/bin
 
+	mkdir -p $(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/share/mame
+	install -m644 $(QNX_PROJECT_ROOT)/uismall.bdf $(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/share/mame
+	cp -r $(QNX_PROJECT_ROOT)/artwork $(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/share/mame
+	cp -r $(QNX_PROJECT_ROOT)/bgfx $(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/share/mame
+	cp -r $(QNX_PROJECT_ROOT)/hash $(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/share/mame
+	cp -r $(QNX_PROJECT_ROOT)/hlsl $(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/share/mame
+	cp -r $(QNX_PROJECT_ROOT)/ini $(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/share/mame
+	cp -r $(QNX_PROJECT_ROOT)/keymaps $(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/share/mame
+	cp -r $(QNX_PROJECT_ROOT)/language $(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/share/mame
+	cp -r $(QNX_PROJECT_ROOT)/plugins $(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/share/mame
+	cp -r $(QNX_PROJECT_ROOT)/roms $(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/share/mame
+	cp -r $(QNX_PROJECT_ROOT)/samples $(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/share/mame
+
 clean:
 	@rm -rf build
 	@make -C $(QNX_PROJECT_ROOT) clean
