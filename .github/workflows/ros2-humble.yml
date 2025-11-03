@@ -64,7 +64,7 @@ jobs:
         fi
         source /usr/local/qnx/env/bin/activate
         WORKSPACE=$PWD
-        PREFIX="/usr" QNX_PROJECT_ROOT="$(pwd)/googletest" make -C build-files/ports/googletest install
+        make -C build-files/ports/googletest install
         cd boost/tools/build
         git apply ../../../build-files/ports/boost/tools_qnx.patch
         cd WORKSPACE
