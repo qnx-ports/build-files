@@ -49,7 +49,7 @@ make -C build-files/ports/boost/ install QNX_PROJECT_ROOT="$(pwd)/boost" -j4
 
 # Build googletest
 cd ~/qnx_workspace
-PREFIX="/usr" QNX_PROJECT_ROOT="$(pwd)/googletest" make -C build-files/ports/googletest install -j4
+make -C build-files/ports/googletest install -j4
 
 # Import ros2 packages
 cd ~/qnx_workspace/build-files/ports/ros2/ros2-jazzy
@@ -272,7 +272,7 @@ Tested Packages:
 
 **Note: Fast-DDS test are skipped in ros2 port. Instead the test results for Fast-DDS can be found [here](https://github.com/qnx-ports/build-files/blob/main/ports/Fast-DDS/fdds.test.result))**
 ```bash
-cd /data/home/qnxuser/opt/ros2/jazzy
+cd /data/home/qnxuser/opt/ros/jazzy
 sh qnxtest.sh
 ```
 
