@@ -61,7 +61,7 @@ install: $(NAME)_all
 	@echo ===============
 	@echo Installing $(NAME)...
 	@echo ===============
-	@install -m755 $(QNX_PROJECT_ROOT)/mame $(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)
+	install -m755 $(QNX_PROJECT_ROOT)/mame $(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/bin
 
 clean:
 	@rm -rf build
