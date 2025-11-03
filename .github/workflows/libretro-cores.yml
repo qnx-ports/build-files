@@ -4,118 +4,115 @@ permissions:
   contents: write
   checks: write
 
-
 on:
   workflow_dispatch:
   push:
     branches:
       - main
     paths:
-      - '.github/workflows/Retrolibretro-cores.yml'
-      - 'ports/RetroPie/libretro-cores/**'
+      - ".github/workflows/Retrolibretro-cores.yml"
+      - "ports/RetroPie/libretro-cores/**"
   pull_request:
     branches:
       - main
     paths:
-      - '.github/workflows/libretro-cores.yml'
-      - 'ports/RetroPie/libretro-cores/**'
+      - ".github/workflows/libretro-cores.yml"
+      - "ports/RetroPie/libretro-cores/**"
 
 jobs:
-    libretro_2048:
-        runs-on: ubuntu-22.04-common
-        if: |
-          ((github.event_name == 'workflow_dispatch') ||
-          (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
-          (github.event_name == 'pull_request' && (contains(github.event.pull_request.title, 'libretro-cores') || contains(github.event.pull_request.title, '2048'))))
-        steps:
-        - name: Checkout build-files
-          uses: actions/checkout@v4
-          with:
-            path: build-files
-    
-        - name: Checkout 2048
-          uses: actions/checkout@v4
-          with:
-            repository: libretro/libretro-2048
-            path: libretro-2048
-    
-        - name: Build libretro-2048
-          shell: bash
-          run: |
-            source ~/qnx/800/qnxsdp-env.sh
-            PREFIX="/usr/local" make -C build-files/ports/RetroPie/libretro-cores/2048  -j$(nproc)
-    
-    libretro_mrboom:
-        runs-on: ubuntu-22.04-common
-        if: |
-          ((github.event_name == 'workflow_dispatch') ||
-          (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
-          (github.event_name == 'pull_request' && (contains(github.event.pull_request.title, 'libretro-cores') || contains(github.event.pull_request.title, 'mrboom'))))
-        steps:
-        - name: Checkout build-files
-          uses: actions/checkout@v4
-          with:
-            path: build-files
-    
-        - name: Checkout 2048
-          uses: actions/checkout@v4
-          with:
-            repository: Javanaise/mrboom-libretro
-            path: mrboom-libretro
-            submodules: recursive
-    
-        - name: Build libretro-mrboom
-          shell: bash
-          run: |
-            source ~/qnx/800/qnxsdp-env.sh
-            PREFIX="/usr/local" make -C build-files/ports/RetroPie/libretro-cores/mrboom  -j$(nproc)
+  libretro_2048:
+    runs-on: ubuntu-22.04-common
+    if: |
+      (github.event_name == 'workflow_dispatch') ||
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'pull_request' && (contains(github.event.pull_request.title, 'libretro-cores') || contains(github.event.pull_request.title, '2048')))
+    steps:
+      - name: Checkout build-files
+        uses: actions/checkout@v4
+        with:
+          path: build-files
 
-    libretro_test:
-        runs-on: ubuntu-22.04-common
-        if: |
-          ((github.event_name == 'workflow_dispatch') ||
-          (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
-          (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'libretro-cores')))
-        steps:
-        - name: Checkout build-files
-          uses: actions/checkout@v4
-          with:
-            path: build-files
-    
-        - name: Checkout 2048
-          uses: actions/checkout@v4
-          with:
-            repository: libretro/libretro-samples
-            path: libretro-samples
-    
-        - name: Build libretro-mrboom
-          shell: bash
-          run: |
-            source ~/qnx/800/qnxsdp-env.sh
-            PREFIX="/usr/local" make -C build-files/ports/RetroPie/libretro-cores/test  -j$(nproc)
+      - name: Checkout 2048
+        uses: actions/checkout@v4
+        with:
+          repository: libretro/libretro-2048
+          path: libretro-2048
 
-    libretro_retro8:
-        runs-on: ubuntu-22.04-common
-        if: |
-          ((github.event_name == 'workflow_dispatch') ||
-          (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
-          (github.event_name == 'pull_request' && (contains(github.event.pull_request.title, 'libretro-cores') || contains(github.event.pull_request.title, 'retro8')))
-        steps:
-        - name: Checkout build-files
-          uses: actions/checkout@v4
-          with:
-            path: build-files
-    
-        - name: Checkout 2048
-          uses: actions/checkout@v4
-          with:
-            repository: Jakz/retro8
-            path: retro8
-    
-        - name: Build libretro-mrboom
-          shell: bash
-          run: |
-            source ~/qnx/800/qnxsdp-env.sh
-            PREFIX="/usr/local" make -C build-files/ports/RetroPie/libretro-cores/retro8  -j$(nproc)
+      - name: Build libretro-2048
+        shell: bash
+        run: |
+          source ~/qnx/800/qnxsdp-env.sh
+          PREFIX="/usr/local" make -C build-files/ports/RetroPie/libretro-cores/2048 JLEVEL=$(nproc)
 
-  
+  libretro_mrboom:
+    runs-on: ubuntu-22.04-common
+    if: |
+      (github.event_name == 'workflow_dispatch') ||
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'pull_request' && (contains(github.event.pull_request.title, 'libretro-cores') || contains(github.event.pull_request.title, 'mrboom')))
+    steps:
+      - name: Checkout build-files
+        uses: actions/checkout@v4
+        with:
+          path: build-files
+
+      - name: Checkout 2048
+        uses: actions/checkout@v4
+        with:
+          repository: Javanaise/mrboom-libretro
+          path: mrboom-libretro
+          submodules: recursive
+
+      - name: Build libretro-mrboom
+        shell: bash
+        run: |
+          source ~/qnx/800/qnxsdp-env.sh
+          PREFIX="/usr/local" make -C build-files/ports/RetroPie/libretro-cores/mrboom JLEVEL=$(nproc)
+
+  libretro_test:
+    runs-on: ubuntu-22.04-common
+    if: |
+      (github.event_name == 'workflow_dispatch') ||
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'libretro-cores'))
+    steps:
+      - name: Checkout build-files
+        uses: actions/checkout@v4
+        with:
+          path: build-files
+
+      - name: Checkout 2048
+        uses: actions/checkout@v4
+        with:
+          repository: libretro/libretro-samples
+          path: libretro-samples
+
+      - name: Build libretro-mrboom
+        shell: bash
+        run: |
+          source ~/qnx/800/qnxsdp-env.sh
+          PREFIX="/usr/local" make -C build-files/ports/RetroPie/libretro-cores/test JLEVEL=$(nproc)
+
+  libretro_retro8:
+    runs-on: ubuntu-22.04-common
+    if: |
+      (github.event_name == 'workflow_dispatch') ||
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'pull_request' && (contains(github.event.pull_request.title, 'libretro-cores') || contains(github.event.pull_request.title, 'retro8')))
+    steps:
+      - name: Checkout build-files
+        uses: actions/checkout@v4
+        with:
+          path: build-files
+
+      - name: Checkout 2048
+        uses: actions/checkout@v4
+        with:
+          repository: Jakz/retro8
+          path: retro8
+
+      - name: Build libretro-mrboom
+        shell: bash
+        run: |
+          source ~/qnx/800/qnxsdp-env.sh
+          PREFIX="/usr/local" make -C build-files/ports/RetroPie/libretro-cores/retro8 JLEVEL=$(nproc)
