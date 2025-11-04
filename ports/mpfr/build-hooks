@@ -29,8 +29,8 @@ function hook_configure {
         --includedir=${INSTALL_ROOT_nto}${BASIC_PREFIX}/include \
         --with-gmp=${INSTALL_ROOT_nto}${EXEC_PREFIX} \
         CFLAGS="-O2 -Wall" \
-        CPPFLAGS="-I${INSTALL_ROOT_nto}${BASIC_PREFIX}/include" \
-        LDFLAGS="-L${INSTALL_ROOT_nto}${BASIC_PREFIX}/lib" \
+        CPPFLAGS="${CPPFLAGS}" \
+        LDFLAGS="${LDFLAGS}" \
         || exit 1
 }
 
