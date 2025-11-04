@@ -35,7 +35,8 @@ LDOPTS="-Wl,-rpath-link=$(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib -Wl,-rpath-link
 
 SDL_INSTALL_ROOT=$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)
 
-$(NAME)_all:
+# Mame requires a clean rebuild
+$(NAME)_all: clean
 	@echo ===============
 	@echo Building $(NAME)...
 	@echo ===============
@@ -77,5 +78,5 @@ install: $(NAME)_all
 	cp -r $(QNX_PROJECT_ROOT)/samples $(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/share/mame
 
 clean:
-	@rm -rf build
+	@rm -rf build || True
 	@make -C $(QNX_PROJECT_ROOT) clean
