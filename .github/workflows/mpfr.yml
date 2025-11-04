@@ -53,4 +53,4 @@ jobs:
           else
             source ~/qnx/710/qnxsdp-env.sh
           fi
-          JLEVEL=$(nproc) QNX_PROJECT_ROOT="$(pwd)/mpfr" make -C build-files/ports/mpfr install
+          QNX_PROJECT_ROOT="$(pwd)/mpfr" make -C build-files/ports/mpfr install
