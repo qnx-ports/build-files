@@ -90,7 +90,7 @@ jobs:
 
           make -C build-files/ports/METIS install
           make -C build-files/ports/OpenBLAS/ install
-          make -C build-files/ports/clapack install
+          QNX_PROJECT_ROOT="$(pwd)/clapack" make -C build-files/ports/clapack install
           QNX_PROJECT_ROOT="$(pwd)/gmp" make -C build-files/ports/gmp install
           QNX_PROJECT_ROOT="$(pwd)/mpfr" make -C build-files/ports/mpfr install
           QNX_PROJECT_ROOT="$(pwd)/SuiteSparse" make -C build-files/ports/SuiteSparse install
