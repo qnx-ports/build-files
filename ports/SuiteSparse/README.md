@@ -41,6 +41,12 @@ wget https://gmplib.org/download/gmp/gmp-6.2.0.tar.xz
 tar -xvf gmp-6.2.0.tar.xz 
 mv gmp-6.2.0 gmp
 
+#Clone SuiteSparse
+git clone https://github.com/DrTimothyAldenDavis/SuiteSparse.git
+cd SuiteSparse
+git checkout v7.11.0
+cd ..
+
 # Build metis
 cd ~/qnx_workspace
 git clone https://github.com/KarypisLab/GKlib.git && cd GKlib
@@ -89,6 +95,12 @@ wget https://gmplib.org/download/gmp/gmp-6.2.0.tar.xz
 tar -xvf gmp-6.2.0.tar.xz 
 mv gmp-6.2.0 gmp
 
+#Clone SuiteSparse
+git clone https://github.com/DrTimothyAldenDavis/SuiteSparse.git
+cd SuiteSparse
+git checkout v7.11.0
+cd ..
+
 # Build metis
 cd ~/qnx_workspace
 git clone https://github.com/KarypisLab/GKlib.git && cd GKlib
@@ -105,3 +117,4 @@ QNX_PROJECT_ROOT="$(pwd)/gmp" make -C build-files/ports/gmp install JLEVEL=4
 QNX_PROJECT_ROOT="$(pwd)/mpfr" make -C build-files/ports/mpfr install JLEVEL=4
 QNX_PROJECT_ROOT="$(pwd)/SuiteSparse" make -C build-files/ports/SuiteSparse install JLEVEL=4
 ```
+
