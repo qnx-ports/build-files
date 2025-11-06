@@ -31,48 +31,48 @@ jobs:
       (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
       (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'SuiteSparse')))
     steps:
-      # 1️⃣ Checkout build-files
+      #  Checkout build-files
       - name: Checkout build-files
         uses: actions/checkout@v4
         with:
           path: build-files
 
-      # 2️⃣ Checkout GMP (dependency)
+      #  Checkout GMP (dependency)
       - name: Checkout gmp
         uses: actions/checkout@v4
         with:
           repository: qnx-ports/gmp
           path: gmp
 
-      # 3️⃣ Checkout MPFR (depends on GMP)
+      #  Checkout MPFR (depends on GMP)
       - name: Checkout mpfr
         uses: actions/checkout@v4
         with:
           repository: qnx-ports/mpfr
           path: mpfr
 
-      # 4️⃣ Checkout OpenBLAS
+      #  Checkout OpenBLAS
       - name: Checkout OpenBLAS
         uses: actions/checkout@v4
         with:
           repository: qnx-ports/openblas
           path: openblas
 
-      # 5️⃣ Checkout CLAPACK
+      # Checkout CLAPACK
       - name: Checkout clapack
         uses: actions/checkout@v4
         with:
           repository: qnx-ports/clapack
           path: clapack
 
-      # 6️⃣ Checkout METIS
+      #  Checkout METIS
       - name: Checkout METIS
         uses: actions/checkout@v4
         with:
           repository: qnx-ports/metis
           path: metis
 
-      # 7️⃣ Checkout SuiteSparse (main project)
+      #  Checkout SuiteSparse (main project)
       - name: Checkout SuiteSparse
         uses: actions/checkout@v4
         with:
