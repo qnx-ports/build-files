@@ -1,0 +1,96 @@
+name: SuiteSparse
+
+permissions:
+  contents: write
+  checks: write
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/SuiteSparse.yml'
+      - 'ports/SuiteSparse/**'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/SuiteSparse.yml'
+      - 'ports/SuiteSparse/**'
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        qnx_env: ["710", "800"]
+    name: Build for QNX ${{ matrix.qnx_env }}
+    runs-on: ubuntu-22.04-common
+    if: |
+      ((github.event_name == 'workflow_dispatch') ||
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'SuiteSparse')))
+    steps:
+      # 1️⃣ Checkout build-files
+      - name: Checkout build-files
+        uses: actions/checkout@v4
+        with:
+          path: build-files
+
+      # 2️⃣ Checkout GMP (dependency)
+      - name: Checkout gmp
+        uses: actions/checkout@v4
+        with:
+          repository: qnx-ports/gmp
+          path: gmp
+
+      # 3️⃣ Checkout MPFR (depends on GMP)
+      - name: Checkout mpfr
+        uses: actions/checkout@v4
+        with:
+          repository: qnx-ports/mpfr
+          path: mpfr
+
+      # 4️⃣ Checkout OpenBLAS
+      - name: Checkout OpenBLAS
+        uses: actions/checkout@v4
+        with:
+          repository: qnx-ports/openblas
+          path: openblas
+
+      # 5️⃣ Checkout CLAPACK
+      - name: Checkout clapack
+        uses: actions/checkout@v4
+        with:
+          repository: qnx-ports/clapack
+          path: clapack
+
+      # 6️⃣ Checkout METIS
+      - name: Checkout METIS
+        uses: actions/checkout@v4
+        with:
+          repository: qnx-ports/metis
+          path: metis
+
+      # 7️⃣ Checkout SuiteSparse (main project)
+      - name: Checkout SuiteSparse
+        uses: actions/checkout@v4
+        with:
+          repository: qnx-ports/SuiteSparse
+          path: SuiteSparse
+
+      - name: Set up QNX environment and build
+        shell: bash
+        run: |
+          if [[ "${{ matrix.qnx_env }}" == "800" ]]; then
+            source ~/qnx/800/qnxsdp-env.sh
+          else
+            source ~/qnx/710/qnxsdp-env.sh
+          fi
+
+          make -C build-files/ports/METIS install
+          make -C build-files/ports/OpenBLAS/ install
+          make -C build-files/ports/clapack install
+          QNX_PROJECT_ROOT="$(pwd)/gmp" make -C build-files/ports/gmp install
+          QNX_PROJECT_ROOT="$(pwd)/mpfr" make -C build-files/ports/mpfr install
+          QNX_PROJECT_ROOT="$(pwd)/SuiteSparse" make -C build-files/ports/SuiteSparse install
