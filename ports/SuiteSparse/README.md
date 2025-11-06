@@ -42,7 +42,7 @@ tar -xvf gmp-6.2.0.tar.xz
 mv gmp-6.2.0 gmp
 
 #Clone SuiteSparse
-git clone https://github.com/DrTimothyAldenDavis/SuiteSparse.git
+git clone https://github.com/qnx-ports/SuiteSparse.git
 cd SuiteSparse
 git checkout v7.11.0
 cd ..
@@ -96,7 +96,7 @@ tar -xvf gmp-6.2.0.tar.xz
 mv gmp-6.2.0 gmp
 
 #Clone SuiteSparse
-git clone https://github.com/DrTimothyAldenDavis/SuiteSparse.git
+git clone https://github.com/qnx-ports/SuiteSparse.git
 cd SuiteSparse
 git checkout v7.11.0
 cd ..
@@ -117,4 +117,5 @@ QNX_PROJECT_ROOT="$(pwd)/gmp" make -C build-files/ports/gmp install JLEVEL=4
 QNX_PROJECT_ROOT="$(pwd)/mpfr" make -C build-files/ports/mpfr install JLEVEL=4
 QNX_PROJECT_ROOT="$(pwd)/SuiteSparse" make -C build-files/ports/SuiteSparse install JLEVEL=4
 ```
+
 
