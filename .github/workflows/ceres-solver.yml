@@ -64,9 +64,7 @@ jobs:
           else
             source ~/qnx/800/qnxsdp-env.sh
           fi
-          if [[ ${{ matrix.qnx_env }} == 710 ]]; then
-            touch build-files/ports/muslflt/nto-arm/Makefile.dnm
-          fi
+          touch build-files/ports/muslflt/nto-arm/Makefile.dnm
           QNX_PROJECT_ROOT="$(pwd)/muslflt" make -C build-files/ports/muslflt/ install
           QNX_PROJECT_ROOT="$(pwd)/eigen" make -C build-files/ports/eigen install
           make -C build-files/ports/ceres-solver install

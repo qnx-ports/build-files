@@ -77,7 +77,7 @@ scp -r $QNX_TARGET/aarch64le/usr/local/lib/libceres.so* qnxuser@$TARGET_HOST:/da
 scp -r $QNX_TARGET/aarch64le/usr/local/lib/libeigen.so* qnxuser@$TARGET_HOST:/data/home/qnxuser/lib
 
 # Move test script to the target
-scp ~/qnx_workspace/build-files/ports/ceres-solver/test.sh qnxuser@$TARGET_HOST:/data/home/qnxuser/bin
+scp ~/qnx_workspace/build-files/ports/ceres-solver/test.sh qnxuser@$TARGET_HOST:/data/home/qnxuser
 ```
 
 Run the tests
