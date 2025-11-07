@@ -1,0 +1,28 @@
+package = "googletest"
+timeout = 1800
+jobs = ${{nproc}}
+
+[googletest]
+path = """build/build/googlemock/*gmock*test*
+    build/build/googletest/googletest*test*
+    build/build/googletest/gtest*test*"""
+
+# These tests fail --gtest_list_tests.
+[[googletest.skipped]]
+name = "build/build/googletest/gtest_no_test_unittest"
+norun = true
+[[googletest.skipped]]
+name = "build/build/googletest/gtest_stress_test"
+norun = true
+[[googletest.skipped]]
+name = "build/build/googlemock/gmock_stress_test"
+norun = true
+[[googletest.skipped]]
+name = "build/build/googlemock/gmock_output_test_"
+norun = true
+[[googletest.skipped]]
+name = "build/build/googletest/gtest_environment_test"
+norun = true
+[[googletest.skipped]]
+name = "build/build/googletest/gtest_repeat_test"
+norun = true

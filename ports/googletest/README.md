@@ -26,8 +26,11 @@ source ~/qnx800/qnxsdp-env.sh
 cd ~/qnx_workspace
 git clone https://github.com/qnx-ports/googletest.git
 
+# If compiling for 800
+touch build-files/ports/googletest/nto-arm-le-v7/Makefile.dnm
+
 # Build googletest
-make -C build-files/ports/googletest install -j4
+BUILD_TESTING=ON make -C build-files/ports/googletest install -j4
 ```
 
 # Compile the port for QNX on Ubuntu host
@@ -41,8 +44,11 @@ git clone https://github.com/qnx-ports/googletest.git
 # source qnxsdp-env.sh
 source ~/qnx800/qnxsdp-env.sh
 
+# If compiling for 800
+touch build-files/ports/googletest/nto-arm-le-v7/Makefile.dnm
+
 # Build
-make -C build-files/ports/googletest install -j4
+BUILD_TESTING=ON make -C build-files/ports/googletest install -j4
 ```
 
 # How to run tests
