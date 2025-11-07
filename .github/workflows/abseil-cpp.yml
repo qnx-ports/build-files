@@ -61,7 +61,7 @@ jobs:
       with:
         repository: qnx-ports/check-tools
         path: check-tools
-        ref: 752117d3e12f0ae53f7c3673696e171f9e0d5e7a
+        ref: 7dc2466dd29471992c8489f3293ce9d0742f9caa
 
     - name: Checkout test-tools
       uses: actions/checkout@v4

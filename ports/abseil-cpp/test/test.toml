@@ -111,6 +111,9 @@ file = "abseil-cpp/absl/strings/string_view_test.cc"
 [[googletest.skipped.suites.cases]]
 name = "TwoPointTwoGB"
 line = "1298"
+platform = [
+    "qemu"
+]
 [[googletest.skipped]]
 name = "build/build/bin/absl_str_split_test"
 [[googletest.skipped.suites]]
@@ -119,6 +122,9 @@ file = "abseil-cpp/absl/strings/str_split_test.cc"
 [[googletest.skipped.suites.cases]]
 name = "WorksWithLargeStrings"
 line = "987"
+platform = [
+    "qemu"
+]
 # Skipped due to limited performance on the test system
 [[googletest.skipped]]
 name = "build/build/bin/absl_kernel_timeout_internal_test"
@@ -128,9 +134,15 @@ file = "abseil-cpp/absl/synchronization/internal/kernel_timeout_test.cc"
 [[googletest.skipped.suites.cases]]
 name = "FiniteTimes"
 line = "61"
+platform = [
+    "qemu"
+]
 [[googletest.skipped.suites.cases]]
 name = "FiniteDurations"
 line = "231"
+platform = [
+    "qemu"
+]
 # Skipped due to missing TZDATA on the test system
 [[googletest.skipped]]
 name = "build/build/bin/absl_time_test"
