@@ -12,6 +12,8 @@ PREFIX              ?= usr/local
 
 BUILD_TESTING       ?= 0
 
+JLEVEL ?= $(subst -j,,$(filter -j%,$(MAKEFLAGS)))
+
 $(NAME)_INSTALL_DIR=$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)
 
 #Setup pkg-config dir

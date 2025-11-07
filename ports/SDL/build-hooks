@@ -28,7 +28,6 @@ function hook_preconfigure
   configure_opts="${configure_opts} --enable-video-wayland=no"
   configure_opts="${configure_opts} --enable-joystick=yes"
   configure_opts="${configure_opts} --enable-audio=${ENABLE_AUDIO}"
-  export STRIP="${machine}-strip"
 }
 
 # Override hook_configure to build from dist

@@ -5,15 +5,8 @@ if("$ENV{QNX_TARGET}" STREQUAL "")
     message(FATAL_ERROR "QNX_TARGET environment variable not found. Please set the variable to the qnx target location")
 endif()
 
-if(CMAKE_HOST_WIN32)
-    set(HOST_EXECUTABLE_SUFFIX ".exe")
-    #convert windows paths to cmake paths
-    file(TO_CMAKE_PATH "$ENV{QNX_HOST}" QNX_HOST)
-    file(TO_CMAKE_PATH "$ENV{QNX_TARGET}" QNX_TARGET)
-else()
-    set(QNX_HOST "$ENV{QNX_HOST}")
-    set(QNX_TARGET "$ENV{QNX_TARGET}")
-endif()
+set(QNX_HOST "$ENV{QNX_HOST}")
+set(QNX_TARGET "$ENV{QNX_TARGET}")
 
 message(STATUS "using QNX_HOST ${QNX_HOST}")
 message(STATUS "using QNX_TARGET ${QNX_TARGET}")
