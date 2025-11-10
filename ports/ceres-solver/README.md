@@ -24,7 +24,7 @@ mkdir qnx_workspace && cd qnx_workspace
 git clone https://github.com/qnx-ports/build-files.git
 git clone https://github.com/qnx-ports/muslflt.git
 git clone https://github.com/qnx-ports/eigen.git
-git clone -b https://github.com/ceres-solver/ceres-solver.git
+git clone -b 2.2.0 https://github.com/ceres-solver/ceres-solver.git
 
 # Optional dependencies of ceres-solver are listed below and available on qnx-ports
 0. gflags
