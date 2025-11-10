@@ -1,0 +1,8 @@
+package = "Fast-DDS"
+timeout = 3600
+jobs = ${{nproc}}
+
+[googletest]
+path = """
+    Fast-DDS_test/unittest/**/*Tests
+    """

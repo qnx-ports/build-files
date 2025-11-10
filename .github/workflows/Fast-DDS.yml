@@ -86,7 +86,36 @@ jobs:
         cd $WORKSPACE
         make -C build-files/ports/asio install -j$(nproc)
         
-        QNX_PROJECT_ROOT="$(pwd)/Fast-CDR" JLEVEL=$(nproc) make -C build-files/ports/Fast-CDR clean install
-        QNX_PROJECT_ROOT="$(pwd)/foonathan_memory_vendor" JLEVEL=$(nproc) make -C build-files/ports/foonathan_memory_vendor clean install
-        JLEVEL=$(nproc) BUILD_TESTING="OFF" QNX_PROJECT_ROOT="$(pwd)/tinyxml2" make -C build-files/ports/tinyxml2 install 
-        QNX_PROJECT_ROOT="$(pwd)/Fast-DDS" JLEVEL=$(nproc) make -C build-files/ports/Fast-DDS clean install
+        QNX_PROJECT_ROOT="$(pwd)/Fast-CDR" JLEVEL=$(nproc) make -C build-files/ports/Fast-CDR INSTALL_ROOT_nto=$PWD/stage USE_INSTALL_ROOT=true clean install
+        QNX_PROJECT_ROOT="$(pwd)/foonathan_memory_vendor" JLEVEL=$(nproc) make -C build-files/ports/foonathan_memory_vendor INSTALL_ROOT_nto=$PWD/stage USE_INSTALL_ROOT=true clean install
+        JLEVEL=$(nproc) BUILD_TESTING="OFF" QNX_PROJECT_ROOT="$(pwd)/tinyxml2" make -C build-files/ports/tinyxml2 INSTALL_ROOT_nto=$PWD/stage USE_INSTALL_ROOT=true install 
+        QNX_PROJECT_ROOT="$(pwd)/Fast-DDS" JLEVEL=$(nproc) make -C build-files/ports/Fast-DDS INSTALL_ROOT_nto=$PWD/stage USE_INSTALL_ROOT=true clean install
+
+    - name: Setup python env
+      if: ${{ (matrix.qnx_env == '800') }}
+      uses: actions/setup-python@v6
+      with:
+        python-version: '3.12'
+        cache: 'pip'
+
+    - name: Install dependencies
+      run: pip install -r ./test-tools/requirements.txt
+
+    - name: Test Fast-DDS
+      if: ${{ (matrix.qnx_env == '800') }}
+      env:
+        OSS_NAME: "Fast-DDS"
+        QNX_VERSION: "qnx${{ matrix.qnx_env }}"
+        COMPANION_DIR: "${{ github.workspace }}/build-files/ports/Fast-DDS"
+      shell: bash
+      run: |
+        source ~/qnx/800/qnxsdp-env.sh
+
+        ./test-tools/bin/run_tests.sh
+
+    - name: Publish Test Report
+      uses: mikepenz/action-junit-report@v5
+      if: ${{ always() }}
+      with:
+        report_paths: 'results/*.xml'
+        check_name: (${{ matrix.qnx_env }}) Test Report
