@@ -4,7 +4,6 @@ permissions:
   contents: write
   checks: write
 
-
 on:
   workflow_dispatch:
   push:
@@ -53,11 +52,54 @@ jobs:
         repository: qnx-ports/opencv
         path: opencv
 
+    - name: Checkout check-tools
+      uses: actions/checkout@v4
+      with:
+        repository: qnx-ports/check-tools
+        path: check-tools
+        ref: v0.1.4
+
+    - name: Checkout test-tools
+      uses: actions/checkout@v4
+      with:
+        repository: qnx-ports/test-tools
+        path: test-tools
+        token: ${{secrets.GCO_TOKEN}}
+
     - name: Build opencv
       shell: bash
       run: |
         source ~/qnx/800/qnxsdp-env.sh
         source /usr/local/qnx/env/bin/activate
-        QNX_PROJECT_ROOT="$(pwd)/muslflt" make -C build-files/ports/muslflt/ 
-        QNX_PROJECT_ROOT="$(pwd)/numpy" make -C build-files/ports/numpy install 
-        BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/opencv" make -C build-files/ports/opencv USE_INSTALL_ROOT=true install 
+        QNX_PROJECT_ROOT="$(pwd)/muslflt" make -C build-files/ports/muslflt/ INSTALL_ROOT_nto=$PWD/stage USE_INSTALL_ROOT=true install
+        QNX_PROJECT_ROOT="$(pwd)/numpy" make -C build-files/ports/numpy INSTALL_ROOT_nto=$PWD/stage USE_INSTALL_ROOT=true install 
+        BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/opencv" make -C build-files/ports/opencv INSTALL_ROOT_nto=$PWD/stage USE_INSTALL_ROOT=true install 
+
+    - name: Setup python env
+      if: ${{ (matrix.qnx_env == '800') }}
+      uses: actions/setup-python@v6
+      with:
+        python-version: '3.12'
+        cache: 'pip'
+
+    - name: Install dependencies
+      run: pip install -r ./test-tools/requirements.txt
+
+    - name: Test opencv
+      if: ${{ (matrix.qnx_env == '800') }}
+      env:
+        OSS_NAME: "opencv"
+        QNX_VERSION: "qnx${{ matrix.qnx_env }}"
+        COMPANION_DIR: "${{ github.workspace }}/build-files/ports/opencv"
+      shell: bash
+      run: |
+        source ~/qnx/800/qnxsdp-env.sh
+
+        ./test-tools/bin/run_tests.sh
+
+    - name: Publish Test Report
+      uses: mikepenz/action-junit-report@v5
+      if: ${{ always() }}
+      with:
+        report_paths: 'results/*.xml'
+        check_name: (${{ matrix.qnx_env }}) Test Report
