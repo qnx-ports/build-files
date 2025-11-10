@@ -24,6 +24,8 @@ PREFIX ?= usr/local
 #choose Release or Debug
 CMAKE_BUILD_TYPE ?= Release
 
+BUILD_TESTING ?= OFF
+
 #override 'all' target to bypass the default QNX build system
 ALL_DEPENDENCIES = protobuf_all
 .PHONY: protobuf_all install check clean
@@ -68,6 +70,7 @@ CMAKE_COMMON_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cma
                     -DBUILD_SHARED_LIBS=1 \
                     -Dprotobuf_USE_EXTERNAL_GTEST=OFF \
                     -Dprotobuf_INSTALL=ON \
+                    -Dprotobuf_BUILD_TESTS=$(BUILD_TESTING) \
                     -Dprotobuf_ABSOLUTE_TEST_PLUGIN_PATH=OFF
 
 HOST_CMAKE_ARGS =   -DCMAKE_BUILD_TYPE=$(CMAKE_BUILD_TYPE) \
@@ -91,7 +94,7 @@ protobuf: protoc_host
 
 protoc_target:
 	mkdir -p protoc
-	cd protoc && cmake $(CMAKE_COMMON_ARGS) -Dprotobuf_BUILD_TESTS=OFF -Dprotobuf_BUILD_LIBUPB=ON $(QNX_PROJECT_ROOT)
+	cd protoc && cmake $(CMAKE_COMMON_ARGS) -Dprotobuf_BUILD_LIBUPB=ON $(QNX_PROJECT_ROOT)
 	cd protoc && cmake --build . $(GENERATOR_ARGS)
 
 protoc_host:

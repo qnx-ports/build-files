@@ -1,0 +1,6 @@
+package = "protobuf"
+timeout = 1800
+jobs = ${{nproc}}
+
+[googletest]
+path = "build/protobuf/tests"
