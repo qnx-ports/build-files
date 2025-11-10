@@ -27,11 +27,14 @@ git clone https://github.com/qnx-ports/eigen.git
 git clone -b https://github.com/ceres-solver/ceres-solver.git
 
 # Optional dependencies of ceres-solver are listed below and available on qnx-ports
+0. gflags
 1. googletest
 2. glog
 3. METIS
 4. OpenBLAS
 5. SuiteSparse
+
+For building with any of above optional dependencies, once they are built, use appropriate options (e.g. SUITESPARSE=ON) to enable them. Options can be found in common.mk file
 ```
 
 3. _Optional_ Build the docker image and create a container
@@ -83,8 +86,10 @@ scp ~/qnx_workspace/build-files/ports/ceres-solver/test.sh qnxuser@$TARGET_HOST:
 Run the tests
 
 ```bash
+# ssh into the target
+
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/data/home/qnxuser/lib
 
-cd ~/bin
+chmod 755 test.sh
 ./test.sh
 ```

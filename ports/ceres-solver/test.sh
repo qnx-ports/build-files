@@ -1,6 +1,6 @@
 #!/bin/sh
 
-cd bin
+cd ~/bin
 
 for file in *; do
   if [ -x "$file" ]; then
@@ -9,3 +9,5 @@ for file in *; do
     "./$file" >> ../test.log 2>&1
   fi
 done
+
+cd -

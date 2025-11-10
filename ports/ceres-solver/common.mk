@@ -64,7 +64,8 @@ BUILD_EXAMPLES ?= OFF
 SUITESPARSE ?= OFF
 EIGENMETIS ?= OFF
 GFLAGS ?= OFF
-USE_CUDA ?= OFF
+LAPACK ?= OFF
+USE_CUDA = OFF
 MINIGLOG ?= ON
 
 CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
@@ -87,6 +88,7 @@ CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DSUITESPARSE=$(SUITESPARSE) \
              -DEIGENMETIS=$(EIGENMETIS) \
              -DGFLAGS=$(GFLAGS) \
+             -DLAPACK=$(LAPACK) \
              -DUSE_CUDA=$(USE_CUDA) \
              -DMINIGLOG=$(MINIGLOG)
 
