@@ -70,7 +70,6 @@ CMAKE_COMMON_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cma
                     -DBUILD_SHARED_LIBS=1 \
                     -Dprotobuf_USE_EXTERNAL_GTEST=OFF \
                     -Dprotobuf_INSTALL=ON \
-                    -Dprotobuf_BUILD_TESTS=$(BUILD_TESTING) \
                     -Dprotobuf_ABSOLUTE_TEST_PLUGIN_PATH=OFF
 
 HOST_CMAKE_ARGS =   -DCMAKE_BUILD_TYPE=$(CMAKE_BUILD_TYPE) \
@@ -89,12 +88,12 @@ protobuf_all: protobuf protoc_target
 
 protobuf: protoc_host
 	mkdir -p protobuf
-	cd protobuf && cmake $(CMAKE_COMMON_ARGS) -DWITH_PROTOC=$(HOST_PROTOC_PATH)/protoc -Dprotobuf_BUILD_LIBUPB=OFF $(QNX_PROJECT_ROOT)
+	cd protobuf && cmake $(CMAKE_COMMON_ARGS) -Dprotobuf_BUILD_TESTS=$(BUILD_TESTING) -DWITH_PROTOC=$(HOST_PROTOC_PATH)/protoc -Dprotobuf_BUILD_LIBUPB=OFF $(QNX_PROJECT_ROOT)
 	cd protobuf && cmake --build . $(GENERATOR_ARGS)
 
 protoc_target:
 	mkdir -p protoc
-	cd protoc && cmake $(CMAKE_COMMON_ARGS) -Dprotobuf_BUILD_LIBUPB=ON $(QNX_PROJECT_ROOT)
+	cd protoc && cmake $(CMAKE_COMMON_ARGS) -Dprotobuf_BUILD_TESTS=OFF -Dprotobuf_BUILD_LIBUPB=ON $(QNX_PROJECT_ROOT)
 	cd protoc && cmake --build . $(GENERATOR_ARGS)
 
 protoc_host:
