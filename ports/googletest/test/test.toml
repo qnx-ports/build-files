@@ -35,3 +35,19 @@ norun = true
 [[googletest.skipped]]
 name = "build/build/googlemock/shared_gmock_test_"
 norun = true
+# Expected failures. These tests leak memory and expect googletest to detect the
+# leak, causing a failure.
+[[googletest.skipped]]
+name = "build/build/googlemock/gmock_leak_test_"
+[[googletest.skipped.suites]]
+name = "LeakTest"
+file = "googletest/googlemock/test/gmock_leak_test_.cc"
+[[googletest.skipped.suites.cases]]
+name = "LeakedMockWithExpectCallCausesFailureWhenLeakCheckingIsEnabled"
+line = "58"
+[[googletest.skipped.suites.cases]]
+name = "LeakedMockWithOnCallCausesFailureWhenLeakCheckingIsEnabled"
+line = "71"
+[[googletest.skipped.suites.cases]]
+name = "CatchesMultipleLeakedMockObjects"
+line = "83"
