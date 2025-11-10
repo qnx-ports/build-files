@@ -32,3 +32,6 @@ norun = true
 [[googletest.skipped]]
 name = "build/build/googlemock/gmock_no_rtti_test"
 norun = true
+[[googletest.skipped]]
+name = "build/build/googlemock/shared_gmock_test_"
+norun = true
