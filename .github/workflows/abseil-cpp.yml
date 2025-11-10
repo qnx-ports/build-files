@@ -61,7 +61,7 @@ jobs:
       with:
         repository: qnx-ports/check-tools
         path: check-tools
-        ref: 752117d3e12f0ae53f7c3673696e171f9e0d5e7a
+        ref: v0.1.4
 
     - name: Checkout test-tools
       uses: actions/checkout@v4
@@ -85,9 +85,9 @@ jobs:
           touch build-files/ports/googletest/nto-arm-le-v7/Makefile.dnm
           touch build-files/ports/abseil-cpp/nto-arm-le-v7/Makefile.dnm
         fi
-        BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/googletest" make -C build-files/ports/googletest PREFIX=system INSTALL_ROOT_nto=$PWD/stage USE_INSTALL_ROOT=true install
-        QNX_PROJECT_ROOT="$(pwd)/muslflt" make -C build-files/ports/muslflt/ PREFIX=system INSTALL_ROOT_nto=$PWD/stage USE_INSTALL_ROOT=true install
-        QNX_SEVEN_COMPAT="true" BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/abseil-cpp" make -C build-files/ports/abseil-cpp PREFIX=system INSTALL_ROOT_nto=$PWD/stage USE_INSTALL_ROOT=true install
+        BUILD_TESTING="OFF" QNX_PROJECT_ROOT="$(pwd)/googletest" make -C build-files/ports/googletest INSTALL_ROOT_nto=$PWD/stage USE_INSTALL_ROOT=true install
+        QNX_PROJECT_ROOT="$(pwd)/muslflt" make -C build-files/ports/muslflt/ INSTALL_ROOT_nto=$PWD/stage USE_INSTALL_ROOT=true install
+        QNX_SEVEN_COMPAT="true" BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/abseil-cpp" make -C build-files/ports/abseil-cpp INSTALL_ROOT_nto=$PWD/stage USE_INSTALL_ROOT=true install
 
     - name: Setup python env
       if: ${{ (matrix.qnx_env == '800') }}
