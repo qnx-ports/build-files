@@ -77,7 +77,6 @@ jobs:
           WORKSPACE=$PWD
           echo "::stop-commands::FIND"
           cd /home/runner/qnx/710
-          find . -name "ares.h"
           grep -rn "struct ares_addrinfo {"
           echo ":FIND::"
           cd $WORKSPACE
