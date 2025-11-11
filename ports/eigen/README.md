@@ -17,6 +17,10 @@ You can optionally set up a staging area folder (e.g. `/tmp/staging`) for `<stag
 Use `$(nproc)` instead of `4` after `JLEVEL=` and `-j` if you want to use the maximum number of cores to build this project.
 32GB of RAM is recommended for using `JLEVEL=$(nproc)` or `-j$(nproc)`.
 
+## Installing to `QNX_TARGET`
+To install Eigen into $QNX\_TARGET location, use `USE_INSTALL_ROOT=false` or `USE_INSTALL_ROOT=0` and do not set any value
+to `INSTALL_ROOT_nto`.
+
 # Compile the port for QNX in a Docker container
 
 Pre-requisite: Install Docker on Ubuntu https://docs.docker.com/engine/install/ubuntu/
