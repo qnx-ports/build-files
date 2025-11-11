@@ -3,15 +3,15 @@ timeout = 6000
 
 [googletest]
 path = """
-    opencv_tests/opencv_perf_*
-    opencv_tests/opencv_test_*
+    build/bin/opencv_perf_*
+    build/bin/opencv_test_*
     """
 
 [[googletest.skipped]]
-name = "opencv_tests/opencv_test_highgui"
+name = "build/bin/opencv_test_highgui"
 [[googletest.skipped.suites]]
 name = "Highgui_GUI"
-file = "opencv/modules/highgui/test/test_gui.cpp" # For reporting in junitxml.
+file = "opencv/modules/highgui/test/test_gui.cpp"
 [[googletest.skipped.suites.cases]]
 name = "regression"
 line = "65"
