@@ -54,7 +54,7 @@ git submodule update --init
 cd ~/qnx_workspace
 
 # Build grpc
-CONTROLLIST="default io-sock" make -C build-files/ports/grpc/ install JLEVEL=4
+CONTROLLIST="host default io-sock" make -C build-files/ports/grpc/ install JLEVEL=4
 
 # Build grpc hello-world example
 CONTROLLIST="examples-default examples-io-sock" make -C build-files/ports/grpc/ install JLEVEL=4
@@ -98,7 +98,7 @@ git submodule update --init
 cd ~/qnx_workspace
 
 # Build grpc
-CONTROLLIST="default io-sock" make -C build-files/ports/grpc/ install JLEVEL=4
+CONTROLLIST="host default io-sock" make -C build-files/ports/grpc/ install JLEVEL=4
 
 # Build grpc hello-world example
 CONTROLLIST="examples-default examples-io-sock" make -C build-files/ports/grpc/ install JLEVEL=4
