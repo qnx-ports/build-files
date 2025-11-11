@@ -57,15 +57,16 @@ jobs:
       - name: Checkout OpenBLAS
         uses: actions/checkout@v4
         with:
-          repository: qnx-ports/openblas
-          path: openblas
-
+          repository: qnx-ports/OpenBLAS
+          path: OpenBLAS
+          
       # Checkout CLAPACK
       - name: Checkout clapack
         uses: actions/checkout@v4
         with:
-          repository: qnx-ports/clapack
-          path: clapack
+           repository: qnx-ports/clapack
+           path: clapack
+          
       - name: Checkout GKlib
         uses: actions/checkout@v4
         with:
