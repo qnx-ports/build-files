@@ -74,11 +74,13 @@ jobs:
           else
             source ~/qnx/800/qnxsdp-env.sh
           fi
-          echo "::stop-commands::pause-logging"
+          WORKSPACE=$PWD
+          echo "::stop-commands::FIND"
           cd /home/runner/qnx/710
           find . -name "ares.h"
           grep -rn "struct ares_addrinfo {"
-          echo "::pause-logging::"
+          echo ":FIND::"
+          cd $WORKSPACE
           make -C build-files/ports/libev install
           QNX_PROJECT_ROOT="$(pwd)/brotli" make -C build-files/ports/brotli/ install -j4
           make -C build-files/ports/jansson/ install -j4
