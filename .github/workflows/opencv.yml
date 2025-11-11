@@ -94,7 +94,6 @@ jobs:
         BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/opencv" make -C build-files/ports/opencv INSTALL_ROOT_nto=$PWD/stage USE_INSTALL_ROOT=true install 
 
     - name: Setup python env
-      if: ${{ (matrix.qnx_env == '800') }}
       uses: actions/setup-python@v6
       with:
         python-version: '3.12'
@@ -104,10 +103,9 @@ jobs:
       run: pip install -r ./test-tools/requirements.txt
 
     - name: Test opencv
-      if: ${{ (matrix.qnx_env == '800') }}
       env:
         OSS_NAME: "opencv"
-        QNX_VERSION: "qnx${{ matrix.qnx_env }}"
+        QNX_VERSION: "qnx800"
         COMPANION_DIR: "${{ github.workspace }}/build-files/ports/opencv"
       shell: bash
       run: |
@@ -120,4 +118,4 @@ jobs:
       if: ${{ always() }}
       with:
         report_paths: 'results/*.xml'
-        check_name: (${{ matrix.qnx_env }}) Test Report
+        check_name: (800) Test Report
