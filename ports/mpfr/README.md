@@ -28,6 +28,16 @@ source ~/qnx710/qnxsdp-env.sh
 source ~/qnx800/qnxsdp-env.sh
 source ~/qnx800/qnxsdp-env.sh
 cd ~/qnx_workspace
+
+# Clone gmp
+wget https://gmplib.org/download/gmp/gmp-6.2.0.tar.xz
+tar -xvf gmp-6.2.0.tar.xz 
+mv gmp-6.2.0 gmp
+
+# Build gmp
+QNX_PROJECT_ROOT="$(pwd)/gmp" make -C build-files/ports/gmp clean 
+QNX_PROJECT_ROOT="$(pwd)/gmp" make -C build-files/ports/gmp install JLEVEL=4
+
 # clone mpfr
 wget https://www.mpfr.org/mpfr-4.2.2/mpfr-4.2.2.tar.xz
 tar -xf mpfr-4.2.2.tar.xz 
@@ -51,6 +61,15 @@ source ~/qnx710/qnxsdp-env.sh
 # for 8.0
 source ~/qnx800/qnxsdp-env.sh
 cd ~/qnx_workspace
+
+# Clone gmp
+wget https://gmplib.org/download/gmp/gmp-6.2.0.tar.xz
+tar -xvf gmp-6.2.0.tar.xz 
+mv gmp-6.2.0 gmp
+
+# Build gmp
+QNX_PROJECT_ROOT="$(pwd)/gmp" make -C build-files/ports/gmp clean 
+QNX_PROJECT_ROOT="$(pwd)/gmp" make -C build-files/ports/gmp install JLEVEL=4
 
 # clone mpfr
 wget https://www.mpfr.org/mpfr-4.2.2/mpfr-4.2.2.tar.xz
