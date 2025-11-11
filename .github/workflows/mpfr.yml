@@ -27,7 +27,7 @@ jobs:
     strategy:
       matrix:
         qnx_env: ["710", "800"]
-    name: Build GMP + MPFR for QNX ${{ matrix.qnx_env }}
+    name: Build MPFR for QNX ${{ matrix.qnx_env }}
     runs-on: ubuntu-22.04-common
     if: |
       ((github.event_name == 'workflow_dispatch') ||
