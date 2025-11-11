@@ -43,9 +43,9 @@ function hook_configure {
         --prefix="${BASIC_PREFIX}" \
         --exec-prefix="${EXEC_PREFIX}" \
         --host="${machine}" \
-        --includedir="${INSTALL_ROOT_nto}${BASIC_PREFIX}/include" \
         --enable-public-key \
         --disable-openssl \
+        --disable-fat \
         --disable-documentation     # disable doc as CI was failing to create documentation
 }
 

@@ -28,7 +28,7 @@ cd ~/qnx_workspace
 # Clone nettle
 git clone https://github.com/gnutls/nettle.git 
 cd nettle
-git checkout tags/nettle_3.6_release_20200429
+git checkout tags/nettle_3.8.1_release_20220727
 cd ..
 
 
@@ -50,7 +50,7 @@ cd ~/qnx_workspace
 # Clone nettle
 git clone https://github.com/gnutls/nettle.git 
 cd nettle
-git checkout tags/nettle_3.6_release_20200429
+git checkout tags/nettle_3.8.1_release_20220727
 cd ..
 
 
