@@ -5,10 +5,7 @@ include $(QCONFIG)
 
 include $(MKFILES_ROOT)/qmacros.mk
 
-NAME=grpc
-
-GRPC_VERSION = 1.65.0
-GRPC_CORE_VERSION = 42.0.0
+NAME=grpc-examples
 
 QNX_PROJECT_ROOT ?= $(PRODUCT_ROOT)/../../grpc
 
@@ -27,11 +24,11 @@ CMAKE_BUILD_TYPE ?= Release
 GENERATE_PINFO_FILES ?= TRUE
 
 # override 'all' target to bypass the default QNX build system
-ALL_DEPENDENCIES = grpc_all
+ALL_DEPENDENCIES = $(NAME)_all
 .PHONY: grpc_all install check clean
 
 CPPFLAGS += $(FLAGS) -D__EXT_QNX -D_QNX_SOURCE $(FORTIFY_DEFS)
-CPPFLAGS += -I$(INSTALL_ROOT)/$(PREFIX)/include
+CPPFLAGS += -I$(INSTALL_ROOT)/$(PREFIX)/include -I$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/bin/src -I$(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/bin/src
 CPPFLAGS += -fstack-protector-strong
 # Ignore warnings
 CPPFLAGS += -w
@@ -62,14 +59,7 @@ HOST_GRPC_PATH = ${PROJECT_ROOT}/host/linux-x86_64-o/build
 
 HOST_PROTOC_PATH = ${HOST_GRPC_PATH}/third_party/protobuf/protoc
 
-define PINFO
-PINFO DESCRIPTION=gRPC - An RPC library and framework - \(${GRPC_VERSION}\)
-endef
-PINFO_STATE=Experimental
-USEFILE=
-
 CMAKE_ARGS += -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
-              -DCMAKE_PROJECT_INCLUDE=$(PROJECT_ROOT)/project_hooks.cmake \
               -DCMAKE_INSTALL_PREFIX=$(INSTALL_ROOT) \
               -DCMAKE_INSTALL_BINDIR="$(CPUVARDIR)/$(PREFIX_EXT)/bin" \
               -DCMAKE_INSTALL_INCLUDEDIR="$(PREFIX)/include" \
@@ -116,7 +106,9 @@ CMAKE_ARGS += -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
               -DRE2_BUILD_TESTING=OFF \
               -DBENCHMARK_ENABLE_TESTING=OFF \
               -DCARES_LIBRARY=$(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX_NET)/usr/lib/libcares.so \
-              -DSOCKET_LIBRARY=$(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX_NET)/lib/libsocket.so
+              -DSOCKET_LIBRARY=$(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX_NET)/lib/libsocket.so \
+			  -D_PROTOBUF_PROTOC=$(HOST_PROTOC_PATH) \
+              -D_GRPC_CPP_PLUGIN_EXECUTABLE=${HOST_GRPC_PATH}/grpc_cpp_plugin
 
 # -DEXT is a carryover for supporting armv7le
 
@@ -131,15 +123,15 @@ GENERATOR_ARGS ?= -j $(firstword $(JLEVEL) 1)
 
 ifndef NO_TARGET_OVERRIDE
 
-grpc_all: grpc_target
+$(NAME)_all: $(NAME)_target
 
-grpc_target:
+$(NAME)_target:
 	@mkdir -p build
 	@cd build && \
 	cmake $(CONFIG_CMAKE_ARGS) $(CMAKE_ARGS) $(QNX_PROJECT_ROOT) && \
 	cmake --build . $(GENERATOR_ARGS)
 
-install check: grpc_all
+install check: $(NAME)_all
 	@echo Installing...
 	@cd build && cmake --build . --target install $(GENERATOR_ARGS)
 	@echo Done.
@@ -150,32 +142,4 @@ clean_target:
 clean iclean spotless: clean_target
 
 uninstall:
-endif
-
-# everything down below deals with the generation of the PINFO
-# information for shared objects that is used by the QNX build
-# infrastructure to embed metadata in the .so files, for example
-# data and time, version number, description, etc. Metadata can
-# be retrieved on the target by typing 'use -i <path to the .so file>'.
-# this is optional: setting GENERATE_PINFO_FILES to FALSE will disable
-# the insertion of metadata in .so files.
-ifeq ($(GENERATE_PINFO_FILES), TRUE)
-# the following rules are called by the cmake generated makefiles,
-# in order to generate the .pinfo files for the shared libraries
-%.so.$(GRPC_VERSION):
-	$(ADD_PINFO)
-	$(ADD_USAGE)
-
-%.so.$(GRPC_CORE_VERSION):
-	$(ADD_PINFO)
-	$(ADD_USAGE)
-
-%_test:
-	$(ADD_PINFO)
-	$(ADD_USAGE)
-
-%_plugin:
-	$(ADD_PINFO)
-	$(ADD_USAGE)
-
 endif

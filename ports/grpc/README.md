@@ -35,10 +35,6 @@ QNX_PROJECT_ROOT="$(pwd)/muslflt" make -C build-files/ports/muslflt/ install JLE
 git clone https://github.com/qnx-ports/googletest.git
 BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/googletest" make -C build-files/ports/googletest install -j16
 
-# Install abseil-cpp
-git clone https://github.com/qnx-ports/abseil-cpp.git
-QNX_SEVEN_COMPAT="true" QNX_PROJECT_ROOT="$(pwd)/abseil-cpp" make -C build-files/ports/abseil-cpp/ install JLEVEL=16
-
 # Clone grpc
 git clone https://github.com/qnx-ports/grpc.git && cd grpc
 git submodule update --init
@@ -79,10 +75,6 @@ QNX_PROJECT_ROOT="$(pwd)/muslflt" make -C build-files/ports/muslflt/ install JLE
 # Install googletest
 git clone https://github.com/qnx-ports/googletest.git
 BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/googletest" make -C build-files/ports/googletest install -j16
-
-# Install abseil-cpp
-git clone https://github.com/qnx-ports/abseil-cpp.git
-QNX_SEVEN_COMPAT="true" QNX_PROJECT_ROOT="$(pwd)/abseil-cpp" make -C build-files/ports/abseil-cpp/ install JLEVEL=16
 
 # Clone grpc
 git clone https://github.com/qnx-ports/grpc.git && cd grpc
