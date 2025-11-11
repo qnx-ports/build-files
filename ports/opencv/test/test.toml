@@ -1,5 +1,6 @@
 package = "opencv"
 timeout = 6000
+jobs = ${{nproc}}
 
 [googletest]
 path = """
