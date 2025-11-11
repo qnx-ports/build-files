@@ -29,11 +29,11 @@ cd ~/qnx_workspace
 
 # Install muslflt
 git clone https://github.com/qnx-ports/muslflt.git
-QNX_PROJECT_ROOT="$(pwd)/muslflt" make -C build-files/ports/muslflt/ install JLEVEL=16
+QNX_PROJECT_ROOT="$(pwd)/muslflt" make -C build-files/ports/muslflt/ install JLEVEL=4
 
 # Install googletest
 git clone https://github.com/qnx-ports/googletest.git
-BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/googletest" make -C build-files/ports/googletest install -j16
+BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/googletest" make -C build-files/ports/googletest install -j4
 
 # Clone grpc
 git clone https://github.com/qnx-ports/grpc.git && cd grpc
@@ -54,7 +54,10 @@ git submodule update --init
 cd ~/qnx_workspace
 
 # Build grpc
-QNX_PROJECT_ROOT="$(pwd)/grpc" make -C build-files/ports/grpc/ install JLEVEL=16
+CONTROLLIST="default io-sock" make -C build-files/ports/grpc/ install JLEVEL=4
+
+# Build grpc hello-world example
+CONTROLLIST="examples-default examples-io-sock" make -C build-files/ports/grpc/ install JLEVEL=4
 ```
 
 # Compile the port for QNX
@@ -70,11 +73,11 @@ source ~/qnx800/qnxsdp-env.sh
 
 # Install muslflt
 git clone https://github.com/qnx-ports/muslflt.git
-QNX_PROJECT_ROOT="$(pwd)/muslflt" make -C build-files/ports/muslflt/ install JLEVEL=16
+QNX_PROJECT_ROOT="$(pwd)/muslflt" make -C build-files/ports/muslflt/ install JLEVEL=4
 
 # Install googletest
 git clone https://github.com/qnx-ports/googletest.git
-BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/googletest" make -C build-files/ports/googletest install -j16
+BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/googletest" make -C build-files/ports/googletest install -j4
 
 # Clone grpc
 git clone https://github.com/qnx-ports/grpc.git && cd grpc
@@ -95,7 +98,10 @@ git submodule update --init
 cd ~/qnx_workspace
 
 # Build grpc
-QNX_PROJECT_ROOT="$(pwd)/grpc" make -C build-files/ports/grpc/ install JLEVEL=16
+CONTROLLIST="default io-sock" make -C build-files/ports/grpc/ install JLEVEL=4
+
+# Build grpc hello-world example
+CONTROLLIST="examples-default examples-io-sock" make -C build-files/ports/grpc/ install JLEVEL=4
 ```
 
 # How to run tests
