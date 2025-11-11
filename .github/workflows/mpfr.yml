@@ -42,9 +42,9 @@ jobs:
       - name: Download and extract GMP
         run: |
           cd ${{ github.workspace }}
-          curl -L -o gmp-6.3.0.tar.xz https://ftp.gnu.org/gnu/gmp/gmp-6.3.0.tar.xz
-          tar -xvf gmp-6.3.0.tar.xz
-          mv gmp-6.3.0 gmp
+          curl -L -o gmp-6.2.0.tar.xz https://gmplib.org/download/gmp/gmp-6.2.0.tar.xz
+          tar -xvf gmp-6.2.0.tar.xz
+          mv gmp-6.2.0 gmp
           
       - name: Build GMP
         shell: bash
