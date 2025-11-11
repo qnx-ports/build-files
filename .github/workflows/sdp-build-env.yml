@@ -17,7 +17,7 @@ on:
 
 jobs:
   build-sdp-image:
-    runs-on: ubuntu-22.04-common
+    runs-on: ubuntu-22.04
     if: |
       ((github.event_name == 'workflow_dispatch') ||
       (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
