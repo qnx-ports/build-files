@@ -66,13 +66,20 @@ jobs:
         with:
           repository: qnx-ports/clapack
           path: clapack
-
+      - name: Checkout GKlib
+        uses: actions/checkout@v4
+        with:
+          repository: KarypisLab/GKlib
+          path: GKlib
+          ref: 8bd6bad750b2b0d90800c632cf18e8ee93ad72d7
+          submodules: recursive
+          
       #  Checkout METIS
       - name: Checkout METIS
         uses: actions/checkout@v4
         with:
-          repository: qnx-ports/metis
-          path: metis
+          repository: qnx-ports/METIS
+          path: METIS
 
       #  Checkout SuiteSparse (main project)
       - name: Checkout SuiteSparse
@@ -89,9 +96,13 @@ jobs:
           else
             source ~/qnx/710/qnxsdp-env.sh
           fi
-
+          
+          WORKSPACE=$PWD
+          cd $WORKSPACE/GKlib
+          git apply ../build-files/ports/METIS/patches/GKlib.patch
+          cd $WORKSPACE
           make -C build-files/ports/METIS install
-          make -C build-files/ports/OpenBLAS/ install
+          make -C build-files/ports/OpenBLAS install
           QNX_PROJECT_ROOT="$(pwd)/clapack" make -C build-files/ports/clapack install
           QNX_PROJECT_ROOT="$(pwd)/gmp" make -C build-files/ports/gmp install
           QNX_PROJECT_ROOT="$(pwd)/mpfr" make -C build-files/ports/mpfr install
