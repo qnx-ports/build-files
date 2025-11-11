@@ -90,6 +90,11 @@ protobuf: protoc_host
 	mkdir -p protobuf
 	cd protobuf && cmake $(CMAKE_COMMON_ARGS) -Dprotobuf_BUILD_TESTS=$(BUILD_TESTING) -DWITH_PROTOC=$(HOST_PROTOC_PATH)/protoc -Dprotobuf_BUILD_LIBUPB=OFF $(QNX_PROJECT_ROOT)
 	cd protobuf && cmake --build . $(GENERATOR_ARGS)
+	if [ "$(BUILD_TESTING)" = "ON" ]; then
+		cp -r $(QNX_PROJECT_ROOT) src
+		# Test binaries need to be run from the source directory.
+		cp protobuf/tests protobuf/lite-test protobuf/lite-arena-test protobuf/test_plugin src
+	fi
 
 protoc_target:
 	mkdir -p protoc
