@@ -132,15 +132,10 @@ $(NAME)_target:
 	cmake $(CONFIG_CMAKE_ARGS) $(CMAKE_ARGS) $(EXAMPLE_ROOT) && \
 	cmake --build . $(GENERATOR_ARGS)
 
-install check: $(NAME)_all
-	@echo Installing...
-	@cd build && cmake --build . --target install $(GENERATOR_ARGS)
-	@echo Done.
-
 clean_target:
 	@rm -rf build
 
 clean iclean spotless: clean_target
 
-uninstall:
+uninstall install check:
 endif
