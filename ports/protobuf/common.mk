@@ -92,7 +92,7 @@ protobuf: protoc_host
 	cd protobuf && cmake --build . $(GENERATOR_ARGS)
 	if [ "$(BUILD_TESTING)" = "ON" ]; then \
 		cp -r $(QNX_PROJECT_ROOT) src; \
-		cp protobuf/tests protobuf/lite-test protobuf/lite-arena-test protobuf/test_plugin src; \
+		cp protobuf/tests protobuf/lite-test protobuf/test_plugin src; \
 	fi
 
 protoc_target:
