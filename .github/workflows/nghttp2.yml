@@ -76,7 +76,8 @@ jobs:
           fi
           WORKSPACE=$PWD
           cd /home/runner/qnx/710
-          grep -rn "struct ares_addrinfo {"
+          find . -name "ares.h"
+          grep -rn "struct ares_addrinfo {" || true
           cd $WORKSPACE
           make -C build-files/ports/libev install
           QNX_PROJECT_ROOT="$(pwd)/brotli" make -C build-files/ports/brotli/ install -j4
