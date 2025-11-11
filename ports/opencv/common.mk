@@ -7,7 +7,9 @@ include $(MKFILES_ROOT)/qmacros.mk
 
 NAME=opencv
 
-QNX_PROJECT_ROOT ?= $(PRODUCT_ROOT)/../../
+QNX_WORKSPACE ?= $(PRODUCT_ROOT)/../../
+QNX_PROJECT_ROOT ?= $(QNX_WORKSPACE)/opencv
+EXTRA_ROOT ?= $(QNX_WORKSPACE)/opencv_extra
 
 #$(INSTALL_ROOT_$(OS)) is pointing to $QNX_TARGET
 #by default, unless it was manually re-routed to
@@ -96,6 +98,10 @@ opencv_all:
 	@mkdir -p build
 	@cd build && cmake $(CMAKE_ARGS) $(QNX_PROJECT_ROOT)
 	@cd build && make VERBOSE=1 all $(MAKE_ARGS)
+	if [ "$(BUILD_TESTING)" = "ON" ]; then
+		cp -r $(EXTRA_ROOT)/testdata ./testdata
+		cp -r $(QNX_PROJECT_ROOT)/samples/data ./sampledata
+	fi
 
 install check: opencv_all
 	@echo Installing...

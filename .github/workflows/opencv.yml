@@ -78,6 +78,17 @@ jobs:
       run: |
         source ~/qnx/800/qnxsdp-env.sh
         source /usr/local/qnx/env/bin/activate
+        WORKSPACE=${{ github.workspace }}
+
+        cd $WORKSPACE/opencv_extra
+
+        # Download models used by the tests
+        cd testdata/dnn
+        python3 download_models.py
+        rm *.tar.gz
+        rm *.tgz
+
+        cd $WORKSPACE
         QNX_PROJECT_ROOT="$(pwd)/muslflt" make -C build-files/ports/muslflt/ INSTALL_ROOT_nto=$PWD/stage USE_INSTALL_ROOT=true install
         QNX_PROJECT_ROOT="$(pwd)/numpy" make -C build-files/ports/numpy INSTALL_ROOT_nto=$PWD/stage USE_INSTALL_ROOT=true install 
         BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/opencv" make -C build-files/ports/opencv INSTALL_ROOT_nto=$PWD/stage USE_INSTALL_ROOT=true install 
@@ -101,28 +112,7 @@ jobs:
       shell: bash
       run: |
         source ~/qnx/800/qnxsdp-env.sh
-        WORKSPACE=${{ github.workspace }}
 
-        cd $WORKSPACE/opencv_extra
-
-        # Download models used by the tests
-        cd testdata/dnn
-        python download_models.py
-        rm *.tar.gz
-        rm *.tgz
-
-        # TODO: Let this install to cpu agnostic location
-        cd $WORKSPACE/opencv_extra
-        cp -r testdata $WORKSPACE/stage/x86_64/usr/local/share
-        cp -r testdata $WORKSPACE/stage/aarch64/usr/local/share
-
-        cd $WORKSPACE/samples/data
-        mkdir -p $WORKSPACE/stage/x86_64/usr/local/share/sampledata
-        mkdir -p $WORKSPACE/stage/aarch64/usr/local/share/sampledata
-        cp -r * $WORKSPACE/stage/x86_64/usr/local/share/sampledata
-        cp -r * $WORKSPACE/stage/aarch64/usr/local/share/sampledata
-
-        cd $WORKSPACE
         ./test-tools/bin/run_tests.sh
 
     - name: Publish Test Report
