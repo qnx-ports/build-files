@@ -7,7 +7,7 @@ include $(MKFILES_ROOT)/qmacros.mk
 
 NAME=grpc-examples
 
-QNX_PROJECT_ROOT ?= $(PRODUCT_ROOT)/../../grpc/examples/cpp/helloworld
+EXAMPLE_ROOT ?= $(PRODUCT_ROOT)/../../grpc/examples/cpp/helloworld
 
 BUILD_TESTING ?= ON
 
@@ -128,7 +128,7 @@ $(NAME)_all: $(NAME)_target
 $(NAME)_target:
 	@mkdir -p build
 	@cd build && \
-	cmake $(CONFIG_CMAKE_ARGS) $(CMAKE_ARGS) $(QNX_PROJECT_ROOT) && \
+	cmake $(CONFIG_CMAKE_ARGS) $(CMAKE_ARGS) $(EXAMPLE_ROOT) && \
 	cmake --build . $(GENERATOR_ARGS)
 
 install check: $(NAME)_all
