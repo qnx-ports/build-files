@@ -78,7 +78,7 @@ jobs:
           echo "::stop-commands::FIND"
           cd /home/runner/qnx/710
           grep -rn "struct ares_addrinfo {"
-          echo ":FIND::"
+          echo "::FIND::"
           cd $WORKSPACE
           make -C build-files/ports/libev install
           QNX_PROJECT_ROOT="$(pwd)/brotli" make -C build-files/ports/brotli/ install -j4
