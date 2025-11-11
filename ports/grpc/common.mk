@@ -7,9 +7,6 @@ include $(MKFILES_ROOT)/qmacros.mk
 
 NAME=grpc
 
-GRPC_VERSION = 1.65.0
-GRPC_CORE_VERSION = 42.0.0
-
 QNX_PROJECT_ROOT ?= $(PRODUCT_ROOT)/../../grpc
 
 BUILD_TESTING ?= ON
@@ -61,12 +58,6 @@ endif
 HOST_GRPC_PATH = ${PROJECT_ROOT}/host/linux-x86_64-o/build
 
 HOST_PROTOC_PATH = ${HOST_GRPC_PATH}/third_party/protobuf/protoc
-
-define PINFO
-PINFO DESCRIPTION=gRPC - An RPC library and framework - \(${GRPC_VERSION}\)
-endef
-PINFO_STATE=Experimental
-USEFILE=
 
 CMAKE_ARGS += -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
               -DCMAKE_PROJECT_INCLUDE=$(PROJECT_ROOT)/project_hooks.cmake \
@@ -150,32 +141,4 @@ clean_target:
 clean iclean spotless: clean_target
 
 uninstall:
-endif
-
-# everything down below deals with the generation of the PINFO
-# information for shared objects that is used by the QNX build
-# infrastructure to embed metadata in the .so files, for example
-# data and time, version number, description, etc. Metadata can
-# be retrieved on the target by typing 'use -i <path to the .so file>'.
-# this is optional: setting GENERATE_PINFO_FILES to FALSE will disable
-# the insertion of metadata in .so files.
-ifeq ($(GENERATE_PINFO_FILES), TRUE)
-# the following rules are called by the cmake generated makefiles,
-# in order to generate the .pinfo files for the shared libraries
-%.so.$(GRPC_VERSION):
-	$(ADD_PINFO)
-	$(ADD_USAGE)
-
-%.so.$(GRPC_CORE_VERSION):
-	$(ADD_PINFO)
-	$(ADD_USAGE)
-
-%_test:
-	$(ADD_PINFO)
-	$(ADD_USAGE)
-
-%_plugin:
-	$(ADD_PINFO)
-	$(ADD_USAGE)
-
 endif

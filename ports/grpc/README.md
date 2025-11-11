@@ -53,11 +53,8 @@ git pull
 git submodule update --init
 cd ~/qnx_workspace
 
-# Build grpc
-CONTROLLIST="host default io-sock" make -C build-files/ports/grpc/ install JLEVEL=4
-
-# Build grpc hello-world example
-CONTROLLIST="examples-default examples-io-sock" make -C build-files/ports/grpc/ install JLEVEL=4
+# Build grpc (with hello-world example)
+make -C build-files/ports/grpc/ install JLEVEL=4
 ```
 
 # Compile the port for QNX
@@ -97,11 +94,8 @@ git pull
 git submodule update --init
 cd ~/qnx_workspace
 
-# Build grpc
-CONTROLLIST="host default io-sock" make -C build-files/ports/grpc/ install JLEVEL=4
-
-# Build grpc hello-world example
-CONTROLLIST="examples-default examples-io-sock" make -C build-files/ports/grpc/ install JLEVEL=4
+# Build grpc (with hello-world example)
+make -C build-files/ports/grpc/ install JLEVEL=4
 ```
 
 # How to run tests

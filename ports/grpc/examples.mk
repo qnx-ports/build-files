@@ -7,7 +7,8 @@ include $(MKFILES_ROOT)/qmacros.mk
 
 NAME=grpc-examples
 
-EXAMPLE_ROOT ?= $(PRODUCT_ROOT)/../../grpc/examples/cpp/helloworld
+QNX_PROJECT_ROOT ?= $(PRODUCT_ROOT)/../../grpc
+EXAMPLE_ROOT ?= $(QNX_PROJECT_ROOT)/examples/cpp/helloworld
 
 BUILD_TESTING ?= ON
 
