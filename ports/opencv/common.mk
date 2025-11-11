@@ -99,8 +99,8 @@ opencv_all:
 	@cd build && cmake $(CMAKE_ARGS) $(QNX_PROJECT_ROOT)
 	@cd build && make VERBOSE=1 all $(MAKE_ARGS)
 	if [ "$(BUILD_TESTING)" = "ON" ]; then \
-		cp -r $(EXTRA_ROOT)/testdata ./testdata \
-		cp -r $(QNX_PROJECT_ROOT)/samples/data ./sampledata \
+		cp -r $(EXTRA_ROOT)/testdata ./testdata; \
+		cp -r $(QNX_PROJECT_ROOT)/samples/data ./sampledata; \
 	fi
 
 install check: opencv_all
