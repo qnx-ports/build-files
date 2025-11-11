@@ -38,18 +38,20 @@ jobs:
           path: build-files
 
       #  Checkout GMP (dependency)
-      - name: Checkout gmp
-        uses: actions/checkout@v4
-        with:
-          repository: qnx-ports/gmp
-          path: gmp
+      - name: Download and extract GMP
+        run: |
+          cd ${{ github.workspace }}
+          curl -L -o gmp-6.2.0.tar.xz https://gmplib.org/download/gmp/gmp-6.2.0.tar.xz
+          tar -xvf gmp-6.2.0.tar.xz
+          mv gmp-6.2.0 gmp
 
       #  Checkout MPFR (depends on GMP)
-      - name: Checkout mpfr
-        uses: actions/checkout@v4
-        with:
-          repository: qnx-ports/mpfr
-          path: mpfr
+      - name: Download and extract MPFR
+        run: |
+          cd ${{ github.workspace }}
+          curl -L -o mpfr-4.2.2.tar.xz https://www.mpfr.org/mpfr-4.2.2/mpfr-4.2.2.tar.xz
+          tar -xvf mpfr-4.2.2.tar.xz
+          mv mpfr-4.2.2 mpfr
 
       #  Checkout OpenBLAS
       - name: Checkout OpenBLAS
