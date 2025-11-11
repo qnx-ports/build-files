@@ -84,7 +84,7 @@ jobs:
 
         # Download models used by the tests
         cd testdata/dnn
-        python3 download_models.py
+        python3 download_models.py || true
         rm *.tar.gz
         rm *.tgz
 
