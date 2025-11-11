@@ -41,7 +41,7 @@ jobs:
         with:
           repository: gnutls/nettle
           path: nettle
-          ref: nettle_3.6_release_20200429
+          ref: nettle_3.8.1_release_20220727
 
       - name: Build nettle
         shell: bash
