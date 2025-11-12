@@ -34,8 +34,6 @@ jobs:
       #  Checkout build-files
       - name: Checkout build-files
         uses: actions/checkout@v4
-        with:
-          path: build-files
 
       #  Checkout GMP (dependency)
       - name: Download and extract GMP
