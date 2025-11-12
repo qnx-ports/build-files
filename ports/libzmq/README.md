@@ -98,10 +98,7 @@ exit
 ```
 ### Failed tests
 ```bash
-# Fails because relative paths causes bind to fail.
-# A fix is being worked on righ now
-# Workaround for now is to convert all relative paths to absolute paths before calling bind().
-./test_use_fd
-./test_rebind_ipd
+# test_reconnect_ivl IPC test fails due to relative path issue
+# Workaround: Convert relative IPC paths to absolute before binding
 ./test_reconnect_ivl
 ```

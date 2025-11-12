@@ -1,59 +1,62 @@
 name: googletest
 
+permissions:
+  contents: write
+  checks: write
+
 on:
   workflow_dispatch:
   push:
     branches:
       - main
     paths:
-      - '.github/workflows/googletest.yml'
-      - 'ports/googletest/**'
+      - ".github/workflows/googletest.yml"
+      - "ports/googletest/**"
   pull_request:
     branches:
       - main
     paths:
-      - '.github/workflows/googletest.yml'
-      - 'ports/googletest/**'
+      - ".github/workflows/googletest.yml"
+      - "ports/googletest/**"
 
 jobs:
-
   build:
     strategy:
       matrix:
         qnx_env: ["710", "800"]
-    runs-on: self-hosted
+    name: Build for QNX ${{ matrix.qnx_env }}
+    runs-on: ubuntu-22.04-common
     if: |
-      (github.event_name == 'workflow_dispatch') ||
+      ((github.event_name == 'workflow_dispatch') ||
       (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
-      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'googletest'))
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'googletest')))
     steps:
-    - name: Checkout build-files
-      uses: actions/checkout@v4
-      with:
-        path: build-files
+      - name: Checkout build-files
+        uses: actions/checkout@v4
+        with:
+          path: build-files
 
-    - name: Checkout googletest
-      uses: actions/checkout@v4
-      with:
-        repository: qnx-ports/googletest
-        path: googletest
+      - name: Checkout googletest
+        uses: actions/checkout@v4
+        with:
+          repository: qnx-ports/googletest
+          path: googletest
 
-    - name: Login to GitHub Container Registry
-      uses: docker/login-action@v3
-      with:
-        registry: ghcr.io
-        username: ${{github.actor}}
-        password: ${{secrets.GITHUB_TOKEN}}
+      - name: Checkout check-tools
+        uses: actions/checkout@v4
+        with:
+          repository: qnx-ports/check-tools
+          path: check-tools
+          ref: v0.1.4
 
-    - name: Pull build environment
-      run: |
-        docker pull ghcr.io/qnx-ports/sdp-build-env:latest
+      - name: Checkout test-tools
+        uses: actions/checkout@v4
+        with:
+          repository: qnx-ports/test-tools
+          path: test-tools
+          token: ${{secrets.GCO_TOKEN}}
 
-    - name: Build googletest
-      uses: addnab/docker-run-action@v3
-      with:
-        image: ghcr.io/qnx-ports/sdp-build-env:latest
-        options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
+      - name: Build googletest
         shell: bash
         run: |
           if [[ ${{ matrix.qnx_env }} == 800 ]]; then
@@ -61,8 +64,36 @@ jobs:
           else
             source ~/qnx/710/qnxsdp-env.sh
           fi
-          cd ~/workspace
           if [[ ${{ matrix.qnx_env }} == 800 ]]; then
             touch build-files/ports/googletest/nto-arm-le-v7/Makefile.dnm
           fi
-          BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/googletest" make -C build-files/ports/googletest install 
+          BUILD_TESTING=ON make -C build-files/ports/googletest INSTALL_ROOT_nto=$PWD/stage USE_INSTALL_ROOT=true install
+
+      - name: Setup python env
+        if: ${{ (matrix.qnx_env == '800') }}
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: pip install -r ./test-tools/requirements.txt
+
+      - name: Test abseil-cpp
+        if: ${{ (matrix.qnx_env == '800') }}
+        env:
+          OSS_NAME: "googletest"
+          QNX_VERSION: "qnx${{ matrix.qnx_env }}"
+          COMPANION_DIR: "${{ github.workspace }}/build-files/ports/googletest"
+        shell: bash
+        run: |
+          source ~/qnx/800/qnxsdp-env.sh
+
+          ./test-tools/bin/run_tests.sh
+
+      - name: Publish Test Report
+        uses: mikepenz/action-junit-report@v5
+        if: ${{ always() }}
+        with:
+          report_paths: 'results/*.xml'
+          check_name: (${{ matrix.qnx_env }}) Test Report

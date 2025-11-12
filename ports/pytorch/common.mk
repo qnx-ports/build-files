@@ -47,6 +47,8 @@ BUILD_LITE_INTERPRETER ?= OFF
 SELECTED_OP_LIST ?=
 BUILD_TESTING ?= OFF
 TRACING_BASED ?= OFF
+BUILD_CAFFE2 ?= ON
+BUILD_PYTHON ?= ON
 
 PREFIX_PATH := $(shell python -c 'import sysconfig, sys; sys.stdout.write(sysconfig.get_path("purelib"))')
 PYTHON_EXECUTABLE := $(shell python -c 'import sys; sys.stdout.write(sys.executable)')
@@ -90,7 +92,9 @@ CMAKE_ARGS =    -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
                 -DTRACING_BASED=$(TRACING_BASED) \
                 -DXNNPACK_ENABLE_ASSEMBLY=OFF \
                 -DBUILD_CUSTOM_PROTOBUFF=OFF \
-                -DBUILD_SHARED_LIBS=ON
+                -DBUILD_SHARED_LIBS=ON \
+                -DBUILD_PYTHON=$(BUILD_PYTHON) \
+                -DBUILD_CAFFE2=$(BUILD_CAFFE2)
 
 ifeq ($(USE_LIGHTWEIGHT_DISPATCH),ON)
     CMAKE_ARGS +=   -DUSE_LIGHTWEIGHT_DISPATCH=ON \

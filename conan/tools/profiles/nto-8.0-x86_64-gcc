@@ -1,0 +1,12 @@
+[settings]
+arch=x86_64
+build_type=Release
+compiler=gcc
+compiler.version=12.2
+compiler.libcxx=libstdc++
+compiler.cppstd=gnu17
+compiler.cstd=gnu17
+
+#For all QNX os name is Neutrino
+os=Neutrino
+os.version=8.0

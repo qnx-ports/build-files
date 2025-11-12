@@ -1,5 +1,10 @@
 name: boost
 
+permissions:
+  contents: write
+  checks: write
+
+
 on:
   workflow_dispatch:
   push:
@@ -18,11 +23,11 @@ on:
 jobs:
 
   build:
-    runs-on: self-hosted
+    runs-on: ubuntu-22.04-common
     if: |
-      (github.event_name == 'workflow_dispatch') ||
+      ((github.event_name == 'workflow_dispatch') ||
       (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
-      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'boost'))
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'boost')))
     steps:
     - name: Checkout build-files
       uses: actions/checkout@v4
@@ -37,29 +42,14 @@ jobs:
         ref: boost-1.82.0
         submodules: recursive
 
-    - name: Login to GitHub Container Registry
-      uses: docker/login-action@v3
-      with:
-        registry: ghcr.io
-        username: ${{github.actor}}
-        password: ${{secrets.GITHUB_TOKEN}}
-
-    - name: Pull build environment
-      run: |
-        docker pull ghcr.io/qnx-ports/sdp800-build-env:latest
-
     - name: Build boost
-      uses: addnab/docker-run-action@v3
-      with:
-        image: ghcr.io/qnx-ports/sdp800-build-env:latest
-        options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
-        shell: bash
-        run: |
-          source ~/qnx/800/qnxsdp-env.sh
-          cd ~/workspace
-          cd boost/tools/build
-          git apply ../../../build-files/ports/boost/tools_qnx.patch
-          cd ~/workspace
-          cd boost/libs/asio && git apply ../../../build-files/ports/boost/asio_1.82.0_qnx.patch
-          cd ~/workspace
-          QNX_PROJECT_ROOT="$(pwd)/boost" make -C build-files/ports/boost install
+      shell: bash
+      run: |
+        source ~/qnx/800/qnxsdp-env.sh
+        WORKSPACE=$PWD
+        cd boost/tools/build
+        git apply ../../../build-files/ports/boost/tools_qnx.patch
+        cd $WORKSPACE
+        cd boost/libs/asio && git apply ../../../build-files/ports/boost/asio_1.82.0_qnx.patch
+        cd $WORKSPACE
+        QNX_PROJECT_ROOT="$(pwd)/boost" make -C build-files/ports/boost install

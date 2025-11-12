@@ -7,6 +7,7 @@
 
 
 ## Build and Install
+
 As a prerequisite, you must have a QNX SDP 8.0 installation. Please ensure you have the following packages installed as well:
 - com.qnx.qnx800.target.screen.fonts.engine
 

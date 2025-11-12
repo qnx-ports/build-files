@@ -1,0 +1,90 @@
+diff --git a/ros2cli/package.xml b/ros2cli/package.xml
+index 663b84d..4db3471 100644
+--- a/ros2cli/package.xml
++++ b/ros2cli/package.xml
+@@ -21,7 +21,7 @@
+   <exec_depend>python3-importlib-metadata</exec_depend>
+   <exec_depend>python3-packaging</exec_depend>
+   <exec_depend>python3-pkg-resources</exec_depend>
+-  <exec_depend>python3-psutil</exec_depend>
++  <exec_depend>python3-netifaces</exec_depend>
+   <exec_depend>rclpy</exec_depend>
+ 
+   <test_depend>ament_copyright</test_depend>
+diff --git a/ros2cli/ros2cli/node/network_aware.py b/ros2cli/ros2cli/node/network_aware.py
+index e04e406..b83d718 100644
+--- a/ros2cli/ros2cli/node/network_aware.py
++++ b/ros2cli/ros2cli/node/network_aware.py
+@@ -14,15 +14,27 @@
+ 
+ import functools
+ import inspect
++import sys
+ 
+-import psutil
++if sys.platform == 'qnx':
++    from collections import defaultdict
++    import netifaces
++else:
++    import psutil
+ import rclpy
+ 
+ from ros2cli.node.direct import DirectNode
+ 
+ 
+ def get_interfaces_ip_addresses():
+-    addresses_by_interfaces = psutil.net_if_addrs()
++    if sys.platform == 'qnx':
++        addresses_by_interfaces = defaultdict(functools.partial(defaultdict, set))
++        for interface_name in netifaces.interfaces():
++            for kind, info_list in netifaces.ifaddresses(interface_name).items():
++                for info in info_list:
++                    addresses_by_interfaces[kind][interface_name].add(info['addr'])
++    else:
++        addresses_by_interfaces = psutil.net_if_addrs()
+     print(f'Addresses by interfaces: {addresses_by_interfaces}')
+     return addresses_by_interfaces
+ 
+diff --git a/ros2cli/ros2cli/xmlrpc/local_server.py b/ros2cli/ros2cli/xmlrpc/local_server.py
+index 9e3e9e4..014ce01 100644
+--- a/ros2cli/ros2cli/xmlrpc/local_server.py
++++ b/ros2cli/ros2cli/xmlrpc/local_server.py
+@@ -18,17 +18,30 @@ import struct
+ from xmlrpc.server import SimpleXMLRPCRequestHandler  # noqa
+ from xmlrpc.server import SimpleXMLRPCServer
+ 
+-import psutil
++import sys
++if sys.platform == 'qnx':
++    import netifaces
++else:
++    import psutil
+ 
+ 
+ def get_local_ipaddrs():
+-    return [
+-        addr.address
+-        for _, addrs in psutil.net_if_addrs().items()
+-        for addr in addrs
+-        if addr.family == socket.AF_INET
+-    ]
+-
++    if sys.platform == 'qnx':
++        iplist = []
++        interfaces = netifaces.interfaces()
++        for interface in interfaces:
++            addrs = netifaces.ifaddresses(interface)
++            if netifaces.AF_INET in addrs.keys():
++                for value in addrs[netifaces.AF_INET]:
++                    iplist.append(value['addr'])
++        return iplist
++    else:
++        return [
++            addr.address
++            for _, addrs in psutil.net_if_addrs().items()
++            for addr in addrs
++            if addr.family == socket.AF_INET
++        ]
+ 
+ class LocalXMLRPCServer(SimpleXMLRPCServer):
+ 

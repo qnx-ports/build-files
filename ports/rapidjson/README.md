@@ -39,7 +39,6 @@ make -C build-files/ports/rapidjson/ install
 BUILD_TESTS=true make -C build-files/ports/rapidjson install
 # With tests & specify Googletest Installation
 BUILD_TESTS=true GTEST_SRC="your/gtest/install/path" make -C build-files/ports/rapidjson install
-
 # You can also get your rapidjson path, as well as specify the path to these makefiles if you need to run from a script or other directory
 QNX_PROJECT_ROOT=/path/to/rapidjson make -C /path/to/build-files/ports/rapidjson install
 ```

@@ -1,5 +1,10 @@
 name: numpy
 
+permissions:
+  contents: write
+  checks: write
+
+
 on:
   workflow_dispatch:
   push:
@@ -21,11 +26,11 @@ jobs:
     strategy:
       matrix:
         qnx_env: ["710", "800"]
-    runs-on: self-hosted
+    runs-on: ubuntu-22.04-common
     if: |
-      (github.event_name == 'workflow_dispatch') ||
+      ((github.event_name == 'workflow_dispatch') ||
       (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
-      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'numpy'))
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'numpy')))
     steps:
     - name: Checkout build-files
       uses: actions/checkout@v4
@@ -39,29 +44,13 @@ jobs:
         path: numpy
         submodules: recursive
 
-    - name: Login to GitHub Container Registry
-      uses: docker/login-action@v3
-      with:
-        registry: ghcr.io
-        username: ${{github.actor}}
-        password: ${{secrets.GITHUB_TOKEN}}
-
-    - name: Pull build environment
-      run: |
-        docker pull ghcr.io/qnx-ports/sdp-build-env:latest
-
     - name: Build numpy
-      uses: addnab/docker-run-action@v3
-      with:
-        image: ghcr.io/qnx-ports/sdp-build-env:latest
-        options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
-        shell: bash
-        run: |
-          if [[ ${{ matrix.qnx_env }} == 800 ]]; then
-            source ~/qnx/800/qnxsdp-env.sh
-          else
-            source ~/qnx/710/qnxsdp-env.sh
-          fi
-          cd ~/workspace
-          source /usr/local/qnx/env/bin/activate
-          QNX_PROJECT_ROOT="$(pwd)/numpy" make -C build-files/ports/numpy install
+      shell: bash
+      run: |
+        if [[ ${{ matrix.qnx_env }} == 800 ]]; then
+          source ~/qnx/800/qnxsdp-env.sh
+        else
+          source ~/qnx/710/qnxsdp-env.sh
+        fi
+        source /usr/local/qnx/env/bin/activate
+        QNX_PROJECT_ROOT="$(pwd)/numpy" make -C build-files/ports/numpy install

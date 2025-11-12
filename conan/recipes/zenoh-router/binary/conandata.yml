@@ -1,4 +1,12 @@
 sources:
+  "1.5.0":
+    Linux:
+      x86_64:
+        url: "https://github.com/eclipse-zenoh/zenoh/releases/download/1.5.0/zenoh-1.5.0-x86_64-unknown-linux-gnu-standalone.zip"
+        sha256: "b37014c772f5c977650ca60d46b34ac20f0c9ea3f016160371511ffeee41595b"
+    license:
+      url: "https://github.com/eclipse-zenoh/zenoh/raw/1.5.0/LICENSE"
+      sha256: "01a44774f7b1a453595c7c6d7f7308284ba6a1059dc49e14dad6647e1d44a338"
   "1.2.1":
     Linux:
       x86_64:
