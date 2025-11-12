@@ -93,12 +93,10 @@ CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DOPENCV_PYTHON_INSTALL_TARGET=ON \
              -DOPENCV_PYTHON2_SKIP_DETECTION=ON \
 
-export INSTALL_ROOT=$(INSTALL_ROOT)
-
 ifndef NO_TARGET_OVERRIDE
 opencv_all:
 	@mkdir -p build
-	@cd build && cmake $(CMAKE_ARGS) $(QNX_PROJECT_ROOT)
+	@cd build && INSTALL_ROOT=$(INSTALL_ROOT) cmake $(CMAKE_ARGS) $(QNX_PROJECT_ROOT)
 	@cd build && make VERBOSE=1 all $(MAKE_ARGS)
 	if [ "$(BUILD_TESTING)" = "ON" ]; then \
 		cp -r $(EXTRA_ROOT)/testdata ./testdata; \
