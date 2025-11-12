@@ -89,6 +89,7 @@ jobs:
             source ~/qnx/800/qnxsdp-env.sh
           fi
           cd gnutls
+          git submodule update --init --recursive
           ./bootstrap
           cd ..
           QNX_PROJECT_ROOT="$(pwd)/gnutls" make -C build-files/ports/gnutls install
