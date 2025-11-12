@@ -1,5 +1,9 @@
 name: gnutls
 
+permissions:
+  contents: write
+  checks: write
+
 on:
   workflow_dispatch:
   push:
@@ -8,29 +12,66 @@ on:
     paths:
       - ".github/workflows/gnutls.yml"
       - "ports/gnutls/**"
+      - 'ports/gmp/**'
+      - 'ports/nettle/**'
   pull_request:
     branches:
       - main
     paths:
       - ".github/workflows/gnutls.yml"
       - "ports/gnutls/**"
-
+      - 'ports/gmp/**'
+      - 'ports/nettle/**'
 jobs:
   build:
     strategy:
       matrix:
         qnx_env: ["710", "800"]
+      fail-fast: false
     name: Build for QNX ${{ matrix.qnx_env }}
-    runs-on: self-hosted
+    runs-on: ubuntu-22.04-common
     if: |
-      (github.event_name == 'workflow_dispatch') ||
+      ((github.event_name == 'workflow_dispatch') ||
       (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
-      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'gnutls'))
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'gnutls')))
     steps:
       - name: Checkout build-files
         uses: actions/checkout@v4
         with:
           path: build-files
+
+      - name: Download and extract GMP
+        run: |
+          cd ${{ github.workspace }}
+          curl -L -o gmp-6.2.0.tar.xz https://gmplib.org/download/gmp/gmp-6.2.0.tar.xz
+          tar -xvf gmp-6.2.0.tar.xz
+          mv gmp-6.2.0 gmp
+          
+      - name: Build GMP
+        shell: bash
+        run: |
+          if [[ "${{ matrix.qnx_env }}" == "800" ]]; then
+            source ~/qnx/800/qnxsdp-env.sh
+          else
+            source ~/qnx/710/qnxsdp-env.sh
+          fi
+          QNX_PROJECT_ROOT="$(pwd)/gmp" make -C build-files/ports/gmp install
+
+      - name: Checkout nettle
+        uses: actions/checkout@v4
+        with:
+          repository: gnutls/nettle
+          path: nettle
+
+      - name: Build nettle
+        shell: bash
+        run: |
+          if [[ "${{ matrix.qnx_env }}" == "800" ]]; then
+            source ~/qnx/800/qnxsdp-env.sh
+          else
+            source ~/qnx/710/qnxsdp-env.sh
+          fi
+          QNX_PROJECT_ROOT="$(pwd)/nettle" make -C build-files/ports/nettle install
 
       - name: Checkout gnutls
         uses: actions/checkout@v4
@@ -39,38 +80,16 @@ jobs:
           path: gnutls
           ref: qnx-3.6.15
 
-      - name: Bootstrap gnutls
-        uses: addnab/docker-run-action@v3
-        with:
-          image: ghcr.io/qnx-ports/sdp-build-env:latest
-          options: -v ${{ github.workspace }}:/home/runner/workspace
-          shell: bash
-          run: |
-            cd ~/workspace/gnutls
-            ./bootstrap
-
-      - name: Login to GitHub Container Registry
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Pull build environment
-        run: |
-          docker pull ghcr.io/qnx-ports/sdp-build-env:latest
-
       - name: Build gnutls
-        uses: addnab/docker-run-action@v3
-        with:
-          image: ghcr.io/qnx-ports/sdp-build-env:latest
-          options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
-          shell: bash
-          run: |
-            if [[ ${{ matrix.qnx_env }} == 710 ]]; then
-              source ~/qnx/710/qnxsdp-env.sh
-            else
-              source ~/qnx/800/qnxsdp-env.sh
-            fi
-            cd ~/workspace
-            make -C build-files/ports/gnutls install
+        shell: bash
+        run: |
+          if [[ ${{ matrix.qnx_env }} == 710 ]]; then
+            source ~/qnx/710/qnxsdp-env.sh
+          else
+            source ~/qnx/800/qnxsdp-env.sh
+          fi
+          cd ~/workspace
+          cd gnutls
+          ./bootstrap
+          cd ..
+          QNX_PROJECT_ROOT="$(pwd)/gnutls" make -C build-files/ports/gnutls install

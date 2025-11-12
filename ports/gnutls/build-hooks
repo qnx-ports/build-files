@@ -1,11 +1,10 @@
 #!/bin/sh
 
 # QNX-specific nested level (path from build dir to source root)
-NESTED_LEVEL="${QNX_PROJECT_ROOT:-../../}"
+NESTED_LEVEL="${QNX_PROJECT_ROOT:-../../..}"
 
 # Default prefix inside QNX target sysroot
 BASIC_PREFIX="/usr/local"
-PREFIX="/usr/local"
 EXEC_PREFIX="/${cpudir}/usr/local"
 
 function hook_preconfigure {
@@ -13,6 +12,15 @@ function hook_preconfigure {
 
     # Unset any conflicting autoconf tool variables
     unset AUTOMAKE AUTOCONF AUTOHEADER AUTORECONF ACLOCAL
+
+    # Initialize gnulib submodule BEFORE bootstrap
+    if [ ! -f "${NESTED_LEVEL}/gnulib/gnulib-tool" ]; then
+        echo "Initializing gnulib submodule..."
+        (cd "${NESTED_LEVEL}" && git submodule update --init --recursive gnulib) || {
+            echo "Failed to initialize gnulib submodule"
+            return 1
+        }
+    fi
 
     # Run bootstrap only if configure doesn't exist
     if [ ! -x "${NESTED_LEVEL}/configure" ]; then
@@ -34,9 +42,8 @@ function hook_preconfigure {
     export NETTLE_LIBS="-lgmp -lnettle"
     
     # Ensure compiler flags can find QNX includes and libs
-    export CPPFLAGS="-I${QNX_TARGET}/${cpudir}/usr/include -I${QNX_TARGET}/usr/include -I${INSTALL_ROOT_nto}/${cpudir}${BASIC_PREFIX}/include ${CPPFLAGS}"
-    export CPPFLAGS="-I${CPPFLAGS} -I${QNX_PROJECT_ROOT}/src/libopts"
-    export LDFLAGS="-L${INSTALL_ROOT_nto}/${cpudir}${BASIC_PREFIX}/lib -L${INSTALL_ROOT_nto}/${cpudir}/usr/lib ${LDFLAGS} -lgmp"
+    export CPPFLAGS="${CPPFLAGS} -I${QNX_TARGET}/${cpudir}/usr/include -I${QNX_TARGET}/usr/include -I${INSTALL_ROOT_nto}/${cpudir}${BASIC_PREFIX}/include -I${QNX_PROJECT_ROOT}/src/libopts"
+    export LDFLAGS="${LDFLAGS} -L${INSTALL_ROOT_nto}/${cpudir}${BASIC_PREFIX}/lib -L${INSTALL_ROOT_nto}/${cpudir}/usr/lib"
 }
 
 function hook_configure {
@@ -50,7 +57,7 @@ function hook_configure {
 
     "${NESTED_LEVEL}/configure" \
         --srcdir="${NESTED_LEVEL}" \
-        --prefix="${PREFIX}" \
+        --prefix="${BASIC_PREFIX}" \
         --exec-prefix="${EXEC_PREFIX}" \
         --host="${machine}" \
         --with-included-libtasn1 \
@@ -68,9 +75,7 @@ function hook_configure {
         --disable-alpn-support \
         --disable-openssl-compatibility \
         --enable-local-libopts \
-        PKG_CONFIG_LIBDIR="${INSTALL_ROOT_nto}/${cpudir}/usr/lib/pkgconfig" \
         LIBS="-L${INSTALL_ROOT_nto}/${cpudir}/usr/lib" \
-	PKG_CONFIG_LIBDIR="${PKG_CONFIG_LIBDIR}" \
         CFLAGS="-O2 -Wall" \
         CPPFLAGS="${CPPFLAGS}" \
         LDFLAGS="${LDFLAGS}" || {
@@ -82,7 +87,6 @@ function hook_configure {
 function hook_make {
     echo "hook_make - running make ${make_cmds}"
     
-    # Use a clean DESTDIR without the full path embedded
     if [ "${make_cmds}" = "install" ]; then
         make ${JLEVEL:+-j${JLEVEL}} install || return 1
         # Clean up .la files

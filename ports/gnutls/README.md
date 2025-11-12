@@ -25,6 +25,26 @@ cd build-files/docker
 source ~/qnx800/qnxsdp-env.sh
 cd ~/qnx_workspace
 
+**Dependencies**
+
+# Clone gmp
+wget https://gmplib.org/download/gmp/gmp-6.2.0.tar.xz
+tar -xvf gmp-6.2.0.tar.xz 
+mv gmp-6.2.0 gmp
+
+# Build gmp
+QNX_PROJECT_ROOT="$(pwd)/gmp" make -C build-files/ports/gmp clean 
+QNX_PROJECT_ROOT="$(pwd)/gmp" make -C build-files/ports/gmp install JLEVEL=4
+
+# Clone nettle
+git clone https://github.com/gnutls/nettle.git 
+cd nettle
+git checkout tags/nettle_3.8.1_release_20220727
+cd ..
+
+# Build nettle
+QNX_PROJECT_ROOT="$(pwd)/nettle" make -C build-files/ports/nettle/  install -j4
+
 # Clone gnutls
 git clone https://github.com/qnx-ports/gnutls.git
 cd gnutls/
@@ -46,6 +66,26 @@ git clone https://github.com/qnx-ports/build-files.git
 # Source SDP environment
 source ~/qnx800/qnxsdp-env.sh
 cd ~/qnx_workspace
+
+**Dependencies**
+
+# Clone gmp
+wget https://gmplib.org/download/gmp/gmp-6.2.0.tar.xz
+tar -xvf gmp-6.2.0.tar.xz 
+mv gmp-6.2.0 gmp
+
+# Build gmp
+QNX_PROJECT_ROOT="$(pwd)/gmp" make -C build-files/ports/gmp clean 
+QNX_PROJECT_ROOT="$(pwd)/gmp" make -C build-files/ports/gmp install JLEVEL=4
+
+# Clone nettle
+git clone https://github.com/gnutls/nettle.git 
+cd nettle
+git checkout tags/nettle_3.8.1_release_20220727
+cd ..
+
+# Build nettle
+QNX_PROJECT_ROOT="$(pwd)/nettle" make -C build-files/ports/nettle/  install -j4
 
 # Clone gnutls
 git clone https://github.com/qnx-ports/gnutls.git
