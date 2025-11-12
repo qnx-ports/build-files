@@ -88,7 +88,6 @@ jobs:
           else
             source ~/qnx/800/qnxsdp-env.sh
           fi
-          cd ~/workspace
           cd gnutls
           ./bootstrap
           cd ..
