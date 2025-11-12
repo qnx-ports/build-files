@@ -56,7 +56,8 @@ RUN apt update && apt install -y \
 	ninja-build \
 	net-tools \
 	tree \
-	scons
+	scons \
+	autogen
 
 # Install QT dependancies
 RUN apt-get update && apt-get install -y \
