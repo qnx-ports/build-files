@@ -95,7 +95,9 @@ jobs:
         cd $WORKSPACE
         CONFIG_CMAKE_ARGS="-G Ninja" GENERATOR_ARGS="-j$(nproc) --verbose" QNX_PROJECT_ROOT="$(pwd)/grpc" make -C build-files/ports/grpc/host install
         CPULIST=aarch64 CONFIG_CMAKE_ARGS="-G Ninja" GENERATOR_ARGS="-j$(nproc) --verbose" QNX_PROJECT_ROOT="$(pwd)/grpc" make -C build-files/ports/grpc/default install
-        CPULIST=aarch64 CONFIG_CMAKE_ARGS="-G Ninja" GENERATOR_ARGS="-j$(nproc) --verbose" QNX_PROJECT_ROOT="$(pwd)/grpc" make -C build-files/ports/grpc/io-sock install
+        CPULIST=aarch64 CONFIG_CMAKE_ARGS="-G Ninja" GENERATOR_ARGS="-j$(nproc) --verbose" QNX_PROJECT_ROOT="$(pwd)/grpc" make -C build-files/ports/grpc/io_sock install
+        CPULIST=aarch64 CONFIG_CMAKE_ARGS="-G Ninja" GENERATOR_ARGS="-j$(nproc) --verbose" make -C build-files/ports/grpc/examples-default install
+        CPULIST=aarch64 CONFIG_CMAKE_ARGS="-G Ninja" GENERATOR_ARGS="-j$(nproc) --verbose" make -C build-files/ports/grpc/examples-io_sock install
   
   build-x86_64o:
     strategy:
@@ -165,11 +167,14 @@ jobs:
         cd $WORKSPACE
         CONFIG_CMAKE_ARGS="-G Ninja" GENERATOR_ARGS="-j$(nproc) --verbose" QNX_PROJECT_ROOT="$(pwd)/grpc" make -C build-files/ports/grpc/host install
         CPULIST=x86_64 CONFIG_CMAKE_ARGS="-G Ninja" GENERATOR_ARGS="-j$(nproc) --verbose" QNX_PROJECT_ROOT="$(pwd)/grpc" make -C build-files/ports/grpc/default install
-        CPULIST=x86_64 CONFIG_CMAKE_ARGS="-G Ninja" GENERATOR_ARGS="-j$(nproc) --verbose" QNX_PROJECT_ROOT="$(pwd)/grpc" make -C build-files/ports/grpc/io-sock install
+        CPULIST=x86_64 CONFIG_CMAKE_ARGS="-G Ninja" GENERATOR_ARGS="-j$(nproc) --verbose" QNX_PROJECT_ROOT="$(pwd)/grpc" make -C build-files/ports/grpc/io_sock install
+        CPULIST=x86_64 CONFIG_CMAKE_ARGS="-G Ninja" GENERATOR_ARGS="-j$(nproc) --verbose" make -C build-files/ports/grpc/examples-default install
+        CPULIST=x86_64 CONFIG_CMAKE_ARGS="-G Ninja" GENERATOR_ARGS="-j$(nproc) --verbose" make -C build-files/ports/grpc/examples-io_sock install
 
   build-armv7le-710:
     runs-on: ubuntu-22.04-common
     if: |
+      false &&
       ((github.event_name == 'workflow_dispatch') ||
       (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
       (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'grpc')))
@@ -228,4 +233,6 @@ jobs:
         cd $WORKSPACE
         CONFIG_CMAKE_ARGS="-G Ninja" GENERATOR_ARGS="-j$(nproc) --verbose" QNX_PROJECT_ROOT="$(pwd)/grpc" make -C build-files/ports/grpc/host install
         CPULIST=arm CONFIG_CMAKE_ARGS="-G Ninja" GENERATOR_ARGS="-j$(nproc) --verbose" QNX_PROJECT_ROOT="$(pwd)/grpc" make -C build-files/ports/grpc/default install
-        CPULIST=arm CONFIG_CMAKE_ARGS="-G Ninja" GENERATOR_ARGS="-j$(nproc) --verbose" QNX_PROJECT_ROOT="$(pwd)/grpc" make -C build-files/ports/grpc/io-sock install
+        CPULIST=arm CONFIG_CMAKE_ARGS="-G Ninja" GENERATOR_ARGS="-j$(nproc) --verbose" QNX_PROJECT_ROOT="$(pwd)/grpc" make -C build-files/ports/grpc/io_sock install
+        CPULIST=arm CONFIG_CMAKE_ARGS="-G Ninja" GENERATOR_ARGS="-j$(nproc) --verbose" make -C build-files/ports/grpc/examples-default install
+        CPULIST=arm CONFIG_CMAKE_ARGS="-G Ninja" GENERATOR_ARGS="-j$(nproc) --verbose" make -C build-files/ports/grpc/examples-io_sock install

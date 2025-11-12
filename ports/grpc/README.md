@@ -29,15 +29,11 @@ cd ~/qnx_workspace
 
 # Install muslflt
 git clone https://github.com/qnx-ports/muslflt.git
-QNX_PROJECT_ROOT="$(pwd)/muslflt" make -C build-files/ports/muslflt/ install JLEVEL=16
+QNX_PROJECT_ROOT="$(pwd)/muslflt" make -C build-files/ports/muslflt/ install JLEVEL=4
 
 # Install googletest
 git clone https://github.com/qnx-ports/googletest.git
-BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/googletest" make -C build-files/ports/googletest install -j16
-
-# Install abseil-cpp
-git clone https://github.com/qnx-ports/abseil-cpp.git
-QNX_SEVEN_COMPAT="true" QNX_PROJECT_ROOT="$(pwd)/abseil-cpp" make -C build-files/ports/abseil-cpp/ install JLEVEL=16
+BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/googletest" make -C build-files/ports/googletest install -j4
 
 # Clone grpc
 git clone https://github.com/qnx-ports/grpc.git && cd grpc
@@ -57,8 +53,8 @@ git pull
 git submodule update --init
 cd ~/qnx_workspace
 
-# Build grpc
-QNX_PROJECT_ROOT="$(pwd)/grpc" make -C build-files/ports/grpc/ install JLEVEL=16
+# Build grpc (with hello-world example)
+make -C build-files/ports/grpc/ install JLEVEL=4
 ```
 
 # Compile the port for QNX
@@ -74,15 +70,11 @@ source ~/qnx800/qnxsdp-env.sh
 
 # Install muslflt
 git clone https://github.com/qnx-ports/muslflt.git
-QNX_PROJECT_ROOT="$(pwd)/muslflt" make -C build-files/ports/muslflt/ install JLEVEL=16
+QNX_PROJECT_ROOT="$(pwd)/muslflt" make -C build-files/ports/muslflt/ install JLEVEL=4
 
 # Install googletest
 git clone https://github.com/qnx-ports/googletest.git
-BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/googletest" make -C build-files/ports/googletest install -j16
-
-# Install abseil-cpp
-git clone https://github.com/qnx-ports/abseil-cpp.git
-QNX_SEVEN_COMPAT="true" QNX_PROJECT_ROOT="$(pwd)/abseil-cpp" make -C build-files/ports/abseil-cpp/ install JLEVEL=16
+BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/googletest" make -C build-files/ports/googletest install -j4
 
 # Clone grpc
 git clone https://github.com/qnx-ports/grpc.git && cd grpc
@@ -102,8 +94,8 @@ git pull
 git submodule update --init
 cd ~/qnx_workspace
 
-# Build grpc
-QNX_PROJECT_ROOT="$(pwd)/grpc" make -C build-files/ports/grpc/ install JLEVEL=16
+# Build grpc (with hello-world example)
+make -C build-files/ports/grpc/ install JLEVEL=4
 ```
 
 # How to run tests
