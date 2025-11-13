@@ -4,7 +4,6 @@ permissions:
   contents: write
   checks: write
 
-
 on:
   workflow_dispatch:
   push:
@@ -39,6 +38,12 @@ jobs:
         with:
           path: build-files
 
+      - name: Checkout libev
+        uses: actions/checkout@v4
+        with:
+          repository: qnx-ports/libev
+          path: libev
+
       - name: Checkout brotli
         uses: actions/checkout@v4
         with:
@@ -68,10 +73,6 @@ jobs:
           else
             source ~/qnx/800/qnxsdp-env.sh
           fi
-          curl -O https://dist.schmorp.de/libev/libev-4.33.tar.gz
-          tar xvf libev-4.33.tar.gz
-          mv libev-4.33 libev
-          patch -i build-files/ports/libev/libev-4.33.patch libev/ev.c
           make -C build-files/ports/libev install
           QNX_PROJECT_ROOT="$(pwd)/brotli" make -C build-files/ports/brotli/ install -j4
           make -C build-files/ports/jansson/ install -j4
