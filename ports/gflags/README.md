@@ -25,11 +25,11 @@ mkdir gflags_wksp && cd gflags_wksp
 #Pick one:
 #Via HTTPS
 git clone https://github.com/qnx-ports/build-files.git
-git clone https://github.com/gflags/gflags.git
+git clone -b v2.2.2 https://github.com/gflags/gflags.git
 
 #Via SSH
 git clone git@github.com:qnx-ports/build-files.git
-git clone git@github.com:gflags/gflags.git
+git clone -b v2.2.2 git@github.com:gflags/gflags.git
 ```
 
 3. _Optional_ Build the Docker image and create a container

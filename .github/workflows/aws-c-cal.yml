@@ -4,7 +4,6 @@ permissions:
   contents: write
   checks: write
 
-
 on:
   workflow_dispatch:
   push:
@@ -48,6 +47,7 @@ jobs:
         with:
           repository: awslabs/aws-c-cal
           path: aws-c-cal
+          ref: v0.9.10
 
       - name: Build aws-c-cal
         shell: bash

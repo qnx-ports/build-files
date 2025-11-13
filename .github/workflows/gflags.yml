@@ -41,6 +41,7 @@ jobs:
         with:
           repository: gflags/gflags
           path: gflags
+          ref: v2.2.2
 
       - name: Build gflags
         shell: bash
