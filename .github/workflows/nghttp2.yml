@@ -26,7 +26,6 @@ jobs:
         qnx_env:
           - { sdp: 710, repo: "qnx-ports/nghttp2", ref: "qnx-1.61.0" }
           - { sdp: 800, repo: "nghttp2/nghttp2", ref: "master" }
-      fail-fast: false
     name: Build for QNX ${{ matrix.qnx_env.sdp }}
     runs-on: ubuntu-22.04-common
     if: |
@@ -74,11 +73,6 @@ jobs:
           else
             source ~/qnx/800/qnxsdp-env.sh
           fi
-          WORKSPACE=$PWD
-          cd /home/runner/qnx/710
-          find . -name "ares.h"
-          grep -rn "struct ares_addrinfo" || true
-          cd $WORKSPACE
           make -C build-files/ports/libev install
           QNX_PROJECT_ROOT="$(pwd)/brotli" make -C build-files/ports/brotli/ install -j4
           make -C build-files/ports/jansson/ install -j4
