@@ -29,7 +29,7 @@ jobs:
         qnx_env: ["710", "800"]
       fail-fast: false
     name: Build for QNX ${{ matrix.qnx_env }}
-    runs-on: ubuntu-22.04-common
+    runs-on: ubuntu-common-22.04
     if: |
       ((github.event_name == 'workflow_dispatch') ||
       (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
