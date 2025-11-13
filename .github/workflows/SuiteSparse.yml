@@ -44,7 +44,7 @@ jobs:
           curl -L -o gmp-6.2.0.tar.xz https://gmplib.org/download/gmp/gmp-6.2.0.tar.xz
           tar -xvf gmp-6.2.0.tar.xz
           mv gmp-6.2.0 gmp
-
+          
       #  Checkout MPFR (depends on GMP)
       - name: Download and extract MPFR
         run: |
@@ -105,6 +105,8 @@ jobs:
           make -C build-files/ports/METIS install
           make -C build-files/ports/OpenBLAS install
           QNX_PROJECT_ROOT="$(pwd)/clapack" make -C build-files/ports/clapack install
+          QNX_PROJECT_ROOT="$(pwd)/gmp" make -C build-files/ports/gmp clean
           QNX_PROJECT_ROOT="$(pwd)/gmp" make -C build-files/ports/gmp install
+          QNX_PROJECT_ROOT="$(pwd)/mpfr" make -C build-files/ports/mpfr clean
           QNX_PROJECT_ROOT="$(pwd)/mpfr" make -C build-files/ports/mpfr install
           QNX_PROJECT_ROOT="$(pwd)/SuiteSparse" make -C build-files/ports/SuiteSparse install
