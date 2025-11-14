@@ -58,6 +58,11 @@ CFLAGS += $(FLAGS) \
 
 LDFLAGS += -Wl,--build-id=md5
 
+WITH_STATIC_LIB ?= ON
+WITH_SHARED_LIB ?= ON
+WITH_TESTS ?= ON
+WITH_EXAMPLES ?= ON
+
 CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DCMAKE_SYSTEM_PROCESSOR=$(CPU) \
              -DCMAKE_C_FLAGS="$(CFLAGS)" \
@@ -71,10 +76,6 @@ CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DCMAKE_MODULE_PATH="$(CMAKE_MODULE_PATH)" \
              -DCMAKE_FIND_ROOT_PATH="$(CMAKE_FIND_ROOT_PATH)" \
              -DCMAKE_BUILD_TYPE=$(CMAKE_BUILD_TYPE) \
-             -DWITH_STATIC_LIB=$(WITH_STATIC_LIB) \
-             -DWITH_SHARED_LIB=$(WITH_SHARED_LIB) \
-             -DWITH_TESTS=$(WITH_TESTS) \
-             -DWITH_EXAMPLES=$(WITH_EXAMPLES) \
              -DBLAS_LIBRARIES=$(QNX_TARGET)/$(CPUVARDIR)/usr/local/lib \
              -DBLAS_INCLUDE_DIR=$(QNX_TARGET)/$(CPUVARDIR)/usr/local/include \
              -DCMAKE_PREFIX_PATH=$(QNX_TARGET)/$(CPUVARDIR)/usr/local/lib \
