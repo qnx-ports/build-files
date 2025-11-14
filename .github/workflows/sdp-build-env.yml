@@ -78,18 +78,14 @@ jobs:
 
     - name: Build interactive SDP build environment image
       run: |
-        # Cleanup first
-        buildah container rm tmp || true
         cd build-files/docker
         METHOD=buildah ./docker-build-qnx-image.sh
-        buildah image tag qnx800:latest ghcr.io/qnx-ports/sdp-build-env:latest
-        buildah create --name tmp ghcr.io/qnx-ports/sdp-build-env:latest
+        buildah tag qnx800:latest ghcr.io/qnx-ports/sdp-build-env:latest
+        buildah from --name tmp ghcr.io/qnx-ports/sdp-build-env:latest
 
-        buildah cp ${{ github.workspace }}/qnx tmp:/home/runner
-        buildah cp ${{ github.workspace }}/.qnx tmp:/home/runner
+        buildah copy ${{ github.workspace }}/qnx tmp:/home/runner
+        buildah copy ${{ github.workspace }}/.qnx tmp:/home/runner
         buildah commit tmp ghcr.io/qnx-ports/sdp-build-env:latest
-        # Cleanup afterwards
-        buildah container rm tmp
 
     - name: Push to ghcr.io
       if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/main') }}
