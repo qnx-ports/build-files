@@ -11,6 +11,7 @@ QNX_PROJECT_ROOT    ?= $(PRODUCT_ROOT)/../../$(NAME)
 PREFIX              ?= usr/local
 
 BUILD_TESTING       ?= 0
+SYMBOLS             ?= 0
 
 JLEVEL ?= $(subst -j,,$(filter -j%,$(MAKEFLAGS)))
 
@@ -51,6 +52,7 @@ $(NAME)_all: clean
 		LDOPTS=$(LDOPTS) \
 		SDL_INSTALL_ROOT=$(SDL_INSTALL_ROOT) \
 		JLEVEL=$(JLEVEL) \
+		SYMBOLS=$(SYMBOLS) \
 		USE_QTDEBUG=0 \
 		NO_USE_XINPUT=1 \
 		NO_X11=1 \
