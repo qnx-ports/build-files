@@ -105,6 +105,11 @@ make -C build-files/ports/SuiteSparse install JLEVEL=4
 
 ```bash
 export TARGET_HOST=<target-ip-address-or-hostname>
+mkdir -p ~/lib \
+         ~/tests\
+         ~/Matrix/Mongoose \
+         ~/Matrix/LAGraph \
+         ~/Matrix/CHOLMOD
 
 # Copy the dependency libraries for testing
 scp $QNX_TARGET/aarch64le/usr/local/lib/lib*.so*   qnxuser@$TARGET_HOST:~/lib
@@ -125,6 +130,7 @@ cd ~/tests
 export LD_LIBRARY_PATH=$HOME/lib:$LD_LIBRARY_PATH
 ./cholmod_di_demo ~/Matrix/CHOLMOD/matrixname.mtx
 ```
+
 
 
 
