@@ -31,13 +31,12 @@ jobs:
       (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
       (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'SuiteSparse')))
     steps:
-      #  Checkout build-files
+    
       - name: Checkout build-files
         uses: actions/checkout@v4
         with:
           path: build-files
           
-      #  Checkout GMP (dependency)
       - name: Download and extract GMP
         run: |
           cd ${{ github.workspace }}
@@ -45,7 +44,6 @@ jobs:
           tar -xvf gmp-6.2.0.tar.xz
           mv gmp-6.2.0 gmp
           
-      #  Checkout MPFR (depends on GMP)
       - name: Download and extract MPFR
         run: |
           cd ${{ github.workspace }}
@@ -53,14 +51,12 @@ jobs:
           tar -xvf mpfr-4.2.2.tar.xz
           mv mpfr-4.2.2 mpfr
 
-      #  Checkout OpenBLAS
       - name: Checkout OpenBLAS
         uses: actions/checkout@v4
         with:
           repository: qnx-ports/OpenBLAS
           path: OpenBLAS
           
-      # Checkout CLAPACK
       - name: Checkout clapack
         uses: actions/checkout@v4
         with:
@@ -75,14 +71,12 @@ jobs:
           ref: 8bd6bad750b2b0d90800c632cf18e8ee93ad72d7
           submodules: recursive
           
-      #  Checkout METIS
       - name: Checkout METIS
         uses: actions/checkout@v4
         with:
           repository: qnx-ports/METIS
           path: METIS
 
-      #  Checkout SuiteSparse (main project)
       - name: Checkout SuiteSparse
         uses: actions/checkout@v4
         with:
