@@ -1,0 +1,106 @@
+name: SuiteSparse
+
+permissions:
+  contents: write
+  checks: write
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/SuiteSparse.yml'
+      - 'ports/SuiteSparse/**'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/SuiteSparse.yml'
+      - 'ports/SuiteSparse/**'
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        qnx_env: ["710", "800"]
+    name: Build for QNX ${{ matrix.qnx_env }}
+    runs-on: ubuntu-22.04-common
+    if: |
+      ((github.event_name == 'workflow_dispatch') ||
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'SuiteSparse')))
+    steps:
+    
+      - name: Checkout build-files
+        uses: actions/checkout@v4
+        with:
+          path: build-files
+          
+      - name: Download and extract GMP
+        run: |
+          cd ${{ github.workspace }}
+          curl -L -o gmp-6.2.0.tar.xz https://gmplib.org/download/gmp/gmp-6.2.0.tar.xz
+          tar -xvf gmp-6.2.0.tar.xz
+          mv gmp-6.2.0 gmp
+          
+      - name: Download and extract MPFR
+        run: |
+          cd ${{ github.workspace }}
+          curl -L -o mpfr-4.2.2.tar.xz https://www.mpfr.org/mpfr-4.2.2/mpfr-4.2.2.tar.xz
+          tar -xvf mpfr-4.2.2.tar.xz
+          mv mpfr-4.2.2 mpfr
+
+      - name: Checkout OpenBLAS
+        uses: actions/checkout@v4
+        with:
+          repository: qnx-ports/OpenBLAS
+          path: OpenBLAS
+          
+      - name: Checkout clapack
+        uses: actions/checkout@v4
+        with:
+           repository: qnx-ports/clapack
+           path: clapack
+          
+      - name: Checkout GKlib
+        uses: actions/checkout@v4
+        with:
+          repository: KarypisLab/GKlib
+          path: GKlib
+          ref: 8bd6bad750b2b0d90800c632cf18e8ee93ad72d7
+          submodules: recursive
+          
+      - name: Checkout METIS
+        uses: actions/checkout@v4
+        with:
+          repository: qnx-ports/METIS
+          path: METIS
+
+      - name: Checkout SuiteSparse
+        uses: actions/checkout@v4
+        with:
+          repository: qnx-ports/SuiteSparse
+          path: SuiteSparse
+
+      - name: Set up QNX environment and build
+        shell: bash
+        run: |
+          if [[ "${{ matrix.qnx_env }}" == "800" ]]; then
+            source ~/qnx/800/qnxsdp-env.sh
+          else
+            source ~/qnx/710/qnxsdp-env.sh
+          fi
+          
+          WORKSPACE=$PWD
+          cd $WORKSPACE/GKlib
+          git apply ../build-files/ports/METIS/patches/GKlib.patch
+          cd $WORKSPACE
+          make -C build-files/ports/METIS install
+          make -C build-files/ports/OpenBLAS install
+          QNX_PROJECT_ROOT="$(pwd)/clapack" make -C build-files/ports/clapack install
+          QNX_PROJECT_ROOT="$(pwd)/gmp" make -C build-files/ports/gmp clean
+          QNX_PROJECT_ROOT="$(pwd)/gmp" make -C build-files/ports/gmp install
+          QNX_PROJECT_ROOT="$(pwd)/mpfr" make -C build-files/ports/mpfr clean
+          QNX_PROJECT_ROOT="$(pwd)/mpfr" make -C build-files/ports/mpfr install
+          make -C build-files/ports/SuiteSparse install
