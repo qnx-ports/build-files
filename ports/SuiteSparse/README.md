@@ -21,43 +21,38 @@ cd build-files/docker
 source ~/qnx800/qnxsdp-env.sh
 # (Use ~/qnx710/qnxsdp-env.sh for SDP 7.1)
 
-# Clone metis
+# Clone and Build METIS
 cd ~/qnx_workspace
 git clone https://github.com/qnx-ports/METIS.git
-
-# Clone OpenBLAS
-git clone https://github.com/qnx-ports/OpenBLAS.git
-
-# Clone clapack
-git clone https://github.com/qnx-ports/clapack.git
-
-# clone mpfr
-wget https://www.mpfr.org/mpfr-4.2.2/mpfr-4.2.2.tar.xz
-tar -xvf mpfr-4.2.2.tar.xz 
-mv mpfr-4.2.2 mpfr
-
-# Clone gmp
-wget https://gmplib.org/download/gmp/gmp-6.2.0.tar.xz
-tar -xvf gmp-6.2.0.tar.xz 
-mv gmp-6.2.0 gmp
-
-#Clone SuiteSparse
-git clone https://github.com/qnx-ports/SuiteSparse.git
-
-# Build metis
-cd ~/qnx_workspace
 git clone https://github.com/KarypisLab/GKlib.git && cd GKlib
 # Checkout latest tested commit
 git checkout 8bd6bad750b2b0d90800c632cf18e8ee93ad72d7
 git apply ~/qnx_workspace/build-files/ports/METIS/patches/GKlib.patch
 
-cd ~/qnx_workspace
-GKLIB_SRC="$(pwd)/GKlib" QNX_PROJECT_ROOT="$(pwd)/METIS" make -C build-files/ports/METIS install -j4
-
+# Clone and Build OpenBLAS
+git clone https://github.com/qnx-ports/OpenBLAS.git
 QNX_PROJECT_ROOT="$(pwd)/OpenBLAS" make -C build-files/ports/OpenBLAS/ install -j4
+
+# Clone and Build clapack
+git clone https://github.com/qnx-ports/clapack.git
 make -C build-files/ports/clapack install
+
+# Clone and Build gmp
+wget https://gmplib.org/download/gmp/gmp-6.2.0.tar.xz
+tar -xvf gmp-6.2.0.tar.xz 
+mv gmp-6.2.0 gmp
+QNX_PROJECT_ROOT="$(pwd)/gmp" make -C build-files/ports/gmp clean
 QNX_PROJECT_ROOT="$(pwd)/gmp" make -C build-files/ports/gmp install JLEVEL=4
+
+# Clone and Build mpfr
+wget https://www.mpfr.org/mpfr-4.2.2/mpfr-4.2.2.tar.xz
+tar -xvf mpfr-4.2.2.tar.xz 
+mv mpfr-4.2.2 mpfr
+QNX_PROJECT_ROOT="$(pwd)/mpfr" make -C build-files/ports/mpfr install clean
 QNX_PROJECT_ROOT="$(pwd)/mpfr" make -C build-files/ports/mpfr install JLEVEL=4
+
+# Clone SuiteSparse
+git clone https://github.com/qnx-ports/SuiteSparse.git
 QNX_PROJECT_ROOT="$(pwd)/SuiteSparse" make -C build-files/ports/SuiteSparse install JLEVEL=4
 ```
 
@@ -72,45 +67,65 @@ git clone https://github.com/qnx-ports/build-files.git
 source ~/qnx800/qnxsdp-env.sh
 # (Use ~/qnx710/qnxsdp-env.sh for SDP 7.1)
 
-# Clone metis
+# Clone and Build METIS
 cd ~/qnx_workspace
 git clone https://github.com/qnx-ports/METIS.git
-
-# Clone OpenBLAS
-git clone https://github.com/qnx-ports/OpenBLAS.git
-
-# Clone clapack
-git clone https://github.com/qnx-ports/clapack.git
-
-# clone mpfr
-wget https://www.mpfr.org/mpfr-4.2.2/mpfr-4.2.2.tar.xz
-tar -xf mpfr-4.2.2.tar.xz 
-mv mpfr-4.2.2 mpfr
-
-# Clone gmp
-wget https://gmplib.org/download/gmp/gmp-6.2.0.tar.xz
-tar -xvf gmp-6.2.0.tar.xz 
-mv gmp-6.2.0 gmp
-
-#Clone SuiteSparse
-git clone https://github.com/qnx-ports/SuiteSparse.git
-
-# Build metis
-cd ~/qnx_workspace
 git clone https://github.com/KarypisLab/GKlib.git && cd GKlib
 # Checkout latest tested commit
 git checkout 8bd6bad750b2b0d90800c632cf18e8ee93ad72d7
 git apply ~/qnx_workspace/build-files/ports/METIS/patches/GKlib.patch
 
-cd ~/qnx_workspace
-GKLIB_SRC="$(pwd)/GKlib" QNX_PROJECT_ROOT="$(pwd)/METIS" make -C build-files/ports/METIS install -j4
-
+# Clone and Build OpenBLAS
+git clone https://github.com/qnx-ports/OpenBLAS.git
 QNX_PROJECT_ROOT="$(pwd)/OpenBLAS" make -C build-files/ports/OpenBLAS/ install -j4
+
+# Clone and Build clapack
+git clone https://github.com/qnx-ports/clapack.git
 make -C build-files/ports/clapack install
+
+# Clone and Build gmp
+wget https://gmplib.org/download/gmp/gmp-6.2.0.tar.xz
+tar -xvf gmp-6.2.0.tar.xz 
+mv gmp-6.2.0 gmp
+QNX_PROJECT_ROOT="$(pwd)/gmp" make -C build-files/ports/gmp clean
 QNX_PROJECT_ROOT="$(pwd)/gmp" make -C build-files/ports/gmp install JLEVEL=4
+
+# Clone and Build mpfr
+wget https://www.mpfr.org/mpfr-4.2.2/mpfr-4.2.2.tar.xz
+tar -xvf mpfr-4.2.2.tar.xz 
+mv mpfr-4.2.2 mpfr
+QNX_PROJECT_ROOT="$(pwd)/mpfr" make -C build-files/ports/mpfr install clean
 QNX_PROJECT_ROOT="$(pwd)/mpfr" make -C build-files/ports/mpfr install JLEVEL=4
+
+# Clone SuiteSparse
+git clone https://github.com/qnx-ports/SuiteSparse.git
 QNX_PROJECT_ROOT="$(pwd)/SuiteSparse" make -C build-files/ports/SuiteSparse install JLEVEL=4
 ```
+# Running tests
+
+```bash
+export TARGET_HOST=<target-ip-address-or-hostname>
+
+# Copy the dependency libraries for testing
+scp $QNX_TARGET/aarch64le/usr/local/lib/lib*.so*   qnxuser@$TARGET_HOST:~/lib
+scp $(pwd)/SuiteSparse/Mongoose/Matrix qnxuser@$TARGET_HOST:~/Matrix/Mongoose
+scp $(pwd)/SuiteSparse/LAGraph/data qnxuser@$TARGET_HOST:~/Matrix/LAGraph
+scp $(pwd)/SuiteSparse/CHOLMOD/Demo/Matrix qnxuser@$TARGET_HOST:~/Matrix/CHOLMOD
+
+# Copy test binaries to target
+scp $(pwd)/build-files/ports/SuiteSparse/nto-aarch64-le/build/CHOLMOD/tests qnxuser@$TARGET_HOST:~/tests
+scp $(pwd)/build-files/ports/SuiteSparse/nto-aarch64-le/build/LAGraph/tests qnxuser@$TARGET_HOST:~/tests
+scp $(pwd)/build-files/ports/SuiteSparse/nto-aarch64-le/build/Mongoose/tests qnxuser@$TARGET_HOST:~/tests
+```
+
+### On target run
+
+```bash
+cd ~/tests
+export LD_LIBRARY_PATH=$HOME/lib:$LD_LIBRARY_PATH
+./cholmod_di_demo ~/Matrix/CHOLMOD/matrixname.mtx
+```
+
 
 
 
