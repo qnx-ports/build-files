@@ -53,7 +53,7 @@ QNX_PROJECT_ROOT="$(pwd)/mpfr" make -C build-files/ports/mpfr install JLEVEL=4
 
 # Clone SuiteSparse
 git clone https://github.com/qnx-ports/SuiteSparse.git
-QNX_PROJECT_ROOT="$(pwd)/SuiteSparse" make -C build-files/ports/SuiteSparse install JLEVEL=4
+make -C build-files/ports/SuiteSparse install JLEVEL=4
 ```
 
 # Compile the port for QNX on Ubuntu host
@@ -99,7 +99,7 @@ QNX_PROJECT_ROOT="$(pwd)/mpfr" make -C build-files/ports/mpfr install JLEVEL=4
 
 # Clone SuiteSparse
 git clone https://github.com/qnx-ports/SuiteSparse.git
-QNX_PROJECT_ROOT="$(pwd)/SuiteSparse" make -C build-files/ports/SuiteSparse install JLEVEL=4
+make -C build-files/ports/SuiteSparse install JLEVEL=4
 ```
 # Running tests
 
@@ -125,6 +125,7 @@ cd ~/tests
 export LD_LIBRARY_PATH=$HOME/lib:$LD_LIBRARY_PATH
 ./cholmod_di_demo ~/Matrix/CHOLMOD/matrixname.mtx
 ```
+
 
 
 
