@@ -1,6 +1,7 @@
 #!/bin/bash
 
 QNX_SDP_VERSION=${QNX_SDP_VERSION:-qnx800}
+METHOD=${METHOD:-docker}
 
 if [ ! -d ${HOME}/${QNX_SDP_VERSION} ]; then
     echo "ERROR: The SDP's path ${HOME}/${QNX_SDP_VERSION} is not available."
@@ -9,7 +10,7 @@ fi
 
 echo "Using SDP from ${HOME}/${QNX_SDP_VERSION}"
 
-docker run -it \
+${METHOD} run -it \
   --net=host \
   --privileged \
   -v $HOME/.qnx:$HOME/.qnx \
