@@ -75,7 +75,6 @@ function hook_configure {
         --disable-alpn-support \
         --disable-openssl-compatibility \
         --enable-local-libopts \
-        LIBS="-L${INSTALL_ROOT_nto}/${cpudir}/usr/lib" \
         CFLAGS="-O2 -Wall" \
         CPPFLAGS="${CPPFLAGS}" \
         LDFLAGS="${LDFLAGS}" || {
