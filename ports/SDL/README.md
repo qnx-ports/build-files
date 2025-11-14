@@ -17,6 +17,9 @@ Instructions for compiling are listed below.
 ### *Dependencies:*
 2.0.5: 
 - screen, OpenGLES2
+2.0.14:
+- screen, OpenGLES2
+- libasound (com.qnx.qnx800.target.sound.alsa)
 
 ### *Steps:*
 1. Create a new workspace or navigate to a desired one
