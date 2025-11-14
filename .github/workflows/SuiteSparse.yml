@@ -109,4 +109,4 @@ jobs:
           QNX_PROJECT_ROOT="$(pwd)/gmp" make -C build-files/ports/gmp install
           QNX_PROJECT_ROOT="$(pwd)/mpfr" make -C build-files/ports/mpfr clean
           QNX_PROJECT_ROOT="$(pwd)/mpfr" make -C build-files/ports/mpfr install
-          QNX_PROJECT_ROOT="$(pwd)/SuiteSparse" make -C build-files/ports/SuiteSparse install
+          make -C build-files/ports/SuiteSparse install
