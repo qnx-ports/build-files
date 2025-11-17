@@ -1,0 +1,95 @@
+name: gnutls
+
+permissions:
+  contents: write
+  checks: write
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/gnutls.yml"
+      - "ports/gnutls/**"
+      - 'ports/gmp/**'
+      - 'ports/nettle/**'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/gnutls.yml"
+      - "ports/gnutls/**"
+      - 'ports/gmp/**'
+      - 'ports/nettle/**'
+jobs:
+  build:
+    strategy:
+      matrix:
+        qnx_env: ["710", "800"]
+      fail-fast: false
+    name: Build for QNX ${{ matrix.qnx_env }}
+    runs-on: ubuntu-22.04-common
+    if: |
+      ((github.event_name == 'workflow_dispatch') ||
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'gnutls')))
+    steps:
+      - name: Checkout build-files
+        uses: actions/checkout@v4
+        with:
+          path: build-files
+
+      - name: Download and extract GMP
+        run: |
+          cd ${{ github.workspace }}
+          curl -L -o gmp-6.2.0.tar.xz https://gmplib.org/download/gmp/gmp-6.2.0.tar.xz
+          tar -xvf gmp-6.2.0.tar.xz
+          mv gmp-6.2.0 gmp
+          
+      - name: Build GMP
+        shell: bash
+        run: |
+          if [[ "${{ matrix.qnx_env }}" == "800" ]]; then
+            source ~/qnx/800/qnxsdp-env.sh
+          else
+            source ~/qnx/710/qnxsdp-env.sh
+          fi
+          QNX_PROJECT_ROOT="$(pwd)/gmp" make -C build-files/ports/gmp install
+
+      - name: Checkout nettle
+        uses: actions/checkout@v4
+        with:
+          repository: gnutls/nettle
+          path: nettle
+
+      - name: Build nettle
+        shell: bash
+        run: |
+          if [[ "${{ matrix.qnx_env }}" == "800" ]]; then
+            source ~/qnx/800/qnxsdp-env.sh
+          else
+            source ~/qnx/710/qnxsdp-env.sh
+          fi
+          QNX_PROJECT_ROOT="$(pwd)/nettle" make -C build-files/ports/nettle install
+
+      - name: Checkout gnutls
+        uses: actions/checkout@v4
+        with:
+          repository: qnx-ports/gnutls
+          path: gnutls
+          ref: qnx-3.6.15
+
+      - name: Build gnutls
+        shell: bash
+        run: |
+          if [[ ${{ matrix.qnx_env }} == 710 ]]; then
+            source ~/qnx/710/qnxsdp-env.sh
+          else
+            source ~/qnx/800/qnxsdp-env.sh
+          fi
+          cd gnutls
+          git submodule update --init --recursive
+          ./bootstrap
+          cd ..
+          QNX_PROJECT_ROOT="$(pwd)/gnutls" make -C build-files/ports/gnutls install
