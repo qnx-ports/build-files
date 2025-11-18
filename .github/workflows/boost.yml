@@ -45,7 +45,7 @@ jobs:
     - name: Build boost
       shell: bash
       run: |
-        source ~/qnx/800/qnxsdp-env.sh
+        source ~/qnx/710/qnxsdp-env.sh
         WORKSPACE=$PWD
         cd boost/tools/build
         git apply ../../../build-files/ports/boost/tools_qnx.patch
