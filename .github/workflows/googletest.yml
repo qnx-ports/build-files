@@ -79,7 +79,7 @@ jobs:
       - name: Install dependencies
         run: pip install -r ./test-tools/requirements.txt
 
-      - name: Test abseil-cpp
+      - name: Test googletest
         if: ${{ (matrix.qnx_env == '800') }}
         env:
           OSS_NAME: "googletest"
