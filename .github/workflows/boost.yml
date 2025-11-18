@@ -55,7 +55,7 @@ jobs:
         options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
         shell: bash
         run: |
-          source ~/qnx/800/qnxsdp-env.sh
+          source ~/qnx/710/qnxsdp-env.sh
           cd ~/workspace
           cd boost/tools/build
           git apply ../../../build-files/ports/boost/tools_qnx.patch
