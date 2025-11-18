@@ -1,0 +1,51 @@
+<gameList>
+	<game>
+		<path>./celeste.p8</path>
+		<image>./celeste.p8.png</image>
+		<name>CELESTE Classic</name>
+		<desc>CELESTE Classic is the first entry in the Celeste series, made for a 2015 game jam. Its success spurred the launch of the series. Help Madeline climb the terrifying mt. Celeste, with the help of her unreasonably swift dash! </desc>
+		<players>1</players>
+		<rating>1</rating>
+		<genre>Platformer</genre>
+		<publisher>Maddy Makes Games</publisher>
+		<developer>Maddy Makes Games</developer>
+		<releasedate>20150721T000000</releasedate>
+	</game>
+	<game>
+		<path>./celeste_2.p8</path>
+		<image>./celeste_2.p8.png</image>
+		<name>CELESTE Classic 2</name>
+		<desc>CELESTE Classic 2 is a promotional sequel to CELESTE Classic, released on CELESTE (the full game)'s third anniversary. Journey across the mountain as Lani, Madeline's friend who owns a grappling hook!</desc>
+		<players>1</players>
+		<rating>0.9</rating>
+		<genre>Platformer</genre>
+		<publisher>Maddy Makes Games</publisher>
+		<developer>Maddy Makes Games</developer>
+		<releasedate>20210126T000000</releasedate>
+	</game>
+	<game>
+		<path>./just_one_boss.p8</path>
+		<image>./just_one_boss.p8.png</image>
+		<name>Just One Boss</name>
+		<desc>Just One Boss is a fun and challenging game, consisting of one (charming?) boss for you to face off against!</desc>
+		<players>1</players>
+		<rating>0.9</rating>
+		<genre>Boss Battle</genre>
+		<publisher>N/A</publisher>
+		<developer>bridgs</developer>
+		<releasedate>20180212T000000</releasedate>
+	</game>
+	<game>
+		<path>./pico8_cmyplatonicsolids-0.p8</path>
+		<image>./pico8_cmyplatonicsolids-0.p8.png</image>
+		<name>CMY Platonic Solids</name>
+		<desc>CMY Platonic Solids is a fun demo of the rendering capabilities that PICO-8 can offer.</desc>
+		<players>1</players>
+		<rating>0.8</rating>
+		<genre>Demo</genre>
+		<publisher>N/A</publisher>
+		<!-- Yes, this is correct. -->
+		<developer>0xFFFF967F</developer>
+		<releasedate>20250218T000000</releasedate>
+	</game>
+</gameList>

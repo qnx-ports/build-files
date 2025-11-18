@@ -1,5 +1,9 @@
 name: nghttp2
 
+permissions:
+  contents: write
+  checks: write
+
 on:
   workflow_dispatch:
   push:
@@ -23,16 +27,22 @@ jobs:
           - { sdp: 710, repo: "qnx-ports/nghttp2", ref: "qnx-1.61.0" }
           - { sdp: 800, repo: "nghttp2/nghttp2", ref: "master" }
     name: Build for QNX ${{ matrix.qnx_env.sdp }}
-    runs-on: self-hosted
+    runs-on: ubuntu-22.04-common
     if: |
-      (github.event_name == 'workflow_dispatch') ||
+      ((github.event_name == 'workflow_dispatch') ||
       (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
-      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'nghttp2'))
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'nghttp2')))
     steps:
       - name: Checkout build-files
         uses: actions/checkout@v4
         with:
           path: build-files
+
+      - name: Checkout libev
+        uses: actions/checkout@v4
+        with:
+          repository: qnx-ports/libev
+          path: libev
 
       - name: Checkout brotli
         uses: actions/checkout@v4
@@ -55,35 +65,15 @@ jobs:
           ref: ${{ matrix.qnx_env.ref }}
           submodules: recursive
 
-      - name: Login to GitHub Container Registry
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{github.actor}}
-          password: ${{secrets.GITHUB_TOKEN}}
-
-      - name: Pull build environment
-        run: |
-          docker pull ghcr.io/qnx-ports/sdp-build-env:latest
-
       - name: Build nghttp2
-        uses: addnab/docker-run-action@v3
-        with:
-          image: ghcr.io/qnx-ports/sdp-build-env:latest
-          options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
-          shell: bash
-          run: |
-            if [[ ${{ matrix.qnx_env.sdp }} == 710 ]]; then
-              source ~/qnx/710/qnxsdp-env.sh
-            else
-              source ~/qnx/800/qnxsdp-env.sh
-            fi
-            cd ~/workspace
-            curl -O https://dist.schmorp.de/libev/libev-4.33.tar.gz
-            tar xvf libev-4.33.tar.gz
-            mv libev-4.33 libev
-            patch -i build-files/ports/libev/libev-4.33.patch libev/ev.c
-            make -C build-files/ports/libev install
-            QNX_PROJECT_ROOT="$(pwd)/brotli" make -C build-files/ports/brotli/ install -j4
-            make -C build-files/ports/jansson/ install -j4
-            make -C build-files/ports/nghttp2/ install -j4
+        shell: bash
+        run: |
+          if [[ ${{ matrix.qnx_env.sdp }} == 710 ]]; then
+            source ~/qnx/710/qnxsdp-env.sh
+          else
+            source ~/qnx/800/qnxsdp-env.sh
+          fi
+          make -C build-files/ports/libev install
+          QNX_PROJECT_ROOT="$(pwd)/brotli" make -C build-files/ports/brotli/ install -j4
+          make -C build-files/ports/jansson/ install -j4
+          make -C build-files/ports/nghttp2/ install -j4

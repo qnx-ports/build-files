@@ -1,0 +1,99 @@
+diff --git a/orocos_kdl_vendor/CMakeLists.txt b/orocos_kdl_vendor/CMakeLists.txt
+index 89be346..c7b025b 100644
+--- a/orocos_kdl_vendor/CMakeLists.txt
++++ b/orocos_kdl_vendor/CMakeLists.txt
+@@ -16,6 +16,7 @@ ament_vendor(orocos_kdl_vendor
+   CMAKE_ARGS
+     -DENABLE_TESTS:BOOL=OFF
+     -DENABLE_EXAMPLES:BOOL=OFF
++    $<$<BOOL:${QNX}>:-DEIGEN3_INCLUDE_DIR=${Eigen3_INCLUDE_DIRS}>
+   PATCHES patches
+ )
+ 
+diff --git a/orocos_kdl_vendor/package.xml b/orocos_kdl_vendor/package.xml
+index 5ed7c71..edcc2d7 100644
+--- a/orocos_kdl_vendor/package.xml
++++ b/orocos_kdl_vendor/package.xml
+@@ -20,6 +20,7 @@
+ 
+   <!-- orocos_kdl depends on eigen -->
+   <depend>eigen</depend>
++  <depend>eigen3</depend>
+   <depend>eigen3_cmake_module</depend>
+   <depend>liborocos-kdl-dev</depend>
+ 
+diff --git a/python_orocos_kdl_vendor/CMakeLists.txt b/python_orocos_kdl_vendor/CMakeLists.txt
+index bd493da..b096d6c 100644
+--- a/python_orocos_kdl_vendor/CMakeLists.txt
++++ b/python_orocos_kdl_vendor/CMakeLists.txt
+@@ -23,7 +23,16 @@ if(NOT FORCE_BUILD_VENDOR_PKG)
+     # Force FindPython3 to use the debug interpreter where ROS 2 expects it
+     set(Python3_EXECUTABLE "${PYTHON_EXECUTABLE_DEBUG}")
+   endif()
+-  find_package(Python3 REQUIRED COMPONENTS Interpreter Development)
++  if(QNX)
++    find_library(python3_LIBRARY NAMES python3)
++
++    include_directories(${PROJECT_NAME}
++      ${QNX_TARGET}/usr/include/python${PYTHON_VERSION_QNX}
++      ${QNX_TARGET}/usr/include/${CPUVARDIR}/python${PYTHON_VERSION_QNX})
++  else()
++    # Find python before pybind11
++    find_package(Python3 REQUIRED COMPONENTS Interpreter Development)
++  endif()
+   execute_process(
+     COMMAND ${Python3_EXECUTABLE} -c "import PyKDL"
+     RESULT_VARIABLE pykdl_import_exit_code
+@@ -38,7 +47,15 @@ endif()
+ macro(build_pykdl)
+   # Find python before pybind11
+   # Workaround for https://github.com/pybind/pybind11/issues/3996
+-  find_package(Python3 REQUIRED COMPONENTS Interpreter Development)
++  if(QNX)
++    find_library(python3_LIBRARY NAMES python3)
++
++    include_directories(${PROJECT_NAME}
++      ${QNX_TARGET}/usr/include/python${PYTHON_VERSION_QNX}
++      ${QNX_TARGET}/usr/include/${CPUVARDIR}/python${PYTHON_VERSION_QNX})
++  else()
++    find_package(Python3 REQUIRED COMPONENTS Interpreter Development)
++  endif()
+ 
+   include(FetchContent)
+ 
+@@ -49,7 +66,9 @@ macro(build_pykdl)
+     URL_MD5 f273799921a2fd21b79211c93fa67a5d
+     PATCH_COMMAND
+       ${CMAKE_COMMAND} -E chdir <SOURCE_DIR> git apply -p1 --ignore-space-change --whitespace=nowarn
+-        ${CMAKE_CURRENT_SOURCE_DIR}/patches/0001-fix-windows-debug.patch
++        ${CMAKE_CURRENT_SOURCE_DIR}/patches/0001-fix-windows-debug.patch &&
++      ${CMAKE_COMMAND} -E chdir <SOURCE_DIR> git apply -p1 --ignore-space-change --whitespace=nowarn
++        ${CMAKE_CURRENT_SOURCE_DIR}/patches/0002-qnx-python-fix.patch
+   )
+ 
+   fetchcontent_getproperties(python_orocos_kdl)
+diff --git a/python_orocos_kdl_vendor/patches/0002-qnx-python-fix.patch b/python_orocos_kdl_vendor/patches/0002-qnx-python-fix.patch
+new file mode 100644
+index 0000000..f869065
+--- /dev/null
++++ b/python_orocos_kdl_vendor/patches/0002-qnx-python-fix.patch
+@@ -0,0 +1,19 @@
++--- a/python_orocos_kdl/CMakeLists.txt	2023-12-08 15:19:53.469243534 +0000
+++++ b/python_orocos_kdl/CMakeLists.txt	2023-12-08 15:20:18.110104659 +0000
++@@ -25,7 +25,15 @@
++ 
++ set(PYBIND11_PYTHON_VERSION ${PYTHON_VERSION} CACHE STRING "Python version used by PyBind11")
++ 
++-find_package(Python ${PYTHON_VERSION} COMPONENTS Interpreter Development REQUIRED)
+++if(QNX)
+++  find_library(python3_LIBRARY NAMES python3)
+++
+++  include_directories(${PROJECT_NAME}
+++    ${QNX_TARGET}/usr/include/python${PYTHON_VERSION_QNX}
+++    ${QNX_TARGET}/usr/include/${CPUVARDIR}/python${PYTHON_VERSION_QNX})
+++else()
+++  find_package(Python ${PYTHON_VERSION} COMPONENTS Interpreter Development REQUIRED)
+++endif()
++ if(WIN32 AND CMAKE_BUILD_TYPE STREQUAL "Debug")
++   get_filename_component(_python_executable_dir "${Python_EXECUTABLE}" DIRECTORY)
++   get_filename_component(_python_executable_name "${Python_EXECUTABLE}" NAME_WE)

@@ -1,0 +1,82 @@
+name: aws-c-io
+
+permissions:
+  contents: write
+  checks: write
+
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/aws-c-io.yml"
+      - "ports/aws-c-io/**"
+  pull_request:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/aws-c-io.yml"
+      - "ports/aws-c-io/**"
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        qnx_env: ["710", "800"]
+    name: Build for QNX ${{ matrix.qnx_env }}
+    runs-on: ubuntu-22.04-common
+    if: |
+      ((github.event_name == 'workflow_dispatch') ||
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'aws-c-io')))
+    steps:
+      - name: Checkout build-files
+        uses: actions/checkout@v4
+        with:
+          path: build-files
+
+      - name: Checkout epoll
+        uses: actions/checkout@v4
+        with:
+          repository: qnx-ports/epoll
+          path: epoll
+
+      - name: Checkout aws-c-common
+        uses: actions/checkout@v4
+        with:
+          repository: qnx-ports/aws-c-common
+          path: aws-c-common
+
+      - name: Checkout aws-c-cal
+        uses: actions/checkout@v4
+        with:
+          repository: awslabs/aws-c-cal
+          path: aws-c-cal
+
+      - name: Checkout s2n-tls
+        uses: actions/checkout@v4
+        with:
+          repository: qnx-ports/s2n-tls
+          path: s2n-tls
+
+      - name: Checkout aws-c-io
+        uses: actions/checkout@v4
+        with:
+          repository: qnx-ports/aws-c-io
+          path: aws-c-io
+
+      - name: Build aws-c-io
+        shell: bash
+        run: |
+          if [[ ${{ matrix.qnx_env }} == 710 ]]; then
+            source ~/qnx/710/qnxsdp-env.sh
+          else
+            source ~/qnx/800/qnxsdp-env.sh
+          fi
+          make -C build-files/ports/epoll install
+          make -C build-files/ports/aws-c-common install
+          make -C build-files/ports/s2n-tls install
+          make -C build-files/ports/aws-c-cal install
+          make -C build-files/ports/aws-c-io install

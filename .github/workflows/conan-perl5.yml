@@ -1,0 +1,49 @@
+name: conan-perl5
+
+permissions:
+  contents: write
+  checks: write
+
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/conan-perl5.yml'
+      - 'conan/recipes/perl5/**'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/conan-perl5.yml'
+      - 'conan/recipes/perl5/**'
+
+jobs:
+
+  build:
+    runs-on: ubuntu-22.04-common
+    if: |
+      ((github.event_name == 'workflow_dispatch') ||
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'conan')))
+    steps:
+    - name: Checkout build-files
+      uses: actions/checkout@v4
+      with:
+        path: build-files
+
+    - name: Build conan cmake recipes
+      shell: bash
+      run: |
+        python3.11 -m venv vpy
+        . vpy/bin/activate
+        pip install conan
+        conan profile detect
+        export QNX_CONAN_ROOT=$(realpath ./build-files/conan)
+        conan config install $QNX_CONAN_ROOT/tools/qnx-8.0-extension/settings_user.yml
+        source ~/qnx/800/qnxsdp-env.sh
+        conan create -pr:h=$QNX_CONAN_ROOT/tools/profiles/nto-8.0-x86_64-gcc --version=5.32.0 $QNX_CONAN_ROOT/recipes/perl5/all
+        conan create -pr:h=$QNX_CONAN_ROOT/tools/profiles/nto-8.0-x86_64-gcc --version=5.36.0 $QNX_CONAN_ROOT/recipes/perl5/all
+        conan create -pr:h=$QNX_CONAN_ROOT/tools/profiles/nto-8.0-x86_64-gcc --version=5.42.0 $QNX_CONAN_ROOT/recipes/perl5/all

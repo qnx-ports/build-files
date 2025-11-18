@@ -1,4 +1,9 @@
 name: graphene
+
+permissions:
+  contents: write
+  checks: write
+
  
 on:
   workflow_dispatch:
@@ -18,11 +23,11 @@ on:
 jobs:
  
   build:
-    runs-on: self-hosted
+    runs-on: ubuntu-22.04-common
     if: |
-      (github.event_name == 'workflow_dispatch') ||
+      ((github.event_name == 'workflow_dispatch') ||
       (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
-      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'graphene'))
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'graphene')))
     steps:
     - name: Checkout build-files
       uses: actions/checkout@v4
@@ -41,24 +46,8 @@ jobs:
         repository: qnx-ports/graphene
         path: graphene
  
-    - name: Login to GitHub Container Registry
-      uses: docker/login-action@v3
-      with:
-        registry: ghcr.io
-        username: ${{github.actor}}
-        password: ${{secrets.GITHUB_TOKEN}}
- 
-    - name: Pull build environment
-      run: |
-        docker pull ghcr.io/qnx-ports/sdp800-build-env:latest
- 
     - name: Build graphene
-      uses: addnab/docker-run-action@v3
-      with:
-        image: ghcr.io/qnx-ports/sdp800-build-env:latest
-        options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
-        shell: bash
-        run: |
-          source ~/qnx/800/qnxsdp-env.sh
-          cd ~/workspace
-          QNX_PROJECT_ROOT="$(pwd)/graphene" make -C build-files/ports/graphene/ JLEVEL=$(nproc) install
+      shell: bash
+      run: |
+        source ~/qnx/800/qnxsdp-env.sh
+        QNX_PROJECT_ROOT="$(pwd)/graphene" make -C build-files/ports/graphene/ JLEVEL=$(nproc) install

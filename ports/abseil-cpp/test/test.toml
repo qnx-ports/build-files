@@ -1,0 +1,214 @@
+package = "abseil-cpp"
+timeout = 3600
+jobs = ${{nproc}}
+
+[googletest]
+path = "build/build/bin/absl*test*"
+# Skipped because we don't have /proc/self/exe, and the test itself continues as
+# normal on systems which don't support it.
+[[googletest.skipped]]
+name = "build/build/bin/absl_log_stripping_test"
+[[googletest.skipped.suites]]
+name = "StrippingTest"
+file = "abseil-cpp/absl/log/stripping_test.cc"
+[[googletest.skipped.suites.cases]]
+name = "Control"
+line = "256"
+[[googletest.skipped.suites.cases]]
+name = "Literal"
+line = "273"
+[[googletest.skipped.suites.cases]]
+name = "LiteralInExpression"
+line = "289"
+[[googletest.skipped.suites.cases]]
+name = "Fatal"
+line = "307"
+[[googletest.skipped.suites.cases]]
+name = "DFatal"
+line = "326"
+[[googletest.skipped.suites.cases]]
+name = "Level"
+line = "369"
+[[googletest.skipped.suites.cases]]
+name = "Check"
+line = "392"
+[[googletest.skipped.suites.cases]]
+name = "CheckOp"
+line = "418"
+[[googletest.skipped.suites.cases]]
+name = "CheckStrOp"
+line = "446"
+[[googletest.skipped.suites.cases]]
+name = "CheckOk"
+line = "475"
+# Skipped because of float to string conversion issues on QNX that can't be
+# corrected with libmusl
+[[googletest.skipped]]
+name = "build/build/bin/absl_log_format_test"
+[[googletest.skipped.suites]]
+name = "ManipulatorLogFormatTest"
+file = "abseil-cpp/absl/log/log_format_test.cc"
+[[googletest.skipped.suites.cases]]
+name = "FixedAndScientificFloat"
+line = "1285"
+[[googletest.skipped.suites.cases]]
+name = "HexfloatFloat"
+line = "1320"
+[[googletest.skipped.suites.cases]]
+name = "SetPrecisionOverflow"
+line = "1470"
+[[googletest.skipped]]
+name = "build/build/bin/absl_log_format_test"
+[[googletest.skipped.suites]]
+name = "ManipulatorLogFormatTest"
+file = "abseil-cpp/absl/log/log_format_test.cc"
+[[googletest.skipped.suites.cases]]
+name = "FixedAndScientificFloat"
+line = "1285"
+[[googletest.skipped.suites.cases]]
+name = "HexfloatFloat"
+line = "1320"
+[[googletest.skipped.suites.cases]]
+name = "SetPrecisionOverflow"
+line = "1470"
+[[googletest.skipped]]
+name = "build/build/bin/absl_random_uniform_real_distribution_test"
+[[googletest.skipped.suites]]
+name = "UniformRealDistributionTest/0"
+file = "abseil-cpp/absl/random/uniform_real_distribution_test.cc"
+[[googletest.skipped.suites.cases]]
+name = "ParamSerializeTest"
+line = "73"
+[[googletest.skipped.suites]]
+name = "UniformRealDistributionTest/1"
+file = "abseil-cpp/absl/random/uniform_real_distribution_test.cc"
+[[googletest.skipped.suites.cases]]
+name = "ParamSerializeTest"
+line = "73"
+[[googletest.skipped.suites]]
+name = "UniformRealDistributionTest/2"
+file = "abseil-cpp/absl/random/uniform_real_distribution_test.cc"
+[[googletest.skipped.suites.cases]]
+name = "ParamSerializeTest"
+line = "73"
+[[googletest.skipped]]
+name = "build/build/bin/absl_str_format_convert_test"
+[[googletest.skipped.suites]]
+name = "FormatConvertTest"
+file = "abseil-cpp/absl/strings/internal/str_format/convert_test.cc"
+[[googletest.skipped.suites.cases]]
+name = "Float"
+line = "859"
+[[googletest.skipped.suites.cases]]
+name = "Double"
+line = "910"
+# Skipped due to limited memory on the test system
+[[googletest.skipped]]
+name = "build/build/bin/absl_string_view_test"
+[[googletest.skipped.suites]]
+name = "HugeStringView"
+file = "abseil-cpp/absl/strings/string_view_test.cc"
+[[googletest.skipped.suites.cases]]
+name = "TwoPointTwoGB"
+line = "1298"
+platform = [
+    "qemu"
+]
+[[googletest.skipped]]
+name = "build/build/bin/absl_str_split_test"
+[[googletest.skipped.suites]]
+name = "Split"
+file = "abseil-cpp/absl/strings/str_split_test.cc"
+[[googletest.skipped.suites.cases]]
+name = "WorksWithLargeStrings"
+line = "987"
+platform = [
+    "qemu"
+]
+# Skipped due to limited performance on the test system
+[[googletest.skipped]]
+name = "build/build/bin/absl_kernel_timeout_internal_test"
+[[googletest.skipped.suites]]
+name = "KernelTimeout"
+file = "abseil-cpp/absl/synchronization/internal/kernel_timeout_test.cc"
+[[googletest.skipped.suites.cases]]
+name = "FiniteTimes"
+line = "61"
+platform = [
+    "qemu"
+]
+[[googletest.skipped.suites.cases]]
+name = "FiniteDurations"
+line = "231"
+platform = [
+    "qemu"
+]
+# Skipped due to missing TZDATA on the test system
+[[googletest.skipped]]
+name = "build/build/bin/absl_time_test"
+[[googletest.skipped.suites]]
+name = "Time"
+file = "abseil-cpp/absl/time/time_test.cc"
+[[googletest.skipped.suites.cases]]
+name = "Breakdown"
+line = "118"
+[[googletest.skipped.suites.cases]]
+name = "TimeZoneAt"
+line = "627"
+[[googletest.skipped.suites.cases]]
+name = "ToTM"
+line = "723"
+[[googletest.skipped.suites.cases]]
+name = "FromTM"
+line = "791"
+[[googletest.skipped.suites.cases]]
+name = "TMRoundTrip"
+line = "873"
+[[googletest.skipped.suites.cases]]
+name = "ExtendedConversionSaturation"
+line = "1119"
+[[googletest.skipped.suites.cases]]
+name = "NextTransitionNYC"
+line = "1240"
+[[googletest.skipped.suites.cases]]
+name = "PrevTransitionNYC"
+line = "1264"
+[[googletest.skipped.suites]]
+name = "FormatTime"
+file = "abseil-cpp/absl/time/format_test.cc"
+[[googletest.skipped.suites.cases]]
+name = "InfiniteTime"
+line = "128"
+[[googletest.skipped.suites]]
+name = "ParseTime"
+file = "abseil-cpp/absl/time/format_test.cc"
+[[googletest.skipped.suites.cases]]
+name = "WithTimeZone"
+line = "170"
+[[googletest.skipped.suites]]
+name = "FormatParse"
+file = "abseil-cpp/absl/time/format_test.cc"
+[[googletest.skipped.suites.cases]]
+name = "RoundTrip"
+line = "367"
+[[googletest.skipped.suites]]
+name = "TimeZone"
+file = "abseil-cpp/absl/time/time_zone_test.cc"
+[[googletest.skipped.suites.cases]]
+name = "Equality"
+line = "33"
+[[googletest.skipped.suites.cases]]
+name = "NamedTimeZones"
+line = "72"
+[[googletest.skipped.suites.cases]]
+name = "Failures"
+line = "81"
+# Flaky?
+[[googletest.skipped]]
+name = "build/build/bin/absl_flags_parse_test"
+[[googletest.skipped.suites]]
+name = "ParseTest"
+file = "abseil-cpp/absl/flags/parse_test.cc"
+[[googletest.skipped.suites.cases]]
+name = "GetHints"
+line = "656"

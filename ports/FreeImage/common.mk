@@ -3,8 +3,6 @@ QCONFIG=qconfig.mk
 endif
 include $(QCONFIG)
 
-
-
 ALL_DEPENDENCIES = freeimage_all
 .PHONY: freeimage_all install check clean
 
@@ -15,7 +13,7 @@ ALL_DEPENDENCIES = freeimage_all
 INSTALL_ROOT ?= $(INSTALL_ROOT_$(OS))
 
 QNX_PROJECT_ROOT?=$(PRODUCT_ROOT)/../../FreeImage
-PREFIX?="usr/local"
+PREFIX?=usr/local
 
 include $(MKFILES_ROOT)/qtargets.mk
 FLAGS   += -g -D_QNX_SOURCE
@@ -66,16 +64,15 @@ freeimage_all:
 	@cd build && cmake $(CMAKE_ARGS) $(QNX_PROJECT_ROOT)
 	@cd build && make VERBOSE=1 all $(MAKE_ARGS)
 
-# @mkdir -p build
-# @echo $(QNX_PROJECT_ROOT)
-# @cd build && cp -r $(QNX_PROJECT_ROOT)/* .
-# @cd build && PC_EXECPREFIX="$(QNX_TARGET)/$(CPUDIR)/$(PREFIX)" PC_PREFIX="$(QNX_TARGET)/$(PREFIX)" CC=$(CC) AR=$(AR) CXX=$(CXX) make -fMakefile.qnx $(MAKE_ARGS)
-
 #somehow this works even without the explicit dependance on freeimage_all.
 #assume its due to ALL_DEPENDENCIES
 install check:
 	@echo Installing...
-	@cd build && make install $(MAKE_ARGS)
+	-cd build && make install $(MAKE_ARGS)
+	-cd build && cp libfreeimage.so $(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/lib/libFreeImage.so
+	-cd build && cp libfreeimage.so $(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/lib/libfreeimage-3.18.0.so
+	-mkdir -p $(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/include/freeimage/
+	-cp $(INSTALL_ROOT)/$(PREFIX)/include/freeimage/* $(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/include/freeimage/
 	@echo Done! Installed.
 
 # Shortcut for RetroPie's build/install all script

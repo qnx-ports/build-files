@@ -2,7 +2,7 @@
 
 ### Tested for QNX 7.1 and 8.0 SDPs
 Cross-compiled on Ubuntu 24.04 for:
-- QNX 8.0 aarch64le on Raspberry Pi 4
+- QNX 8.0: aarch64le on Raspberry Pi 4
 - QNX 7.1: x86_64 on qemu VM
 
 Instructions for compiling and running tests are listed below.
@@ -22,10 +22,10 @@ https://docs.docker.com/engine/install/
 ### *Steps:*
 1. Create a new workspace or navigate to a desired one
 ```bash
-mkdir re2_wksp && cd re2_wksp
+mkdir qnx_workspace && cd qnx_workspace
 ```
 
-2. Clone `re2`, `build_files`, and the required libraries. You can skip dependancies you already have installed in $QNX_TARGET.
+2. Clone `re2`, `build_files`, and the required libraries. You can skip dependencies you already have installed in $QNX_TARGET.
 ```bash
 #Pick one:
 #Via HTTPS
@@ -50,6 +50,7 @@ git clone git@github.com:qnx-ports/re2.git
 cd build-files/docker
 ./docker-build-qnx-image.sh
 ./docker-create-container.sh
+cd ~/qnx_workspace
 ```
 
 4. Source your SDP (Installed from QNX Software Center)

@@ -1,0 +1,67 @@
+name: pandas
+
+permissions:
+  contents: write
+  checks: write
+
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/pandas.yml'
+      - 'ports/pandas/**'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/pandas.yml'
+      - 'ports/pandas/**'
+
+jobs:
+
+  build:
+    strategy:
+      matrix:
+        qnx_env: ["710", "800"]
+    name: Build for QNX ${{ matrix.qnx_env }}
+    runs-on: ubuntu-22.04-common
+    if: |
+      ((github.event_name == 'workflow_dispatch') ||
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'pandas')))
+    steps:
+    - name: Checkout build-files
+      uses: actions/checkout@v4
+      with:
+        path: build-files
+
+    - name: Checkout numpy
+      uses: actions/checkout@v4
+      with:
+        repository: qnx-ports/numpy
+        path: numpy
+        submodules: recursive
+
+    - name: Checkout pandas
+      uses: actions/checkout@v4
+      with:
+        repository: qnx-ports/pandas
+        path: pandas
+
+    - name: Build pandas
+      shell: bash
+      run: |
+        if [[ ${{ matrix.qnx_env }} == 800 ]]; then
+          source ~/qnx/800/qnxsdp-env.sh
+        else
+          source ~/qnx/710/qnxsdp-env.sh
+        fi
+        source /usr/local/qnx/env/bin/activate
+        QNX_PROJECT_ROOT="$(pwd)/numpy" make -C build-files/ports/numpy install
+        pip3 install Cython==3.0.5
+        pip3 install versioneer
+        QNX_PROJECT_ROOT="$(pwd)/pandas" make -C build-files/ports/pandas install
+

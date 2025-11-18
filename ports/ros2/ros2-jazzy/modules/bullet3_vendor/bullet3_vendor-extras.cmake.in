@@ -1,0 +1,18 @@
+find_package(bullet3 QUIET)
+
+if(NOT bullet3_FOUND)
+  # add the local Modules directory to the modules path
+  if(WIN32)
+    set(bullet3_DIR "${@PROJECT_NAME@_DIR}/../../../opt/bullet3_vendor/CMake")
+  else()
+    set(bullet3_DIR "${@PROJECT_NAME@_DIR}/../../../opt/bullet3_vendor/lib/cmake/bullet3")
+  endif()
+  message(STATUS "Setting bullet3_DIR to: '${bullet3_DIR}'")
+
+  find_package(bullet3 CONFIG REQUIRED QUIET)
+endif()
+
+set(bullet3_vendor_LIBRARIES ${BULLET3_LIBRARIES})
+set(bullet3_vendor_INCLUDE_DIRS ${BULLET3_INCLUDE_DIR})
+
+list(APPEND bullet3_vendor_TARGETS bullet3)

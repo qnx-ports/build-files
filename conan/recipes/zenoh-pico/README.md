@@ -53,7 +53,7 @@ cd ~/qnx_workspace
 # Build zenoh-pico for QNX target
 #
 # <profile-name>: nto-7.1-aarch64-le, nto-7.1-x86_64, nto-8.0-aarch64-le, nto-8.0-x86_64
-# <version-number>: 1.4.0, 1.2.1, 1.0.0-rc5
+# <version-number>: 1.5.0, 1.4.0, 1.2.1, 1.0.0-rc5
 #
 conan create -pr:h=$QNX_CONAN_ROOT/tools/profiles/<profile-name> --version=<version-number> $QNX_CONAN_ROOT/recipes/zenoh-pico/release
 ```
@@ -82,7 +82,7 @@ export QNX_PROJECT_ROOT=$(pwd)
 # Install conan toolchain for QNX target
 #
 # <profile-name>: nto-7.1-aarch64-le, nto-7.1-x86_64, nto-8.0-aarch64-le, nto-8.0-x86_64
-# <version-number>: 1.4.0, 1.2.1, 1.0.0-rc5
+# <version-number>: 1.5.0, 1.4.0, 1.2.1, 1.0.0-rc5
 #
 conan install -pr:h=$QNX_CONAN_ROOT/tools/profiles/<profile-name> --version=<version-number> $QNX_CONAN_ROOT/recipes/zenoh-pico/tests
 
@@ -105,7 +105,7 @@ ssh qnxuser@$TARGET_HOST "rm -rf zenoh-pico_tests"
 # Create new test dir on target
 ssh qnxuser@$TARGET_HOST "mkdir zenoh-pico_tests"
 
-# Copy gtest build tree to your QNX target
+# Copy zenoh-pico build tree to your QNX target
 scp -r $QNX_PROJECT_ROOT/* qnxuser@$TARGET_HOST:/data/home/qnxuser/zenoh-pico_tests/
 
 # Ssh into the target
@@ -124,10 +124,10 @@ cd ./build_tests/Release/
 
 ctest
 ```
-CTest reports no error
+CTest for zeenoh-pico version=1.5.0 reports no error
 
 ```bash
 100% tests passed, 0 tests failed out of 14
 
-Total Test time (real) =  27.40 sec
+Total Test time (real) =   2.98 sec
 ```

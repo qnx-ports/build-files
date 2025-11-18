@@ -1,3 +1,5 @@
+# Pandas [![Build](https://github.com/qnx-ports/build-files/actions/workflows/pandas.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/pandas.yml)
+
 # Compile the port for QNX
 
 **Note**: QNX ports are only supported from a **Linux host** operating system
@@ -26,6 +28,8 @@ cd build-files/docker
 # Source qnxsdp-env.sh in
 source ~/qnx800/qnxsdp-env.sh
 cd ~/qnx_workspace
+
+pip3 install Cython==3.0.5
 
 # Clone numpy
 git clone https://github.com/qnx-ports/numpy.git && cd numpy
@@ -63,7 +67,7 @@ cd -
 # Create a python virtual environment and install necessary packages
 python3.11 -m venv env
 source env/bin/activate
-pip install -U pip Cython wheel requests
+pip install -U pip Cython wheel requests versioneer
 
 # source qnxsdp-env.sh
 source ~/qnx800/qnxsdp-env.sh

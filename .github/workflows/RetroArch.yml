@@ -1,0 +1,48 @@
+name: RetroArch
+
+permissions:
+  contents: write
+  checks: write
+
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/RetroArch.yml'
+      - 'ports/RetroPie/RetroArch/**'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/RetroArch.yml'
+      - 'ports/RetroPie/RetroArch/**'
+
+jobs:
+
+  build:
+    runs-on: ubuntu-22.04-common
+    if: |
+      ((github.event_name == 'workflow_dispatch') ||
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'RetroArch')))
+    steps:
+    - name: Checkout build-files
+      uses: actions/checkout@v4
+      with:
+        path: build-files
+
+    - name: Checkout RetroArch
+      uses: actions/checkout@v4
+      with:
+        repository: qnx-ports/RetroArch
+        path: RetroArch
+        ref: qnx_master
+
+    - name: Build RetroArch
+      shell: bash
+      run: |
+        source ~/qnx/800/qnxsdp-env.sh
+        PREFIX="/usr/local" QNX_PROJECT_ROOT="$(pwd)/RetroArch" make -C build-files/ports/RetroPie/RetroArch -j$(nproc)

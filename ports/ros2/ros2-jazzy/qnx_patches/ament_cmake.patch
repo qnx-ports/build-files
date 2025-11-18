@@ -1,0 +1,67 @@
+diff --git a/ament_cmake_core/cmake/core/ament_package.cmake b/ament_cmake_core/cmake/core/ament_package.cmake
+index 3188875..665fbf9 100644
+--- a/ament_cmake_core/cmake/core/ament_package.cmake
++++ b/ament_cmake_core/cmake/core/ament_package.cmake
+@@ -133,23 +133,28 @@ function(_ament_package)
+ 
+   # generate CMake config file
+   stamp("${ament_cmake_core_DIR}/core/templates/nameConfig.cmake.in")
++
++  set(_ament_config_name ${PROJECT_NAME})
++  if(${PROJECT_NAME} STREQUAL "eigen3")
++    set(_ament_config_name "Eigen3")
++  endif()
+   configure_file(
+     ${ament_cmake_core_DIR}/core/templates/nameConfig.cmake.in
+-    ${CMAKE_CURRENT_BINARY_DIR}/ament_cmake_core/${PROJECT_NAME}Config.cmake
++    ${CMAKE_CURRENT_BINARY_DIR}/ament_cmake_core/${_ament_config_name}Config.cmake
+     @ONLY
+   )
+   # generate CMake config-version file
+   stamp("${ament_cmake_core_DIR}/core/templates/nameConfig-version.cmake.in")
+   configure_file(
+     ${ament_cmake_core_DIR}/core/templates/nameConfig-version.cmake.in
+-    ${CMAKE_CURRENT_BINARY_DIR}/ament_cmake_core/${PROJECT_NAME}Config-version.cmake
++    ${CMAKE_CURRENT_BINARY_DIR}/ament_cmake_core/${_ament_config_name}Config-version.cmake
+     @ONLY
+   )
+ 
+   # install CMake config and config-version files
+   install(FILES
+-    ${CMAKE_CURRENT_BINARY_DIR}/ament_cmake_core/${PROJECT_NAME}Config.cmake
+-    ${CMAKE_CURRENT_BINARY_DIR}/ament_cmake_core/${PROJECT_NAME}Config-version.cmake
++    ${CMAKE_CURRENT_BINARY_DIR}/ament_cmake_core/${_ament_config_name}Config.cmake
++    ${CMAKE_CURRENT_BINARY_DIR}/ament_cmake_core/${_ament_config_name}Config-version.cmake
+     DESTINATION share/${PROJECT_NAME}/cmake
+   )
+ 
+diff --git a/ament_cmake_core/cmake/core/python.cmake b/ament_cmake_core/cmake/core/python.cmake
+index 204f002..54c5fc8 100644
+--- a/ament_cmake_core/cmake/core/python.cmake
++++ b/ament_cmake_core/cmake/core/python.cmake
+@@ -34,5 +34,9 @@ if(NOT TARGET Python3::Interpreter)
+   cmake_policy(SET CMP0094 NEW)
+   set(Python3_FIND_UNVERSIONED_NAMES FIRST)
+ 
++  if(QNX)
++    find_package(Python3 ${PYTHON_VERSION_QNX} REQUIRED COMPONENTS Interpreter)
++  else()
+   find_package(Python3 REQUIRED COMPONENTS Interpreter)
++  endif()
+ endif()
+diff --git a/ament_cmake_vendor_package/cmake/ament_vendor.cmake b/ament_cmake_vendor_package/cmake/ament_vendor.cmake
+index c9b963c..e280104 100644
+--- a/ament_cmake_vendor_package/cmake/ament_vendor.cmake
++++ b/ament_cmake_vendor_package/cmake/ament_vendor.cmake
+@@ -314,5 +314,11 @@ function(_ament_vendor TARGET_NAME VCS_TYPE VCS_URL VCS_VERSION PATCHES CMAKE_AR
+       DESTINATION "opt/${PROJECT_NAME}"
+       USE_SOURCE_PERMISSIONS
+     )
++    # Also install to main lib directory for compatibility with Humble-style packages
++    install(
++      DIRECTORY "${INSTALL_DIR}/"
++      DESTINATION "."
++      USE_SOURCE_PERMISSIONS
++    )
+   endif()
+ endfunction()

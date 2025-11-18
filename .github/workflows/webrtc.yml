@@ -1,5 +1,10 @@
 name: webrtc
 
+permissions:
+  contents: write
+  checks: write
+
+
 on:
   workflow_dispatch:
   push:
@@ -17,23 +22,12 @@ on:
 
 jobs:
   build:
-    runs-on: self-hosted
+    runs-on: ubuntu-22.04-common
     if: |
-      (github.event_name == 'workflow_dispatch') ||
+      ((github.event_name == 'workflow_dispatch') ||
       (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
-      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'webrtc'))
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'webrtc')))
     steps:
-    - name: Login to GitHub Container Registry
-      uses: docker/login-action@v3
-      with:
-        registry: ghcr.io
-        username: ${{github.actor}}
-        password: ${{secrets.GITHUB_TOKEN}}
-
-    - name: Pull build environment
-      run: |
-        docker pull ghcr.io/qnx-ports/sdp-build-env:latest
-
     - name: Parse branch name
       id: parse
       run: |
@@ -44,21 +38,16 @@ jobs:
         fi
 
     - name: Build webrtc
-      uses: addnab/docker-run-action@v3
-      with:
-        image: ghcr.io/qnx-ports/sdp-build-env:latest
-        options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
-        shell: bash
-        run: |
-          # clone and sync webrtc
-          source ~/qnx/710/qnxsdp-env.sh
-          export PATH=/usr/local/qnx/depot_tools:$PATH
-          cd workspace
-          gclient config --name=src --unmanaged --custom-var checkout_qnx=True --custom-var qnx_build_files_branch=${{ steps.parse.outputs.branch }} https://github.com/qnx-ports/webrtc.git
-          echo "target_os = [\"qnx\"]" >> .gclient
-          gclient sync
-          # Make
-          cd src
-          make
-          # Install
-          make install
+      shell: bash
+      run: |
+        # clone and sync webrtc
+        source ~/qnx/710/qnxsdp-env.sh
+        export PATH=/usr/local/qnx/depot_tools:$PATH
+        gclient config --name=src --unmanaged --custom-var checkout_qnx=True --custom-var qnx_build_files_branch=${{ steps.parse.outputs.branch }} https://github.com/qnx-ports/webrtc.git
+        echo "target_os = [\"qnx\"]" >> .gclient
+        gclient sync
+        # Make
+        cd src
+        make
+        # Install
+        make install

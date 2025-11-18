@@ -12,7 +12,11 @@ Pre-requisite: Install Docker on Ubuntu https://docs.docker.com/engine/install/u
 # Create a workspace
 mkdir -p ~/qnx_workspace && cd ~/qnx_workspace
 git clone https://github.com/qnx-ports/build-files.git
+# For vsomeip 3.4.10
 git clone https://github.com/qnx-ports/vsomeip.git  -b qnx_3.4.10
+# For vsomeip 3.5.5
+#git clone https://github.com/qnx-ports/vsomeip.git  -b qnx_3.5.5
+
 # Optional: get googletest if you want to run vsomeip tests
 git clone https://github.com/qnx-ports/googletest.git -b qnx_v1.13.0
 
@@ -52,7 +56,6 @@ cd -
 
 # For boost 1.74.0: apply an ionotify patch and an interprocess patch
 #git apply $WORKSPACE/build-files/ports/boost/boost_1_74-ionotify.patch
-#cd libs/interprocess && git apply $WORKSPACE/build-files/ports/boost/interprocess_1.78.0_qnx_7.1.patch
 #cd -
 
 # Apply a tools patch for any boost version
@@ -61,8 +64,8 @@ cd $WORKSPACE
 
 # SDP 8.0: build and install boost
 BOOST_CPP_VERSION_FLAG="-std=c++17" QNX_PROJECT_ROOT="$(pwd)/boost" make -C build-files/ports/boost install -j4
-# SDP 8.0: build and install boost version 1.74
-B2_EXTRA_OPTS="--without-python" BOOST_CPP_VERSION_FLAG="-std=c++17" QNX_PROJECT_ROOT="$(pwd)/boost" make -C build-files/ports/boost install -j4
+# SDP 8.0 uses Python 3.11 and is not compatible with boost version 1.74. Build with Python disabled
+#B2_EXTRA_OPTS="--without-python" BOOST_CPP_VERSION_FLAG="-std=c++17" QNX_PROJECT_ROOT="$(pwd)/boost" make -C build-files/ports/boost install -j4
 
 # SDP 7.1: build and install boost
 #QNX_PROJECT_ROOT="$(pwd)/boost" make -C build-files/ports/boost install -j4
@@ -79,7 +82,11 @@ TEST_IP_MASTER="<QNX-target-ip-address>" TEST_IP_SLAVE="<Ubuntu-ip-address>" QNX
 mkdir -p ~/qnx_workspace && cd ~/qnx_workspace
 WORKSPACE=${PWD}
 git clone https://github.com/qnx-ports/build-files.git
-git clone https://github.com/qnx-ports/vsomeip.git -b qnx_3.4.10
+# For vsomeip 3.4.10
+git clone https://github.com/qnx-ports/vsomeip.git  -b qnx_3.4.10
+# For vsomeip 3.5.5
+#git clone https://github.com/qnx-ports/vsomeip.git  -b qnx_3.5.5
+
 # Optional: get googletest if you want to run vsomeip tests
 git clone https://github.com/qnx-ports/googletest.git -b qnx_v1.13.0
 GTEST_ROOT=$WORKSPACE/googletest
@@ -110,7 +117,6 @@ cd -
 
 # For boost 1.74.0: apply an ionotify patch and an interprocess patch
 #git apply $WORKSPACE/build-files/ports/boost/boost_1_74-ionotify.patch
-#cd libs/interprocess && git apply $WORKSPACE/build-files/ports/boost/interprocess_1.78.0_qnx_7.1.patch
 #cd -
 
 # Apply a tools patch for any boost
@@ -119,8 +125,8 @@ cd $WORKSPACE
 
 # SDP 8.0: build and install boost
 BOOST_CPP_VERSION_FLAG="-std=c++17" QNX_PROJECT_ROOT="$(pwd)/boost" make -C build-files/ports/boost install -j4
-# SDP 8.0: build and install boost version 1.74
-B2_EXTRA_OPTS="--without-python" BOOST_CPP_VERSION_FLAG="-std=c++17" QNX_PROJECT_ROOT="$(pwd)/boost" make -C build-files/ports/boost install -j4
+# SDP 8.0 uses Python 3.11 and is not compatible with boost version 1.74. Build with Python disabled
+#B2_EXTRA_OPTS="--without-python" BOOST_CPP_VERSION_FLAG="-std=c++17" QNX_PROJECT_ROOT="$(pwd)/boost" make -C build-files/ports/boost install -j4
 
 # SDP 7.1: build and install boost
 #QNX_PROJECT_ROOT="$(pwd)/boost" make -C build-files/ports/boost install -j4
@@ -200,6 +206,13 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$WORKSPACE/vsomeip/build:$WORKSPACE/vsom
 ```
 
 ## Run vsomeip tests
+
+### Configuration Test
+
+```bash
+# Run on target
+sh ./configuration_test
+```
 
 ### Application Test
 
@@ -289,26 +302,17 @@ sh ./big_payload_test_client_local_start.sh
 Run test with different ports:
 ```bash
 # Run on target
+# This test is currently under an investigation because it has an issue
 sh ./client_id_test_master_starter_qnx.sh client_id_test_diff_client_ids_diff_ports_master.json
 # Run on host PC
 ./client_id_test_slave_starter.sh client_id_test_diff_client_ids_diff_ports_slave.json
-```
-
-### Offer tests
-
-```bash
-# Run on target, you need to ctrl+c to exit after the test passes
-sh ./offer_test_local_starter_qnx.sh
-# Run on target, you need to ctrl+c to exit after the test passes
-sh ./offer_test_external_master_starter_qnx.sh
-# Then run this on external host when prompted on host PC
-./offer_test_external_slave_starter.sh
 ```
 
 ### Subscribe notify tests
 
 ```bash
 # Run on target
+# This test is currently under an investigation because it has an issue
 sh ./subscribe_notify_test_master_starter_qnx.sh UDP subscribe_notify_test_diff_client_ids_diff_ports_master.json
 
 # Run on host PC

@@ -1,0 +1,97 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 47408b11e..ff88aba42 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -17,6 +17,8 @@
+ ###############################################################################
+ cmake_minimum_required(VERSION 3.20)
+ 
++set(CMAKE_CXX_STANDARD 14)
++
+ # Set CMAKE_BUILD_TYPE to Release by default.
+ if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
+     message(STATUS "Setting build type to 'Release' as none was specified.")
+@@ -113,7 +115,18 @@ endif()
+ 
+ include(${PROJECT_SOURCE_DIR}/cmake/common/check_configuration.cmake)
+ 
+-set(FORCE_CXX "11" CACHE STRING "C++ standard fulfillment selection")
++if(QNX)
++    set(FORCE_CXX "14" CACHE STRING "C++ standard fulfillment selection")
++    add_compile_definitions(ASIO_HAS_STD_STRING_VIEW=1)
++    if ($ENV{QNX_SDP_VERSION} STREQUAL "qnx710")
++        link_libraries(socket)
++    else()
++        link_libraries(socket fsnotify)
++    endif()
++else()
++    set(FORCE_CXX "11" CACHE STRING "C++ standard fulfillment selection")
++endif()
++
+ check_stdcxx(${FORCE_CXX})
+ 
+ check_endianness()
+diff --git a/test/CMakeLists.txt b/test/CMakeLists.txt
+index 0b1486cb3..a977237a4 100644
+--- a/test/CMakeLists.txt
++++ b/test/CMakeLists.txt
+@@ -20,6 +20,7 @@ option(PERFORMANCE_TESTS "Activate the building and execution of performance tes
+ option(SYSTEM_TESTS "Activate the building and execution of system tests" OFF)
+ option(PROFILING_TESTS "Activate the building and execution of profiling tests" OFF)
+ option(EPROSIMA_BUILD_TESTS "Activate the building and execution unit tests and integral tests" OFF)
++
+ option(FASTDDS_EXAMPLE_TESTS "Activate the building and execution of Fast DDS examples tests" OFF)
+ 
+ if(EPROSIMA_BUILD)
+@@ -51,6 +52,9 @@ message(STATUS "EPROSIMA_TEST_DNS_NOT_SET_UP: '${EPROSIMA_TEST_DNS_NOT_SET_UP}'"
+ # Testing
+ ###############################################################################
+ if(EPROSIMA_BUILD_TESTS)
++    # Set test discovery mode for cross-compilation
++    set(CMAKE_GTEST_DISCOVER_TESTS_DISCOVERY_MODE PRE_TEST)
++    
+     find_package(GTest CONFIG REQUIRED)
+     include(${PROJECT_SOURCE_DIR}/cmake/testing/GoogleTest.cmake)
+ 
+@@ -97,7 +101,7 @@ endif()
+ 
+ if(EPROSIMA_BUILD_TESTS AND QNX)
+     install(DIRECTORY ${PROJECT_BINARY_DIR}/test/
+-      DESTINATION bin/Fast-DDS_test
++      DESTINATION test/fastrtps
+       PATTERN "*.cmake" EXCLUDE
+       PATTERN "*.d" EXCLUDE
+       PATTERN "*.dir" EXCLUDE
+@@ -112,7 +116,7 @@ if(EPROSIMA_BUILD_TESTS AND QNX)
+       PATTERN "cmake" EXCLUDE
+       )
+     install(DIRECTORY ${PROJECT_SOURCE_DIR}/test/certs
+-      DESTINATION bin/Fast-DDS_test
++      DESTINATION test/fastrtps
+       )
+ endif()
+ 
+@@ -135,4 +139,4 @@ if (ANDROID)
+                         endif()
+                         execute_process(COMMAND adb push \"${CMAKE_BINARY_DIR}/test\" \"${ANDROID_TESTING_ROOT}\") ")
+     endif()
+-endif()
++endif()
+\ No newline at end of file
+diff --git a/test/profiling/allocations/CMakeLists.txt b/test/profiling/allocations/CMakeLists.txt
+index 8d67649d8..ae09bd29d 100644
+--- a/test/profiling/allocations/CMakeLists.txt
++++ b/test/profiling/allocations/CMakeLists.txt
+@@ -18,7 +18,11 @@ project(fastrtps_allocation_test VERSION 1 LANGUAGES CXX)
+ 
+ # Default to C++11
+ if(NOT CMAKE_CXX_STANDARD)
+-  set(CMAKE_CXX_STANDARD 11)
++  if(QNX)
++    set(CMAKE_CXX_STANDARD 11)
++  else()
++    set(CMAKE_CXX_STANDARD 14)
++  endif()
+ endif()
+ 
+ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
