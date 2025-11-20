@@ -128,11 +128,11 @@ grpc_target:
 	@mkdir -p build
 	@cd build && \
 	cmake $(CONFIG_CMAKE_ARGS) $(CMAKE_ARGS) $(QNX_PROJECT_ROOT) && \
-	cmake --build . $(GENERATOR_ARGS)
+	env -u MAKEFLAGS cmake --build . $(GENERATOR_ARGS)
 
 install check: grpc_all
 	@echo Installing...
-	@cd build && cmake --build . --target install $(GENERATOR_ARGS)
+	@cd build && env -u MAKEFLAGS cmake --build . --target install $(GENERATOR_ARGS)
 	@echo Done.
 
 clean_target:

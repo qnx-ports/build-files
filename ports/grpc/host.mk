@@ -39,7 +39,7 @@ grpc_host:
 	@mkdir -p build
 	@cd build && \
 	cmake $(CONFIG_CMAKE_ARGS) $(HOST_CMAKE_ARGS) $(QNX_PROJECT_ROOT) && \
-	cmake --build . --target protoc grpc_cpp_plugin $(GENERATOR_ARGS)
+	env -u MAKEFLAGS cmake --build . --target protoc grpc_cpp_plugin $(GENERATOR_ARGS)
 
 clean_host:
 	@rm -rf build
