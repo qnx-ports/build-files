@@ -9,7 +9,7 @@ NAME=grpc
 
 QNX_PROJECT_ROOT ?= $(PRODUCT_ROOT)/../../grpc
 
-BUILD_TESTING ?= ON
+BUILD_TESTING ?= OFF
 
 # $(INSTALL_ROOT_$(OS)) is pointing to $QNX_TARGET
 # by default, unless it was manually re-routed to
