@@ -30,6 +30,7 @@ jobs:
         shell: bash
         run: |
           set -x
+          mkdir -p workspace
           cd ~/workspace
           source ~/qnx/800/qnxsdp-env.sh
           echo "password" | sudo -S apt update
