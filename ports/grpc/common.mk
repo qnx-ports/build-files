@@ -9,7 +9,7 @@ NAME=grpc
 
 QNX_PROJECT_ROOT ?= $(PRODUCT_ROOT)/../../grpc
 
-BUILD_TESTING ?= ON
+BUILD_TESTING ?= OFF
 
 # $(INSTALL_ROOT_$(OS)) is pointing to $QNX_TARGET
 # by default, unless it was manually re-routed to
@@ -128,11 +128,11 @@ grpc_target:
 	@mkdir -p build
 	@cd build && \
 	cmake $(CONFIG_CMAKE_ARGS) $(CMAKE_ARGS) $(QNX_PROJECT_ROOT) && \
-	cmake --build . $(GENERATOR_ARGS)
+	env -u MAKEFLAGS cmake --build . $(GENERATOR_ARGS)
 
 install check: grpc_all
 	@echo Installing...
-	@cd build && cmake --build . --target install $(GENERATOR_ARGS)
+	@cd build && env -u MAKEFLAGS cmake --build . --target install $(GENERATOR_ARGS)
 	@echo Done.
 
 clean_target:

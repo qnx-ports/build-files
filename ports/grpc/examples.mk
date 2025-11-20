@@ -130,7 +130,7 @@ $(NAME)_target:
 	@mkdir -p build
 	@cd build && \
 	cmake $(CONFIG_CMAKE_ARGS) $(CMAKE_ARGS) $(EXAMPLE_ROOT) && \
-	cmake --build . $(GENERATOR_ARGS)
+	env -u MAKEFLAGS cmake --build . $(GENERATOR_ARGS)
 
 clean_target:
 	@rm -rf build
