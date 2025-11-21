@@ -127,7 +127,7 @@ grpc_all: grpc_target
 grpc_target:
 	@mkdir -p build
 	@cd build && \
-	cmake -G Ninja $(CONFIG_CMAKE_ARGS) $(CMAKE_ARGS) $(QNX_PROJECT_ROOT) && \
+	cmake $(CONFIG_CMAKE_ARGS) $(CMAKE_ARGS) $(QNX_PROJECT_ROOT) && \
 	cmake --build . $(GENERATOR_ARGS)
 
 install check: grpc_all
