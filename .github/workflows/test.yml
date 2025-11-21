@@ -44,6 +44,8 @@ jobs:
           run: |
             pwd
             ls -la
+            mkdir .qnx
+            mv license .qnx
             source ~/800/qnxsdp-env.sh
             echo "password" | sudo -S apt update
             echo "password" | sudo -S apt install qemu-system-x86 qemu-kvm virt-manager libvirt-clients bridge-utils libvirt-daemon-system sshpass -y
