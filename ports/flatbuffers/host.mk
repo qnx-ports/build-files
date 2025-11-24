@@ -24,6 +24,7 @@ ALL_DEPENDENCIES = $(flatbuffers)_all
 HOST_CMAKE_ARGS = -DCMAKE_BUILD_TYPE=$(CMAKE_BUILD_TYPE) \
 				  -DCMAKE_INSTALL_PREFIX="$(INSTALL_ROOT)/usr" \
                   -DBUILD_TESTING=OFF \
+				  -DFLATBUFFERS_BUILD_TESTS=OFF \
                   -DCMAKE_NO_SYSTEM_FROM_IMPORTED=ON \
                   -DCMAKE_VERBOSE_MAKEFILE=ON
 
@@ -40,8 +41,10 @@ $(flatbuffers)_host:
 	cmake --build . --target flatc
 
 install check: $(flatbuffers)_all
-	@[[ -d "${INSTALL_ROOT}/" ]] || mkdir -p "${INSTALL_ROOT}/"
-	@if [ -w "${INSTALL_ROOT}/" ]; then \
+	if [ ! -d "${INSTALL_ROOT}/" ]; then \
+		mkdir -p "${INSTALL_ROOT}/"; \
+		fi
+	if [ -w "${INSTALL_ROOT}/" ]; then \
 		cd build && \
 		make install; \
 		else \

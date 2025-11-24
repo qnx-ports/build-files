@@ -6,7 +6,7 @@ include $(MKFILES_ROOT)/qmacros.mk
 
 NAME=flatbuffers
 
-QNX_PROJECT_ROOT ?= $(PRODUCT_ROOT)/../../
+QNX_PROJECT_ROOT ?= $(PRODUCT_ROOT)/../../flatbuffers
 
 BUILD_TESTING ?= ON
 
@@ -77,6 +77,7 @@ CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DBUILD_SHARED_LIBS=ON \
              -DFLATBUFFERS_BUILD_SHAREDLIB=ON \
              -DBUILD_TESTING=$(BUILD_TESTING) \
+			 -DFLATBUFFERS_BUILD_TESTS=$(BUILD_TESTING) \
              -DFLATBUFFERS_BUILD_FLATC=OFF \
              -DCPU=$(CPU) \
              -DEXT=$(EXT)
