@@ -50,6 +50,7 @@ jobs:
         repository: qnx-ports/protobuf
         path: protobuf
         ref: qnx-v27.2
+        submodules: recursive
 
     - name: Build onnx
       shell: bash
