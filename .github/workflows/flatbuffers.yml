@@ -1,0 +1,49 @@
+name: flatbuffers
+
+permissions:
+  contents: write
+  checks: write
+
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/flatbuffers.yml'
+      - 'ports/flatbuffers/**'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/flatbuffers.yml'
+      - 'ports/flatbuffers/**'
+
+jobs:
+
+  build:
+    runs-on: ubuntu-22.04-common
+    if: |
+      ((github.event_name == 'workflow_dispatch') ||
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'flatbuffers')))
+    steps:
+    - name: Checkout build-files
+      uses: actions/checkout@v4
+      with:
+        path: build-files
+
+    - name: Checkout flatbuffers
+      uses: actions/checkout@v4
+      with:
+        repository: google/flatbuffers
+        path: flatbuffers
+        submodules: 'true'
+        ref: v25.9.23
+
+    - name: Build flatbuffers
+      shell: bash
+      run: |
+        source ~/qnx/800/qnxsdp-env.sh
+        QNX_PROJECT_ROOT="$(pwd)/flatbuffers" make -C build-files/ports/flatbuffers INSTALL_ROOT_nto=$PWD/stage USE_INSTALL_ROOT=true install
