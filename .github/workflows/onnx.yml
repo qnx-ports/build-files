@@ -74,8 +74,8 @@ jobs:
         else
           source ~/qnx/710/qnxsdp-env.sh
         fi
-        QNX_PROJECT_ROOT="$(pwd)/protobuf" make -C build-files/ports/protobuf install
-        BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/onnx" make -C build-files/ports/onnx install
+        QNX_PROJECT_ROOT="$(pwd)/protobuf" make -C build-files/ports/protobuf INSTALL_ROOT_nto=$PWD/stage USE_INSTALL_ROOT=true install
+        BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/onnx" make -C build-files/ports/onnx INSTALL_ROOT_nto=$PWD/stage USE_INSTALL_ROOT=true install
 
     - name: Setup python env
       if: ${{ (matrix.qnx_env == '800') }}
