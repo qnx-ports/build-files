@@ -58,3 +58,20 @@ make -C build-files/ports/protobuf JLEVEL=4 install
 # Build
 make -C build-files/ports/onnx JLEVEL=4 install
 ```
+
+# How to Run Tests
+
+Copy tests and runtime dependencies to the target
+```bash
+TARGET_HOST=<target-ip-address-or-hostname>
+
+scp $QNX_TARGET/aarch64le/usr/local/lib/libonnx* qnxuser@$TARGET_HOST:/data/home/qnxuser/lib
+scp ~/qnx_workspace/build-files/ports/onnx/nto-aarch64-le/build/onnx_gtests qnxuser@$TARGET_HOST:/data/home/qnxuser/bin
+```
+
+Run the tests on the target
+```bash
+ssh qnxuser@$TARGET_HOST
+
+onnx_gtests
+```

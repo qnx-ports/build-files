@@ -52,6 +52,20 @@ jobs:
         ref: qnx-v27.2
         submodules: recursive
 
+    - name: Checkout check-tools
+      uses: actions/checkout@v4
+      with:
+        repository: qnx-ports/check-tools
+        path: check-tools
+        ref: v0.1.4
+
+    - name: Checkout test-tools
+      uses: actions/checkout@v4
+      with:
+        repository: qnx-ports/test-tools
+        path: test-tools
+        token: ${{secrets.GCO_TOKEN}}
+
     - name: Build onnx
       shell: bash
       run: |
@@ -62,3 +76,32 @@ jobs:
         fi
         QNX_PROJECT_ROOT="$(pwd)/protobuf" make -C build-files/ports/protobuf install
         BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/onnx" make -C build-files/ports/onnx install
+
+    - name: Setup python env
+      if: ${{ (matrix.qnx_env == '800') }}
+      uses: actions/setup-python@v6
+      with:
+        python-version: '3.12'
+        cache: 'pip'
+
+    - name: Install dependencies
+      run: pip install -r ./test-tools/requirements.txt
+
+    - name: Test onnx
+      if: ${{ (matrix.qnx_env == '800') }}
+      env:
+        OSS_NAME: "onnx"
+        QNX_VERSION: "qnx${{ matrix.qnx_env }}"
+        COMPANION_DIR: "${{ github.workspace }}/build-files/ports/onnx"
+      shell: bash
+      run: |
+        source ~/qnx/800/qnxsdp-env.sh
+
+        ./test-tools/bin/run_tests.sh
+
+    - name: Publish Test Report
+      uses: mikepenz/action-junit-report@v5
+      if: ${{ always() }}
+      with:
+        report_paths: 'results/*.xml'
+        check_name: (${{ matrix.qnx_env }}) Test Report
