@@ -68,6 +68,7 @@ CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DCMAKE_INSTALL_LIBDIR="$(CPUVARDIR)/$(PREFIX)/lib" \
              -DCMAKE_INSTALL_BINDIR="$(CPUVARDIR)/$(PREFIX)/bin" \
              -DCMAKE_INSTALL_INCLUDEDIR="$(PREFIX)/include" \
+             -DCMAKE_PREFIX_PATH="$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)" \
              -DCMAKE_FIND_ROOT_PATH="$(CMAKE_FIND_ROOT_PATH)" \
              -DCMAKE_MODULE_PATH="$(CMAKE_MODULE_PATH)" \
              -DCMAKE_BUILD_TYPE=$(CMAKE_BUILD_TYPE) \
@@ -75,13 +76,14 @@ CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DEXTRA_CMAKE_CXX_FLAGS="$(CXXFLAGS) $(CPPFLAGS)" \
              -DEXTRA_CMAKE_ASM_FLAGS="$(ASFLAGS)" \
              -DEXTRA_CMAKE_LINKER_FLAGS="$(LDFLAGS)" \
-			 -DCMAKE_ASM_COMPILER_TARGET="gcc_nto${CPU}${EXT}" \
-			 -DCMAKE_C_COMPILER_TARGET="gcc_nto${CPU}${EXT}" \
-			 -DCMAKE_CXX_COMPILER_TARGET="gcc_nto${CPU}${EXT}" \
+             -DCMAKE_ASM_COMPILER_TARGET="gcc_nto${CPU}${EXT}" \
+             -DCMAKE_C_COMPILER_TARGET="gcc_nto${CPU}${EXT}" \
+             -DCMAKE_CXX_COMPILER_TARGET="gcc_nto${CPU}${EXT}" \
              -DBUILD_SHARED_LIBS=ON \
              -DBUILD_TESTING=$(BUILD_TESTING) \
              -DCPU="$(CPU)" \
              -DEXT="$(EXT)" \
+             -DCMAKE_FIND_PACKAGE_PREFER_CONFIG=ON \
              -DONNX_CUSTOM_PROTOC_EXECUTABLE=$(HOST_PROTOC_PATH) \
              -DProtobuf_PROTOC_EXECUTABLE=$(HOST_PROTOC_PATH) \
              -DONNX_BUILD_TESTS=$(BUILD_TESTING)

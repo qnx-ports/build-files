@@ -66,6 +66,7 @@ Copy tests and runtime dependencies to the target
 TARGET_HOST=<target-ip-address-or-hostname>
 
 scp $QNX_TARGET/aarch64le/usr/local/lib/libonnx* qnxuser@$TARGET_HOST:/data/home/qnxuser/lib
+scp $QNX_TARGET/aarch64le/usr/local/lib/libproto*.so* qnxuser@$TARGET_HOST:/data/home/qnxuser/lib
 scp ~/qnx_workspace/build-files/ports/onnx/nto-aarch64-le/build/onnx_gtests qnxuser@$TARGET_HOST:/data/home/qnxuser/bin
 ```
 
