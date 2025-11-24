@@ -39,6 +39,8 @@ ALL_DEPENDENCIES = $(NAME)_all
 
 CPPFLAGS += -D_QNX_SOURCE
 
+LDFLAGS += -lregex
+
 include $(MKFILES_ROOT)/qtargets.mk
 
 #Search paths for all of CMake's find_* functions --
@@ -73,10 +75,13 @@ CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DEXTRA_CMAKE_CXX_FLAGS="$(CXXFLAGS) $(CPPFLAGS)" \
              -DEXTRA_CMAKE_ASM_FLAGS="$(ASFLAGS)" \
              -DEXTRA_CMAKE_LINKER_FLAGS="$(LDFLAGS)" \
+			 -DCMAKE_ASM_COMPILER_TARGET="gcc_nto${CPU}${EXT}" \
+			 -DCMAKE_C_COMPILER_TARGET="gcc_nto${CPU}${EXT}" \
+			 -DCMAKE_CXX_COMPILER_TARGET="gcc_nto${CPU}${EXT}" \
              -DBUILD_SHARED_LIBS=ON \
              -DBUILD_TESTING=$(BUILD_TESTING) \
-             -DCPU=$(CPU) \
-             -DEXT=$(EXT) \
+             -DCPU="$(CPU)" \
+             -DEXT="$(EXT)" \
              -DONNX_CUSTOM_PROTOC_EXECUTABLE=$(HOST_PROTOC_PATH) \
              -DProtobuf_PROTOC_EXECUTABLE=$(HOST_PROTOC_PATH) \
              -DONNX_BUILD_TESTS=$(BUILD_TESTING)
