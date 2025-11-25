@@ -83,8 +83,8 @@ jobs:
         buildah tag qnx800:latest ghcr.io/qnx-ports/sdp-build-env:latest
         buildah from --name tmp ghcr.io/qnx-ports/sdp-build-env:latest
 
-        buildah copy tmp ${{ github.workspace }}/qnx /home/runner
-        buildah copy tmp ${{ github.workspace }}/.qnx /home/runner
+        buildah copy tmp ${{ github.workspace }}/qnx /home/runner/qnx
+        buildah copy tmp ${{ github.workspace }}/.qnx /home/runner/.qnx
         buildah commit tmp ghcr.io/qnx-ports/sdp-build-env:latest
 
     - name: Push to ghcr.io
