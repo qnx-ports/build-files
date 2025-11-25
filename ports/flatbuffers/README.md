@@ -25,7 +25,7 @@ cd build-files/docker
 
 # Clone flatbuffers
 cd ~/qnx_workspace
-git clone https://github.com/google/flatbuffers.git --branch v25.9.23
+git clone https://github.com/qnx-ports/flatbuffers.git --branch qnx-v25.9.23
 
 # Build flatbuffers
 QNX_PROJECT_ROOT="$(pwd)/flatbuffers" make -C build-files/ports/flatbuffers JLEVEL=4 install
@@ -36,7 +36,7 @@ QNX_PROJECT_ROOT="$(pwd)/flatbuffers" make -C build-files/ports/flatbuffers JLEV
 # Clone the repos
 mkdir -p ~/qnx_workspace && cd qnx_workspace
 git clone https://github.com/qnx-ports/build-files.git
-git clone https://github.com/google/flatbuffers.git --branch v25.9.23
+git clone https://github.com/qnx-ports/flatbuffers.git --branch qnx-v25.9.23
 
 # source qnxsdp-env.sh
 source ~/qnx800/qnxsdp-env.sh

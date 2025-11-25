@@ -37,10 +37,10 @@ jobs:
     - name: Checkout flatbuffers
       uses: actions/checkout@v4
       with:
-        repository: google/flatbuffers
+        repository: qnx-ports/flatbuffers
         path: flatbuffers
         submodules: 'true'
-        ref: v25.9.23
+        ref: qnx-v25.9.23
 
     - name: Build flatbuffers
       shell: bash
