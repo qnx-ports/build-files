@@ -46,4 +46,4 @@ jobs:
       shell: bash
       run: |
         source ~/qnx/800/qnxsdp-env.sh
-        QNX_PROJECT_ROOT="$(pwd)/flatbuffers" make -C build-files/ports/flatbuffers INSTALL_ROOT_linux=$PWD/stage USE_INSTALL_ROOT=true install
+        BUILD_TESTING=ON QNX_PROJECT_ROOT="$(pwd)/flatbuffers" make -C build-files/ports/flatbuffers INSTALL_ROOT_linux=$PWD/stage USE_INSTALL_ROOT=true install

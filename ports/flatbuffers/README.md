@@ -47,5 +47,19 @@ QNX_PROJECT_ROOT="$(pwd)/flatbuffers" make -C build-files/ports/flatbuffers JLEV
 
 # How to run tests
 
-Test executables are built under the build folder and can be installed to
-/data/home/qnxuser/bin on the target, but we don't currently verify them.
+Copy tests and runtime dependencies to the target
+```bash
+TARGET_HOST=<target-ip-address-or-hostname>
+
+scp -r ~/qnx_workspace/flatbuffers/tests qnxuser@$TARGET_HOST:/data/home/qnxuser
+
+(cd ~/qnx_workspace/build-files/ports/flatbuffers/nto-aarch64-le/build && scp flatc flatsamplebfbs flatsamplebinary flatsampletext flattests  qnxuser@$TARGET_HOST:~/bin)
+scp $QNX_TARGET/aarch64le/usr/local/lib/libflatbuffers.so* qnxuser@$TARGET_HOST:/data/home/qnxuser/lib
+```
+
+Run the tests on the target
+```bash
+ssh qnxuser:$TARGET_HOST
+
+flattests
+```
