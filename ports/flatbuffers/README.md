@@ -28,7 +28,7 @@ cd ~/qnx_workspace
 git clone https://github.com/qnx-ports/flatbuffers.git --branch qnx-v25.9.23
 
 # Build flatbuffers
-QNX_PROJECT_ROOT="$(pwd)/flatbuffers" make -C build-files/ports/flatbuffers JLEVEL=4 install
+QNX_PROJECT_ROOT="$(pwd)/flatbuffers" BUILD_TESTING=ON make -C build-files/ports/flatbuffers JLEVEL=4 install
 ```
 
 # Compile the port for QNX on Ubuntu host
@@ -42,7 +42,7 @@ git clone https://github.com/qnx-ports/flatbuffers.git --branch qnx-v25.9.23
 source ~/qnx800/qnxsdp-env.sh
 
 # Build flatbuffers
-QNX_PROJECT_ROOT="$(pwd)/flatbuffers" make -C build-files/ports/flatbuffers JLEVEL=4 install
+QNX_PROJECT_ROOT="$(pwd)/flatbuffers" BUILD_TESTING=ON make -C build-files/ports/flatbuffers JLEVEL=4 install
 ```
 
 # How to run tests
