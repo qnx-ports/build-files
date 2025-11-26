@@ -1,0 +1,107 @@
+name: onnx
+
+permissions:
+  contents: write
+  checks: write
+
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/onnx.yml'
+      - 'ports/onnx/**'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/onnx.yml'
+      - 'ports/onnx/**'
+
+jobs:
+
+  build:
+    strategy:
+      matrix:
+        qnx_env: ["710", "800"]
+    runs-on: ubuntu-22.04-common
+    if: |
+      ((github.event_name == 'workflow_dispatch') ||
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'onnx')))
+    steps:
+    - name: Checkout build-files
+      uses: actions/checkout@v4
+      with:
+        path: build-files
+
+    - name: Checkout onnx
+      uses: actions/checkout@v4
+      with:
+        repository: qnx-ports/onnx
+        path: onnx
+        ref: qnx-v1.13.1
+
+    - name: Checkout protobuf
+      uses: actions/checkout@v4
+      with:
+        repository: qnx-ports/protobuf
+        path: protobuf
+        ref: qnx-v27.2
+        submodules: recursive
+
+    - name: Checkout check-tools
+      uses: actions/checkout@v4
+      with:
+        repository: qnx-ports/check-tools
+        path: check-tools
+        ref: v0.1.4
+
+    - name: Checkout test-tools
+      uses: actions/checkout@v4
+      with:
+        repository: qnx-ports/test-tools
+        path: test-tools
+        token: ${{secrets.GCO_TOKEN}}
+
+    - name: Build onnx
+      shell: bash
+      run: |
+        if [[ ${{ matrix.qnx_env }} == 800 ]]; then
+          source ~/qnx/800/qnxsdp-env.sh
+        else
+          source ~/qnx/710/qnxsdp-env.sh
+        fi
+        QNX_PROJECT_ROOT="$(pwd)/protobuf" make -C build-files/ports/protobuf INSTALL_ROOT_nto=$PWD/stage USE_INSTALL_ROOT=true install
+        BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/onnx" make -C build-files/ports/onnx INSTALL_ROOT_nto=$PWD/stage USE_INSTALL_ROOT=true install
+
+    - name: Setup python env
+      if: ${{ (matrix.qnx_env == '800') }}
+      uses: actions/setup-python@v6
+      with:
+        python-version: '3.12'
+        cache: 'pip'
+
+    - name: Install dependencies
+      run: pip install -r ./test-tools/requirements.txt
+
+    - name: Test onnx
+      if: ${{ (matrix.qnx_env == '800') }}
+      env:
+        OSS_NAME: "onnx"
+        QNX_VERSION: "qnx${{ matrix.qnx_env }}"
+        COMPANION_DIR: "${{ github.workspace }}/build-files/ports/onnx"
+      shell: bash
+      run: |
+        source ~/qnx/800/qnxsdp-env.sh
+
+        ./test-tools/bin/run_tests.sh
+
+    - name: Publish Test Report
+      uses: mikepenz/action-junit-report@v5
+      if: ${{ always() }}
+      with:
+        report_paths: 'results/*.xml'
+        check_name: (${{ matrix.qnx_env }}) Test Report
