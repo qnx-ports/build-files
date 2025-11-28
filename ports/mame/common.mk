@@ -84,3 +84,5 @@ install: $(NAME)_all
 clean:
 	@rm -rf build || True
 	@make -C $(QNX_PROJECT_ROOT) clean
+	@rm $(QNX_PROJECT_ROOT)/mame
+	@find . -name "lib*.a" | xargs rm -f
