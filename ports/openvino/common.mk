@@ -39,7 +39,7 @@ ALL_DEPENDENCIES = $(NAME)_all
 
 CPPFLAGS += -D_QNX_SOURCE
 
-LDFLAGS += -lgomp
+LDFLAGS += -lgomp -lregex
 
 include $(MKFILES_ROOT)/qtargets.mk
 
@@ -91,6 +91,7 @@ CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DFlatbuffers_DIR="$(HOST_FLATC_PATH)/usr/lib/cmake/flatbuffers" \
              -DCMAKE_FIND_PACKAGE_PREFER_CONFIG=ON \
              -DPYTHON_EXECUTABLE="$(PYTHON_EXECUTABLE)" \
+             -DENABLE_SYSTEM_OPENCL=ON \
              -DCPU=$(CPU) \
              -DEXT=$(EXT)
 
