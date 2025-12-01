@@ -2,6 +2,6 @@
 nto-aarch64-le/*
 nto-x86_64-o/*
 
-# …but do not ignore the QNXmakefile in each
-!nto-aarch64-le/QNXmakefile
-!nto-x86_64-o/QNXmakefile
+# …but do not ignore the GNUmakefile in each
+!nto-aarch64-le/GNUmakefile
+!nto-x86_64-o/GNUmakefile

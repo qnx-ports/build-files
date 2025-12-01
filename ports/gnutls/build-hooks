@@ -47,14 +47,25 @@ function hook_preconfigure {
 }
 
 function hook_configure {
-    echo "hook_configure - running configure from ${NESTED_LEVEL}"
-
+    echo "hook_configure - running configure from ${NESTED_LEVEL} build directory"
+    
     # Verify configure exists and is executable
     if [ ! -x "${NESTED_LEVEL}/configure" ]; then
         echo "Error: configure script not found at ${NESTED_LEVEL}/configure"
         return 1
     fi
 
+    mkdir -p "${PWD}/build" || {
+        echo "Failed to create build directory"
+        return 1
+    }
+    # Change to build directory FIRST
+    cd "${PWD}/build" || {
+        echo "Failed to enter build directory: ${PWD}/build"
+        return 1
+    }
+    
+    # Run configure pointing back to source root
     "${NESTED_LEVEL}/configure" \
         --srcdir="${NESTED_LEVEL}" \
         --prefix="${BASIC_PREFIX}" \
@@ -73,7 +84,6 @@ function hook_configure {
         --disable-anon-authentication \
         --disable-dtls-srtp-support \
         --disable-alpn-support \
-        --disable-openssl-compatibility \
         --enable-local-libopts \
         CFLAGS="-O2 -Wall" \
         CPPFLAGS="${CPPFLAGS}" \

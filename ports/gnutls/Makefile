@@ -1,3 +1,3 @@
 LIST=OS CPU VARIANT
-MAKEFILE=QNXmakefile
+MAKEFILE=GNUmakefile
 include recurse.mk
