@@ -4,7 +4,7 @@ endif
 include $(QCONFIG)
 include $(MKFILES_ROOT)/qmacros.mk
 
-NAME=SDL_tff
+NAME=SDL_ttf
 
 QNX_PROJECT_ROOT ?= $(PRODUCT_ROOT)/../../$(NAME)
 

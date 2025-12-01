@@ -12,6 +12,7 @@ PREFIX              ?= usr/local
 
 BUILD_TESTING       ?= 0
 SYMBOLS             ?= 0
+DEBUG               ?= 0
 
 JLEVEL ?= $(subst -j,,$(filter -j%,$(MAKEFLAGS)))
 
@@ -33,7 +34,7 @@ include $(MKFILES_ROOT)/qtargets.mk
 ##########Post-Target Def###########
 
 TARGETOS=qnx
-ARCHOPTS="-D_QNX_SOURCE -DSDL_DISABLE_IMMINTRIN_H -Wno-error=format-overflow -Wno-error=alloc-size-larger-than= -Wno-error=parentheses -Wno-error=pointer-arith"
+ARCHOPTS="-D_QNX_SOURCE -DSDL_DISABLE_IMMINTRIN_H -DCATCH_CONFIG_CPP11_NO_SHUFFLE -Wno-error=format-overflow -Wno-error=alloc-size-larger-than= -Wno-error=parentheses -Wno-error=pointer-arith -Wno-error=unused-value"
 LDOPTS="-Wl,-rpath-link=$(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib -Wl,-rpath-link=$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/lib"
 
 SDL_INSTALL_ROOT=$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)
@@ -54,11 +55,13 @@ $(NAME)_all: clean
 		JLEVEL=$(JLEVEL) \
 		SYMBOLS=$(SYMBOLS) \
 		USE_QTDEBUG=0 \
+		USE_PCAP=1 \
 		NO_USE_XINPUT=1 \
 		NO_X11=1 \
 		NO_USE_MIDI=1 \
 		USE_SYSTEM_LIB_ZLIB=1 \
 		VERBOSE=1 \
+		DEBUG=$(DEBUG) \
 		make -C $(QNX_PROJECT_ROOT) qnx_$(CPU_ALIAS)
 
 
@@ -66,7 +69,11 @@ install: $(NAME)_all
 	@echo ===============
 	@echo Installing $(NAME)...
 	@echo ===============
-	install -m755 $(QNX_PROJECT_ROOT)/mame $(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/bin
+	if [ $(DEBUG) -eq 1 ]; then \
+		install -m755 $(QNX_PROJECT_ROOT)/mamed $(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/bin; \
+	else \
+		install -m755 $(QNX_PROJECT_ROOT)/mame $(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/bin; \
+	fi
 
 	mkdir -p $(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/share/mame
 	install -m644 $(QNX_PROJECT_ROOT)/uismall.bdf $(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/share/mame
@@ -85,4 +92,5 @@ clean:
 	@rm -rf build || True
 	@make -C $(QNX_PROJECT_ROOT) clean
 	@rm -f $(QNX_PROJECT_ROOT)/mame
+	@rm -f $(QNX_PROJECT_ROOT)/mamed
 	@find . -name "lib*.a" | xargs rm -f
