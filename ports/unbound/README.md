@@ -57,3 +57,40 @@ cd ..
 # Build unbound
 QNX_PROJECT_ROOT="$(pwd)/unbound" make -C build-files/ports/unbound/  install -j4
 ```
+
+
+# Testing :
+
+After building Unbound for your QNX target, validation is straightforward. The make process already compiles test binaries and copies test data to the CPU-specific directory (nto-<cpudir>). Deploy and run tests on your target device (RPi/x86 QNX machine).
+
+Prerequisites:
+    1. Built Unbound artifacts in build-files/ports/unbound/nto-<cpudir>/
+    2. Write permissions on target /tmp (or use TMPDIR=/fs/hd0/temp)
+    3. SSH access to target device
+
+1. Deploy to Target Device
+```bash
+# Copy entire CPU directory to target
+scp -r ./build-files/ports/unbound/nto-aarch64-le qnxuser@10.123.3.62:/home/qnxuser/guests/
+```
+2. SSH to Target and Setup Environment
+```bash
+ssh qnxuser@10.123.2.191
+cd /home/qnxuser/guests/nto-aarch64-le
+
+# Set library path (adjust to your install location)
+export LD_LIBRARY_PATH=/usr/local/lib:$PWD:$LD_LIBRARY_PATH
+```
+3. Run Validation Tests
+```bash
+# Execute full test suite
+sh ./unboundtest.sh
+```
+4. Expected Results
+```text
+1329XXX checks ok.
+selftest successful (33 checks).
+testdata/acl.rpl OK
+testdata/auth_nsec3_*.rpl OK
+# Note: auth_xfr.rpl may fail on QNX due to /tmp limitations (non-critical)
+```
