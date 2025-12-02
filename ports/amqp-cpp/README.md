@@ -83,9 +83,26 @@ QNX_PROJECT_ROOT="$(pwd)/AMQP-CPP" make -C build-files/ports/amqp-cpp/  install 
 
 ```
 
+# AMQP-CPP Validation Guide
 
-**Testing**:
-for validating the amqp-cpp we need to build libev and libuv and use the prebuild binaries from examples folder. 
+## Overview
+
+This guide provides step-by-step instructions to validate the AMQP-CPP library on QNX using the pre-built example binaries (`amqpcpp_libev_example` and `amqpcpp_libuv_example`).
+
+---
+
+## Prerequisites
+
+- **Ubuntu Machine (RabbitMQ Server)**: Ubuntu 22.04 (Jammy) or later
+- **QNX Target (RPi)**: QNX 7.x or 8.x with aarch64 architecture
+- **Network Connection**: Both machines must be able to communicate on the same network
+- **Built AMQP-CPP**: Successfully compiled with libev and libuv examples
+
+---
+
+## Part 1: RabbitMQ Server Setup (Ubuntu Machine)
+
+### 1.1 Install RabbitMQ Server
 
 ```bash
 # Update package list
@@ -93,7 +110,11 @@ sudo apt-get update
 
 # Install RabbitMQ (includes Erlang dependencies automatically)
 sudo apt-get install -y rabbitmq-server
+```
 
+### 1.2 Start and Enable RabbitMQ Service
+
+```bash
 # Start the service
 sudo systemctl start rabbitmq-server
 
@@ -102,52 +123,199 @@ sudo systemctl enable rabbitmq-server
 
 # Verify it's running
 sudo systemctl status rabbitmq-server
+```
 
-# Enable management plugin
+### 1.3 Enable Management Plugin (Optional but Recommended)
+
+```bash
+# Enable management plugin for web UI
 sudo rabbitmq-plugins enable rabbitmq_management
 
-# Restart to apply plugin
+# Restart to apply changes
 sudo systemctl restart rabbitmq-server
+```
 
-# Verify listening ports
-sudo netstat -tulpn | grep beam
+### 1.4 Create User and Configure Permissions
 
-##Create User and Configure
-# Create user
+```bash
+# Create custom user with password
 sudo rabbitmqctl add_user myuser mypassword
 
-# Set permissions
+# Set permissions (full access to "/" virtual host)
 sudo rabbitmqctl set_permissions -p / myuser ".*" ".*" ".*"
 
-# Verify
+# Verify user and permissions
 sudo rabbitmqctl list_users
 sudo rabbitmqctl list_permissions -p /
+```
 
-# Get your Ubuntu IP
-hostname -I
+**Expected output:**
+```
+Listing users ...
+guest	[administrator]
+myuser	[]
 
-##Verify Installation
-# Check if RabbitMQ is running
-sudo systemctl status rabbitmq-server
+Listing permissions for vhost "/" ...
+user	configure	write	read
+guest	.*	.*	.*
+myuser	.*	.*	.*
+```
 
-# Check listening ports (should show 5672 and 15672)
+### 1.5 Verify RabbitMQ is Listening
+
+```bash
+# Check listening ports (should show 5672 for AMQP and 15672 for management)
 sudo ss -tulpn | grep beam
 
-# Test local connection
+# Alternative command
+sudo netstat -tulpn | grep beam
+```
+
+**Expected output:**
+```
+LISTEN  0  128  0.0.0.0:5672  0.0.0.0:*  (AMQP Protocol Port)
+LISTEN  0  128  0.0.0.0:15672 0.0.0.0:*  (Management UI Port)
+```
+
+### 1.6 Test Local Connection
+
+```bash
+# Test AMQP port locally
 telnet localhost 5672
 
-#Expected output should show:
-LISTEN  0  128  0.0.0.0:5672  0.0.0.0:*  (AMQP)
-LISTEN  0  128  0.0.0.0:15672 0.0.0.0:*  (Management)
+# Or test both ports
+nc -vz localhost 5672
+nc -vz localhost 15672
+```
 
-##Once Working, Test from RPi
-# From QNX RPi target
-ping <ubuntu-ip>
-nc -vz <ubuntu-ip> 5672
-telnet <ubuntu-ip> 5672
+### 1.7 Find Your Ubuntu Machine's IP Address
 
-# Then run your AMQP-CPP example with:
-# AMQP::Address address("amqp://myuser:mypassword@<ubuntu-ip>/");
-# above line need to be updated on examples/libev.cpp or examples/libuv.cpp
+```bash
+# Get IP address
+hostname -I
 
+# Expected output example: 10.123.39.76
+```
+
+**Note:** Save this IP address for use on the QNX target.
+
+## Part 2: QNX Target Setup and Testing
+
+### 2.1 Update Example Code with RabbitMQ Server Address
+
+Edit the example source file to point to your RabbitMQ server.
+
+**For libev example** (`examples/libev.cpp`):
+
+```cpp
+// Find this line in the example:
+AMQP::Address address("amqp://guest:guest@localhost/");
+
+// Replace with your RabbitMQ server details:
+AMQP::Address address("amqp://myuser:mypassword@10.123.39.76/");
+```
+
+**For libuv example** (`examples/libuv.cpp`):
+
+```cpp
+// Same change as above
+AMQP::Address address("amqp://myuser:mypassword@10.123.39.76/");
+```
+
+**Then rebuild:**
+
+```bash
+cd ~/path/to/amqp-cpp/build-files/ports/amqp-cpp
+QNX_PROJECT_ROOT="$(pwd)/AMQP-CPP" make install
+```
+
+### 2.2 Connect to QNX Target
+
+```bash
+# SSH into your QNX RPi target
+ssh qnxuser@10.123.2.191
+
+# Or use direct connection if available
+```
+
+### 2.3 Copy Example Binaries to Target
+
+From your build machine:
+
+```bash
+# Copy libev example (recommended)
+scp nto-aarch64-le/build/examples/amqpcpp_libev_example qnxuser@10.123.2.191:~/
+
+# Copy libuv example (optional)
+scp nto-aarch64-le/build/examples/amqpcpp_libuv_example qnxuser@10.123.2.191:~/
+
+# Copy the AMQP-CPP shared library
+scp nto-aarch64-le/build/bin/libamqpcpp.so.4.3 qnxuser@10.123.2.191:~/
+```
+
+### 2.4 Verify Network Connectivity (On QNX Target)
+
+```bash
+# Test connectivity to Ubuntu RabbitMQ server
+ping 10.123.39.76
+
+# Test AMQP port connectivity
+nc -vz 10.123.39.76 5672
+
+# Or use telnet if nc is not available
+telnet 10.123.39.76 5672
+```
+
+**Expected output:** Connection should succeed without timeout.
+
+### 2.5 Set Library Path (If Needed)
+
+If libraries are not in standard paths:
+
+```bash
+# On QNX target
+export LD_LIBRARY_PATH=~/lib:$LD_LIBRARY_PATH
+
+# Or if you copied libamqpcpp.so.4.3 to current directory
+export LD_LIBRARY_PATH=.:$LD_LIBRARY_PATH
+```
+---
+
+## Part 3: Run Validation Tests
+
+### 3.1 Run Libev Example (Recommended)
+
+On QNX target:
+
+```bash
+cd ~
+./amqpcpp_libev_example
+```
+
+**Expected output:**
+```
+connected
+ready
+declared queue amq.gen-xxxxxxxxxxxxxxxxxxxxxx
+started consuming with tag amq.ctag-xxxxxxxxxxxxxxxxxx
+received 1
+received 2
+received 3
+received 4
+consumer amq.ctag-xxxxxxxxxxxxxxxxxx was cancelled
+```
+
+### 3.2 Run Libuv Example
+
+On QNX target:
+
+```bash
+cd ~
+./amqpcpp_libuv_example
+```
+
+**Expected output (similar to libev):**
+```
+connected
+declared queue amq.gen-xxxxxxxxxxxxxxxxxxxxxx
 ```

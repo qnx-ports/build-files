@@ -69,7 +69,7 @@ CFLAGS += $(FLAGS) \
           -I$(INSTALL_ROOT)/$(PREFIX)/include \
           -D_QNX_SOURCE
           
-LDFLAGS += -Wl,--build-id=md5 -lm -lsocket -lc -lang-c++
+LDFLAGS += -Wl,--build-id=md5 -lm -lsocket -lang-c++
 
 BUILD_SHARED_LIBS ?= ON
 AMQP-CPP_BUILD_SHARED ?= ON
