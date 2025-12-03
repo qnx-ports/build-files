@@ -75,7 +75,7 @@ scp -r ./build-files/ports/unbound/nto-aarch64-le qnxuser@10.123.3.62:/home/qnxu
 ```
 2. SSH to Target and Setup Environment
 ```bash
-ssh qnxuser@10.123.2.191
+ssh qnxuser@<TARGET_HOST>
 cd /home/qnxuser/guests/nto-aarch64-le
 
 # Set library path (adjust to your install location)
