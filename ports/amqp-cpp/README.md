@@ -233,7 +233,7 @@ QNX_PROJECT_ROOT="$(pwd)/AMQP-CPP" make install
 
 ```bash
 # SSH into your QNX RPi target
-ssh qnxuser@10.123.2.191
+ssh qnxuser@<TARGET_HOST>
 
 # Or use direct connection if available
 ```
