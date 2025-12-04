@@ -34,10 +34,14 @@ cd build-files/docker
 make -C build-files/ports/SDL JLEVEL=4 install
 
 # Build freetype2
+chmod +x ./build-files/ports/freetype/install_all.sh
 ./build-files/ports/freetype/install_all.sh
 QNX_PROJECT_ROOT="$(pwd)/freetype" JLEVEL=4 make -C build-files/ports/freetype install
 
 # Build fontconfig
+chmod +x ./build-files/ports/fontconfig/install_all.sh
+./build-files/ports/fontconfig/install_all.sh
+# NOTE: You may need to tweak the required meson version in fontconfig/meson.build before running.
 QNX_PROJECT_ROOT="$(pwd)/fontconfig" JLEVEL=4 make -C build-files/ports/fontconfig install
 
 # Build SDL_ttf

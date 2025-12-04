@@ -16,8 +16,6 @@ DEBUG               ?= 0
 
 JLEVEL ?= $(subst -j,,$(filter -j%,$(MAKEFLAGS)))
 
-$(NAME)_INSTALL_DIR=$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)
-
 #Setup pkg-config dir
 export PKG_CONFIG_PATH=
 PKG_CONFIG_LIBDIR_IN = $($(NAME)_INSTALL_DIR)/lib/pkgconfig:$($(NAME)_INSTALL_DIR)/share/pkgconfig
@@ -29,13 +27,15 @@ export PKG_CONFIG_LIBDIR = $(PKG_CONFIG_LIBDIR_IN):$(PKG_CONFIG_TARGET_IN)
 ALL_DEPENDENCIES = $(NAME)_all
 INSTALL_ROOT ?= $(INSTALL_ROOT_$(OS))
 
+$(NAME)_INSTALL_DIR=$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)
+
 ##########Pre-Target Def############
 include $(MKFILES_ROOT)/qtargets.mk
 ##########Post-Target Def###########
 
 TARGETOS=qnx
 ARCHOPTS="-D_QNX_SOURCE -DSDL_DISABLE_IMMINTRIN_H -DCATCH_CONFIG_CPP11_NO_SHUFFLE -Wno-error=format-overflow -Wno-error=alloc-size-larger-than= -Wno-error=parentheses -Wno-error=pointer-arith -Wno-error=unused-value"
-LDOPTS="-Wl,-rpath-link=$(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib -Wl,-rpath-link=$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/lib"
+LDOPTS="-Wl,-rpath-link=$(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib -Wl,-rpath-link=$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/lib -lsocket"
 
 SDL_INSTALL_ROOT=$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)
 
@@ -55,7 +55,7 @@ $(NAME)_all: clean
 		JLEVEL=$(JLEVEL) \
 		SYMBOLS=$(SYMBOLS) \
 		USE_QTDEBUG=0 \
-		USE_PCAP=1 \
+		USE_TAPTUN=1 \
 		NO_USE_XINPUT=1 \
 		NO_X11=1 \
 		NO_USE_MIDI=1 \
