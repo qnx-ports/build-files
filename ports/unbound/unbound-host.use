@@ -1,0 +1,106 @@
+unbound-host(1)                 unbound 1.16.3                unbound-host(1)
+
+
+
+NAME
+       unbound-host - unbound DNS lookup utility
+
+SYNOPSIS
+       unbound-host  [-C  configfile] [-vdhr46D] [-c class] [-t type] [-y key]
+       [-f keyfile] [-F namedkeyfile] hostname
+
+DESCRIPTION
+       Unbound-host uses the Unbound validating  resolver  to  query  for  the
+       hostname and display results. With the -v option it displays validation
+       status: secure, insecure, bogus (security failure).
+
+       By default it reads no configuration file whatsoever.  It  attempts  to
+       reach  the  internet  root servers.  With -C an Unbound config file and
+       with -r resolv.conf can be read.
+
+       The available options are:
+
+       hostname
+              This name is resolved (looked up in the DNS).  If a IPv4 or IPv6
+              address is given, a reverse lookup is performed.
+
+       -h     Show the version and commandline option help.
+
+       -v     Enable  verbose output and it shows validation results, on every
+              line.  Secure means that the NXDOMAIN (no such domain name), no-
+              data  (no  such  data)  or positive data response validated cor-
+              rectly with one of the keys.  Insecure means  that  that  domain
+              name  has  no  security set up for it.  Bogus (security failure)
+              means that the response failed one or more checks, it is  likely
+              wrong, outdated, tampered with, or broken.
+
+       -d     Enable  debug  output  to stderr. One -d shows what the resolver
+              and validator are doing and may tell you what is going on.  More
+              times,  -d -d, gives a lot of output, with every packet sent and
+              received.
+
+       -c class
+              Specify the class to lookup for, the default is IN the  internet
+              class.
+
+       -t type
+              Specify  the type of data to lookup. The default looks for IPv4,
+              IPv6 and mail handler data, or domain name pointers for  reverse
+              queries.
+
+       -y key Specify  a  public  key to use as trust anchor. This is the base
+              for a chain of trust that is built up from the trust  anchor  to
+              the  response, in order to validate the response message. Can be
+              given as a DS or DNSKEY record.  For example -y "example.com  DS
+              31560 5 1 1CFED84787E6E19CCF9372C1187325972FE546CD".
+
+       -D     Enables  DNSSEC  validation.  Reads the root anchor from the de-
+              fault configured root anchor at the default  location,  /etc/un-
+              bound/root.key.
+
+       -f keyfile
+              Reads keys from a file. Every line has a DS or DNSKEY record, in
+              the format as for -y. The zone file format, the same as dig  and
+              drill produce.
+
+       -F namedkeyfile
+              Reads   keys   from  a  BIND-style  named.conf  file.  Only  the
+              trusted-key {}; entries are read.
+
+       -C configfile
+              Uses the specified unbound.conf to prime libunbound(3).  Pass it
+              as  first argument if you want to override some options from the
+              config file with further arguments on the commandline.
+
+       -r     Read /etc/resolv.conf, and use  the  forward  DNS  servers  from
+              there  (those  could  have  been set by DHCP).  More info in re-
+              solv.conf(5).  Breaks validation if those servers do not support
+              DNSSEC.
+
+       -4     Use solely the IPv4 network for sending packets.
+
+       -6     Use solely the IPv6 network for sending packets.
+
+EXAMPLES
+       Some  examples  of use. The keys shown below are fakes, thus a security
+       failure is encountered.
+
+       $ unbound-host www.example.com
+
+       $    unbound-host    -v    -y    "example.com    DS    31560    5     1
+       1CFED84787E6E19CCF9372C1187325972FE546CD" www.example.com
+
+       $     unbound-host    -v    -y    "example.com    DS    31560    5    1
+       1CFED84787E6E19CCF9372C1187325972FE546CD" 192.0.2.153
+
+EXIT CODE
+       The unbound-host program exits with status code 1 on error, 0 on no er-
+       ror.  The  data  may not be available on exit code 0, exit code 1 means
+       the lookup encountered a fatal error.
+
+SEE ALSO
+       unbound.conf(5), unbound(8).
+
+
+
+NLnet Labs                       Sep  21, 2022                  unbound-host(1)
