@@ -60,7 +60,6 @@ CFLAGS += -I$(QNX_TARGET)/$(PREFIX)/include \
 
 LDFLAGS += -Wl,--build-id=md5
 LDFLAGS += -lsocket
-
 CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DCMAKE_SYSTEM_PROCESSOR=$(CPUVARDIR) \
              -DCMAKE_CXX_FLAGS="$(CFLAGS)" \
@@ -69,12 +68,16 @@ CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DCMAKE_C_COMPILER_TARGET=gcc_nto$(CPUVARDIR) \
              -DCMAKE_INSTALL_PREFIX="$(INSTALL_ROOT)" \
              -DCMAKE_INSTALL_LIBDIR="$(CPUVARDIR)/$(PREFIX)/lib" \
-             -DCMAKE_INSTALL_BINDIR="$(CPUVARDIR)/$(PREFIX)/bin" \
+             -DCMAKE_INSTALL_BINDIR="$(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/bin/rtl-sdr-tests" \
              -DCMAKE_INSTALL_INCLUDEDIR="$(PREFIX)/include" \
              -DCMAKE_MODULE_PATH="$(CMAKE_MODULE_PATH)" \
              -DCMAKE_FIND_ROOT_PATH="$(CMAKE_FIND_ROOT_PATH)" \
              -DCMAKE_BUILD_TYPE=$(CMAKE_BUILD_TYPE) \
              -DCPUVARDIR=$(CPUVARDIR)\
+             -DLIBUSB_FOUND=TRUE\
+             -DLIBUSB_LIBRARIES=$(QNX_TARGET)/$(CPUVARDIR)/usr/lib/libusb-1.0.so \
+             -DLIBUSB_INCLUDE_DIRS=$(QNX_TARGET)/$(CPUVARDIR)/usr/include/libusb-1.0
+
 
 MAKE_ARGS ?= -j $(firstword $(JLEVEL) 1)
 
