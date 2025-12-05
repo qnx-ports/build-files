@@ -1,12 +1,10 @@
 #!/bin/bash
 
-# Set default values for variables
-
 # Process command line
 while [[ $# -gt 0 ]]; do
     case $1 in
-        -v|--volume)
-            MOUNTS+=("$2")
+        -m|--method)
+            METHOD="$2"
             shift
             ;;
         --mount-home)
@@ -20,6 +18,10 @@ while [[ $# -gt 0 ]]; do
             QNX_SDP_VERSION="$2"
             shift
             ;;
+        -v|--volume)
+            MOUNTS+=("$2")
+            shift
+            ;;
         *)
             echo "Unknown argument: $1"
             exit 1
@@ -29,6 +31,7 @@ while [[ $# -gt 0 ]]; do
 done
 
 # Set defaults if an explicit value wasn't specified.
+METHOD=${METHOD:-docker}
 QNX_SDP_VERSION=${QNX_SDP_VERSION:-qnx800}
 if [ -z "$QNX_SDP" ]; then
     if [ -n "$QNX_TARGET" ]; then
@@ -59,7 +62,7 @@ if [ ! -d ${QNX_SDP} ]; then
 fi
 echo "Using SDP from ${QNX_SDP} with version ${QNX_SDP_VERSION}."
 
-docker run -it \
+${METHOD} run -it \
   --net=host \
   --privileged \
   --env QNX_SDP="$QNX_SDP" \

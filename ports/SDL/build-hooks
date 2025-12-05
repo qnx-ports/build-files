@@ -1,0 +1,52 @@
+#!/bin/sh
+
+# Control installation
+DIST_BASE=${QNX_PROJECT_ROOT:-"${PWD}/../../../../SDL"}
+INSTALL_ROOT=$(eval "echo \${INSTALL_ROOT_${TARGET_SYSNAME}}")
+INSTALL_PREFIX=${PREFIX:-"usr/local"}
+
+ENABLE_AUDIO=${ENABLE_AUDIO:-"yes"}
+
+function hook_preconfigure
+{
+  # Override srcdir
+  rm -rf ${PWD}/build
+  mkdir -p ${PWD}/build
+  cp -r ${DIST_BASE} build
+  export BUILDDIR="${PWD}/build/SDL"
+  export SRCDIR="${PWD}/build/SDL"
+  configure_opts="$(echo ${configure_opts} | sed -e 's/--srcdir=..//')"
+
+  # Installation locations
+  configure_opts="${configure_opts} --srcdir=${SRCDIR}"
+  configure_opts="${configure_opts} --prefix=${INSTALL_ROOT}/${INSTALL_PREFIX}"
+  configure_opts="${configure_opts} --exec-prefix=${INSTALL_ROOT}/${cpudir}/${INSTALL_PREFIX}"
+
+  # Set up options
+  configure_opts="${configure_opts} --disable-pulseaudio"
+  configure_opts="${configure_opts} --enable-wayland-shared=no"
+  configure_opts="${configure_opts} --enable-video-wayland=no"
+  configure_opts="${configure_opts} --enable-joystick=yes"
+  configure_opts="${configure_opts} --enable-audio=${ENABLE_AUDIO}"
+}
+
+# Override hook_configure to build from dist
+# VIM doesn't want to be built outside of its source directory.
+# To accomplish building for different targets we need to copy the source tree
+# under the build directory.
+function hook_configure
+{
+   cd $BUILDDIR
+   ./configure \
+        ${ac_host:+"--host=${ac_host}"} \
+        ${ac_build:+"--build=${ac_build}"} \
+        ${configure_opts} \
+        ${ac_params:+${CC:+"CC=${CC}"}} \
+        ${ac_params:+${CFLAGS:+"CFLAGS=${CFLAGS}"}} \
+        ${ac_params:+${CPPFLAGS:+"CPPFLAGS=${CPPFLAGS}"}} \
+        ${ac_params:+${LDFLAGS:+"LDFLAGS=${LDFLAGS}"}} \
+        ${ac_params:+${CXX:+"CXX=${CXX}"}} \
+        ${ac_params:+${CXXFLAGS:+"CXXFLAGS=${CXXFLAGS}"}} \
+        ${ac_params:+${ac_autotools:+${ac_autotools}}} \
+        || Error "configure failed";
+}

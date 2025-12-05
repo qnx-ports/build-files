@@ -1,5 +1,9 @@
 name: open-amp
 
+permissions:
+  contents: write
+  checks: write
+
 on:
   workflow_dispatch:
   push:

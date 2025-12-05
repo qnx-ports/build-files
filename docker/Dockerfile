@@ -495,7 +495,9 @@ RUN apt install -qq --assume-yes \
 RUN cd /opt && sudo wget https://cmake.org/files/v3.31/cmake-3.31.7-linux-x86_64.sh && \
 	sudo mkdir /opt/cmake-3.31.7-linux-x86_64 && \
 	yes | sudo sh cmake-3.31.7-linux-x86_64.sh --prefix=/opt/cmake-3.31.7-linux-x86_64 --skip-license && \
-	sudo ln -s /opt/cmake-3.31.7-linux-x86_64/bin/cmake /usr/local/bin/cmake
+	sudo ln -s /opt/cmake-3.31.7-linux-x86_64/bin/cmake /usr/local/bin/cmake && \
+	sudo sed -i 's/gmake //' /opt/cmake-3.31.7-linux-x86_64/share/cmake-3.31/Modules/CMakeUnixFindMake.cmake && \
+	sudo sed -i 's/gmake //' /usr/share/cmake-3.22/Modules/CMakeUnixFindMake.cmake
 
 # Install APK dependencies (apk stuff is removed, but dependencies left intentionally)
 RUN apt-get install -y \

@@ -1,0 +1,106 @@
+#!/bin/sh
+
+# QNX-specific nested level (path from build dir to source root)
+NESTED_LEVEL="${QNX_PROJECT_ROOT:-../../..}"
+
+# Default prefix inside QNX target sysroot
+BASIC_PREFIX="/usr/local"
+EXEC_PREFIX="/${cpudir}/usr/local"
+
+function hook_preconfigure {
+    echo "hook_preconfigure - running bootstrap in ${NESTED_LEVEL}"
+
+    # Unset any conflicting autoconf tool variables
+    unset AUTOMAKE AUTOCONF AUTOHEADER AUTORECONF ACLOCAL
+
+    # Initialize gnulib submodule BEFORE bootstrap
+    if [ ! -f "${NESTED_LEVEL}/gnulib/gnulib-tool" ]; then
+        echo "Initializing gnulib submodule..."
+        (cd "${NESTED_LEVEL}" && git submodule update --init --recursive gnulib) || {
+            echo "Failed to initialize gnulib submodule"
+            return 1
+        }
+    fi
+
+    # Run bootstrap only if configure doesn't exist
+    if [ ! -x "${NESTED_LEVEL}/configure" ]; then
+        echo "Running bootstrap..."
+        (cd "${NESTED_LEVEL}" && ./bootstrap --skip-po --gnulib-srcdir=gnulib) || {
+            echo "Bootstrap failed"
+            return 1
+        }
+    fi
+
+    # Set DESTDIR for staged installs
+    export DESTDIR="${INSTALL_ROOT_nto}"
+
+    # Ensure pkg-config points to QNX target .pc files
+    export PKG_CONFIG_PATH="${INSTALL_ROOT_nto}/${cpudir}${BASIC_PREFIX}/lib/pkgconfig:${INSTALL_ROOT_nto}/${cpudir}/usr/lib/pkgconfig"
+    export PKG_CONFIG_LIBDIR="${INSTALL_ROOT_nto}/${cpudir}${BASIC_PREFIX}/lib/pkgconfig"
+    
+    export HOGWEED_LIBS="-lgmp -lnettle -lhogweed"
+    export NETTLE_LIBS="-lgmp -lnettle"
+    
+    # Ensure compiler flags can find QNX includes and libs
+    export CPPFLAGS="${CPPFLAGS} -I${QNX_TARGET}/${cpudir}/usr/include -I${QNX_TARGET}/usr/include -I${INSTALL_ROOT_nto}/${cpudir}${BASIC_PREFIX}/include -I${QNX_PROJECT_ROOT}/src/libopts"
+    export LDFLAGS="${LDFLAGS} -L${INSTALL_ROOT_nto}/${cpudir}${BASIC_PREFIX}/lib -L${INSTALL_ROOT_nto}/${cpudir}/usr/lib"
+}
+
+function hook_configure {
+    echo "hook_configure - running configure from ${NESTED_LEVEL} build directory"
+    
+    # Verify configure exists and is executable
+    if [ ! -x "${NESTED_LEVEL}/configure" ]; then
+        echo "Error: configure script not found at ${NESTED_LEVEL}/configure"
+        return 1
+    fi
+
+    mkdir -p "${PWD}/build" || {
+        echo "Failed to create build directory"
+        return 1
+    }
+    # Change to build directory FIRST
+    cd "${PWD}/build" || {
+        echo "Failed to enter build directory: ${PWD}/build"
+        return 1
+    }
+    
+    # Run configure pointing back to source root
+    "${NESTED_LEVEL}/configure" \
+        --srcdir="${NESTED_LEVEL}" \
+        --prefix="${BASIC_PREFIX}" \
+        --exec-prefix="${EXEC_PREFIX}" \
+        --host="${machine}" \
+        --with-included-libtasn1 \
+        --with-included-unistring \
+        --disable-libdane \
+        --without-p11-kit \
+        --without-tpm \
+        --disable-heartbeat-support \
+        --disable-rpath \
+        --disable-doc \
+        --disable-full-test-suite \
+        --disable-srp-authentication \
+        --disable-anon-authentication \
+        --disable-dtls-srtp-support \
+        --disable-alpn-support \
+        --enable-local-libopts \
+        CFLAGS="-O2 -Wall" \
+        CPPFLAGS="${CPPFLAGS}" \
+        LDFLAGS="${LDFLAGS}" || {
+            echo "Configure failed"
+            return 1
+        }
+}
+
+function hook_make {
+    echo "hook_make - running make ${make_cmds}"
+    
+    if [ "${make_cmds}" = "install" ]; then
+        make ${JLEVEL:+-j${JLEVEL}} install || return 1
+        # Clean up .la files
+        find "${INSTALL_ROOT_nto}/${cpudir}" -name "*.la" -exec rm -f {} \; 2>/dev/null || true
+    else
+        make ${JLEVEL:+-j${JLEVEL}} ${make_cmds} || return 1
+    fi
+}
