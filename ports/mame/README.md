@@ -50,3 +50,71 @@ make -C build-files/ports/SDL_ttf JLEVEL=4 install
 # Build mame
 make -C build-files/ports/mame JLEVEL=4 install
 ```
+
+# How to run MAME
+
+Copy files to the target,
+
+```bash
+TARGET_HOST=<target-ip-address-or-hostname>
+
+scp ~/qnx_workspace/build-files/ports/mame/mame.ini qnxuser@$TARGET_HOST:~/
+
+libs=(
+$QNX_TARGET/aarch64le/usr/local/lib/libz.so
+$QNX_TARGET/aarch64le/usr/local/lib/libbrotlidec.so.1
+$QNX_TARGET/aarch64le/usr/local/lib/libfreetype.so.6
+$QNX_TARGET/aarch64le/usr/local/lib/libSDL2.so
+$QNX_TARGET/aarch64le/usr/local/lib/libSDL2-2.0.so.14
+$QNX_TARGET/aarch64le/usr/local/lib/libfreetype.so.6.20.2
+$QNX_TARGET/aarch64le/usr/local/lib/libfontconfig.so.1
+$QNX_TARGET/aarch64le/usr/local/lib/libbrotlicommon.so.1
+$QNX_TARGET/aarch64le/usr/local/lib/libpng16.so.16
+$QNX_TARGET/aarch64le/usr/local/lib/libbrotlienc.so
+$QNX_TARGET/aarch64le/usr/local/lib/libbrotlicommon.so.1.1.0
+$QNX_TARGET/aarch64le/usr/local/lib/libbrotlidec.so.1.1.0
+$QNX_TARGET/aarch64le/usr/local/lib/libexpat.so.1
+$QNX_TARGET/aarch64le/usr/local/lib/libbrotlidec.so
+$QNX_TARGET/aarch64le/usr/local/lib/libz.so.1
+$QNX_TARGET/aarch64le/usr/local/lib/libfontconfig.so
+$QNX_TARGET/aarch64le/usr/local/lib/libiconv.so
+$QNX_TARGET/aarch64le/usr/local/lib/libcharset.so.1.0.0
+$QNX_TARGET/aarch64le/usr/local/lib/libiconv.so.2.7.0
+$QNX_TARGET/aarch64le/usr/local/lib/libbz2.so.1.0.8
+$QNX_TARGET/aarch64le/usr/local/lib/libiconv.so.2
+$QNX_TARGET/aarch64le/usr/local/lib/libbrotlienc.so.1
+$QNX_TARGET/aarch64le/usr/local/lib/libpng16.so
+$QNX_TARGET/aarch64le/usr/local/lib/libbz2.so.1.0
+$QNX_TARGET/aarch64le/usr/local/lib/libexpat.so.1.10.0
+$QNX_TARGET/aarch64le/usr/local/lib/libz.so.1.3.1
+$QNX_TARGET/aarch64le/usr/local/lib/libfontconfig.so.1.15.0
+$QNX_TARGET/aarch64le/usr/local/lib/libpng.so
+$QNX_TARGET/aarch64le/usr/local/lib/libfreetype.so
+$QNX_TARGET/aarch64le/usr/local/lib/libcharset.so.1
+$QNX_TARGET/aarch64le/usr/local/lib/libexpat.so
+$QNX_TARGET/aarch64le/usr/local/lib/libcharset.so
+$QNX_TARGET/aarch64le/usr/local/lib/libpng16.so.16.46.0
+$QNX_TARGET/aarch64le/usr/local/lib/libbrotlicommon.so
+$QNX_TARGET/aarch64le/usr/local/lib/libbrotlienc.so.1.1.0
+$QNX_TARGET/aarch64le/usr/local/lib/libSDL2_ttf.so
+)
+scp ${libs[@]} qnxuser@$TARGET_HOST:~/lib
+
+scp $QNX_TARGET/aarch64le/usr/local/bin/mame qnxuser@$TARGET_HOST:~/
+
+# Assuming root ssh is enabled.
+scp -r $QNX_TARGET/aarch64le/usr/local/share/mame root@$TARGET_HOST:/system/share
+
+# Install any roms you have to $HOME/.mame/roms on the target.
+scp *.zip qnxuser@$TARGET_HOST:~/.mame/roms
+```
+
+Execute MAME on the target,
+```bash
+ssh qnxuser@$TARGET_HOST
+
+./mame
+```
+
+To view an complete list of commandline options and options you can set in
+mame.ini, see https://docs.mamedev.org/commandline/commandline-all.html
