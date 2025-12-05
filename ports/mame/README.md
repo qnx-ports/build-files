@@ -116,5 +116,5 @@ ssh qnxuser@$TARGET_HOST
 ./mame
 ```
 
-To view an complete list of commandline options and options you can set in
+To view a complete list of commandline options and options you can set in
 mame.ini, see https://docs.mamedev.org/commandline/commandline-all.html
