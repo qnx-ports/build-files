@@ -64,6 +64,7 @@ CMAKE_MODULE_PATH := $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/cmake;$(INSTALL_RO
 #because CMake and pkg-config do not necessary add it automatically
 #if the include path is "default"
 CPPFLAGS += -I$(INSTALL_ROOT)/$(PREFIX)/include -I$(QNX_TARGET)/$(PREFIX)/include
+CXXFLAGS += -isystem $(QNX_TARGET)/usr/include/c++/v1/
 
 CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DCMAKE_INSTALL_PREFIX="$(INSTALL_ROOT)" \
@@ -92,8 +93,8 @@ CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DCMAKE_FIND_PACKAGE_PREFER_CONFIG=ON \
              -DPYTHON_EXECUTABLE="$(PYTHON_EXECUTABLE)" \
              -DENABLE_SYSTEM_OPENCL=ON \
-             -DCPU=$(CPU) \
-             -DEXT=$(EXT)
+			 -DCMAKE_AR=${QNX_HOST}/usr/bin/nto${CPU}-ar \
+			 -DCMAKE_RANLIB=${QNX_HOST}/usr/bin/nto${CPU}-ranlib
 
 MAKE_ARGS ?= -j $(firstword $(JLEVEL) 1)
 
