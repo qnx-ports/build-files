@@ -31,6 +31,7 @@ ALL_DEPENDENCIES = $(NAME)_all
 
 CFLAGS += $(FLAGS)
 LDFLAGS += -Wl,--build-id=md5
+LDFLAGS += -lsocket
 
 include $(MKFILES_ROOT)/qtargets.mk
 
@@ -58,8 +59,7 @@ CFLAGS += -I$(QNX_TARGET)/$(PREFIX)/include \
           -L$(QNX_TARGET)/$(CPUVARDIR)/lib \
           -D_QNX_SOURCE
 
-LDFLAGS += -Wl,--build-id=md5
-LDFLAGS += -lsocket
+
 CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DCMAKE_SYSTEM_PROCESSOR=$(CPUVARDIR) \
              -DCMAKE_CXX_FLAGS="$(CFLAGS)" \
