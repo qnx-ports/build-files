@@ -60,14 +60,14 @@ export TARGET_HOST=<target-ip-address-or-hostname>
 scp $QNX_TARGET/aarch64le/usr/local/lib/librtlsdr.so*   qnxuser@$TARGET_HOST:~/lib
 
 
-# Copy test binaries abd script to target
+# Copy test binaries to target
 scp -r $QNX_TARGET/aarch64le/usr/local/bin/rtl-sdr-tests qnxuser@$TARGET_HOST:~/
 
 #copy test script and run 
 scp $(pwd)/build-files/ports/rtl-sdr/test.sh qnxuser@$TARGET_HOST:~/
 
 #copy libusb to target from your  sdp location
-scp libusb*   qnxuser@10.123.3.91:~/lib
+scp $QNX_TARGET/target/qnx/aarch64le/usr/lib/libusb*    qnxuser@$TARGET_HOST:~/lib
 
 
 ```
