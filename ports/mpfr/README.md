@@ -26,7 +26,6 @@ cd build-files/docker
 source ~/qnx710/qnxsdp-env.sh
 # for 8.0
 source ~/qnx800/qnxsdp-env.sh
-source ~/qnx800/qnxsdp-env.sh
 cd ~/qnx_workspace
 
 # Clone gmp
