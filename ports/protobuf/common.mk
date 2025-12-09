@@ -48,7 +48,8 @@ CMAKE_MODULE_PATH := $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/cmake;$(INSTALL_RO
 #Headers from INSTALL_ROOT need to be made available by default
 #because CMake and pkg-config do not necessary add it automatically
 #if the include path is "default"
-CFLAGS += -I$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/include
+CPPFLAGS += -I$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/include
+CXXFLAGS += -isystem $(QNX_TARGET)/usr/include/c++/v1/
 
 CMAKE_COMMON_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
                     -DCMAKE_SYSTEM_PROCESSOR=$(CPUVARDIR) \
@@ -61,8 +62,8 @@ CMAKE_COMMON_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cma
                     -DCMAKE_MODULE_PATH="$(CMAKE_MODULE_PATH)" \
                     -DCMAKE_FIND_ROOT_PATH="$(CMAKE_FIND_ROOT_PATH)" \
                     -DCMAKE_BUILD_TYPE=$(CMAKE_BUILD_TYPE) \
-                    -DEXTRA_CMAKE_C_FLAGS="$(CFLAGS)" \
-                    -DEXTRA_CMAKE_CXX_FLAGS="$(CFLAGS)" \
+                    -DEXTRA_CMAKE_C_FLAGS="$(CFLAGS) $(CPPFLAGS)" \
+                    -DEXTRA_CMAKE_CXX_FLAGS="$(CXXFLAGS) $(CPPFLAGS)" \
                     -DEXTRA_CMAKE_ASM_FLAGS="$(FLAGS)" \
                     -DEXTRA_CMAKE_LINKER_FLAGS="$(LDFLAGS)" \
                     -DBUILD_SHARED_LIBS=1 \
