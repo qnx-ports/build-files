@@ -9,13 +9,13 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - main
+      - hyarasi/sysbench
     paths:
       - '.github/workflows/sysbench.yml'
       - 'ports/sysbench/**'
   pull_request:
     branches:
-      - main
+      - hyarasi/sysbench
     paths:
       - '.github/workflows/sysbench.yml'
       - 'ports/sysbench/**'
@@ -29,7 +29,7 @@ jobs:
     runs-on: ubuntu-22.04-common
     if: |
       ((github.event_name == 'workflow_dispatch') ||
-      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'push' && github.ref == 'refs/heads/hyarasi/sysbench') ||
       (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'sysbench')))
     steps:
       - name: Checkout build-files
