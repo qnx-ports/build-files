@@ -1,0 +1,104 @@
+diff -ruN tests/include/config.sh.in tests2/include/config.sh.in
+--- tests/include/config.sh.in	2024-02-07 16:03:52.223944787 -0500
++++ tests2/include/config.sh.in	2024-02-07 15:23:14.248673249 -0500
+@@ -1,4 +1,3 @@
+-#!/usr/bin/env bash
+ 
+ # Configuration file used by the sysbench test suite.
+ 
+diff -ruN tests/include/drv_common.sh tests2/include/drv_common.sh
+--- tests/include/drv_common.sh	2024-02-07 16:03:54.491970199 -0500
++++ tests2/include/drv_common.sh	2024-02-07 15:23:17.968714613 -0500
+@@ -1,4 +1,3 @@
+-#!/usr/bin/env bash
+ #
+ #########################################################################
+ # Common code for DB driver tests
+diff -ruN tests/include/script_bulk_insert_common.sh tests2/include/script_bulk_insert_common.sh
+--- tests/include/script_bulk_insert_common.sh	2024-02-07 16:03:56.555993326 -0500
++++ tests2/include/script_bulk_insert_common.sh	2024-02-07 15:23:26.540809928 -0500
+@@ -1,4 +1,3 @@
+-#!/usr/bin/env bash
+ #
+ ################################################################################
+ # Common code for select_bulk_insert* tests
+diff -ruN tests/include/script_oltp_common.sh tests2/include/script_oltp_common.sh
+--- tests/include/script_oltp_common.sh	2024-02-07 16:04:04.932087176 -0500
++++ tests2/include/script_oltp_common.sh	2024-02-07 15:23:30.100849513 -0500
+@@ -1,4 +1,3 @@
+-#!/usr/bin/env bash
+ #
+ ################################################################################
+ # Common code for OLTP tests
+diff -ruN tests/include/script_oltp_legacy_common.sh tests2/include/script_oltp_legacy_common.sh
+--- tests/include/script_oltp_legacy_common.sh	2024-02-07 16:04:04.932087176 -0500
++++ tests2/include/script_oltp_legacy_common.sh	2024-02-07 15:23:33.236884383 -0500
+@@ -1,4 +1,3 @@
+-#!/usr/bin/env bash
+ #
+ ################################################################################
+ # Common code for legacy OLTP tests
+diff -ruN tests/include/script_select_random_common.sh tests2/include/script_select_random_common.sh
+--- tests/include/script_select_random_common.sh	2024-02-07 16:04:04.932087176 -0500
++++ tests2/include/script_select_random_common.sh	2024-02-07 15:23:36.972925924 -0500
+@@ -1,4 +1,3 @@
+-#!/usr/bin/env bash
+ #
+ ################################################################################
+ # Common code for select_random_* tests
+diff -ruN tests/include/script_select_random_legacy_common.sh tests2/include/script_select_random_legacy_common.sh
+--- tests/include/script_select_random_legacy_common.sh	2024-02-07 16:04:04.932087176 -0500
++++ tests2/include/script_select_random_legacy_common.sh	2024-02-07 15:23:39.836957769 -0500
+@@ -1,4 +1,3 @@
+-#!/usr/bin/env bash
+ #
+ ################################################################################
+ # Common code for select_random_* tests
+diff -ruN tests/t/test_fileio.t tests2/t/test_fileio.t
+--- tests/t/test_fileio.t	2024-02-07 16:04:04.932087176 -0500
++++ tests2/t/test_fileio.t	2024-02-07 15:27:00.347186901 -0500
+@@ -21,7 +21,7 @@
+   test_file.1
+   test_file.2
+   test_file.3
+-  $ for i in $(seq 0 3)
++  $ for i in 0 1 2 3
+   > do
+   >   echo -n "test_file.$i: "
+   >   echo $(wc -c < test_file.$i)
+diff -ruN tests/test_run.sh tests2/test_run.sh
+--- tests/test_run.sh	2024-02-07 16:03:49.519914489 -0500
++++ tests2/test_run.sh	2024-02-07 15:34:02.267907471 -0500
+@@ -1,4 +1,3 @@
+-#!/usr/bin/env bash
+ 
+ # Copyright (C) 2016-2017 Alexey Kopytov <akopytov@gmail.com>
+ #
+@@ -21,10 +20,7 @@
+ testroot=$(cd $(dirname "$0"); echo $PWD)
+ 
+ # Find the sysbench binary to use
+-dirlist=( "$testroot/../src"       # source directory
+-          "$testroot/../bin"       # standalone install root directory
+-          "$testroot/../../../bin" # system-wide install (e.g. /usr/local/share/sysbench/tests)
+-          "$PWD/../src" )          # build directory by 'make distcheck'
++set -A dirlist "$testroot/../src" "$testroot/../bin" "$testroot/../../../bin" "$PWD/../src"           # build directory by 'make distcheck'
+ 
+ for dir in ${dirlist[@]}
+ do
+@@ -86,6 +82,9 @@
+ if $(command -v python >/dev/null 2>&1)
+ then
+     PYTHON=python
++elif $(command -v python3 >/dev/null 2>&1)
++then
++    PYTHON=python3
+ elif $(command -v python2 >/dev/null 2>&1)
+ then
+     PYTHON=python2
+@@ -94,4 +93,4 @@
+     exit 1
+ fi
+ 
+-$PYTHON $(command -v cram) --shell=/bin/bash --verbose $tests
++$PYTHON $(command -v cram) --shell=/bin/ksh --verbose $tests

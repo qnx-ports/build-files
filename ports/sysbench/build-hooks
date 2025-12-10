@@ -1,0 +1,58 @@
+#!/bin/sh
+
+# QNX-specific nested level
+NESTED_LEVEL="${QNX_PROJECT_ROOT:-../../..}"  # fallback to `../../..` if variable is unset
+
+# Default prefix
+BASIC_PREFIX="/usr/local"
+EXEC_PREFIX="${INSTALL_ROOT_nto}/${cpudir}${BASIC_PREFIX}"
+
+function hook_preconfigure {
+    echo "hook_preconfigure - running autoreconf in ${NESTED_LEVEL}"
+
+    # Unset any conflicting autoconf tool variables
+    unset AUTOMAKE AUTOCONF AUTOHEADER AUTORECONF ACLOCAL
+
+    export CPPFLAGS="${CPPFLAGS}"
+    export LDFLAGS="${LDFLAGS} -L${INSTALL_ROOT_nto}/usr/local/lib"
+
+    # Optional: regenerate configure (only if needed)
+    if [ ! -x "${NESTED_LEVEL}/configure" ]; then
+        (cd "${NESTED_LEVEL}" && autoreconf -fiv)
+    fi
+}
+
+function hook_configure {
+    echo "hook_configure - running configure"
+
+    export FORCE_CROSS_COMPILING=yes
+
+    ${NESTED_LEVEL}/configure \
+        --srcdir=${NESTED_LEVEL} \
+        --prefix=${INSTALL_ROOT_nto}${BASIC_PREFIX} \
+        --exec-prefix=${EXEC_PREFIX} \
+        --host=${machine} \
+        --without-mysql \
+        NTOQNX=true \
+        PKG_CONFIG_LIBDIR=${DESTDIR}/usr/local/lib/pkgconfig \
+        CFLAGS="-O2 -Wall" \
+        CPPFLAGS="${CPPFLAGS}" \
+        LDFLAGS="${LDFLAGS}" \
+        || exit 1
+}
+
+function hook_make {
+    echo "hook_make - running make ${make_cmds}"
+
+    INSTALL_ROOT="${INSTALL_ROOT_nto}"
+    FixMakeEnvironment
+
+    if [ "${make_cmds}" = "install" ]; then
+        make ${JLEVEL:+-j${JLEVEL}} install || exit 1
+
+        # Clean up .la files if present
+        find ${INSTALL_ROOT_nto} -name "*.la" -exec rm -f {} \;
+    else
+        make ${JLEVEL:+-j${JLEVEL}} ${make_cmds} || exit 1
+    fi
+}
