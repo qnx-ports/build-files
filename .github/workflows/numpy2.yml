@@ -1,0 +1,55 @@
+name: numpy2
+
+permissions:
+  contents: write
+  checks: write
+
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/numpy2.yml'
+      - 'ports/numpy2/**'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/numpy2.yml'
+      - 'ports/numpy2/**'
+
+jobs:
+
+  build:
+    strategy:
+      matrix:
+        qnx_env: ["800"]
+    runs-on: ubuntu-22.04-common
+    if: |
+      ((github.event_name == 'workflow_dispatch') ||
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'numpy2')))
+    steps:
+    - name: Checkout build-files
+      uses: actions/checkout@v4
+      with:
+        path: build-files
+
+    - name: Checkout numpy
+      uses: actions/checkout@v4
+      with:
+        repository: qnx-ports/numpy
+        path: numpy
+        submodules: recursive
+        ref: qnx_v2.3.4
+
+    - name: Build numpy2
+      shell: bash
+      run: |
+        if [[ ${{ matrix.qnx_env }} == 800 ]]; then
+          source ~/qnx/800/qnxsdp-env.sh
+        fi
+        source /usr/local/qnx/env/bin/activate
+        QNX_PROJECT_ROOT="$(pwd)/numpy" make -C build-files/ports/numpy2 install
