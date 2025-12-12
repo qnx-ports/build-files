@@ -40,7 +40,7 @@ jobs:
       - name: Download and extract sysbench
         run: |
           cd ${{ github.workspace }}
-          git clone https://github.com/qnx-ports/sysbench.git
+          git clone --branch qnx-1.0.20 --single-branch https://github.com/qnx-ports/sysbench.git
           
       - name: Set up QNX environment and build
         shell: bash
