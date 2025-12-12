@@ -80,7 +80,7 @@ jobs:
       run: |
         cd build-files/docker
         METHOD=buildah ./docker-build-qnx-image.sh
-        buildah tag qnx800:latest ghcr.io/qnx-ports/sdp-build-env:latest
+        buildah tag qnx-ports-docker:latest ghcr.io/qnx-ports/sdp-build-env:latest
         buildah from --name tmp ghcr.io/qnx-ports/sdp-build-env:latest
 
         buildah copy --chown runner tmp ${{ github.workspace }}/qnx /home/runner/qnx
