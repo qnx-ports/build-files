@@ -1,0 +1,13 @@
+sources:
+  "1.28.2":
+    default-toolchain: "1.90.0"
+    license-apache:
+      url: "https://github.com/rust-lang/rustup/raw/1.28.2/LICENSE-APACHE" 
+      sha256: "8173d5c29b4f956d532781d2b86e4e30f83e6b7878dce18c919451d6ba707c90"
+    license-mit:
+      url: "https://github.com/rust-lang/rustup/raw/1.28.2/LICENSE-MIT" 
+      sha256: "c9a75f18b9ab2927829a208fc6aa2cf4e63b8420887ba29cdb265d6619ae82d5"
+    Linux:
+      x86_64:
+        url: "https://static.rust-lang.org/rustup/archive/1.28.2/x86_64-unknown-linux-gnu/rustup-init"
+        sha256: "20a06e644b0d9bd2fbdbfd52d42540bdde820ea7df86e92e533c073da0cdd43c"
