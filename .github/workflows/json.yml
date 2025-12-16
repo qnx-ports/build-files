@@ -1,0 +1,54 @@
+name: json
+
+permissions:
+  contents: write
+  checks: write
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/json.yml"
+      - "ports/json/**"
+  pull_request:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/json.yml"
+      - "ports/json/**"
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        qnx_env: ["710", "800"]
+    name: Build for QNX ${{ matrix.qnx_env }}
+    runs-on: ubuntu-22.04-common
+    if: |
+      ((github.event_name == 'workflow_dispatch') ||
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'json')))
+    steps:
+      - name: Checkout build-files
+        uses: actions/checkout@v4
+        with:
+          path: build-files
+
+      - name: Checkout json
+        uses: actions/checkout@v4
+        with:
+          repository: nlohmann/json
+          path: json
+          ref: v3.12.0
+
+      - name: Build json
+        shell: bash
+        run: |
+          if [[ ${{ matrix.qnx_env }} == 710 ]]; then
+            source ~/qnx/710/qnxsdp-env.sh
+          else
+            source ~/qnx/800/qnxsdp-env.sh
+          fi
+          make -C build-files/ports/json install
