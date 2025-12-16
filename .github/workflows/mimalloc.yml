@@ -39,9 +39,9 @@ jobs:
       - name: Checkout mimalloc
         uses: actions/checkout@v4
         with:
-          repository: microsoft/mimalloc
+          repository: qnx-ports/mimalloc
           path: mimalloc
-          ref: v3.1.5
+          ref: qnx-v3.1.5
 
       - name: Build mimalloc
         shell: bash
