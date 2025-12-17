@@ -14,7 +14,7 @@ function hook_preconfigure {
     unset AUTOMAKE AUTOCONF AUTOHEADER AUTORECONF ACLOCAL
 
     export CPPFLAGS="${CPPFLAGS}"
-    export LDFLAGS="${LDFLAGS} -L${INSTALL_ROOT_nto}/usr/local/lib"
+    export LDFLAGS="${LDFLAGS} -L${INSTALL_ROOT_nto}/${cpudir}/usr/local/lib"
 
     # Optional: regenerate configure (only if needed)
     if [ ! -x "${NESTED_LEVEL}/configure" ]; then
@@ -33,7 +33,7 @@ function hook_configure {
         --exec-prefix=${EXEC_PREFIX} \
         --host=${machine} \
         --without-mysql \
-        NTOQNX=true \
+        QNXENV=true \
         PKG_CONFIG_LIBDIR=${DESTDIR}/usr/local/lib/pkgconfig \
         CFLAGS="-O2 -Wall" \
         CPPFLAGS="${CPPFLAGS}" \
