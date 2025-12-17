@@ -74,7 +74,7 @@ CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DCMAKE_FIND_ROOT_PATH="$(CMAKE_FIND_ROOT_PATH)" \
              -DCMAKE_BUILD_TYPE=$(CMAKE_BUILD_TYPE) \
              -DMI_BUILD_STATIC=$(MI_BUILD_STATIC) \
-						 -DMI_BUILD_TESTS=$(MI_BUILD_TESTS)
+             -DMI_BUILD_TESTS=$(MI_BUILD_TESTS)
 
 MAKE_ARGS ?= -j $(firstword $(JLEVEL) 1)
 

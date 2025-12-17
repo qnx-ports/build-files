@@ -73,7 +73,7 @@ CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DCMAKE_MODULE_PATH="$(CMAKE_MODULE_PATH)" \
              -DCMAKE_FIND_ROOT_PATH="$(CMAKE_FIND_ROOT_PATH)" \
              -DCMAKE_BUILD_TYPE=$(CMAKE_BUILD_TYPE) \
-						 -DJSON_MultipleHeaders=$(JSON_MultipleHeaders) \
+             -DJSON_MultipleHeaders=$(JSON_MultipleHeaders) \
              -DJSON_BuildTests=$(JSON_BuildTests)
 
 MAKE_ARGS ?= -j $(firstword $(JLEVEL) 1)
