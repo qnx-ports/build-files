@@ -33,7 +33,7 @@ BASE_FLAGS := $(FLAGS) -D_XOPEN_SOURCE=700 -D_QNX_SOURCE
 INCLUDE_FLAGS := -I$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/include
 
 C_FLAGS   := $(BASE_FLAGS) $(INCLUDE_FLAGS)
-CXX_FLAGS := $(BASE_FLAGS) $(INCLUDE_FLAGS) -I$(QNX_TARGET)/usr/include/c++/v1
+CXX_FLAGS := $(BASE_FLAGS) $(INCLUDE_FLAGS) -isystem $(QNX_TARGET)/usr/include/c++/v1
 
 #Search paths for all of CMake's find_* functions --
 #headers, libraries, etc.
