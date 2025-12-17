@@ -56,3 +56,27 @@ git clone https://github.com/qnx-ports/sysbench.git
 # Build sysbench
 QNX_PROJECT_ROOT="$(pwd)/sysbench" make -C build-files/ports/sysbench clean 
 QNX_PROJECT_ROOT="$(pwd)/sysbench" make -C build-files/ports/sysbench install JLEVEL=4
+```
+# Running tests
+
+```bash
+export TARGET_HOST=<target-ip-address-or-hostname>
+mkdir sysbench
+
+# Copy the dependency libraries for testing
+scp $QNX_TARGET/aarch64le/usr/local/bin/sysbench   qnxuser@$TARGET_HOST:~/sysbench
+```
+
+### On target run
+
+```bash
+cd ~/sysbench
+./sysbench cpu run
+./sysbench memory run
+./sysbench threads run
+./sysbench mutex run
+./sysbench fileio prepare
+./sysbench fileio run
+./sysbench fileio cleanup
+
+```

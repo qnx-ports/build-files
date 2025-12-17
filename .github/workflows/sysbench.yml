@@ -9,13 +9,13 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - hyarasi/sysbench
+      - main
     paths:
       - '.github/workflows/sysbench.yml'
       - 'ports/sysbench/**'
   pull_request:
     branches:
-      - hyarasi/sysbench
+      - main
     paths:
       - '.github/workflows/sysbench.yml'
       - 'ports/sysbench/**'
@@ -29,7 +29,7 @@ jobs:
     runs-on: ubuntu-22.04-common
     if: |
       ((github.event_name == 'workflow_dispatch') ||
-      (github.event_name == 'push' && github.ref == 'refs/heads/hyarasi/sysbench') ||
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
       (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'sysbench')))
     steps:
       - name: Checkout build-files
@@ -37,10 +37,13 @@ jobs:
         with:
           path: build-files
           
-      - name: Download and extract sysbench
-        run: |
-          cd ${{ github.workspace }}
-          git clone https://github.com/qnx-ports/sysbench.git
+      - name: Checkout sysbench repo (branch qnx-1.0.20)
+        uses: actions/checkout@v4
+        with:
+          repository: qnx-ports/sysbench
+          ref: qnx-1.0.20
+          path: sysbench
+    
           
       - name: Set up QNX environment and build
         shell: bash
