@@ -78,5 +78,4 @@ cd ~/sysbench
 ./sysbench fileio prepare
 ./sysbench fileio run
 ./sysbench fileio cleanup
-
 ```
