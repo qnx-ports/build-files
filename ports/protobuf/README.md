@@ -46,3 +46,20 @@ make -C build-files/ports/protobuf install JLEVEL=4 #[INSTALL_ROOT_nto=PATH_TO_Y
 # Build older version of protobuf
 #QNX_PROJECT_ROOT=$(pwd)/protobuf/cmake make -C build-files/ports/protobuf install JLEVEL=4
 ```
+
+# Troubleshotting `librt`, `pthread` libraries
+
+Sometimes, `-pthread`, `-lpthread` and `-lrt` are required by open source projects without checking whether these are needed. To solve this, create an empty library with the following commands for each architecture:
+```bash
+# source qnxsdp-env.sh
+source ~/qnx800/qnxsdp-env.sh
+# create librt for aarch64le
+touch empty.c
+qcc -fpic -Vgcc_ntoaarch64le -c empty.c -o /tmp/empty.o
+ntoaarch64-ar rcsv /tmp/librt.a /tmp/empty.o
+mv /tmp/librt.a "${QNX_TARGET}/aarch64le/usr/lib/librt.a"
+# create librt for x86_64
+qcc -fpic -Vgcc_ntox86_64 -c /tmp/empty.c -o /tmp/empty.o
+ntox86_64-ar rcsv /tmp/librt.a /tmp/empty.o
+mv /tmp/librt.a "${QNX_TARGET}/x86_64/usr/lib/librt.a"
+```
