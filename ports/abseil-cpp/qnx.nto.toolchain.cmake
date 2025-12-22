@@ -19,7 +19,7 @@ message(STATUS "using QNX_HOST ${QNX_HOST}")
 message(STATUS "using QNX_TARGET ${QNX_TARGET}")
 
 set(QNX TRUE)
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_SYSTEM_NAME QNX)
 set(CMAKE_C_COMPILER ${QNX_HOST}/usr/bin/qcc)
 set(CMAKE_CXX_COMPILER ${QNX_HOST}/usr/bin/q++)
