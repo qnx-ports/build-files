@@ -135,6 +135,22 @@ cd /data/home/qnxuser/perl5_tests/t && ln -sf ../perl . && LD_LIBRARY_PATH=$(pwd
 ./TEST
 ```
 
+### QNX8.0 x86_64 v5.42.0 + perl-cross 1.6.4:
+```bash
+Failed 51 tests out of 2548, 98.00% okay.
+...
+Elapsed: 995 sec
+u=4.59  s=0.00  cu=401.43  cs=0.00  scripts=2548  tests=637699
+```
+
+### QNX7.1 x86_64 v5.42.0 + perl-cross 1.6.4:
+```bash
+Failed 50 tests out of 2549, 98.04% okay.
+...
+Elapsed: 867 sec
+u=7.11  s=0.01  cu=441.66  cs=2.86  scripts=2549  tests=637703
+```
+
 ### QNX8.0 x86_64 v5.42.0:
 ```bash
 Failed 54 tests out of 2548, 97.88% okay.
