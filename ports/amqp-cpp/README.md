@@ -194,7 +194,7 @@ nc -vz localhost 15672
 # Get IP address
 hostname -I
 
-# Expected output example: 10.123.39.76
+# NOTE: Replace <UBUNTU_IP> below with this IP address.
 ```
 
 **Note:** Save this IP address for use on the QNX target.
@@ -212,14 +212,14 @@ Edit the example source file to point to your RabbitMQ server.
 AMQP::Address address("amqp://guest:guest@localhost/");
 
 // Replace with your RabbitMQ server details:
-AMQP::Address address("amqp://myuser:mypassword@10.123.39.76/");
+AMQP::Address address("amqp://myuser:mypassword@<UBUNTU_IP>/");
 ```
 
 **For libuv example** (`examples/libuv.cpp`):
 
 ```cpp
 // Same change as above
-AMQP::Address address("amqp://myuser:mypassword@10.123.39.76/");
+AMQP::Address address("amqp://myuser:mypassword@<UBUNTU_IP>/");
 ```
 
 **Then rebuild:**
@@ -229,7 +229,24 @@ cd ~/path/to/amqp-cpp/build-files/ports/amqp-cpp
 QNX_PROJECT_ROOT="$(pwd)/AMQP-CPP" make install
 ```
 
-### 2.2 Connect to QNX Target
+### 2.2 Copy Example Binaries to Target
+
+From your build machine:
+
+```bash
+TARGET_HOST=<target-ip-address-or-hostname>
+
+# Copy libev example (recommended)
+scp nto-aarch64-le/build/examples/amqpcpp_libev_example qnxuser@$TARGET_HOST:~/
+
+# Copy libuv example (optional)
+scp nto-aarch64-le/build/examples/amqpcpp_libuv_example qnxuser@$TARGET_HOST:~/
+
+# Copy the AMQP-CPP shared library
+scp nto-aarch64-le/build/bin/libamqpcpp.so.4.3 qnxuser@$TARGET_HOST:~/
+```
+
+### 2.3 Connect to QNX Target
 
 ```bash
 # SSH into your QNX RPi target
@@ -238,32 +255,17 @@ ssh qnxuser@<TARGET_HOST>
 # Or use direct connection if available
 ```
 
-### 2.3 Copy Example Binaries to Target
-
-From your build machine:
-
-```bash
-# Copy libev example (recommended)
-scp nto-aarch64-le/build/examples/amqpcpp_libev_example qnxuser@10.123.2.191:~/
-
-# Copy libuv example (optional)
-scp nto-aarch64-le/build/examples/amqpcpp_libuv_example qnxuser@10.123.2.191:~/
-
-# Copy the AMQP-CPP shared library
-scp nto-aarch64-le/build/bin/libamqpcpp.so.4.3 qnxuser@10.123.2.191:~/
-```
-
 ### 2.4 Verify Network Connectivity (On QNX Target)
 
 ```bash
 # Test connectivity to Ubuntu RabbitMQ server
-ping 10.123.39.76
+ping <UBUNTU_IP>
 
 # Test AMQP port connectivity
-nc -vz 10.123.39.76 5672
+nc -vz <UBUNTU_IP> 5672
 
 # Or use telnet if nc is not available
-telnet 10.123.39.76 5672
+telnet <UBUNTU_IP> 5672
 ```
 
 **Expected output:** Connection should succeed without timeout.
