@@ -1,0 +1,129 @@
+#!/bin/sh
+
+# Path from build dir to source root
+NESTED_LEVEL="${QNX_PROJECT_ROOT:-../../..}"
+
+# Default prefix inside QNX target sysroot
+BASIC_PREFIX="/usr/local"
+
+function hook_preconfigure {
+    echo "hook_preconfigure - setting up compiler flags"
+
+    # Ensure compiler flags can find QNX includes and libs
+    export CPPFLAGS="-I${QNX_TARGET}/${cpudir}/usr/include \
+                     -I${INSTALL_ROOT_nto}/${cpudir}${BASIC_PREFIX}/include ${CPPFLAGS}"
+
+    export LDFLAGS="-L${INSTALL_ROOT_nto}/${cpudir}${BASIC_PREFIX}/lib \
+                    -L${INSTALL_ROOT_nto}/${cpudir}/usr/lib ${LDFLAGS}"
+
+    # Set CFLAGS that configure will use
+    export CFLAGS="-O2 -Wall"
+}
+
+function hook_configure {
+    echo "hook_configure - running configure"
+
+    "${NESTED_LEVEL}/configure" \
+        --srcdir="${NESTED_LEVEL}" \
+        --prefix="${BASIC_PREFIX}" \
+        --exec-prefix="${BASIC_PREFIX}" \
+        --libdir="${BASIC_PREFIX}/lib" \
+        --includedir="${BASIC_PREFIX}/include" \
+        --mandir="${BASIC_PREFIX}/share/man" \
+        --sysconfdir="${BASIC_PREFIX}/etc" \
+        --host="${machine}" \
+    	--with-ssl="${QNX_TARGET}/usr" \
+    	--disable-gost
+}
+
+function hook_make {
+    echo "hook_make - running make ${make_cmds}"
+
+    if [ "${make_cmds}" == "install" ]; then
+        # First, run the standard install with DESTDIR
+        echo "Installing main binaries and libraries..."
+        make ${JLEVEL:+-j${JLEVEL}} \
+             DESTDIR="${INSTALL_ROOT_nto}/${cpudir}" \
+             install || exit 1
+
+        # Build the test binaries
+        echo "Building test binaries..."
+        make -fMakefile \
+            ${make_CC:+"CC=${make_CC}"} \
+            ${make_defns} \
+            ${make_opts} \
+            tests \
+            ${JLEVEL:+"-j${JLEVEL}"} \
+            || exit 1
+
+        # testbound & unittest need more stack
+        # See the comments for PTHREADSTACKSIZE in util/locks.h
+        echo "Adjusting stack size for test binaries..."
+        if [ -f testbound ]; then
+            elfnote -S 2M testbound
+        fi
+        if [ -f unittest ]; then
+            elfnote -S 2M unittest
+        fi
+
+        # Copy the test binaries to the install directory
+        echo "Installing test binaries..."
+        mkdir -p "${INSTALL_ROOT_nto}/${cpudir}/tests/unbound"
+
+        TEST_BIN="asynclook delayer \
+            lock-verify memstats perf \
+            petal pktview streamtcp \
+            dohclient \
+            testbound unittest readzone"
+
+        for testfile in ${TEST_BIN}
+        do
+            if [ -f "${testfile}" ]; then
+                ${CP_HOST} "${testfile}" "${INSTALL_ROOT_nto}/${cpudir}/tests/unbound/"
+                echo "  Copied ${testfile}"
+            else
+                echo "  Warning: ${testfile} not found, skipping"
+            fi
+        done
+
+        # Copy testdata from source using QNX_PROJECT_ROOT
+        if [ -d "${NESTED_LEVEL}/testdata" ]; then
+            echo "Copying testdata..."
+            ${CP_HOST} -r "${NESTED_LEVEL}/testdata" "${INSTALL_ROOT_nto}/${cpudir}/tests/unbound/testdata"
+            ${CP_HOST} -r "${NESTED_LEVEL}/testdata" "${PWD}/testdata"
+        else
+            echo "Warning: testdata directory not found at ${NESTED_LEVEL}/testdata"
+        fi
+
+        # Copy test script from build-files directory
+        if [ -f "../unboundtest.sh" ]; then
+            echo "Copying test script..."
+            ${CP_HOST} "../unboundtest.sh" "${INSTALL_ROOT_nto}/${cpudir}/tests/unbound/"
+            ${CP_HOST} "../unboundtest.sh" "${PWD}/unboundtest.sh"
+        else
+            echo "Warning: unboundtest.sh not found"
+        fi
+
+        # Clean up .la files
+        echo "Cleaning up .la files..."
+        find "${INSTALL_ROOT_nto}" -name "*.la" -exec rm -f {} \;
+
+        echo "Installation complete!"
+
+    else
+        # For other make targets (all, clean, etc.)
+        make ${JLEVEL:+-j${JLEVEL}} ${make_cmds} || exit 1
+    fi
+}
+
+function hook_pinfo {
+    if [ "${make_cmds}" == "install" ] || [ "${make_cmds}" == "all" ] || [ "${make_cmds}" == "" ]; then
+        SetInstallOnUse yes
+        gen_pinfo unbound usr/local/sbin DESCRIPTION="Caching DNS resolver" USE=../unbound.use
+        gen_pinfo unbound-checkconf usr/local/sbin DESCRIPTION="Unbound configuration checker" USE=../unbound-checkconf.use
+        gen_pinfo unbound-control usr/local/sbin DESCRIPTION="Unbound controller" USE=../unbound-control.use
+        gen_pinfo -n.libs/unbound-anchor unbound-anchor usr/local/sbin DESCRIPTION="DNS root trust anchor setup" USE=../unbound-anchor.use
+        gen_pinfo -n.libs/unbound-host unbound-host usr/local/sbin DESCRIPTION="Unbound lookup utility" USE=../unbound-host.use
+        gen_pinfo -n.libs/libunbound.so.9 libunbound.so.9 usr/local/lib DESCRIPTION="Unbound library"
+    fi
+}
