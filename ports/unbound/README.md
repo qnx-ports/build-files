@@ -70,8 +70,10 @@ Prerequisites:
 
 1. Deploy to Target Device
 ```bash
+TARGET_HOST=<target-ip-or-hostname>
+
 # Copy entire CPU directory to target
-scp -r ./build-files/ports/unbound/nto-aarch64-le qnxuser@10.123.3.62:/home/qnxuser/guests/
+scp -r ./build-files/ports/unbound/nto-aarch64-le qnxuser@$TARGET_HOST:/home/qnxuser/guests/
 ```
 2. SSH to Target and Setup Environment
 ```bash
