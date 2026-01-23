@@ -70,8 +70,17 @@ build(){
         find ./install/${CPUVARDIR}/test -name "ament_*" -exec rm -rf {} +
 
         echo "Installing googletest..."
-        cp -f ${QNX_TARGET}/${CPUVARDIR}/usr/lib/libgtest* ./install/${CPUVARDIR}/lib
-        cp -f ${QNX_TARGET}/${CPUVARDIR}/usr/lib/libgmock* ./install/${CPUVARDIR}/lib
+        if ls ${QNX_TARGET}/${CPUVARDIR}/usr/lib/libgtest* ${QNX_TARGET}/${CPUVARDIR}/usr/lib/libgmock* 1> /dev/null 2>&1; then
+            cp -f ${QNX_TARGET}/${CPUVARDIR}/usr/lib/libgtest* ./install/${CPUVARDIR}/lib
+            cp -f ${QNX_TARGET}/${CPUVARDIR}/usr/lib/libgmock* ./install/${CPUVARDIR}/lib
+        elif ls ${QNX_TARGET}/${CPUVARDIR}/usr/local/lib/libgtest* ${QNX_TARGET}/${CPUVARDIR}/usr/local/lib/libgmock* 1> /dev/null 2>&1; then
+            cp -f ${QNX_TARGET}/${CPUVARDIR}/usr/local/lib/libgtest* ./install/${CPUVARDIR}/lib
+            cp -f ${QNX_TARGET}/${CPUVARDIR}/usr/local/lib/libgmock* ./install/${CPUVARDIR}/lib
+        else
+            echo "Error: googletest libraries (libgtest* and libgmock*) not found in ${QNX_TARGET}/${CPUVARDIR}/usr/lib or ${QNX_TARGET}/${CPUVARDIR}/usr/local/lib"
+            echo "Please make sure you have installed googletest libraries into the appropriate locations."
+            exit 1
+        fi
     else
         echo "Test not installed"
     fi
