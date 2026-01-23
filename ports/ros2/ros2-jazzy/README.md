@@ -75,7 +75,8 @@ export CPU=aarch64
 # Specify the python path on the target
 export QNX_PYTHON3_PATH=/system/bin/python3
 
-# If you would like to build test
+# You may assign this variable to ON if you would like to build test.
+# You may assign this variable to OFF to expedite the build or skip building test due to build failures with googletest
 export QNX_TESTING=ON
 
 # Build ros2
