@@ -1,8 +1,7 @@
-# rtl-sdr [![Build](https://github.com/qnx-ports/build-files/actions/workflows/rtl-sdr.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/rtl-sdr.yml)
 
 **NOTE**: QNX ports are only supported from a Linux host operating system
 
-RTL-SDR (Realtek Software Defined Radio) is a low-cost software-defined radio that uses DVB-T USB dongles based on the Realtek RTL2832U chipset. It allows computers to receive radio signals and process them in software, enabling a wide range of radio applications such as FM/AM reception.
+dump1090 (Realtek Software Defined Radio) is a low-cost software-defined radio that uses DVB-T USB dongles based on the Realtek RTL2832U chipset. It allows computers to receive radio signals and process them in software, enabling a wide range of radio applications such as FM/AM reception.
 
 Use `$(nproc)` instead of `4` after `JLEVEL=` if you want to use the maximum number of cores to build this project.
 
@@ -24,12 +23,12 @@ cd build-files/docker
 
 # Now you are in the Docker container
 
-# Clone rtl-sdr
+# Clone dump1090
 cd ~/qnx_workspace
-git clone https://github.com/qnx-ports/rtl-sdr.git
+git clone https://github.com/qnx-ports/dump1090.git
 
-# Build rtl-sdr
-make -C build-files/ports/rtl-sdr install JLEVEL=4
+# Build dump1090
+make -C build-files/ports/dump1090 install JLEVEL=4
 
 ```
 
@@ -39,14 +38,14 @@ make -C build-files/ports/rtl-sdr install JLEVEL=4
 # Clone the repos
 mkdir -p ~/qnx_workspace && cd qnx_workspace
 git clone https://github.com/qnx-ports/build-files.git
-git clone https://github.com/qnx-ports/rtl-sdr.git
+git clone https://github.com/qnx-ports/dump1090.git
 
 
 # source qnxsdp-env.sh
 source ~/qnx800/qnxsdp-env.sh
 
-# Build rtl-sdr
-make -C build-files/ports/rtl-sdr install JLEVEL=4
+# Build dump1090
+make -C build-files/ports/dump1090 install JLEVEL=4
 
 ```
 
@@ -61,12 +60,11 @@ scp $QNX_TARGET/aarch64le/usr/local/lib/librtlsdr.so*   qnxuser@$TARGET_HOST:~/l
 
 
 # Copy test binaries to target
-scp -r $QNX_TARGET/aarch64le/usr/local/bin/rtl-sdr-tests qnxuser@$TARGET_HOST:~/
+scp -r $QNX_TARGET/aarch64le/usr/local/bin/dump1090 qnxuser@$TARGET_HOST:~/
 
-#copy test script and run 
-scp $(pwd)/build-files/ports/rtl-sdr/test.sh qnxuser@$TARGET_HOST:~/
 
 #copy libusb to target from your  sdp location
+Note: Not available in the qnx ports and internal library
 scp $QNX_TARGET/target/qnx/aarch64le/usr/lib/libusb*    qnxuser@$TARGET_HOST:~/lib
 
 
