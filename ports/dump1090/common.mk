@@ -21,25 +21,28 @@ ALL_DEPENDENCIES = $(NAME)_all
 .PHONY: $(NAME)_all install clean check
 
 # QNX flags
-CFLAGS += -D_QNX_SOURCE
-LDFLAGS += -lrtlsdr -lm -lpthread
+CFLAGS += -D_QNX_SOURCE -g -O0
+LDFLAGS += -lrtlsdr -lm  -lsocket
+CFLAGS += -DQNX=1
+
 
 include $(MKFILES_ROOT)/qtargets.mk
 
+QNX_VARIANT = -Vgcc_nto$(CPUVARDIR)
 
 $(NAME)_all:
-	$(MAKE) -C $(QNX_PROJECT_ROOT) \
-		CC=$(CC) \
+	@mkdir -p build
+	@cd build && $(MAKE) -C $(QNX_PROJECT_ROOT) \
+		CC="qcc $(QNX_VARIANT)" \
+		OBJDIR=$(CURDIR)/build \
 		CFLAGS="$(CFLAGS)" \
 		LDLIBS="$(LDFLAGS)"
 
 install:
-	install -d $(INSTALL_ROOT)/$(CPUVARDIR)/usr/bin
-	install $(QNX_PROJECT_ROOT)/dump1090 \
+	install build/$(NAME) \
 	        $(INSTALL_ROOT)/$(CPUVARDIR)/usr/bin/
-
 check:
 	@echo "No tests for dump1090"
 
 clean iclean spotless:
-	$(MAKE) -C $(QNX_PROJECT_ROOT) clean
+	$(MAKE) -C $(QNX_PROJECT_ROOT) OBJDIR=$(CURDIR)/build clean
