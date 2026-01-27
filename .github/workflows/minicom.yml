@@ -1,0 +1,60 @@
+name: minicom
+
+permissions:
+  contents: write
+  checks: write
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/minicom.yml'
+      - 'ports/minicom/**'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/minicom.yml'
+      - 'ports/minicom/**'
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        qnx_env: ["710", "800"]
+
+    name: Build minicom 2.10 for QNX ${{ matrix.qnx_env }}
+    runs-on: ubuntu-22.04-common
+
+    if: |
+      ((github.event_name == 'workflow_dispatch') ||
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'minicom')))
+
+    steps:
+      - name: Checkout build-files
+        uses: actions/checkout@v4
+        with:
+          repository: qnx-ports/build-files
+          path: build-files
+
+      - name: Checkout minicom source (v2.10)
+        uses: actions/checkout@v4
+        with:
+          repository: minicom-team/minicom
+          ref: "2.10"
+          path: minicom
+
+      - name: Set up QNX environment and build
+        shell: bash
+        run: |
+          if [[ "${{ matrix.qnx_env }}" == "800" ]]; then
+            source ~/qnx800/qnxsdp-env.sh
+          else
+            source ~/qnx710/qnxsdp-env.sh
+          fi
+
+          QNX_PROJECT_ROOT="$(pwd)/minicom" \
+          make -C build-files/ports/minicom install
