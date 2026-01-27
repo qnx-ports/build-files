@@ -32,7 +32,7 @@ cd ~/qnx_workspace
 git clone https://salsa.debian.org/minicom-team/minicom.git
 git checkout 2.10
 
-# Build gmp
+# Build minicom
 QNX_PROJECT_ROOT="$(pwd)/minicom" make -C build-files/ports/minicom clean 
 QNX_PROJECT_ROOT="$(pwd)/minicom" make -C build-files/ports/minicom install JLEVEL=4
 
@@ -56,7 +56,7 @@ cd ~/qnx_workspace
 git clone https://salsa.debian.org/minicom-team/minicom.git
 git checkout 2.10
 
-# Build gmp
+# Build minicom
 QNX_PROJECT_ROOT="$(pwd)/minicom" make -C build-files/ports/minicom clean 
 QNX_PROJECT_ROOT="$(pwd)/minicom" make -C build-files/ports/minicom install JLEVEL=4
 ```
