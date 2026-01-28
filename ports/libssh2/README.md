@@ -1,4 +1,4 @@
- Compile the port for QNX
+# libssh2 [![Build](https://github.com/qnx-ports/build-files/actions/workflows/libssh2.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/libssh2.yml)
 
 **Note**: QNX ports are only supported from a **Linux host** operating system
 
