@@ -30,7 +30,7 @@ cd ~/qnx_workspace
 
 #clone minicom
 git clone https://salsa.debian.org/minicom-team/minicom.git
-git checkout 2.10
+cd minicom && git checkout 2.10
 
 # Build minicom
 QNX_PROJECT_ROOT="$(pwd)/minicom" make -C build-files/ports/minicom clean 
