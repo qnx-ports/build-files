@@ -1,5 +1,4 @@
 # minicom [![Build](https://github.com/qnx-ports/build-files/actions/workflows/minicom.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/minicom.yml)
-# Compile the port for QNX
 
 **Note**: QNX ports are only supported from a **Linux host** operating system
 
