@@ -1,4 +1,4 @@
-name: conan-perl5
+name: conan-lighttpd1.4
 
 permissions:
   contents: write
@@ -11,14 +11,14 @@ on:
     branches:
       - main
     paths:
-      - '.github/workflows/conan-perl5.yml'
-      - 'conan/recipes/perl5/**'
+      - '.github/workflows/conan-lighttpd1.4.yml'
+      - 'conan/recipes/lighttpd1.4/**'
   pull_request:
     branches:
       - main
     paths:
-      - '.github/workflows/conan-perl5.yml'
-      - 'conan/recipes/perl5/**'
+      - '.github/workflows/conan-lighttpd1.4.yml'
+      - 'conan/recipes/lighttpd1.4/**'
 
 jobs:
 
@@ -34,7 +34,7 @@ jobs:
       with:
         path: build-files
 
-    - name: Build conan perl5 recipes
+    - name: Build conan lightttpd1.4 recipes
       shell: bash
       run: |
         python3.11 -m venv vpy
@@ -44,6 +44,5 @@ jobs:
         export QNX_CONAN_ROOT=$(realpath ./build-files/conan)
         conan config install $QNX_CONAN_ROOT/tools/qnx-8.0-extension/settings_user.yml
         source ~/qnx/800/qnxsdp-env.sh
-        conan create -pr:h=$QNX_CONAN_ROOT/tools/profiles/nto-8.0-x86_64-gcc --version=5.32.0 $QNX_CONAN_ROOT/recipes/perl5/all
-        conan create -pr:h=$QNX_CONAN_ROOT/tools/profiles/nto-8.0-x86_64-gcc --version=5.36.0 $QNX_CONAN_ROOT/recipes/perl5/all
-        conan create -pr:h=$QNX_CONAN_ROOT/tools/profiles/nto-8.0-x86_64-gcc --version=5.42.0 $QNX_CONAN_ROOT/recipes/perl5/all
+        conan create -pr:h=$QNX_CONAN_ROOT/tools/profiles/nto-8.0-x86_64-gcc --version=1.4.73 $QNX_CONAN_ROOT/recipes/lighttpd1.4/all --build=missing
+        conan create -pr:h=$QNX_CONAN_ROOT/tools/profiles/nto-8.0-x86_64-gcc --version=1.4.81 $QNX_CONAN_ROOT/recipes/lighttpd1.4/all --build=missing

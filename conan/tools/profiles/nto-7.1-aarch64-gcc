@@ -11,3 +11,7 @@ compiler.cstd=gnu11
 #For all QNX os name is Neutrino
 os=Neutrino
 os.version=7.1
+
+[buildenv]
+CC=ntoaarch64-gcc
+CXX=ntoaarch64-g++
