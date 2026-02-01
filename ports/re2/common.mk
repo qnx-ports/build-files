@@ -64,6 +64,9 @@ CMAKE_MODULE_PATH := $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/cmake;$(INSTALL_RO
 #if the include path is "default"
 CFLAGS +=   -I$(INSTALL_ROOT)/$(PREFIX)/include -I$(QNX_TARGET)/$(PREFIX)/include
 
+RE2_BUILD_TESTING ?= OFF
+BUILD_SHARED_LIBS ?= ON
+
 # Add the line below
 CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DCMAKE_INSTALL_PREFIX="$(INSTALL_ROOT)" \
@@ -78,9 +81,9 @@ CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DEXTRA_CMAKE_CXX_FLAGS="$(FLAGS)" \
              -DEXTRA_CMAKE_LINKER_FLAGS="$(LDFLAGS)" \
              -DCMAKE_NO_SYSTEM_FROM_IMPORTED=ON \
-             -DRE2_BUILD_TESTING=ON \
+             -DRE2_BUILD_TESTING=$(RE2_BUILD_TESTING) \
              -DCPU=$(CPU) \
-             -DBUILD_SHARED_LIBS=ON
+             -DBUILD_SHARED_LIBS=$(BUILD_SHARED_LIBS)
 
 MAKE_ARGS ?= -j $(firstword $(JLEVEL) 1)
 
@@ -97,4 +100,11 @@ install check: re2_all
 
 clean iclean spotless:
 	rm -rf build
+
+uninstall quninstall huninstall cuninstall: clean
+	@rm -rf $(QNX_TARGET)/$(PREFIX)/include/re2
+	@rm -rf $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/libre2*
+	@rm -rf $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/cmake/re2
+	@rm -rf $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/pkgconfig/re2*
+	@rm -rf $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/bin/re2_tests
 endif

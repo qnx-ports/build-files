@@ -79,7 +79,8 @@ CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DFLATBUFFERS_BUILD_FLATC=ON \
              -DFLATBUFFERS_FLATC_EXECUTABLE=$(HOST_FLATC_PATH) \
              -DCPU=$(CPU) \
-             -DEXT=$(EXT)
+             -DEXT=$(EXT) \
+             -DFLATBUFFERS_INSTALL=ON
 
 MAKE_ARGS ?= -j $(firstword $(JLEVEL) 1)
 
