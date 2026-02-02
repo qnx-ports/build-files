@@ -3,8 +3,9 @@
 Supports QNX7.1 and QNX8.0
 
 
-# source qnxsdp-env.sh in
-source ~/qnx800/qnxsdp-env.sh
+# evn setup
+sudo apt install autoconf
+source ~/qnx800/qnxsdp-env.sh or source ~/qnx/qnx710/qnxsdp-env.sh
 
 # Clione iftop and build 
 git clone git@gitlab.com:qnx/ports/build-files.git
