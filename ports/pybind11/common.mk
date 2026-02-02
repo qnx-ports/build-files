@@ -59,7 +59,8 @@ LDFLAGS += -Wl,--build-id=md5
 
 PYBIND11_TEST ?= OFF
 PYBIND11_USE_CROSSCOMPILING ?= ON
-Python_INCLUDE_DIR ?= "/usr/include/python3.11"
+PYTHON_VERSION ?= $(python3 -c 'import sys; print(f"{sys.version_info.major}.{sys.version_info.minor}")')
+Python_INCLUDE_DIR ?= "/usr/include/python$(PYTHON_VERSION)"
 
 CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DCMAKE_SYSTEM_PROCESSOR=$(CPU) \
