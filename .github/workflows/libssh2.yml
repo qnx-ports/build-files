@@ -1,0 +1,53 @@
+name: libssh2
+
+permissions:
+  contents: write
+  checks: write
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/libssh2.yml'
+      - 'ports/libssh2/**'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/libssh2.yml'
+      - 'ports/libssh2/**'
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        qnx_env: [ 710, 800 ]
+    runs-on: ubuntu-22.04-common
+    if: |
+      ((github.event_name == 'workflow_dispatch') ||
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'libssh2')))
+    steps:
+      - name: Checkout build-files
+        uses: actions/checkout@v4
+        with:
+          path: build-files
+
+      - name: Checkout libssh2
+        uses: actions/checkout@v4
+        with:
+          repository: qnx-ports/libssh2
+          path: libssh2
+          ref: qnx-libssh2-1.11.1
+
+      - name: Build libssh2
+        shell: bash
+        run: |
+          if [[ "${{ matrix.qnx_env }}" == "800" ]]; then
+            source ~/qnx/800/qnxsdp-env.sh
+          else
+            source ~/qnx/710/qnxsdp-env.sh
+          fi
+          JLEVEL=$(nproc) QNX_PROJECT_ROOT="$(pwd)/libssh2" make -C build-files/ports/libssh2/ install
