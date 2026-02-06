@@ -1,0 +1,54 @@
+name: libsndfile
+
+permissions:
+  contents: write
+  checks: write
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/libsndfile.yml'
+      - 'ports/libsndfile/**'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/libsndfile.yml'
+      - 'ports/libsndfile/**'
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        qnx_env: [ 710, 800 ]
+    name: Build for QNX ${{ matrix.qnx_env }}
+    runs-on: ubuntu-22.04-common
+    if: |
+      ((github.event_name == 'workflow_dispatch') ||
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'libsndfile')))
+    steps:
+      - name: Checkout build-files
+        uses: actions/checkout@v4
+        with:
+          path: build-files
+
+      - name: Checkout libsndfile
+        uses: actions/checkout@v4
+        with:
+          repository: libsndfile/libsndfile
+          path: libsndfile
+          ref: 1.2.2
+
+      - name: Build libsndfile
+        shell: bash
+        run: |
+          if [[ "${{ matrix.qnx_env }}" == "800" ]]; then
+            source ~/qnx/800/qnxsdp-env.sh
+          else
+            source ~/qnx/710/qnxsdp-env.sh
+          fi
+          QNX_PROJECT_ROOT="$(pwd)/libsndfile" make -C build-files/ports/libsndfile install
