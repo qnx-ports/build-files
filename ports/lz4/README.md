@@ -1,4 +1,4 @@
-
+# lz4 [![Build](https://github.com/qnx-ports/build-files/actions/workflows/lz4.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/lz4.yml)
 
 **Note**: QNX ports are only supported from a **Linux host** operating system
 
