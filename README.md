@@ -178,5 +178,6 @@ Click on a port below to navigate to its `README.md` for build and test instruct
 | [XNNPACK](https://github.com/qnx-ports/build-files/blob/main/ports/XNNPACK/README.md) | [![Build](https://github.com/qnx-ports/build-files/actions/workflows/XNNPACK.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/XNNPACK.yml) |
 | [zlib](https://github.com/qnx-ports/build-files/blob/main/ports/zlib/README.md) | [![Build](https://github.com/qnx-ports/build-files/actions/workflows/zlib.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/zlib.yml) |
 | [zstd](https://github.com/qnx-ports/build-files/blob/main/ports/zstd/README.md) | [![Build](https://github.com/qnx-ports/build-files/actions/workflows/zstd.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/zstd.yml) |
+[rtl-sdr](https://github.com/qnx-ports/build-files/blob/main/ports/zstd/README.md) | [![Build](https://github.com/qnx-ports/build-files/actions/workflows/zstd.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/rtl-sdr.yml) |
 ---
 
