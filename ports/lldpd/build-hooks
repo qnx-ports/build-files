@@ -1,0 +1,76 @@
+#!/bin/sh
+
+#
+# Default basic prefix is /usr/local
+#
+BASIC_PREFIX="/usr/local"
+
+#
+#	QNX specific build configuration nested level
+#
+NESTED_LEVEL="../../../../lldpd"
+
+#
+#    A prefix path to use on the target.
+#
+PREFIX="${INSTALL_ROOT_nto}/${BASIC_PREFIX}"
+
+#
+#    A prefix path to binary on the target.
+#    bindir	${EXEC_PREFIX}/bin
+#    libdir	${EXEC_PREFIX}/lib
+#
+EXEC_PREFIX="${INSTALL_ROOT_nto}/${cpudir}/${BASIC_PREFIX}"
+
+#
+# export PKG_CONFIG_PATH variable to tell pkg-config
+# where to look for *.pc files
+#
+export PKG_CONFIG_PATH="${EXEC_PREFIX}/lib/pkgconfig"
+
+#
+#	Setup of essential configuration parameters
+#
+function hook_preconfigure {
+
+	CFLAGS="$CFLAGS"
+	CXXFLAGS="$CXXFLAGS"
+	CPPFLAGS="$CPPFLAGS -I${EXEC_PREFIX}/include"
+
+	LDFLAGS="$LDFLAGS -L${EXEC_PREFIX}/lib -lsocket -lregex -lcheck"
+
+	DIST_BASE="${PWD}/${NESTED_LEVEL}"
+
+	configure_opts="--srcdir=${DIST_BASE}"
+	configure_opts="${configure_opts} --prefix=${PREFIX}"
+	configure_opts="${configure_opts} --exec-prefix=${EXEC_PREFIX}"
+	configure_opts="${configure_opts} --enable-min-macro"
+}
+
+#
+#	Adjust relative path to ./configure tool
+#
+function hook_configure {
+    ${NESTED_LEVEL}/configure \
+        ${ac_host:+"--host=${ac_host}"} \
+        ${ac_build:+"--build=${ac_build}"} \
+        ${configure_opts} \
+        ${ac_params:+${CC:+"CC=${CC}"}} \
+        ${ac_params:+${CFLAGS:+"CFLAGS=-O2 ${CFLAGS}"}} \
+        ${ac_params:+${CPPFLAGS:+"CPPFLAGS=${CPPFLAGS}"}} \
+        ${ac_params:+${LDFLAGS:+"LDFLAGS=${LDFLAGS}"}} \
+        ${ac_params:+${CXX:+"CXX=${CXX}"}} \
+        ${ac_params:+${CXXFLAGS:+"CXXFLAGS=-O2 ${CXXFLAGS}"}} \
+        ${ac_params:+${ac_autotools:+${ac_autotools}}} \
+        || Error "configure failed";
+}
+
+function hook_premake {
+	if [ "${make_cmds}" == "check" ] && [ "${TARGET_SYSNAME}" == "nto" ]; then
+        echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+        echo "! Test execution suppressed              !"
+        echo "! All tests have to be run on the target !"
+        echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+		make_opts="${make_opts} TESTS=''"
+	fi
+}
