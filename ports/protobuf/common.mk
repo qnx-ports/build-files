@@ -24,6 +24,8 @@ PREFIX ?= usr/local
 #choose Release or Debug
 CMAKE_BUILD_TYPE ?= Release
 
+BUILD_TESTING ?= OFF
+
 #override 'all' target to bypass the default QNX build system
 ALL_DEPENDENCIES = protobuf_all
 .PHONY: protobuf_all install check clean
@@ -92,8 +94,12 @@ protobuf_all: protobuf protoc_target
 
 protobuf: protoc_host
 	mkdir -p protobuf
-	cd protobuf && cmake $(CMAKE_COMMON_ARGS) -DWITH_PROTOC=$(HOST_PROTOC_PATH)/protoc -Dprotobuf_BUILD_LIBUPB=OFF $(QNX_PROJECT_ROOT)
+	cd protobuf && cmake $(CMAKE_COMMON_ARGS) -Dprotobuf_BUILD_TESTS=$(BUILD_TESTING) -DWITH_PROTOC=$(HOST_PROTOC_PATH)/protoc -Dprotobuf_BUILD_LIBUPB=OFF $(QNX_PROJECT_ROOT)
 	cd protobuf && cmake --build . $(GENERATOR_ARGS)
+	if [ "$(BUILD_TESTING)" = "ON" ]; then \
+		cp -r $(QNX_PROJECT_ROOT) src; \
+		cp protobuf/tests protobuf/lite-test protobuf/test_plugin src; \
+	fi
 
 protoc_target:
 	mkdir -p protoc
