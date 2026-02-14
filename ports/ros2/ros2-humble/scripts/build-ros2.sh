@@ -44,6 +44,7 @@ build(){
             -DCMAKE_TOOLCHAIN_FILE="${PWD}/platform/qnx.nto.toolchain.cmake" \
             -DCMAKE_MODULE_PATH="${PWD}/modules" \
             -DBUILD_TESTING:BOOL="OFF" \
+            -DQNX_TESTING=${QNX_TESTING} \
             -DCMAKE_BUILD_TYPE="Release" \
             -DTHIRDPARTY=FORCE \
             --no-warn-unused-cli \
@@ -57,17 +58,30 @@ build(){
     cp -f ./scripts/qnxtest.sh install/${CPUVARDIR}
 
     # Remove build files under test
-    find ./install/${CPUVARDIR}/test -name "CMakeFiles" -exec rm -rf {} +
-    find ./install/${CPUVARDIR}/test -name "*.o" -exec rm -rf {} +
-    find ./install/${CPUVARDIR}/test -name "Makefile" -exec rm -rf {} +
-    find ./install/${CPUVARDIR}/test -name "*.cmake" -exec rm -rf {} +
-    find ./install/${CPUVARDIR}/test -name "*.txt" -exec rm -rf {} +
-    find ./install/${CPUVARDIR}/test -name "*.make" -exec rm -rf {} +
-    find ./install/${CPUVARDIR}/test -name "ament_*" -exec rm -rf {} +
+    if [ "${QNX_TESTING}" == "ON" ]; then
+        find ./install/${CPUVARDIR}/test -name "CMakeFiles" -exec rm -rf {} +
+        find ./install/${CPUVARDIR}/test -name "*.o" -exec rm -rf {} +
+        find ./install/${CPUVARDIR}/test -name "Makefile" -exec rm -rf {} +
+        find ./install/${CPUVARDIR}/test -name "*.cmake" -exec rm -rf {} +
+        find ./install/${CPUVARDIR}/test -name "*.txt" -exec rm -rf {} +
+        find ./install/${CPUVARDIR}/test -name "*.make" -exec rm -rf {} +
+        find ./install/${CPUVARDIR}/test -name "ament_*" -exec rm -rf {} +
 
-    # Install googletest
-    cp -f ${QNX_TARGET}/${CPUVARDIR}/usr/lib/libgtest* ./install/${CPUVARDIR}/lib
-    cp -f ${QNX_TARGET}/${CPUVARDIR}/usr/lib/libgmock* ./install/${CPUVARDIR}/lib
+        echo "Installing googletest..."
+        if ls ${QNX_TARGET}/${CPUVARDIR}/usr/lib/libgtest* ${QNX_TARGET}/${CPUVARDIR}/usr/lib/libgmock* 1> /dev/null 2>&1; then
+            cp -f ${QNX_TARGET}/${CPUVARDIR}/usr/lib/libgtest* ./install/${CPUVARDIR}/lib
+            cp -f ${QNX_TARGET}/${CPUVARDIR}/usr/lib/libgmock* ./install/${CPUVARDIR}/lib
+        elif ls ${QNX_TARGET}/${CPUVARDIR}/usr/local/lib/libgtest* ${QNX_TARGET}/${CPUVARDIR}/usr/local/lib/libgmock* 1> /dev/null 2>&1; then
+            cp -f ${QNX_TARGET}/${CPUVARDIR}/usr/local/lib/libgtest* ./install/${CPUVARDIR}/lib
+            cp -f ${QNX_TARGET}/${CPUVARDIR}/usr/local/lib/libgmock* ./install/${CPUVARDIR}/lib
+        else
+            echo "Error: googletest libraries (libgtest* and libgmock*) not found in ${QNX_TARGET}/${CPUVARDIR}/usr/lib or ${QNX_TARGET}/${CPUVARDIR}/usr/local/lib"
+            echo "Please make sure you have installed googletest libraries into the appropriate locations."
+            exit 1
+        fi
+    else
+        echo "Test not installed"
+    fi
 
     # Zip and install humble
     mkdir -p ./opt/ros

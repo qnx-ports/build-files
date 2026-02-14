@@ -1,12 +1,12 @@
 diff --git a/rosidl_typesupport_fastrtps_c/CMakeLists.txt b/rosidl_typesupport_fastrtps_c/CMakeLists.txt
-index 314f933..09c67de 100644
+index 314f933..1d142ac 100644
 --- a/rosidl_typesupport_fastrtps_c/CMakeLists.txt
 +++ b/rosidl_typesupport_fastrtps_c/CMakeLists.txt
 @@ -60,6 +60,10 @@ ament_export_targets(${PROJECT_NAME})
  
  ament_index_register_resource("rosidl_typesupport_c")
  
-+if(QNX)
++if(QNX AND QNX_TESTING)
 +  set(BUILD_TESTING ON)
 +endif()
 +
@@ -25,14 +25,14 @@ index 314f933..09c67de 100644
  
  ament_package(
 diff --git a/rosidl_typesupport_fastrtps_cpp/CMakeLists.txt b/rosidl_typesupport_fastrtps_cpp/CMakeLists.txt
-index d42ce68..8de21d9 100644
+index d42ce68..6a5cc8e 100644
 --- a/rosidl_typesupport_fastrtps_cpp/CMakeLists.txt
 +++ b/rosidl_typesupport_fastrtps_cpp/CMakeLists.txt
 @@ -64,6 +64,10 @@ ament_export_targets(${PROJECT_NAME})
  
  ament_index_register_resource("rosidl_typesupport_cpp")
  
-+if(QNX)
++if(QNX AND QNX_TESTING)
 +  set(BUILD_TESTING ON)
 +endif()
 +
