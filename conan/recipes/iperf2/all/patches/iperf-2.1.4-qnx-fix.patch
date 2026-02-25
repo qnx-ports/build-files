@@ -1,0 +1,1095 @@
+diff --git a/include/Client.hpp b/include/Client.hpp
+index 8a4eeef0..c23a662b 100644
+--- a/include/Client.hpp
++++ b/include/Client.hpp
+@@ -85,7 +85,7 @@ public:
+     struct ReportHeader *myJob;
+ 
+ private:
+-    inline void WritePacketID(intmax_t);
++    inline void WritePacketID(intmax_t, struct UDP_datagram * mBuf_UDP);
+     inline void WriteTcpTxHdr(struct ReportStruct *, int, int);
+     inline double get_delay_target(void);
+     void InitTrafficLoop(void);
+@@ -122,6 +122,10 @@ private:
+     void RunUDPIsochronous(void);
+     // UDP plain
+     void RunUDP(void);
++#ifdef __QNX__
++    // UDP traffic in bursts using sendmmsg
++    void RunUDPBurst(void);
++#endif /* __QNX__ */
+     // client connect
+     void PeerXchange(void);
+     thread_Settings *mSettings;
+diff --git a/include/Locale.h b/include/Locale.h
+index 237e8c81..ae4166a7 100644
+--- a/include/Locale.h
++++ b/include/Locale.h
+@@ -141,6 +141,16 @@ extern const char client_burstperiod[];
+ extern const char server_burstperiod[];
+ 
+ extern const char client_fq_pacing[];
++
++#ifdef __QNX__
++extern const char send_mm_conf[];
++
++extern const char recv_mm_conf[];
++
++extern const char recv_mm_conf_no_timeout[];
++
++extern const char recv_lowat_conf[];
++#endif /* __QNX__ */
+ /* -------------------------------------------------------------------
+  * Legacy reports
+  * ------------------------------------------------------------------- */
+diff --git a/include/Reporter.h b/include/Reporter.h
+index 8e82cbef..c0ddb25a 100644
+--- a/include/Reporter.h
++++ b/include/Reporter.h
+@@ -243,6 +243,12 @@ struct ReportCommon {
+     double rtt_weight;
+     double ListenerTimeout;
+     double FPS;
++#ifdef __QNX__
++    enum WaitMode wait_mode;
++    int mmnum;
++    int wait_nsec;
++    int* recvlowat; //point to either the setting value or 'BufLen' (-l)
++#endif /* __QNX__ */
+ #ifdef HAVE_STRUCT_TCP_INFO_TCPI_TOTAL_RETRANS
+     bool enable_sampleTCPstats;
+     bool intervalonly_sampleTCPstats;
+diff --git a/include/Server.hpp b/include/Server.hpp
+index 4f3b7b8a..905b68ad 100644
+--- a/include/Server.hpp
++++ b/include/Server.hpp
+@@ -82,6 +82,9 @@ private:
+ 
+     void InitKernelTimeStamping(void);
+     bool InitTrafficLoop(void);
++#ifdef __QNX__
++    ssize_t recvmulti(int, void *,  size_t, int );
++#endif /* __QNX__ */
+     inline void SetFullDuplexReportStartTime(void);
+     inline void SetReportStartTime();
+     int ReadWithRxTimestamp(void);
+@@ -111,14 +114,28 @@ private:
+     struct sockaddr_storage srcaddr;
+     struct iovec iov[1];
+     struct msghdr message;
++#ifdef __QNX__
++    char *ctrl;
++#else
+     char ctrl[CMSG_SPACE(sizeof(struct timeval))];
++#endif /* __QNX__ */
+     struct cmsghdr *cmsg;
+ #endif
++
+ #if defined(HAVE_LINUX_FILTER_H) && defined(HAVE_AF_PACKET)
+     struct ether_header *eth_hdr;
+     struct iphdr *ip_hdr;
+     struct udphdr *udp_hdr;
+ #endif
++#ifdef __QNX__
++    char* mBuf_curr;
++    bool init_buf_idx;
++    bool initialized_mm;
++    int nextindex;
++    struct mmsghdr *msghdr;
++    struct iovec *iovmm;
++    int count;
++#endif /* __QNX__ */
+ }; // end class Server
+ 
+ #endif // SERVER_H
+diff --git a/include/Settings.hpp b/include/Settings.hpp
+index 47c2f825..d812bc6e 100644
+--- a/include/Settings.hpp
++++ b/include/Settings.hpp
+@@ -138,6 +138,14 @@ enum RateUnits {
+     kRate_PPS
+ };
+ 
++#ifdef __QNX__
++// wait mode for QNX recv-mmsg/send-mmsg extension
++enum WaitMode {
++    WaitForOne = 0,
++    WaitAll
++};
++#endif /* __QNX__ */
++
+ #include "Reporter.h"
+ #include "payloads.h"
+ 
+@@ -289,6 +297,12 @@ struct thread_Settings {
+ #if HAVE_DECL_TCP_NOTSENT_LOWAT
+     int mWritePrefetch;
+ #endif
++#ifdef __QNX__
++    enum WaitMode wait_mode;
++    int mmnum;
++    int wait_nsec;
++    int* recvlowat; //point to either the setting value or 'mBufLen' (-l)
++#endif /* __QNX__ */
+ };
+ 
+ /*
+@@ -378,6 +392,17 @@ struct thread_Settings {
+ #define FLAG_TAPDEV         0x00000040
+ #define FLAG_HIDEIPS        0x00000080
+ 
++#ifdef __QNX__
++/*
++ * QNX flags
++ */
++#define FLAG_SNDMMSGS       0x01000000
++#define FLAG_RCVMMSGS       0x02000000
++#define FLAG_RCVMMSGSWAITALL 0x04000000
++#define FLAG_RCVMMSGSTIME   0x08000000
++#define FLAG_RCVLOWAT       0x10000000
++#endif /* __QNX__ */
++
+ #define isBuflenSet(settings)      ((settings->flags & FLAG_BUFLENSET) != 0)
+ #define isCompat(settings)         ((settings->flags & FLAG_COMPAT) != 0)
+ #define isDaemon(settings)         ((settings->flags & FLAG_DAEMON) != 0)
+@@ -445,6 +470,13 @@ struct thread_Settings {
+ #define isTapDev(settings)         ((settings->flags_extend2 & FLAG_TAPDEV) != 0)
+ #define isTunDev(settings)         ((settings->flags_extend2 & FLAG_TUNDEV) != 0)
+ #define isHideIPs(settings)        ((settings->flags_extend2 & FLAG_HIDEIPS) != 0)
++#ifdef __QNX__
++#define isSndMMsgs(settings)          ((settings->flags_extend2 & FLAG_SNDMMSGS) != 0)
++#define isRcvMMsgs(settings)          ((settings->flags_extend2 & FLAG_RCVMMSGS) != 0)
++#define isRcvMMsgsWaitAll(settings)   ((settings->flags_extend2 & FLAG_RCVMMSGSWAITALL) != 0)
++#define isRcvMMsgsTime(settings)      ((settings->flags_extend2 & FLAG_RCVMMSGSTIME) != 0)
++#define isRcvLowat(settings)      ((settings->flags_extend2 & FLAG_RCVLOWAT) != 0)
++#endif /* __QNX__ */
+ 
+ #define setBuflenSet(settings)     settings->flags |= FLAG_BUFLENSET
+ #define setCompat(settings)        settings->flags |= FLAG_COMPAT
+@@ -510,6 +542,13 @@ struct thread_Settings {
+ #define setTapDev(settings)        settings->flags_extend2 |= FLAG_TAPDEV
+ #define setTunDev(settings)        settings->flags_extend2 |= FLAG_TUNDEV
+ #define setHideIPs(settings)       settings->flags_extend2 |= FLAG_HIDEIPS
++#ifdef __QNX__
++#define setSndMMsgs(settings)      settings->flags_extend2 |= FLAG_SNDMMSGS
++#define setRcvMMsgs(settings)      settings->flags_extend2 |= FLAG_RCVMMSGS
++#define setRcvMMsgsWaitAll(settings) settings->flags_extend2 |= FLAG_RCVMMSGSWAITALL
++#define setRcvMMsgsTime(settings)  settings->flags_extend2 |= FLAG_RCVMMSGSTIME
++#define setRcvLowat(settings)      settings->flags_extend2 |= FLAG_RCVLOWAT
++#endif /* __QNX__ */
+ 
+ #define unsetBuflenSet(settings)   settings->flags &= ~FLAG_BUFLENSET
+ #define unsetCompat(settings)      settings->flags &= ~FLAG_COMPAT
+@@ -574,6 +613,13 @@ struct thread_Settings {
+ #define unsetTapDev(settings)        settings->flags_extend2 &= ~FLAG_TAPDEV
+ #define unsetTunDev(settings)        settings->flags_extend2 &= ~FLAG_TUNDEV
+ #define unsetHideIPs(settings)       settings->flags_extend2 &= ~FLAG_HIDEIPS
++#ifdef __QNX__
++#define unsetSndMMsgs(settings)      settings->flags_extend2 &= ~FLAG_SNDMMSGS
++#define unsetRcvMMsgs(settings)      settings->flags_extend2 &= ~FLAG_RCVMMSGS
++#define unsetRcvMMsgsWaitAll(settings) settings->flags_extend2 &= ~FLAG_RCVMMSGSWAITALL
++#define unsetRcvMMsgsTime(settings)  settings->flags_extend2 &= ~FLAG_RCVMMSGSTIME
++#define unsetRcvLowat(settings)      settings->flags_extend2 &= ~FLAG_RCVLOWAT
++#endif /* __QNX__ */
+ 
+ // set to defaults
+ void Settings_Initialize(struct thread_Settings* main);
+diff --git a/include/payloads.h b/include/payloads.h
+index 179d07b5..df898098 100644
+--- a/include/payloads.h
++++ b/include/payloads.h
+@@ -565,7 +565,11 @@ struct server_hdr {
+ #define SIZEOF_UDPHDRMSG_EXT (sizeof(struct client_udp_testhdr))
+ #define SIZEOF_TCPHDRMSG_V1 (sizeof(struct client_hdr_v1))
+ #define SIZEOF_TCPHDRMSG_EXT (sizeof(struct client_tcp_testhdr))
++#ifdef __QNX__
++#define MINMBUFALLOCSIZE (int) (sizeof(struct client_tcp_testhdr) > 1024 ? sizeof(struct client_tcp_testhdr) : 1024)
++#else
+ #define MINMBUFALLOCSIZE (int) (sizeof(struct client_tcp_testhdr))
++#endif /* __QNX__ */
+ #define MINTRIPTIMEPLAYOAD (int) (sizeof(struct client_udp_testhdr) - sizeof(struct client_hdrext_isoch_settings))
+ #ifdef __cplusplus
+ } /* end extern "C" */
+diff --git a/src/Client.cpp b/src/Client.cpp
+index 12aa6156..6dfaae8f 100644
+--- a/src/Client.cpp
++++ b/src/Client.cpp
+@@ -518,6 +518,10 @@ void Client::Run () {
+ 	// Launch the approprate UDP traffic loop
+ 	if (isIsochronous(mSettings)) {
+ 	    RunUDPIsochronous();
++#ifdef __QNX__
++	} else if (isSndMMsgs(mSettings)) {
++	    RunUDPBurst();
++#endif /* __QNX__ */
+ 	} else {
+ 	    RunUDP();
+ 	}
+@@ -948,6 +952,184 @@ double Client::get_delay_target () {
+     return delay_target;
+ }
+ 
++#ifdef __QNX__
++void Client::RunUDPBurst(void) {
++	int currMsg=0;
++	int msg_len;
++	struct iovec *iov;
++	struct mmsghdr *mmsg;
++	char*  mBuf;
++	struct UDP_datagram* mBuf_UDP = NULL;
++	int vlen;
++	double delay_target = get_delay_target();
++	double delay = 0;
++	double adjust = 0;
++	int i=0;
++
++	delay_target *= mSettings->mmnum;
++
++	double variance = mSettings->mVariance;
++
++	// Size of one message
++	if (!isModeTime(mSettings)) {
++		msg_len = (mSettings->mAmount < static_cast<unsigned>(mSettings->mBufLen)) ? mSettings->mAmount : mSettings->mBufLen;
++	} else {
++		msg_len = mSettings->mBufLen;
++	}
++	//msg_len = mSettings->mBufLen;
++	// Number of messages in one burst
++	vlen = mSettings->mmnum;
++
++	// Allocate temporary mBuf with enough space for all messages in a burst
++	mBuf = (char*) malloc( vlen * msg_len);
++	if (mBuf == NULL) {
++		FAIL_errno(errno, "Out of memory", mSettings);
++	}
++
++	for(i=0;i<vlen;i++)
++		memcpy(mBuf + i*msg_len, mSettings->mBuf, mSettings->mBufLen);
++
++	// Allocate temporary mBuf with enough space for all messages in a burst
++	iov = (struct iovec *) calloc(vlen, sizeof(struct iovec));
++	if (iov == NULL) {
++		free(mBuf);
++		FAIL_errno(errno, "Out of memory", mSettings);
++	}
++
++	// Allocate buffer for multi message header array
++	mmsg = (struct mmsghdr *) calloc(vlen, sizeof(struct mmsghdr));
++	if (mmsg == NULL) {
++		free(iov);
++		free(mBuf);
++		FAIL_errno(errno, "Out of memory", mSettings);
++	}
++
++	while (InProgress()) {
++		// Test case: drop 17 packets and send 2 out-of-order:
++		// sequence 51, 52, 70, 53, 54, 71, 72
++		//switch(datagramID) {
++		//  case 53: datagramID = 70; break;
++		//  case 71: datagramID = 53; break;
++		//  case 55: datagramID = 71; break;
++		//  default: break;
++		//}
++
++		for (int m = 0; m < vlen; m++) {
++
++			iov[m].iov_base = mBuf + (m * msg_len);
++			iov[m].iov_len  = msg_len;
++
++			mmsg[m].msg_hdr.msg_name = NULL;
++			mmsg[m].msg_hdr.msg_namelen = 0;
++			mmsg[m].msg_hdr.msg_iov = &iov[m];
++			mmsg[m].msg_hdr.msg_iovlen = 1;
++			mmsg[m].msg_hdr.msg_control = NULL;
++			mmsg[m].msg_hdr.msg_controllen = 0;
++
++			now.setnow();
++			reportstruct->packetTime.tv_sec = now.getSecs();
++			reportstruct->packetTime.tv_usec = now.getUsecs();
++			reportstruct->sentTime = reportstruct->packetTime;
++			if (isVaryLoad(mSettings) && mSettings->mAppRateUnits == kRate_BW) {
++				static Timestamp time3;
++				if (now.subSec(time3) >= VARYLOAD_PERIOD) {
++					long var_rate = lognormal(mSettings->mAppRate,variance);
++					if (var_rate < 0)
++						var_rate = 0;
++					delay_target = (mSettings->mBufLen * ((kSecs_to_nsecs * kBytes_to_Bits) / var_rate));
++
++					time3 = now;
++				}
++			}
++			// store datagram ID into buffer
++			mBuf_UDP = reinterpret_cast<struct UDP_datagram*>(mBuf + (m*msg_len));
++			WritePacketID(reportstruct->packetID++, mBuf_UDP);
++			mBuf_UDP->tv_sec  = htonl(reportstruct->packetTime.tv_sec);
++			mBuf_UDP->tv_usec = htonl(reportstruct->packetTime.tv_usec);
++		}
++
++		// Adjustment for the running delay
++		// o measure how long the last loop iteration took
++		// o calculate the delay adjust
++		//   - If write succeeded, adjust = target IPG - the loop time
++		//   - If write failed, adjust = the loop time
++		// o then adjust the overall running delay
++		// Note: adjust units are nanoseconds,
++		//       packet timestamps are microseconds
++		adjust = delay_target + (1000.0 * lastPacketTime.subUsec(reportstruct->packetTime));
++
++		lastPacketTime.set(reportstruct->packetTime.tv_sec, reportstruct->packetTime.tv_usec);
++		// Since linux nanosleep/busyloop can exceed delay
++		// there are two possible equilibriums
++		//  1)  Try to perserve inter packet gap
++		//  2)  Try to perserve requested transmit rate
++		// The latter seems preferred, hence use a running delay
++		// that spans the life of the thread and constantly adjust.
++		// A negative delay means the iperf app is behind.
++		delay += adjust;
++		// Don't let delay grow unbounded
++		if (delay < delay_lower_bounds) {
++			delay = delay_target;
++		}
++
++		reportstruct->errwrite = WriteNoErr;
++		reportstruct->emptyreport = 0;
++
++		int msgSent=0;
++
++		do {
++			// perform write
++			currMsg = sendmmsg(mSettings->mSock, &mmsg[msgSent], vlen - msgSent, 0);
++
++			if (currMsg < 0) {
++				reportstruct->packetID -= (vlen - currMsg);
++
++				if(errno == ECONNREFUSED) {
++					WARN_errno(1, "sendmmsg - connection refused");
++					goto err;
++				}
++				if (FATALUDPWRITERR(errno)) {
++					reportstruct->errwrite = WriteErrFatal;
++					WARN_errno(1, "write");
++					goto err;
++				} else {
++					reportstruct->errwrite = WriteErrAccount;
++					currMsg = 0;
++				}
++				reportstruct->emptyreport = 1;
++			}
++			// report packets
++			for (int m = msgSent; m < msgSent + currMsg; m++) {
++				reportstruct->packetLen = static_cast<unsigned long>(msg_len);
++				//reportstruct->prevPacketTime = myReport->info.ts.prevpacketTime;
++				myReportPacket();
++				//reportstruct->packetID++;
++				//myReport->info.ts.prevpacketTime = reportstruct->packetTime;
++				//ReportPacket( mSettings->reporthdr, reportstruct );
++			}
++
++			msgSent += currMsg;
++		} while( msgSent < vlen );
++#if 1
++		// Insert delay here only if the running delay is greater than 100 usec,
++		// otherwise don't delay and immediately continue with the next tx.
++		if (delay >= 1000) {
++			// Convert from nanoseconds to microseconds
++			// and invoke the microsecond delay
++			delay_loop(static_cast<unsigned long>(delay / 1000));
++		}
++#endif
++	}
++
++err:
++	FinishTrafficActions();
++
++	free(mmsg);
++	free(iov);
++	free(mBuf);
++}
++#endif /* __QNX__ */
++
+ void Client::RunUDP () {
+     struct UDP_datagram* mBuf_UDP = reinterpret_cast<struct UDP_datagram*>(mSettings->mBuf);
+     int currLen;
+@@ -988,7 +1170,7 @@ void Client::RunUDP () {
+ 	    }
+ 	}
+ 	// store datagram ID into buffer
+-	WritePacketID(reportstruct->packetID);
++	WritePacketID(reportstruct->packetID, mBuf_UDP);
+ 	mBuf_UDP->tv_sec  = htonl(reportstruct->packetTime.tv_sec);
+ 	mBuf_UDP->tv_usec = htonl(reportstruct->packetTime.tv_usec);
+ 
+@@ -1115,7 +1297,7 @@ void Client::RunUDPIsochronous () {
+ 	    reportstruct->sentTime = reportstruct->packetTime;
+ 	    mBuf_UDP->tv_sec  = htonl(reportstruct->packetTime.tv_sec);
+ 	    mBuf_UDP->tv_usec = htonl(reportstruct->packetTime.tv_usec);
+-	    WritePacketID(reportstruct->packetID);
++	    WritePacketID(reportstruct->packetID, mBuf_UDP);
+ 
+ 	    // Adjustment for the running delay
+ 	    // o measure how long the last loop iteration took
+@@ -1212,8 +1394,7 @@ void Client::RunUDPIsochronous () {
+ }
+ // end RunUDPIsoch
+ 
+-inline void Client::WritePacketID (intmax_t packetID) {
+-    struct UDP_datagram * mBuf_UDP = reinterpret_cast<struct UDP_datagram *>(mSettings->mBuf);
++inline void Client::WritePacketID (intmax_t packetID, struct UDP_datagram * mBuf_UDP) {
+     // store datagram ID into buffer
+ #ifdef HAVE_INT64_T
+     // Pack signed 64bit packetID into unsigned 32bit id1 + unsigned
+@@ -1333,8 +1514,8 @@ void Client::FinishTrafficActions () {
+ 	// Don't count in the mTotalLen. The server counts this one,
+ 	// but didn't count our first datagram, so we're even now.
+ 	// The negative datagram ID signifies termination to the server.
+-	WritePacketID(-reportstruct->packetID);
+ 	struct UDP_datagram * mBuf_UDP = reinterpret_cast<struct UDP_datagram *>(mSettings->mBuf);
++	WritePacketID(-reportstruct->packetID, mBuf_UDP);
+ 	mBuf_UDP->tv_sec = htonl(reportstruct->packetTime.tv_sec);
+ 	mBuf_UDP->tv_usec = htonl(reportstruct->packetTime.tv_usec);
+ 	int len = write(mySocket, mSettings->mBuf, mSettings->mBufLen);
+@@ -1392,7 +1573,8 @@ void Client::AwaitServerFinPacket () {
+         // rc= zero means select's read timed out
+ 	if (rc == 0) {
+ 	    // try to trigger another FIN by resending a negative seq no
+-	    WritePacketID(-(++reportstruct->packetID));
++	    struct UDP_datagram* mBuf_UDP = reinterpret_cast<struct UDP_datagram*>(mSettings->mBuf);
++	    WritePacketID(-(++reportstruct->packetID), mBuf_UDP);
+ 	    // write data
+ 	    rc = write(mySocket, mSettings->mBuf, mSettings->mBufLen);
+ 	    WARN_errno(rc < 0, "write-fin");
+@@ -1485,10 +1667,10 @@ int Client::SendFirstPayload () {
+ 	}
+ 	if (pktlen > 0) {
+ 	    if (isUDP(mSettings)) {
+-		struct client_udp_testhdr *tmphdr = reinterpret_cast<struct client_udp_testhdr *>(mSettings->mBuf);
+-		WritePacketID(reportstruct->packetID);
+-		tmphdr->seqno_ts.tv_sec  = htonl(reportstruct->packetTime.tv_sec);
+-		tmphdr->seqno_ts.tv_usec = htonl(reportstruct->packetTime.tv_usec);
++		struct UDP_datagram * mBuf_UDP = reinterpret_cast<struct UDP_datagram *>(mSettings->mBuf);
++		WritePacketID(reportstruct->packetID, mBuf_UDP);
++		mBuf_UDP->tv_sec  = htonl(reportstruct->packetTime.tv_sec);
++		mBuf_UDP->tv_usec = htonl(reportstruct->packetTime.tv_usec);
+ 		udp_payload_minimum = pktlen;
+ #if HAVE_DECL_MSG_DONTWAIT
+ 		pktlen = send(mySocket, mSettings->mBuf, (pktlen > mSettings->mBufLen) ? pktlen : mSettings->mBufLen, MSG_DONTWAIT);
+diff --git a/src/Listener.cpp b/src/Listener.cpp
+index 8f7f3605..81c8a253 100644
+--- a/src/Listener.cpp
++++ b/src/Listener.cpp
+@@ -994,14 +994,21 @@ int Listener::my_accept (thread_Settings *server) {
+ 	}
+ 	// note udp_accept will update the active host table
+     } else {
+-	// accept a TCP  connection
+-	server->mSock = accept(ListenSocket, reinterpret_cast<sockaddr*>(&server->peer), &server->size_peer);
+-	if (server->mSock > 0) {
+-	    server->size_local = sizeof(iperf_sockaddr);
+-	    getsockname(server->mSock, reinterpret_cast<sockaddr*>(&server->local), &server->size_local);
+-	    SockAddr_Ifrname(server);
+-	    Iperf_push_host(server);
+-	}
++        // accept a TCP  connection
++        server->mSock = accept(ListenSocket, reinterpret_cast<sockaddr*>(&server->peer), &server->size_peer);
++        if (server->mSock > 0) {
++            server->size_local = sizeof(iperf_sockaddr);
++            getsockname(server->mSock, reinterpret_cast<sockaddr*>(&server->local), &server->size_local);
++            SockAddr_Ifrname(server);
++            Iperf_push_host(server);
++        }
++#ifdef __QNX__
++        if (server->mSock != INVALID_SOCKET) {
++            if (setsockopt(server->mSock, SOL_SOCKET, SO_RCVLOWAT, mSettings->recvlowat, sizeof(*mSettings->recvlowat)) != 0) {
++                WARN(1, "Failed setting recv low-water mark for the socket");
++            }
++        }
++#endif /* __QNX__ */
+     }
+     if (server->mSock > 0) {
+ 	Timestamp now;
+diff --git a/src/Locale.c b/src/Locale.c
+index 7d89fee7..7ffc251b 100644
+--- a/src/Locale.c
++++ b/src/Locale.c
+@@ -101,8 +101,14 @@ Server specific:\n\
+       --tcp-rx-window-clamp set the TCP receive window clamp size in bytes\n\
+       --tap-dev   #[<dev>] use TAP device to receive at L2 layer\n\
+   -t, --time      #        time in seconds to listen for new connections as well as to receive traffic (default not set)\n\
+-      --udp-histogram #,#  enable UDP latency histogram(s) with bin width and count, e.g. 1,1000=1(ms),1000(bins)\n\
+-  -B, --bind <ip>[%<dev>]  bind to multicast address and optional device\n\
++      --udp-histogram #,#  enable UDP latency histogram(s) with bin width and count, e.g. 1,1000=1(ms),1000(bins)\n"
++#ifdef __QNX__
++"      --recv-mmsg #        use recvmmsg() API\n\
++      --recv-mmsg-wait-all use MSG_WAITALL instead of MSG_WAITFORONE\n\
++      --recv-mmsg-time #   set timeout to wait for messages to be received in recvmmsg() API\n\
++      --recvlowat #        set the tcp socket receive low-water mark\n"
++#endif /* __QNX__ */
++"  -B, --bind <ip>[%<dev>]  bind to multicast address and optional device\n\
+   -U, --single_udp         run in single threaded UDP mode\n\
+       --sum-dstip          sum traffic threads based upon destination ip address (default is src ip)\n\
+   -D, --daemon             run the server as a daemon\n"
+@@ -129,8 +135,11 @@ Client specific:\n\
+       --local-only         Set don't route on socket\n\
+       --near-congestion=[w] Use a weighted write delay per the sampled TCP RTT (experimental)\n\
+       --no-connect-sync    No sychronization after connect when -P or parallel traffic threads\n\
+-      --no-udp-fin         No final server to client stats at end of UDP test\n\
+-  -n, --num       #[kmgKMG]    number of bytes to transmit (instead of -t)\n\
++      --no-udp-fin         No final server to client stats at end of UDP test\n"
++#ifdef __QNX__
++"      --send-mmsg #        use sendmmsg() API\n"
++#endif /* __QNX__ */
++"  -n, --num       #[kmgKMG]    number of bytes to transmit (instead of -t)\n\
+   -r, --tradeoff           Do a fullduplexectional test individually\n\
+       --tcp-write-prefetch set the socket's TCP_NOTSENT_LOWAT value in bytes and use event based writes\n\
+   -t, --time      #        time in seconds to transmit for (default 10 secs)\n\
+@@ -265,6 +274,20 @@ const char server_burstperiod[] =
+ const char client_fq_pacing [] =
+ "fair-queue socket pacing set to %s/s\n";
+ 
++#ifdef __QNX__
++const char send_mm_conf[] =
++"Num. of send mmsg array: %d\n";
++
++const char recv_mm_conf[] =
++"Num. of recv mmsg array: %d, wait-all:%d, wait time:%dms\n";
++
++const char recv_mm_conf_no_timeout[] =
++"Num. of recv mmsg array: %d, wait-all:%d, wait time: NULL\n";
++
++const char recv_lowat_conf[] =
++"Recv low-water mark";
++#endif /* __QNX__ */
++
+ /* -------------------------------------------------------------------
+  * Legacy reports
+  * ------------------------------------------------------------------- */
+diff --git a/src/ReportOutputs.c b/src/ReportOutputs.c
+index b69636c9..e3aaf675 100644
+--- a/src/ReportOutputs.c
++++ b/src/ReportOutputs.c
+@@ -120,8 +120,9 @@ static inline void _print_stats_common (struct TransferInfo *stats) {
+     if (stats->ts.iEnd < SMALLEST_INTERVAL_SEC) {
+         stats->cntBytes = 0;
+     }
+-    byte_snprintf(outbufferext, sizeof(outbufferext), (double)stats->cntBytes / (stats->ts.iEnd - stats->ts.iStart), \
+-		  stats->common->Format);
++    byte_snprintf(outbufferext, sizeof(outbufferext),
++                  (stats->ts.iEnd == stats->ts.iStart ? 0 : (double)stats->cntBytes / (stats->ts.iEnd - stats->ts.iStart)),
++                  stats->common->Format);
+     outbuffer[sizeof(outbuffer)-1]='\0';
+     outbufferext[sizeof(outbufferext)-1]='\0';
+ }
+@@ -467,7 +468,7 @@ void udp_output_read (struct TransferInfo *stats) {
+ 	    stats->ts.iStart, stats->ts.iEnd,
+ 	    outbuffer, outbufferext,
+ 	    stats->jitter*1000.0, stats->cntError, stats->cntDatagrams,
+-	    (100.0 * stats->cntError) / stats->cntDatagrams);
++	    (stats->cntDatagrams ? (100.0 * stats->cntError) / stats->cntDatagrams : 0.0));
+     _output_outoforder(stats);
+     fflush(stdout);
+ }
+@@ -489,7 +490,7 @@ void udp_output_read_enhanced (struct TransferInfo *stats) {
+ 		   stats->ts.iStart, stats->ts.iEnd,
+ 		   outbuffer, outbufferext,
+ 		   stats->jitter*1000.0, stats->cntError, stats->cntDatagrams,
+-		   (100.0 * stats->cntError) / stats->cntDatagrams,
++		   (stats->cntDatagrams ? (100.0 * stats->cntError) / stats->cntDatagrams : 0.0),
+ 		   (stats->cntIPG / stats->IPGsum));
+ 	} else {
+ 	    double meantransit = (stats->transit.cntTransit > 0) ? (stats->transit.sumTransit / stats->transit.cntTransit) : 0;
+@@ -498,7 +499,7 @@ void udp_output_read_enhanced (struct TransferInfo *stats) {
+ 		   stats->ts.iStart, stats->ts.iEnd,
+ 		   outbuffer, outbufferext,
+ 		   stats->jitter*1000.0, stats->cntError, stats->cntDatagrams,
+-		   (100.0 * stats->cntError) / stats->cntDatagrams,
++		   (stats->cntDatagrams ? (100.0 * stats->cntError) / stats->cntDatagrams : 0.0),
+ 		   (meantransit * 1e3),
+ 		   stats->transit.minTransit*1e3,
+ 		   stats->transit.maxTransit*1e3,
+@@ -531,7 +532,7 @@ void udp_output_read_enhanced_triptime (struct TransferInfo *stats) {
+ 		   stats->ts.iStart, stats->ts.iEnd,
+ 		   outbuffer, outbufferext,
+ 		   stats->jitter*1000.0, stats->cntError, stats->cntDatagrams,
+-		   (100.0 * stats->cntError) / stats->cntDatagrams,
++		   (stats->cntDatagrams ? (100.0 * stats->cntError) / stats->cntDatagrams : 0.0),
+ 		   (stats->cntIPG / stats->IPGsum));
+ 	} else {
+ 	    double meantransit = (stats->transit.cntTransit > 0) ? (stats->transit.sumTransit / stats->transit.cntTransit) : 0;
+@@ -543,7 +544,7 @@ void udp_output_read_enhanced_triptime (struct TransferInfo *stats) {
+ 		   stats->ts.iStart, stats->ts.iEnd,
+ 		   outbuffer, outbufferext,
+ 		   stats->jitter*1000.0, stats->cntError, stats->cntDatagrams,
+-		   (100.0 * stats->cntError) / stats->cntDatagrams,
++		   (stats->cntDatagrams ? (100.0 * stats->cntError) / stats->cntDatagrams : 0.0),
+ 		   (meantransit * 1e3),
+ 		   stats->transit.minTransit*1e3,
+ 		   stats->transit.maxTransit*1e3,
+@@ -580,7 +581,7 @@ void udp_output_read_enhanced_triptime_isoch (struct TransferInfo *stats) {
+ 		   stats->ts.iStart, stats->ts.iEnd,
+ 		   outbuffer, outbufferext,
+ 		   stats->jitter*1000.0, stats->cntError, stats->cntDatagrams,
+-		   (100.0 * stats->cntError) / stats->cntDatagrams,
++		   (stats->cntDatagrams ? (100.0 * stats->cntError) / stats->cntDatagrams : 0.0),
+ 		   (stats->cntIPG / stats->IPGsum));
+ 	} else {
+ 	    double meantransit = (stats->transit.cntTransit > 0) ? (stats->transit.sumTransit / stats->transit.cntTransit) : 0;
+@@ -592,7 +593,7 @@ void udp_output_read_enhanced_triptime_isoch (struct TransferInfo *stats) {
+ 		   stats->ts.iStart, stats->ts.iEnd,
+ 		   outbuffer, outbufferext,
+ 		   stats->jitter*1e3, stats->cntError, stats->cntDatagrams,
+-		   (100.0 * stats->cntError) / stats->cntDatagrams,
++		   (stats->cntDatagrams ? (100.0 * stats->cntError) / stats->cntDatagrams : 0.0),
+ 		   (meantransit * 1e3),
+ 		   stats->transit.minTransit*1e3,
+ 		   stats->transit.maxTransit*1e3,
+@@ -653,7 +654,7 @@ void udp_output_sum_read (struct TransferInfo *stats) {
+ 	   stats->ts.iStart, stats->ts.iEnd,
+ 	   outbuffer, outbufferext,
+ 	   stats->cntError, stats->cntDatagrams,
+-	   (100.0 * stats->cntError) / stats->cntDatagrams);
++	   (stats->cntDatagrams ? (100.0 * stats->cntError) / stats->cntDatagrams : 0.0));
+     if (stats->cntOutofOrder > 0) {
+ 	printf(report_sum_outoforder,
+ 	       stats->ts.iStart,
+@@ -708,7 +709,7 @@ void udp_output_sumcnt_read_enhanced (struct TransferInfo *stats) {
+ 	   stats->ts.iStart, stats->ts.iEnd,
+ 	   outbuffer, outbufferext,
+ 	   stats->jitter*1000.0, stats->cntError, stats->cntDatagrams,
+-	   (100.0 * stats->cntError) / stats->cntDatagrams);
++	   (stats->cntDatagrams ? (100.0 * stats->cntError) / stats->cntDatagrams : 0.0));
+     if (stats->cntOutofOrder > 0) {
+ 	if (isSumOnly(stats->common)) {
+ 	    printf(report_sumcnt_outoforder,
+@@ -950,7 +951,8 @@ void udp_output_basic_csv (struct TransferInfo *stats) {
+ 	    stats->jitter*1000.0,
+ 	    stats->cntError,
+ 	    stats->cntDatagrams,
+-	    (100.0 * stats->cntError) / stats->cntDatagrams, stats->cntOutofOrder );
++	    (stats->cntDatagrams ? (100.0 * stats->cntError) / stats->cntDatagrams : 0.0),
++	    stats->cntOutofOrder);
+ }
+ void tcp_output_basic_csv (struct TransferInfo *stats) {
+     format_timestamp(&stats->ts.nextTime, isEnhanced(stats->common));
+@@ -1040,12 +1042,29 @@ static void reporter_output_listener_settings (struct ReportSettings *report) {
+     if (isTunDev(report->common) || isTapDev(report->common)) {
+ 	printf(bind_address_iface_taptun, report->common->Ifrname);
+     }
++#ifdef __QNX__
++    if (isUDP(report->common) && !isIsochronous(report->common)) {
++        if (isRcvMMsgs(report->common)) {
++            if(isRcvMMsgsTime(report->common)) {
++                printf(recv_mm_conf, report->common->mmnum,report->common->wait_mode,report->common->wait_nsec/1000000);
++            }
++            else {
++                printf(recv_mm_conf_no_timeout, report->common->mmnum,report->common->wait_mode);
++            }
++        }
++    }
++#endif /* __QNX__ */
+     if (isEnhanced(report->common)) {
+ 	byte_snprintf(outbuffer, sizeof(outbuffer), report->common->BufLen, toupper((int)report->common->Format));
+ 	byte_snprintf(outbufferext, sizeof(outbufferext), report->common->BufLen / 8, 'A');
+ 	outbuffer[(sizeof(outbuffer)-1)] = '\0';
+ 	outbufferext[(sizeof(outbufferext)-1)] = '\0';
+ 	printf("%s: %s (Dist bin width=%s)\n", server_read_size, outbuffer, outbufferext);
++#ifdef __QNX__
++	byte_snprintf( outbufferext2, sizeof(outbufferext2), *report->common->recvlowat, toupper((int)report->common->Format));
++	outbufferext2[(sizeof(outbufferext2)-1)] = '\0';
++	printf("%s: %s\n", recv_lowat_conf, outbufferext2);
++#endif /* __QNX__ */
+     }
+     if (isCongestionControl(report->common) && report->common->Congestion) {
+ 	fprintf(stdout, "TCP congestion control set to %s\n", report->common->Congestion);
+@@ -1142,6 +1161,13 @@ static void reporter_output_client_settings (struct ReportSettings *report) {
+         printf(client_datagram_size, report->common->BufLen, report->common->pktIPG);
+ #endif
+     }
++#ifdef __QNX__
++    if (isUDP(report->common) && !isIsochronous(report->common)) {
++        if (isSndMMsgs(report->common)) {
++            printf(send_mm_conf, report->common->mmnum);
++        }
++    }
++#endif /* __QNX__*/
+     if (isConnectOnly(report->common)) {
+ 	fprintf(stdout, "TCP three-way-handshake (3WHS) only\n");
+     } else {
+diff --git a/src/Reports.c b/src/Reports.c
+index 695ec9e7..9c035758 100644
+--- a/src/Reports.c
++++ b/src/Reports.c
+@@ -132,6 +132,12 @@ static void common_copy (struct ReportCommon **common, struct thread_Settings *i
+     (*common)->rtt_weight =inSettings->rtt_nearcongest_divider;
+     (*common)->ListenerTimeout =inSettings->mListenerTimeout;
+     (*common)->FPS = inSettings->mFPS;
++#ifdef __QNX__
++    (*common)->mmnum = inSettings->mmnum;
++    (*common)->wait_mode = inSettings->wait_mode;
++    (*common)->wait_nsec = inSettings->wait_nsec;
++    (*common)->recvlowat = inSettings->recvlowat;
++#endif /* __QNX__ */
+ #if HAVE_DECL_TCP_WINDOW_CLAMP
+     (*common)->ClampSize = inSettings->mClampSize;
+ #endif
+diff --git a/src/Server.cpp b/src/Server.cpp
+index 53f6949d..66df6e0d 100644
+--- a/src/Server.cpp
++++ b/src/Server.cpp
+@@ -94,6 +94,19 @@ Server::Server (thread_Settings *inSettings) {
+ 	}
+     }
+ #endif
++
++#ifdef __QNX__
++	mBuf_curr = NULL;
++	initialized_mm = false;
++	nextindex = 0;
++#endif /* __QNX__ */
++
++#if HAVE_DECL_SO_TIMESTAMP
++#ifdef __QNX__
++    ctrl = new char[CMSG_SPACE(sizeof(struct timeval))];
++    FAIL_errno( ctrl == NULL, "No memory for ctrl\n", mSettings );
++#endif /* __QNX__ */
++#endif /* HAVE_DECL_SO_TIMESTAMP */
+     // Enable kernel level timestamping if available
+     InitKernelTimeStamping();
+     int sorcvtimer = 0;
+@@ -129,6 +142,12 @@ Server::~Server () {
+ 	myDropSocket = INVALID_SOCKET;
+     }
+ #endif
++#if HAVE_DECL_SO_TIMESTAMP
++#ifdef __QNX__
++    delete [] ctrl;
++    ctrl = NULL;
++#endif /* __QNX__ */
++#endif /* HAVE_DECL_SO_TIMESTAMP */
+ }
+ 
+ inline bool Server::InProgress () {
+@@ -136,6 +155,70 @@ inline bool Server::InProgress () {
+ 	((isServerModeTime(mSettings) || (isModeTime(mSettings) && isReverse(mSettings))) && mEndTime.before(reportstruct->packetTime)));
+ }
+ 
++#ifdef __QNX__
++ssize_t Server::recvmulti(int s, void *buforig,  size_t len, int flags ) {
++	int index = 0;
++	struct timespec *pts=NULL,ts;
++
++	if(isRcvMMsgsWaitAll(mSettings)) {
++		flags |= MSG_WAITALL;
++	} else {
++		flags |= MSG_WAITFORONE;
++	}
++
++	if( isRcvMMsgsTime(mSettings)) {
++		ts.tv_sec=mSettings->wait_nsec/1000000000;
++		ts.tv_nsec=mSettings->wait_nsec%1000000000;
++		pts = &ts;
++	}
++
++	if( false ==  initialized_mm) {
++		msghdr = new struct mmsghdr[mSettings->mmnum];
++		if(NULL==msghdr) {
++			printf("%s \n",strerror(errno));
++			exit(1);
++		}
++		iovmm = new struct iovec[mSettings->mmnum];
++		if(NULL == iovmm) {
++			printf("%s \n",strerror(errno));
++			exit(1);
++		}
++		initialized_mm=true;
++	}
++
++	if (init_buf_idx)
++		nextindex = 0;
++
++	index = nextindex;
++	if (index == 0) { //prepare new call
++		for (int a = 0; a < mSettings->mmnum; a++ ){
++			iovmm[a].iov_base = (char *)buforig + (a * mSettings->mBufLen);
++			iovmm[a].iov_len = mSettings->mBufLen;
++
++			msghdr[a].msg_hdr.msg_name = &srcaddr;
++			msghdr[a].msg_hdr.msg_namelen = sizeof(srcaddr);
++			msghdr[a].msg_hdr.msg_iov = &iovmm[a];
++			msghdr[a].msg_hdr.msg_iovlen = 1;
++			msghdr[a].msg_hdr.msg_control = NULL;
++			msghdr[a].msg_hdr.msg_controllen = 0;
++		}
++		count = recvmmsg(s, msghdr, mSettings->mmnum, flags, pts);
++		if (count < 1) {
++			return -1;
++		}
++	}
++
++	mBuf_curr = reinterpret_cast<char *>(iovmm[index].iov_base);
++
++	if (index == (count - 1)) 
++		nextindex = 0;
++	else 
++		nextindex = index + 1;
++
++	return msghdr[index].msg_len;
++}
++#endif /* __QNX__ */
++
+ /* -------------------------------------------------------------------
+  * Receive TCP data from the (connected) socket.
+  * Sends termination flag several times at the end.
+@@ -294,13 +377,23 @@ void Server::InitKernelTimeStamping () {
+     message.msg_namelen=sizeof(srcaddr);
+ 
+     message.msg_control = (char *) ctrl;
++#ifdef __QNX__
++    message.msg_controllen = CMSG_SPACE(sizeof(struct timeval));
++    if(!isRcvMMsgs(mSettings)) {
++        int timestampOn = 1;
++        if (setsockopt(mSettings->mSock, SOL_SOCKET, SO_TIMESTAMP, &timestampOn, sizeof(timestampOn)) < 0) {
++            WARN_errno(mSettings->mSock == SO_TIMESTAMP, "socket");
++        }
++    }
++#else
+     message.msg_controllen = sizeof(ctrl);
+ 
+     int timestampOn = 1;
+     if (setsockopt(mSettings->mSock, SOL_SOCKET, SO_TIMESTAMP, &timestampOn, sizeof(timestampOn)) < 0) {
+ 	WARN_errno(mSettings->mSock == SO_TIMESTAMP, "socket");
+     }
+-#endif
++#endif /* __QNX__ */
++#endif /* HAVE_DECL_SO_TIMESTAMP */
+ }
+ 
+ //
+@@ -499,6 +592,11 @@ bool Server::InitTrafficLoop (void) {
+ 	ReportPacket(myReport, reportstruct);
+ #endif
+     }
++#ifdef __QNX__
++    if (isUDP(mSettings)) {
++        init_buf_idx=true;
++    }
++#endif /* __QNX__ */
+     return true;
+ }
+ 
+@@ -507,6 +605,12 @@ inline int Server::ReadWithRxTimestamp () {
+     int tsdone = 0;
+ 
+ #if HAVE_DECL_SO_TIMESTAMP
++#ifdef __QNX__
++	if(isRcvMMsgs(mSettings)) {
++		currLen = recvmulti(mSettings->mSock, mSettings->mBuf, mSettings->mBufLen, mSettings->recvflags );
++		init_buf_idx = false;
++	} else {
++#endif /* __QNX__ */
+     cmsg = reinterpret_cast<struct cmsghdr *>(&ctrl);
+     currLen = recvmsg(mSettings->mSock, &message, mSettings->recvflags);
+     if (currLen > 0) {
+@@ -517,7 +621,10 @@ inline int Server::ReadWithRxTimestamp () {
+ 	    tsdone = 1;
+ 	}
+     }
+-#else
++#ifdef __QNX__
++	}
++#endif /* __QNX__ */
++#else /* HAVE_DECL_SO_TIMESTAMP */
+     currLen = recv(mSettings->mSock, mSettings->mBuf, mSettings->mBufLen, mSettings->recvflags);
+ #endif
+     if (currLen <=0) {
+@@ -546,6 +653,12 @@ inline bool Server::ReadPacketID () {
+     bool terminate = false;
+     struct UDP_datagram* mBuf_UDP  = reinterpret_cast<struct UDP_datagram*>(mSettings->mBuf + mSettings->l4payloadoffset);
+ 
++#ifdef __QNX__
++    if( isRcvMMsgs(mSettings) && mBuf_curr ) {
++        mBuf_UDP = reinterpret_cast<struct UDP_datagram*>(mBuf_curr + mSettings->l4payloadoffset);
++    }
++#endif /* __QNX__*/
++
+     // terminate when datagram begins with negative index
+     // the datagram ID should be correct, just negated
+ 
+@@ -781,11 +894,22 @@ void Server::RunUDP () {
+ 	write_UDP_AckFIN(&myReport->info, mSettings->mBufLen);
+     }
+     if (do_close) {
++#ifdef __QNX__
++	/*
++	 *  In case of UDP, packet(s) can be lost or delayed.
++	 *  Your issue is occurred when UDP packet(s) transfer is delayed.
++	 *  If a delayed packet from 1st test is received while 2nd
++	 *  test is running, iperf consider it as a packet for 3rd test
++	 *  and start new thread for 3rd test.
++	 *  To prevent it, just don't close socket so as new socket is not opened
++	 */
++#else
+ #if HAVE_THREAD_DEBUG
+ 	thread_debug("udp close sock=%d", mySocket);
+ #endif
+ 	int rc = close(mySocket);
+ 	WARN_errno(rc == SOCKET_ERROR, "server close");
++#endif /* __QNX__ */
+     }
+     Iperf_remove_host(mSettings);
+     FreeReport(myJob);
+diff --git a/src/Settings.cpp b/src/Settings.cpp
+index a9b12eba..8f85d3c7 100644
+--- a/src/Settings.cpp
++++ b/src/Settings.cpp
+@@ -104,6 +104,14 @@ static int txnotsentlowwater = 0;
+ static int tapif = 0;
+ static int tunif = 0;
+ static int hideips = 0;
++#ifdef __QNX__
++static int sendmmsgs = 0;
++static int recvmmsgs = 0;          // number of mmsg
++static int recvmmsgs_waitall = 0;  // wait for one (0) default / wait for all(1)
++static int recvmmsgs_time = 0;     // wait time in msec. , default (0) means forever
++static int recvlowat_flag = 0;
++static int recvlowat = 1; //the recv low-water mark value
++#endif /* __QNX__ */
+ 
+ void Settings_Interpret(char option, const char *optarg, struct thread_Settings *mExtSettings);
+ // apply compound settings after the command line has been fully parsed
+@@ -198,6 +206,13 @@ const struct option long_options[] =
+ {"tap-dev", optional_argument, &tapif, 1},
+ {"tun-dev", optional_argument, &tunif, 1},
+ {"NUM_REPORT_STRUCTS", required_argument, &numreportstructs, 1},
++#ifdef __QNX__
++{"send-mmsg", optional_argument, &sendmmsgs, 1},
++{"recv-mmsg", optional_argument, &recvmmsgs, 1},
++{"recv-mmsg-wait-all", no_argument, &recvmmsgs_waitall, 1},
++{"recv-mmsg-time", optional_argument, &recvmmsgs_time, 1},
++{"recvlowat", optional_argument, &recvlowat_flag, 1},
++#endif /* __QNX__ */
+ #ifdef WIN32
+ {"reverse", no_argument, &reversetest, 1},
+ #endif
+@@ -323,6 +338,12 @@ void Settings_Initialize (struct thread_Settings *main) {
+     setDontRoute(main);
+ #endif
+     main->mFPS = 1;
++#ifdef __QNX__
++    main->mmnum = 1;
++    main->wait_mode = WaitForOne;
++    main->wait_nsec = -1;
++    main->recvlowat = &recvlowat; //default value
++#endif /* __QNX__ */
+ } // end Settings
+ 
+ void Settings_Copy (struct thread_Settings *from, struct thread_Settings **into, int copyall) {
+@@ -412,7 +433,13 @@ void Settings_Copy (struct thread_Settings *from, struct thread_Settings **into,
+ #if (((HAVE_TUNTAP_TUN) || (HAVE_TUNTAP_TAP)) && (AF_PACKET))
+     mbuflen += TAPBYTESSLOP;
+ #endif
++#ifdef __QNX__
++    if(isRcvMMsgs(from)) {
++        mbuflen = mbuflen * from->mmnum;
++    }
++#endif /* __QNX__ */
+     (*into)->mBuf = new char[mbuflen];
++    memset((*into)->mBuf, 0, mbuflen);
+ #ifdef HAVE_THREAD_DEBUG
+     thread_debug("Copy Settings: MBUF malloc %d bytes (%p)", mbuflen, (void *) (*into)->mBuf);
+ #endif
+@@ -1012,6 +1039,60 @@ void Settings_Interpret (char option, const char *optarg, struct thread_Settings
+ 		fprintf(stderr, "WARNING: The --fq-rate option is not supported\n");
+ #endif
+ 	    }
++#ifdef __QNX__
++        if ( sendmmsgs ) {
++            sendmmsgs=0;
++            setSndMMsgs(mExtSettings);
++            if (optarg) {
++                mExtSettings->mmnum = byte_atoi(optarg);
++                if( mExtSettings->mmnum > 1024)
++                    mExtSettings->mmnum = 1024;
++
++                if( mExtSettings->mmnum <= 0)
++                    mExtSettings->mmnum = 1;
++            }
++        }
++        if ( recvmmsgs ) {
++            recvmmsgs = 0;
++            setRcvMMsgs(mExtSettings);
++
++            if (optarg) {
++                mExtSettings->mmnum = byte_atoi(optarg);
++                if( mExtSettings->mmnum > 1024)
++                    mExtSettings->mmnum = 1024;
++                if( mExtSettings->mmnum <= 0)
++                    mExtSettings->mmnum = 1;
++            }
++        }
++        if ( recvmmsgs_waitall ) {
++            recvmmsgs_waitall=0;
++            setRcvMMsgsWaitAll(mExtSettings);
++            mExtSettings->wait_mode = WaitAll;
++        }
++        if ( recvmmsgs_time ) {
++            recvmmsgs_time=0;
++            setRcvMMsgsTime(mExtSettings);
++
++            if (optarg) {
++                mExtSettings->wait_nsec = byte_atoi(optarg) * 1000000; // input unit is ms
++            } else {
++                mExtSettings->wait_nsec = 1000000;
++            }
++        }
++        if ( recvlowat_flag ) {
++            recvlowat_flag = 0;
++            setRcvLowat(mExtSettings);
++
++            if (optarg) {
++                recvlowat = byte_atoi(optarg);
++                if (recvlowat <= 0) {
++                    mExtSettings->recvlowat = &mExtSettings->mBufLen; //use the value of the "mExtSettings->mBufLen"
++                }
++            } else {
++                mExtSettings->recvlowat = &mExtSettings->mBufLen; //use the value of the "mExtSettings->mBufLen"
++            }
++        }
++#endif /* __QNX__ */
+ 	    if (isochronous) {
+ 		isochronous = 0;
+ 		setEnhanced(mExtSettings);
+diff --git a/src/checksums.c b/src/checksums.c
+index 852f1952..0bbeecf4 100644
+--- a/src/checksums.c
++++ b/src/checksums.c
+@@ -172,7 +172,11 @@ uint32_t udpchecksum(const void *l3pdu, const void *l4pdu, int udplen, int v6) {
+     int i;
+ 
+     const struct udphdr *udp_hdr = (const struct udphdr *)l4pdu;
++#ifdef __QNX__
++    if (!udp_hdr->uh_sum) {
++#else
+     if (!udp_hdr->check) {
++#endif /* __QNX__ */
+ 	if (v6)
+ 	    // v6 requires checksums
+ 	    return -1;
+diff --git a/src/main.cpp b/src/main.cpp
+index ce2c511a..7921274f 100644
+--- a/src/main.cpp
++++ b/src/main.cpp
+@@ -229,7 +229,13 @@ int main(int argc, char **argv) {
+ #if (((HAVE_TUNTAP_TUN) || (HAVE_TUNTAP_TAP)) && (AF_PACKET))
+     mbuflen += TAPBYTESSLOP;
+ #endif
++#ifdef __QNX__
++    if(isRcvMMsgs(ext_gSettings)) {
++        mbuflen = mbuflen * ext_gSettings->mmnum;
++    }
++#endif /* __QNX__ */
+     ext_gSettings->mBuf = new char[mbuflen];
++    memset(ext_gSettings->mBuf, 0, mbuflen);
+ 
+     unsetReport(ext_gSettings);
+     switch (ext_gSettings->mThreadMode) {
