@@ -115,7 +115,7 @@ conan install -pr:h=$QNX_CONAN_ROOT/tools/profiles/nto-8.0-x86_64-gcc $QNX_CONAN
 # Usage [QNX]:
 #   conan build -pr:h=$QNX_CONAN_ROOT/tools/profiles/<profile-name> --version=<version-number> $QNX_CONAN_ROOT/recipes/iperf2/all
 #
-conan install -pr:h=$QNX_CONAN_ROOT/tools/profiles/nto-8.0-x86_64-gcc $QNX_CONAN_ROOT/recipes/iperf2/tests
+conan build -pr:h=$QNX_CONAN_ROOT/tools/profiles/nto-8.0-x86_64-gcc $QNX_CONAN_ROOT/recipes/iperf2/tests
 ```
 
 # Run tests on the target.
