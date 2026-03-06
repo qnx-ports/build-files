@@ -54,14 +54,14 @@ cd ~/qnx_workspace
 
 #
 # <profile-name>: nto-7.1-aarch64-gcc, nto-7.1-x86_64-gcc, nto-8.0-aarch64-gcc, nto-8.0-x86_64-gcc
-# <version-number>: 2.0.13, 2.1.4, 2.1.7
+# <version-number>: 2.0.13, 2.1.4, 2.1.7, 2.1.9, 2.2.1
 #
 # Usage [linux]:
 #   conan create --version=<version-number> $QNX_CONAN_ROOT/recipes/iperf2/all
 # Usage [QNX]:
 #   conan create -pr:h=$QNX_CONAN_ROOT/tools/profiles/<profile-name> --version=<version-number> $QNX_CONAN_ROOT/recipes/iperf2/all
 #
-conan create -pr:h=$QNX_CONAN_ROOT/tools/profiles/nto-8.0-x86_64-gcc --version=2.1.7 $QNX_CONAN_ROOT/recipes/iperf2/all
+conan create -pr:h=$QNX_CONAN_ROOT/tools/profiles/nto-8.0-x86_64-gcc --version=2.2.1 $QNX_CONAN_ROOT/recipes/iperf2/all
 ```
 
 # Deploy iperf2
@@ -74,7 +74,7 @@ PATH_2_STAGE=$(realpath ~/qnx_workspace/stage_iperf2)
 
 # deploy iperf2 to the stage folder
 conan install -pr:h=$QNX_CONAN_ROOT/tools/profiles/nto-8.0-x86_64-gcc \
-    --requires=iperf2/2.1.7 \
+    --requires=iperf2/2.2.1 \
     --deployer=direct_deploy \
     --deployer-folder=$PATH_2_STAGE
 

@@ -1,3 +1,11 @@
+2.2.1:
+  sources:
+    url: "https://sourceforge.net/projects/iperf2/files/iperf-2.2.1.tar.gz"
+    sha256: "754ab0a7e28033dbea81308ef424bc7df4d6e2fe31b60cc536b61b51fefbd8fb"
+2.1.9:
+  sources:
+    url: "https://sourceforge.net/projects/iperf2/files/iperf-2.1.9.tar.gz"
+    sha256: "5c0771aab00ef14520013aef01675977816e23bb8f5d9fde016f90eb2f1be788"
 2.1.7:
   sources:
     url: "https://sourceforge.net/projects/iperf2/files/iperf-2.1.7.tar.gz"
@@ -11,6 +19,14 @@
     url: "https://sourceforge.net/projects/iperf2/files/iperf-2.0.13.tar.gz"
     sha256: "c88adec966096a81136dda91b4bd19c27aae06df4d45a7f547a8e50d723778ad"
 patches:
+  2.2.1:
+    - patch_file: "patches/iperf-2.2.1-qnx-fix.patch"
+      patch_description: "QNX-related improvements"
+      patch_type: "bugfix"
+  2.1.9:
+    - patch_file: "patches/iperf-2.1.9-qnx-fix.patch"
+      patch_description: "QNX-related improvements"
+      patch_type: "bugfix"
   2.1.7:
     - patch_file: "patches/iperf-2.1.7-qnx-fix.patch"
       patch_description: "QNX-related improvements"
