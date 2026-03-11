@@ -1,0 +1,54 @@
+name: dnsmasq
+
+permissions:
+  contents: write
+  checks: write
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/dnsmasq.yml'
+      - 'ports/dnsmasq/**'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/dnsmasq.yml'
+      - 'ports/dnsmasq/**'
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        qnx_env: [ 710, 800 ]
+    runs-on: ubuntu-22.04-common
+    if: |
+      ((github.event_name == 'workflow_dispatch') ||
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'dnsmasq')))
+    steps:
+      - name: Checkout build-files
+        uses: actions/checkout@v4
+        with:
+          path: build-files
+
+      - name: Checkout dnsmasq
+        uses: actions/checkout@v4
+        with:
+          repository: qnx-ports/dnsmasq
+          path: dnsmasq
+          ref: qnx-v2.92
+
+      - name: Build dnsmasq
+        shell: bash
+        run: |
+          if [[ "${{ matrix.qnx_env }}" == "800" ]]; then
+            source ~/qnx/800/qnxsdp-env.sh
+            QNX_PROJECT_ROOT="$(pwd)/dnsmasq" make -C build-files/ports/dnsmasq/ install
+          else
+            source ~/qnx/710/qnxsdp-env.sh
+            USE_IOSOCK=true QNX_PROJECT_ROOT="$(pwd)/dnsmasq" make -C build-files/ports/dnsmasq/ install
+          fi
