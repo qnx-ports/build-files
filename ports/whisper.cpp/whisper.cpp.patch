@@ -1,0 +1,169 @@
+diff --git a/ggml/cmake/common.cmake b/ggml/cmake/common.cmake
+index cb663883..1f0f8bd7 100644
+--- a/ggml/cmake/common.cmake
++++ b/ggml/cmake/common.cmake
+@@ -29,7 +29,7 @@ function(ggml_get_system_arch)
+     if (CMAKE_OSX_ARCHITECTURES      STREQUAL "arm64" OR
+         CMAKE_GENERATOR_PLATFORM_LWR STREQUAL "arm64" OR
+         (NOT CMAKE_OSX_ARCHITECTURES AND NOT CMAKE_GENERATOR_PLATFORM_LWR AND
+-            CMAKE_SYSTEM_PROCESSOR MATCHES "^(aarch64|arm.*|ARM64)$"))
++            CMAKE_SYSTEM_PROCESSOR MATCHES "^(aarch64|aarch64.*|arm.*|ARM64)$"))
+         set(GGML_SYSTEM_ARCH "ARM" PARENT_SCOPE)
+     elseif (CMAKE_OSX_ARCHITECTURES STREQUAL "x86_64" OR
+             CMAKE_GENERATOR_PLATFORM_LWR MATCHES "^(x86_64|i686|amd64|x64|win32)$" OR
+diff --git a/ggml/src/ggml-backend-reg.cpp b/ggml/src/ggml-backend-reg.cpp
+index 311fa5fe..90fdbb04 100644
+--- a/ggml/src/ggml-backend-reg.cpp
++++ b/ggml/src/ggml-backend-reg.cpp
+@@ -464,7 +464,16 @@ static ggml_backend_reg_t ggml_backend_load_best(const char * name, bool silent,
+ #endif
+         // default search paths: executable directory, current directory
+         search_paths.push_back(get_executable_path());
++#ifdef __QNX__
++        {
++            char cwd[PATH_MAX];
++            if (getcwd(cwd, sizeof(cwd)) != nullptr) {
++                search_paths.push_back(std::string(cwd));
++            }
++        }
++#else
+         search_paths.push_back(fs::current_path());
++#endif
+     } else {
+         search_paths.push_back(fs::u8path(user_search_path));
+     }
+diff --git a/ggml/src/ggml-cpu/ggml-cpu.cpp b/ggml/src/ggml-cpu/ggml-cpu.cpp
+index ddf1737a..8d96df38 100644
+--- a/ggml/src/ggml-cpu/ggml-cpu.cpp
++++ b/ggml/src/ggml-cpu/ggml-cpu.cpp
+@@ -360,6 +360,42 @@ static const char * ggml_backend_cpu_device_get_description(ggml_backend_dev_t d
+     return ctx->description.c_str();
+ }
+ 
++#ifdef __QNX__
++#include <fcntl.h>
++#include <sys/stat.h>
++#include <sys/syspage.h>
++static int _qnx_get_memory(size_t *total, size_t *free) {
++    int                 fd;
++    struct stat         st;
++    char                *str = (char *)SYSPAGE_ENTRY(strings)->data;
++    struct asinfo_entry *as  = (struct asinfo_entry *)SYSPAGE_ENTRY(asinfo);
++    unsigned            num;
++
++    *total = *free = 0;
++
++    if ((fd = open("/proc", O_RDONLY)) == -1) {
++        return -1;
++    }
++
++    if (fstat(fd, &st) == -1) {
++        close(fd);
++        return -1;
++    }
++
++    *free = st.st_size;
++    close(fd);
++
++    for (num = SYSPAGE_ENTRY_SIZE(asinfo) / sizeof(*as); num > 0; --num) {
++        if (strcmp(&str[as->name], "ram") == 0) {
++            *total += as->end - as->start + 1;
++        }
++        ++as;
++    }
++
++    return 0;
++}
++#endif
++
+ static void ggml_backend_cpu_device_get_memory(ggml_backend_dev_t dev, size_t * free, size_t * total) {
+ #ifdef _WIN32
+     MEMORYSTATUSEX status;
+@@ -367,6 +403,8 @@ static void ggml_backend_cpu_device_get_memory(ggml_backend_dev_t dev, size_t *
+     GlobalMemoryStatusEx(&status);
+     *total = status.ullTotalPhys;
+     *free = status.ullAvailPhys;
++#elif defined(__QNX__)
++    _qnx_get_memory(total, free);
+ #else
+     long pages = sysconf(_SC_PHYS_PAGES);
+     long page_size = sysconf(_SC_PAGE_SIZE);
+diff --git a/src/whisper.cpp b/src/whisper.cpp
+index 796bccfb..4d51a839 100644
+--- a/src/whisper.cpp
++++ b/src/whisper.cpp
+@@ -6479,9 +6479,25 @@ static whisper_token_data whisper_sample_token(
+             }
+         }
+     } else {
+-        std::discrete_distribution<> dist(probs.begin(), probs.end());
++        // Manual cumulative sum + binary search (lighter than std::discrete_distribution)
++        double sum = 0.0;
++        for (int i = 0; i < n_logits; ++i) {
++            sum += probs[i];
++        }
++
++        std::uniform_real_distribution<double> udist(0.0, sum);
++        double r = udist(decoder.rng);
++
++        double cumsum = 0.0;
++        result.id = 0;
++        for (int i = 0; i < n_logits; ++i) {
++            cumsum += probs[i];
++            if (r <= cumsum) {
++                result.id = i;
++                break;
++            }
++        }
+ 
+-        result.id   = dist(decoder.rng);
+         result.p    = probs[result.id];
+         result.plog = logprobs[result.id];
+     }
+@@ -6515,13 +6531,13 @@ static std::vector<whisper_token_data> whisper_sample_token_topk(
+     }
+ 
+     {
++        // nth_element + sort of top-k only (lighter than partial_sort over full array)
+         using pair_type = std::remove_reference<decltype(logits_id)>::type::value_type;
+-        std::partial_sort(
+-                logits_id.begin(),
+-                logits_id.begin() + k, logits_id.end(),
+-                [](const pair_type & a, const pair_type & b) {
++        auto comp = [](const pair_type & a, const pair_type & b) {
+             return a.first > b.first;
+-        });
++        };
++        std::nth_element(logits_id.begin(), logits_id.begin() + k, logits_id.end(), comp);
++        std::sort(logits_id.begin(), logits_id.begin() + k, comp);
+     }
+ 
+     std::vector<whisper_token_data> result;
+@@ -6552,11 +6568,24 @@ static std::vector<whisper_token_data> whisper_sample_token_topk(
+         ptsum = sum_ts;
+     }
+ 
+-    std::discrete_distribution<> dist(probs.begin(), probs.end());
++    // Manual cumulative sum + binary search (lighter than std::discrete_distribution)
++    double prob_sum = 0.0;
++    for (int j = 0; j < n_logits; ++j) {
++        prob_sum += probs[j];
++    }
++    std::uniform_real_distribution<double> udist(0.0, prob_sum);
+ 
+     for (int i = 0; i < k; ++i) {
+-        const auto id = dist(decoder.rng);
+-        //printf("XXX %d %d %f %f %f %f\n", id, tid, probs[id], logprobs[id], pt, ptsum);
++        double r = udist(decoder.rng);
++        double cumsum = 0.0;
++        int id = 0;
++        for (int j = 0; j < n_logits; ++j) {
++            cumsum += probs[j];
++            if (r <= cumsum) {
++                id = j;
++                break;
++            }
++        }
+ 
+         result.push_back({ id, tid, probs[id], logprobs[id], pt, ptsum, -1, -1, -1, 0.0f, });
+ 
