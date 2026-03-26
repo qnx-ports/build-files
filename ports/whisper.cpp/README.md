@@ -51,27 +51,25 @@ QNX_PROJECT_ROOT="$(pwd)/whisper.cpp" make -C build-files/ports/whisper.cpp inst
 
 whisper.cpp requires a GGML-format Whisper model. You can download one on your host:
 ```bash
-cd ~/qnx_workspace
-# Download the tiny English model (~77 MB)
-wget https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-tiny.en.bin
+cd ~/qnx_workspace/whisper.cpp/models
+./download-ggml-model.sh tiny.en
 ```
 
 # How to run on the target
 
-Transfer the binaries, libraries, and model to the target:
+Transfer the binaries, libraries, model, and test audio to the target:
 ```bash
 TARGET_HOST=<target-ip-address-or-hostname>
 
 # Transfer whisper binaries
-scp $QNX_TARGET/aarch64le/usr/local/bin/whisper-cli qnxuser@$TARGET_HOST:/data/home/qnxuser/
-scp $QNX_TARGET/aarch64le/usr/local/bin/whisper-bench qnxuser@$TARGET_HOST:/data/home/qnxuser/
+scp $QNX_TARGET/aarch64le/usr/local/bin/whisper-* qnxuser@$TARGET_HOST:/data/home/qnxuser/
 
 # Transfer shared libraries
 scp $QNX_TARGET/aarch64le/usr/local/lib/libwhisper* qnxuser@$TARGET_HOST:/data/home/qnxuser/
 scp $QNX_TARGET/aarch64le/usr/local/lib/libggml* qnxuser@$TARGET_HOST:/data/home/qnxuser/
 
 # Transfer model and test audio
-scp ~/qnx_workspace/ggml-tiny.en.bin qnxuser@$TARGET_HOST:/data/home/qnxuser/
+scp ~/qnx_workspace/whisper.cpp/models/ggml-tiny.en.bin qnxuser@$TARGET_HOST:/data/home/qnxuser/
 scp ~/qnx_workspace/whisper.cpp/samples/jfk.wav qnxuser@$TARGET_HOST:/data/home/qnxuser/
 ```
 
@@ -85,7 +83,7 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/data/home/qnxuser
 
 # Run speech-to-text
 cd /data/home/qnxuser
-./whisper-cli -m ggml-tiny.en.bin -f jfk.wav
+./whisper-cli -m ggml-tiny.en.bin jfk.wav
 
 # Run benchmark
 ./whisper-bench -m ggml-tiny.en.bin

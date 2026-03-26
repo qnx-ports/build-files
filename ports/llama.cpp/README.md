@@ -67,6 +67,7 @@ TARGET_HOST=<target-ip-address-or-hostname>
 # Transfer llama.cpp binaries
 scp $QNX_TARGET/aarch64le/usr/local/bin/llama-cli qnxuser@$TARGET_HOST:/data/home/qnxuser/
 scp $QNX_TARGET/aarch64le/usr/local/bin/llama-server qnxuser@$TARGET_HOST:/data/home/qnxuser/
+scp $QNX_TARGET/aarch64le/usr/local/bin/llama-tts qnxuser@$TARGET_HOST:/data/home/qnxuser/
 
 # Transfer shared libraries
 scp $QNX_TARGET/aarch64le/usr/local/lib/libllama* qnxuser@$TARGET_HOST:/data/home/qnxuser/
@@ -94,6 +95,33 @@ Run llama-server on the target:
 ./llama-server -m qwen3-0.6b-q4_k_m.gguf --host 0.0.0.0
 ```
 Then open a browser on your host and navigate to `http://<target-ip-address-or-hostname>:8080/`
+
+## Text-to-Speech (TTS)
+
+llama.cpp supports on-device text-to-speech using OuteTTS and WavTokenizer models.
+
+Download the TTS models on your host:
+```bash
+cd ~/qnx_workspace
+# OuteTTS LLM model
+wget https://huggingface.co/OuteAI/OuteTTS-0.2-500M-GGUF/resolve/main/OuteTTS-0.2-500M-FP16.gguf
+
+# WavTokenizer voice decoder model
+wget https://huggingface.co/novateur/WavTokenizer-large-speech-75token-GGUF/resolve/main/WavTokenizer-Large-75-F16.gguf
+```
+
+Transfer to the target:
+```bash
+scp ~/qnx_workspace/OuteTTS-0.2-500M-FP16.gguf qnxuser@$TARGET_HOST:/data/home/qnxuser/
+scp ~/qnx_workspace/WavTokenizer-Large-75-F16.gguf qnxuser@$TARGET_HOST:/data/home/qnxuser/
+```
+
+Run TTS on the target:
+```bash
+cd /data/home/qnxuser
+./llama-tts -m OuteTTS-0.2-500M-FP16.gguf -mv WavTokenizer-Large-75-F16.gguf -p "Hello world"
+```
+The output audio will be written to `output.wav`.
 
 ## Supported architectures
 - aarch64le
