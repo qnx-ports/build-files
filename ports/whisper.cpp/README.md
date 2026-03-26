@@ -80,6 +80,7 @@ ssh qnxuser@$TARGET_HOST
 
 # Set library path
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/data/home/qnxuser
+export GGML_BACKEND_PATH=/data/home/qnxuser
 
 # Run speech-to-text
 cd /data/home/qnxuser
