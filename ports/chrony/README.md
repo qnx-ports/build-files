@@ -54,6 +54,13 @@ cd ..
 
 # Build gnutls
 QNX_PROJECT_ROOT="$(pwd)/gnutls" make -C build-files/ports/gnutls install JLEVEL=4
+
+# Clone Chrony
+git clone https://github.com/qnx-ports/chrony.git
+
+# Build Chrony
+QNX_PROJECT_ROOT="$(pwd)/chrony" make -C build-files/ports/chrony clean 
+QNX_PROJECT_ROOT="$(pwd)/chrony" make -C build-files/ports/chrony install JLEVEL=4
 ```
 
 # Compile the port for QNX on Ubuntu host
@@ -96,3 +103,11 @@ cd ..
 
 # Build gnutls
 QNX_PROJECT_ROOT="$(pwd)/gnutls" make -C build-files/ports/gnutls install JLEVEL=4
+
+# Clone Chrony
+git clone https://github.com/qnx-ports/chrony.git
+
+# Build Chrony
+QNX_PROJECT_ROOT="$(pwd)/chrony" make -C build-files/ports/chrony clean 
+QNX_PROJECT_ROOT="$(pwd)/chrony" make -C build-files/ports/chrony install JLEVEL=4
+```
