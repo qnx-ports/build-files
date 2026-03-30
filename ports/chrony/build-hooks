@@ -5,15 +5,17 @@ BASIC_PREFIX="/usr/local"
 EXEC_PREFIX="/${cpudir}${BASIC_PREFIX}"
 
 function hook_preconfigure {
-    echo "hook_preconfigure - running autogen.sh in ${NESTED_LEVEL}"
+    cd "${QNX_PROJECT_ROOT}" || exit 1
+    if [ -f "./autogen.sh" ]; then
+        echo "hook_preconfigure - running autogen.sh in ${NESTED_LEVEL}"
+        ./autogen.sh || exit 1
+    fi
 
     unset AUTOMAKE AUTOCONF AUTOHEADER AUTORECONF ACLOCAL
     export DESTDIR="${INSTALL_ROOT_nto}"
-    export CPPFLAGS="-I$QNX_TARGET/usr/local/include/" 
-    export LDFLAGS="-L$QNX_TARGET/${cpudir}/usr/local/lib -lsocket -lhogweed -lgmp -lm"
-    export PKG_CONFIG_SYSROOT_DIR="$QNX_TARGET/"
-    export PKG_CONFIG_LIBDIR="$QNX_TARGET/${cpudir}/usr/local/lib/pkgconfig"
-    export LDFLAGS="$LDFLAGS -Wl,-rpath-link,$QNX_TARGET/${cpudir}/usr/local/lib" 
+    export CPPFLAGS="-I$QNX_TARGET${BASIC_PREFIX}/include/" 
+    export LDFLAGS="-L$QNX_TARGET/${cpudir}${BASIC_PREFIX}/lib -lsocket -lnettle -lgmp -lm -Wl,-rpath-link,$QNX_TARGET/${cpudir}${BASIC_PREFIX}/lib"
+    export PKG_CONFIG_LIBDIR="$QNX_TARGET/${cpudir}${BASIC_PREFIX}/lib/pkgconfig"
 
 }
 
