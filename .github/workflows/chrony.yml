@@ -1,0 +1,95 @@
+name: chrony
+
+permissions:
+  contents: write
+  checks: write
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/chrony-stack.yml'
+      - 'ports/chrony/**'
+      - 'ports/gnutls/**'
+      - 'ports/nettle/**'
+      - 'ports/gmp/**'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/chrony-stack.yml'
+      - 'ports/chrony/**'
+      - 'ports/gnutls/**'
+      - 'ports/nettle/**'
+      - 'ports/gmp/**'
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        qnx_env: ["710", "800"]
+
+    name: Build Chrony for QNX ${{ matrix.qnx_env }}
+    runs-on: ubuntu-22.04-common
+    if: |
+      ((github.event_name == 'workflow_dispatch') ||
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'chrony')))
+
+    steps:
+      - name: Checkout build-files
+        uses: actions/checkout@v4
+        with:
+          path: build-files
+
+      - name: Setup QNX Environment
+        shell: bash
+        run: |
+          if [[ "${{ matrix.qnx_env }}" == "800" ]]; then
+            source ~/qnx/800/qnxsdp-env.sh
+          else
+            source ~/qnx/710/qnxsdp-env.sh
+          fi
+
+      - name: Download and extract GMP
+        run: |
+          curl -L -o gmp-6.2.0.tar.xz https://gmplib.org/download/gmp/gmp-6.2.0.tar.xz
+          tar -xvf gmp-6.2.0.tar.xz
+          mv gmp-6.2.0 gmp
+
+      - name: Build GMP
+        run: |
+          QNX_PROJECT_ROOT="$(pwd)/gmp" make -C build-files/ports/gmp clean
+          QNX_PROJECT_ROOT="$(pwd)/gmp" make -C build-files/ports/gmp install JLEVEL=4
+
+      - name: Clone Nettle
+        run: |
+          git clone https://github.com/gnutls/nettle.git
+          cd nettle
+          git checkout tags/nettle_3.8.1_release_20220727
+
+      - name: Build Nettle
+        run: |
+          QNX_PROJECT_ROOT="$(pwd)/nettle" make -C build-files/ports/nettle install JLEVEL=4
+
+      - name: Clone GnuTLS
+        run: |
+          git clone https://github.com/qnx-ports/gnutls.git
+          cd gnutls
+          git checkout qnx-3.6.15
+          ./bootstrap
+
+      - name: Build GnuTLS
+        run: |
+          QNX_PROJECT_ROOT="$(pwd)/gnutls" make -C build-files/ports/gnutls install JLEVEL=4
+
+      - name: Clone Chrony
+        run: |
+          git clone https://github.com/qnx-ports/chrony.git
+
+      - name: Build Chrony
+        run: |
+          QNX_PROJECT_ROOT="$(pwd)/chrony" make -C build-files/ports/chrony clean
+          QNX_PROJECT_ROOT="$(pwd)/chrony" make -C build-files/ports/chrony install JLEVEL=4
