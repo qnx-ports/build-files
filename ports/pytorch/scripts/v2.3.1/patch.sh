@@ -1,7 +1,7 @@
 #!/bin/bash
 
-patch_dir=${PWD}/patches
-torch_dir=$1
+patch_dir=$1
+torch_dir=$2
 
 # Function for apply a patch
 # $1 arg is the directory
