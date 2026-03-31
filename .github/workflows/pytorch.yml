@@ -74,7 +74,7 @@ jobs:
       with:
         repository: qnx-ports/pytorch
         path: pytorch
-        ref: eleir/qnx_v1.13.0
+        ref: qnx_v1.13.0
         submodules: recursive
 
     - name: Build pytorch
