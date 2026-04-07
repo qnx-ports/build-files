@@ -22,13 +22,13 @@ git clone -b qnx_v1.13.0 https://github.com/qnx-ports/googletest.git
 
 # Build the Docker image and create a container
 cd build-files/docker
+
+# Set your QNX_SDP_VERSION for the SDP to be included into the docker image (qnx710 or qnx800)
+export QNX_SDP_VERSION=qnx800
 ./docker-build-qnx-image.sh
 ./docker-create-container.sh
 
 # Now you are in the Docker container
-
-# Set QNX_SDP_VERSION to be qnx800 for SDP 8.0 or qnx710 for SDP 7.1
-export QNX_SDP_VERSION=qnx800
 
 # Get boost library if you want to include vision_opencv in your ros2 build
 cd ~/qnx_workspace
@@ -63,6 +63,9 @@ vcs import src < ros2-extra.repos
 ./scripts/colcon-ignore.sh
 ./scripts/patch.sh
 
+# Set QNX_SDP_VERSION to be qnx800 for SDP 8.0 build or qnx710 for SDP 7.1 build
+export QNX_SDP_VERSION=qnx800
+
 # Set LD_PRELOAD to the host libzstd.so for x86_64 builds
 export LD_PRELOAD=$LD_PRELOAD:/usr/lib/x86_64-linux-gnu/libzstd.so
 
@@ -71,6 +74,10 @@ export CPU=aarch64
 
 # Specify the python path on the target
 export QNX_PYTHON3_PATH=/system/bin/python3
+
+# You may assign this variable to ON if you would like to build test.
+# You may assign this variable to OFF to expedite the build or skip building test due to build failures with googletest
+export QNX_TESTING=ON
 
 # Build ros2
 ./scripts/build-ros2.sh
@@ -83,9 +90,6 @@ After the build completes, ros2_humble.tar.gz will be created at QNX_TARGET/CPUV
 Don't forget to source qnxsdp-env.sh in your SDP.
 
 ```bash
-# Set QNX_SDP_VERSION to be qnx800 for SDP 8.0 or qnx710 for SDP 7.1
-export QNX_SDP_VERSION=qnx800
-
 # Create a workspace
 mkdir -p ~/qnx_workspace && cd ~/qnx_workspace
 
@@ -145,8 +149,9 @@ cd ~/qnx_workspace
 # Build boost
 make -C build-files/ports/boost/ install QNX_PROJECT_ROOT="$(pwd)/boost" -j4
 
-# Build and install googletest
-PREFIX="/usr" QNX_PROJECT_ROOT="$(pwd)/googletest" make -C build-files/ports/googletest install -j4
+# Build googletest
+cd ~/qnx_workspace
+make -C build-files/ports/googletest install -j4
 
 # Import ros2 packages
 cd ~/qnx_workspace/build-files/ports/ros2/ros2-humble
@@ -160,6 +165,9 @@ vcs import src < ros2-extra.repos
 ./scripts/colcon-ignore.sh
 ./scripts/patch.sh
 
+# Set QNX_SDP_VERSION to be qnx800 for SDP 8.0 build or qnx710 for SDP 7.1 build
+export QNX_SDP_VERSION=qnx800
+
 # Set LD_PRELOAD to the host libzstd.so for x86_64 builds
 export LD_PRELOAD=$LD_PRELOAD:/usr/lib/x86_64-linux-gnu/libzstd.so
 
@@ -169,11 +177,14 @@ export CPU=aarch64
 # Specify the python path on the target
 export QNX_PYTHON3_PATH=/system/bin/python3
 
+# If you would like to build test
+export QNX_TESTING=ON
+
 # Build ros2
 ./scripts/build-ros2.sh
 ```
 
-# How to run tests
+# How to run examples and tests
 
 Use scp to move ros2_humble.tar.gz to the target (note, mDNS is configured from
 /boot/qnx_config.txt and uses qnxpi.local by default)
@@ -246,12 +257,31 @@ There is no QNX port for rviz2.
 Follow the instructions at https://docs.ros.org/en/humble/Installation/Ubuntu-Install-Debians.html.
 
 Start rviz2
+
+Please refer to https://docs.ros.org/en/humble/Tutorials/Demos/dummy-robot-demo.html for more details about the dummy robot demo.
+
 ```bash
 source <ROS2_INSTALL_FOLDER>/setup.bash
 rviz2
 ```
 
-Please refer to https://docs.ros.org/en/humble/Tutorials/Demos/dummy-robot-demo.html for more details about the dummy robot demo.
+### Running QNX test
+Tested Packages:
+- foonathan_memory
+- Fast-CDR
+- Fast-DDS
+- libstatistics_collector
+- rcpputils
+- rmw
+- rosidl_runtime_c
+- rosidl_typesupport_cpp
+- rosidl_typesupport_fastrtps_cpp
+
+**Note: Fast-DDS test are skipped in ros2 port. Instead the test results for Fast-DDS can be found [here](https://github.com/qnx-ports/build-files/blob/main/ports/Fast-DDS/fdds.test.result))**
+```bash
+cd /data/home/qnxuser/opt/ros/jazzy
+sh qnxtest.sh
+```
 
 # How to build your own node
 
