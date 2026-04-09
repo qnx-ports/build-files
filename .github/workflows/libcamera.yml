@@ -1,0 +1,54 @@
+name: libcamera
+
+permissions:
+  contents: write
+  checks: write
+
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/libcamera.yml'
+      - 'ports/libcamera/**'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/libcamera.yml'
+      - 'ports/libcamera/**'
+
+jobs:
+
+  build:
+    runs-on: ubuntu-22.04-common
+    if: |
+      ((github.event_name == 'workflow_dispatch') ||
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'libcamera')))
+    steps:
+    - name: Checkout build-files
+      uses: actions/checkout@v4
+      with:
+        path: build-files
+
+    - name: Checkout libyaml
+      uses: actions/checkout@v4
+      with:
+        repository: qnx-ports/libyaml
+        path: libyaml
+
+    - name: Checkout libcamera
+      uses: actions/checkout@v4
+      with:
+        repository: qnx-ports/libcamera
+        path: libcamera
+
+    - name: Build libcamera
+      shell: bash
+      run: |
+        source ~/qnx/800/qnxsdp-env.sh
+        QNX_PROJECT_ROOT="$(pwd)/libyaml" make -C build-files/ports/libyaml install
+        QNX_PROJECT_ROOT="$(pwd)/libcamera" make -C build-files/ports/libcamera install
