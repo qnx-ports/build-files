@@ -40,12 +40,11 @@ jobs:
           repository: qnx-ports/build-files
           path: build-files
 
-      - name: Checkout minicom source (v2.10)
-        uses: actions/checkout@v4
-        with:
-          repository: Distrotech/minicom
-          ref: "2.10"
-          path: minicom
+      - name: Download minicom 2.10
+        run: |
+          wget https://salsa.debian.org/minicom-team/minicom/-/archive/2.10/minicom-2.10.tar.gz
+          tar -xzf minicom-2.10.tar.gz
+          mv minicom-2.10 minicom
 
       - name: Set up QNX environment and build
         shell: bash
