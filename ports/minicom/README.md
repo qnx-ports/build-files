@@ -74,7 +74,6 @@ scp $QNX_TARGET/aarch64le/usr/local/bin/minicom   qnxuser@$TARGET_HOST:~/minicom
 on Target
 ```bash
 cd ~/minicom
-
 ./minicom -D /dev/ser1
 
 ```
