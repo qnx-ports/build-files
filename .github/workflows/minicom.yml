@@ -43,7 +43,7 @@ jobs:
       - name: Checkout minicom source (v2.10)
         uses: actions/checkout@v4
         with:
-          repository: minicom-team/minicom
+          repository: Distrotech/minicom
           ref: "2.10"
           path: minicom
 
