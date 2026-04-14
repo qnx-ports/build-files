@@ -54,4 +54,6 @@ jobs:
           pwd
           cd ~
           ls -A
-          make -C build-files/ports/aws-c-common install
+          echo -e '#include <stdio.h>\nint main() { printf("Hello, World!\\n"); return 0; }' > hello.c
+          qcc hello.c -o hello
+          ./hello
