@@ -54,6 +54,8 @@ jobs:
           pwd
           cd ~
           ls -A
+          cd .qnx
+          ls -A
           echo -e '#include <stdio.h>\nint main() { printf("Hello, World!\\n"); return 0; }' > hello.c
           qcc hello.c -o hello
           ./hello
