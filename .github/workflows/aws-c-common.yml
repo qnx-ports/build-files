@@ -51,4 +51,7 @@ jobs:
           else
             source ~/qnx/800/qnxsdp-env.sh
           fi
+          pwd
+          cd ~
+          ls -A
           make -C build-files/ports/aws-c-common install
