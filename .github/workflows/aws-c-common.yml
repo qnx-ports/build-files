@@ -4,7 +4,6 @@ permissions:
   contents: write
   checks: write
 
-
 on:
   workflow_dispatch:
   push:
@@ -25,6 +24,7 @@ jobs:
     strategy:
       matrix:
         qnx_env: ["710", "800"]
+      fail-fast: false
     name: Build for QNX ${{ matrix.qnx_env }}
     runs-on: ubuntu-22.04-common
     if: |
