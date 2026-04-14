@@ -43,6 +43,14 @@ jobs:
           repository: qnx-ports/aws-c-common
           path: aws-c-common
 
+      - name: Activate 710 license
+        env:
+          MYQNX_USER: ${{ secrets.MYQNX_USER }}
+          MYQNX_PASSWORD: ${{ secrets.MYQNX_PASSWORD }}
+        run: |
+          echo "Activating keys..."
+          ${{ github.workspace }}/qnx/qnxsoftwarecenter/qnxsoftwarecenter_clt qnxsoftwarecenter_clt -activateAll --myqnx.user="your@email.com" -myqnx.password="your_password"
+
       - name: Build aws-c-common
         shell: bash
         run: |
@@ -58,4 +66,3 @@ jobs:
           ls -A
           echo -e '#include <stdio.h>\nint main() { printf("Hello, World!\\n"); return 0; }' > hello.c
           qcc hello.c -o hello
-          ./hello
