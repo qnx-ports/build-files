@@ -43,13 +43,25 @@ jobs:
           repository: qnx-ports/aws-c-common
           path: aws-c-common
 
+      - name: Prepare QNX Software Center
+        env:
+          MYQNX_USER: ${{ secrets.MYQNX_USER }}
+          MYQNX_PASSWORD: ${{ secrets.MYQNX_PASSWORD }}
+        run: |
+          echo "Downloading QNX Software Center ..."
+          mkdir ${{ github.workspace }}/.qnx
+          curl -v --cookie-jar ${{ github.workspace }}/.qnx/myqnxcookies.auth --form "userlogin=$MYQNX_USER" --form "password=$MYQNX_PASSWORD" -X POST https://www.qnx.com/account/login.html > login_response.html
+          curl -v -L --cookie ${{ github.workspace }}/.qnx/myqnxcookies.auth https://www.qnx.com/download/download/77351/qnx-setup-2.0.3-202408131717-linux.run > qnx-setup-lin.run
+          chmod a+x qnx-setup-lin.run
+          ./qnx-setup-lin.run force-override disable-auto-start agree-to-license-terms ${{ github.workspace }}/qnx
+
       - name: Activate 710 license
         env:
           MYQNX_USER: ${{ secrets.MYQNX_USER }}
           MYQNX_PASSWORD: ${{ secrets.MYQNX_PASSWORD }}
         run: |
           echo "Activating keys..."
-          ${{ github.workspace }}/qnx/qnxsoftwarecenter/qnxsoftwarecenter_clt qnxsoftwarecenter_clt -activateAll --myqnx.user="your@email.com" -myqnx.password="your_password"
+          ${{ github.workspace }}/qnx/qnxsoftwarecenter/qnxsoftwarecenter_clt qnxsoftwarecenter_clt -activateAll --myqnx.user="$MYQNX_USER" -myqnx.password="$MYQNX_PASSWORD"
 
       - name: Build aws-c-common
         shell: bash
@@ -59,10 +71,7 @@ jobs:
           else
             source ~/qnx/800/qnxsdp-env.sh
           fi
-          pwd
           cd ~
-          ls -A
-          cd .qnx
-          ls -A
+          ls qnx
           echo -e '#include <stdio.h>\nint main() { printf("Hello, World!\\n"); return 0; }' > hello.c
           qcc hello.c -o hello
