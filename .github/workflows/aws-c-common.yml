@@ -61,7 +61,7 @@ jobs:
           MYQNX_PASSWORD: ${{ secrets.MYQNX_PASSWORD }}
         run: |
           echo "Activating keys..."
-          ${{ github.workspace }}/qnx/qnxsoftwarecenter/qnxsoftwarecenter_clt -activateAll -myqnx.user="$MYQNX_USER" -myqnx.password="$MYQNX_PASSWORD"
+          ${{ github.workspace }}/qnx/qnxsoftwarecenter/qnxsoftwarecenter_clt -syncLicenseKeys -activateAll -myqnx.user="$MYQNX_USER" -myqnx.password="$MYQNX_PASSWORD"
 
       - name: Build aws-c-common
         shell: bash
