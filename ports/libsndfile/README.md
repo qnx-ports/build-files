@@ -47,5 +47,5 @@ source ~/qnx800/qnxsdp-env.sh
 cd ~/qnx_workspace
 
 # Build libsndfile
-QNX_PROJECT_ROOT="$(pwd)/libsndfile" make -C build-files/ports/libsndfile/ install -j4
+QNX_PROJECT_ROOT="$(pwd)/libsndfile" make -C build-files/ports/libsndfile/ install -j4 
 ```
