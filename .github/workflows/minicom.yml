@@ -50,9 +50,9 @@ jobs:
         shell: bash
         run: |
           if [[ "${{ matrix.qnx_env }}" == "800" ]]; then
-            source ~/qnx800/qnxsdp-env.sh
+            source ~/qnx/800/qnxsdp-env.sh
           else
-            source ~/qnx710/qnxsdp-env.sh
+            source ~/qnx/710/qnxsdp-env.sh
           fi
           
           QNX_PROJECT_ROOT="$(pwd)/minicom" \
