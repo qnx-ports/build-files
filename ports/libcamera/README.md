@@ -64,4 +64,4 @@ PREFIX="/usr" QNX_PROJECT_ROOT="$(pwd)/libcamera" make -C build-files/ports/libc
 
 # Tests
 
-`libyaml-so.2` is a dependency of RPi4 and RPi5 camera. At runtime, observe to see auto-white balance and auto-exposure are working correctly.
+`libyaml-so.2` and `librpi_camera_ipa.so` are dependencies of RPi4 and RPi5 camera. At runtime, observe to see auto-white balance and auto-exposure are working correctly.
