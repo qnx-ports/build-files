@@ -25,7 +25,7 @@ jobs:
   build:
     strategy:
       matrix:
-        qnx_env: ["Linux", "QNX 710", "QNX 800"]
+        qnx_env: ["Linux", "710", "800"]
     name: Build conan catch2 for ${{ matrix.qnx_env }}
     runs-on: ubuntu-22.04-common
     if: |
@@ -50,16 +50,16 @@ jobs:
         if [ "${{ matrix.qnx_env }}" == "Linux" ]; then
           conan create --version=2.13.10 $QNX_CONAN_ROOT/recipes/catch2/2.x.x
           #conan create --version=3.6.0 $QNX_CONAN_ROOT/recipes/catch2/3.x.x
-        elif [ "${{ matrix.qnx_env }}" == "QNX 710" ]; then
+        elif [ "${{ matrix.qnx_env }}" == "710" ]; then
           source ~/qnx/710/qnxsdp-env.sh
           conan create -pr:h=$QNX_CONAN_ROOT/tools/profiles/nto-7.1-aarch64-le --version=2.13.10 $QNX_CONAN_ROOT/recipes/catch2/2.x.x
           conan create -pr:h=$QNX_CONAN_ROOT/tools/profiles/nto-7.1-aarch64-gcc --version=2.13.10 $QNX_CONAN_ROOT/recipes/catch2/2.x.x
-          conan create -pr:h=$QNX_CONAN_ROOT/tools/profiles/nto-7.1-x86_64 --version=2.13.10 $QNX_CONAN_ROOT/recipes/catch2/2.x.x
-          conan create -pr:h=$QNX_CONAN_ROOT/tools/profiles/nto-7.1-x86_64-gcc --version=2.13.10 $QNX_CONAN_ROOT/recipes/catch2/2.x.x
-        elif [ "${{ matrix.qnx_env }}" == "QNX 800" ]; then
+          #conan create -pr:h=$QNX_CONAN_ROOT/tools/profiles/nto-7.1-x86_64 --version=2.13.10 $QNX_CONAN_ROOT/recipes/catch2/2.x.x
+          #conan create -pr:h=$QNX_CONAN_ROOT/tools/profiles/nto-7.1-x86_64-gcc --version=2.13.10 $QNX_CONAN_ROOT/recipes/catch2/2.x.x
+        elif [ "${{ matrix.qnx_env }}" == "800" ]; then
           source ~/qnx/800/qnxsdp-env.sh
           conan create -pr:h=$QNX_CONAN_ROOT/tools/profiles/nto-8.0-aarch64-le --version=2.13.10 $QNX_CONAN_ROOT/recipes/catch2/2.x.x
           conan create -pr:h=$QNX_CONAN_ROOT/tools/profiles/nto-8.0-aarch64-gcc --version=2.13.10 $QNX_CONAN_ROOT/recipes/catch2/2.x.x
-          conan create -pr:h=$QNX_CONAN_ROOT/tools/profiles/nto-8.0-x86_64 --version=2.13.10 $QNX_CONAN_ROOT/recipes/catch2/2.x.x
-          conan create -pr:h=$QNX_CONAN_ROOT/tools/profiles/nto-8.0-x86_64-gcc --version=2.13.10 $QNX_CONAN_ROOT/recipes/catch2/2.x.x
+          #conan create -pr:h=$QNX_CONAN_ROOT/tools/profiles/nto-8.0-x86_64 --version=2.13.10 $QNX_CONAN_ROOT/recipes/catch2/2.x.x
+          #conan create -pr:h=$QNX_CONAN_ROOT/tools/profiles/nto-8.0-x86_64-gcc --version=2.13.10 $QNX_CONAN_ROOT/recipes/catch2/2.x.x
         fi
