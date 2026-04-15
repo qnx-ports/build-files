@@ -22,11 +22,25 @@ def replaceinfile(oldstr, newstr, fileName):
         f.write(filedata)
 
 """
+extract actual cmake path from file
+"""
+def getcmakepath(filename):
+    cmake_path = ""
+    cmake_ptrn = re.compile(r'"\s*(cmake|/cmake|/[^"]*/cmake)"', re.IGNORECASE)
+    with open(filename, 'r', encoding='utf-8') as f:
+        for l in f.readlines():
+            m = cmake_ptrn.search(l)
+            if None is not m:
+                cmake_path = m.group(1)
+                break
+    return cmake_path
+
+"""
 extract actual python path from file
 """
 def getpythonpath(filename):
     python_path = ""
-    python_ptrn = re.compile(r'(([\s]*python|/[\w/]*/python)(\d+\.?\d*)?)"', re.IGNORECASE)
+    python_ptrn = re.compile(r'"\s*((python|/python|/[^"]*/python)(?:\d+(?:\.\d+)?)?)"', re.IGNORECASE)
     with open(filename, 'r', encoding='utf-8') as f:
         for l in f.readlines():
             m = python_ptrn.search(l)
@@ -80,6 +94,15 @@ def getfilesmap(root, glob):
     return res
 
 """
+fix cmake path to the specified cmake in file
+"""
+def fixcmakename(cmakename, files):
+    for f in files:
+        oldcmakename = getcmakepath(f)
+        if len(oldcmakename)>0:
+            replaceinfile(oldcmakename, cmakename, f)
+
+"""
 fix python path to the specified pythonname in file
 """
 def fixpythonname(pythonname, files):
@@ -104,6 +127,9 @@ if __name__ == "__main__":
 
     print(f"Fix python paths in CTestTestfile.cmake [{len(filesmap['CTestTestfile.cmake'])}]")
     fixpythonname("python3", filesmap["CTestTestfile.cmake"])
+
+    print(f"Fix cmake paths in CTestTestfile.cmake [{len(filesmap['CTestTestfile.cmake'])}]")
+    fixcmakename("cmake", filesmap["CTestTestfile.cmake"])
 
     print(f"Fix src/build paths in *.cmake [{len(filesmap['.cmake'])}]")
     fixpaths(commonpath, currentpath, filesmap[".cmake"])
