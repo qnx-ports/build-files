@@ -63,7 +63,6 @@ scp -r $QNX_TARGET/aarch64le/usr/local/bin/lz4 qnxuser@$TARGET_HOST:~/lz4
 scp -r $QNX_TARGET/aarch64le/usr/local/bin/lz4cat qnxuser@$TARGET_HOST:~/lz4
 scp -r $QNX_TARGET/aarch64le/usr/local/bin/unlz4 qnxuser@$TARGET_HOST:~/lz4
 ```
-
 Run the tests
 
 ```bash
