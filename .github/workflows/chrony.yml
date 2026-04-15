@@ -77,6 +77,8 @@ jobs:
           fi
           QNX_PROJECT_ROOT="$(pwd)/nettle" make -C build-files/ports/nettle install
 
+          autogen --version
+
       - name: Checkout gnutls
         uses: actions/checkout@v4
         with:
