@@ -37,7 +37,7 @@ jobs:
       ((github.event_name == 'workflow_dispatch') ||
       (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
       (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'chrony')))
-
+      
     steps:
       - name: Checkout build-files
         uses: actions/checkout@v4
@@ -61,13 +61,14 @@ jobs:
           fi
           QNX_PROJECT_ROOT="$(pwd)/gmp" make -C build-files/ports/gmp install
 
-      - name: Clone Nettle
-        run: |
-          git clone https://github.com/gnutls/nettle.git
-          cd nettle
-          git checkout tags/nettle_3.8.1_release_20220727
+      - name: Checkout nettle
+        uses: actions/checkout@v4
+        with:
+          repository: gnutls/nettle
+          path: nettle
 
-      - name: Build Nettle
+      - name: Build nettle
+        shell: bash
         run: |
           if [[ "${{ matrix.qnx_env }}" == "800" ]]; then
             source ~/qnx/800/qnxsdp-env.sh
@@ -75,7 +76,7 @@ jobs:
             source ~/qnx/710/qnxsdp-env.sh
           fi
           QNX_PROJECT_ROOT="$(pwd)/nettle" make -C build-files/ports/nettle install
-          
+
       - name: Checkout gnutls
         uses: actions/checkout@v4
         with:
@@ -86,10 +87,10 @@ jobs:
       - name: Build gnutls
         shell: bash
         run: |
-          if [[ "${{ matrix.qnx_env }}" == "800" ]]; then
-            source ~/qnx/800/qnxsdp-env.sh
-          else
+          if [[ ${{ matrix.qnx_env }} == 710 ]]; then
             source ~/qnx/710/qnxsdp-env.sh
+          else
+            source ~/qnx/800/qnxsdp-env.sh
           fi
           cd gnutls
           git submodule update --init --recursive
