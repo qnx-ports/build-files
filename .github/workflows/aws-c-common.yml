@@ -52,7 +52,7 @@ jobs:
             source ~/qnx/800/qnxsdp-env.sh
           fi
           automake --version
-          cd /
+          which automake
           find . -name "autogen" 2>/dev/null
           autogen --version
           cd ~
