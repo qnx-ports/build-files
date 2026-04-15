@@ -64,7 +64,7 @@ CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DEXTRA_CMAKE_CXX_FLAGS="$(CFLAGS)" \
              -DEXTRA_CMAKE_LINKER_FLAGS="$(LDFLAGS)" \
              -DBUILD_SHARED_LIBS=ON \
-             -DINSTALL_INCLUDE_DIR="$(YAML_INSTALL_ROOT)/$(PREFIX)/include"
+             -DQNX_INSTALL_INCLUDE_DIR="$(YAML_INSTALL_ROOT)/$(PREFIX)/include"
 
 MAKE_ARGS ?= -j $(firstword $(JLEVEL) 4)
 
