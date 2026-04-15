@@ -74,23 +74,28 @@ jobs:
           else
             source ~/qnx/710/qnxsdp-env.sh
           fi
-          QNX_PROJECT_ROOT="$(pwd)/nettle" make -C build-files/ports/nettle install JLEVEL=4
+          QNX_PROJECT_ROOT="$(pwd)/nettle" make -C build-files/ports/nettle install
+          
+      - name: Checkout gnutls
+        uses: actions/checkout@v4
+        with:
+          repository: qnx-ports/gnutls
+          path: gnutls
+          ref: qnx-3.6.15
 
-      - name: Clone GnuTLS
-        run: |
-          git clone https://github.com/qnx-ports/gnutls.git
-          cd gnutls
-          git checkout qnx-3.6.15
-          ./bootstrap
-
-      - name: Build GnuTLS
+      - name: Build gnutls
+        shell: bash
         run: |
           if [[ "${{ matrix.qnx_env }}" == "800" ]]; then
             source ~/qnx/800/qnxsdp-env.sh
           else
             source ~/qnx/710/qnxsdp-env.sh
           fi
-          QNX_PROJECT_ROOT="$(pwd)/gnutls" make -C build-files/ports/gnutls install JLEVEL=4
+          cd gnutls
+          git submodule update --init --recursive
+          ./bootstrap
+          cd ..
+          QNX_PROJECT_ROOT="$(pwd)/gnutls" make -C build-files/ports/gnutls install
 
       - name: Clone Chrony
         run: |
@@ -105,4 +110,4 @@ jobs:
             source ~/qnx/710/qnxsdp-env.sh
           fi
           QNX_PROJECT_ROOT="$(pwd)/chrony" make -C build-files/ports/chrony clean
-          QNX_PROJECT_ROOT="$(pwd)/chrony" make -C build-files/ports/chrony install JLEVEL=4
+          QNX_PROJECT_ROOT="$(pwd)/chrony" make -C build-files/ports/chrony install
