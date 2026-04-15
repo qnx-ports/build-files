@@ -49,7 +49,7 @@ cd ~/qnx_workspace
 # Clone trompeloeil
 git clone https://github.com/rollbear/trompeloeil.git
 cd trompeloeil
-git git checkout v49
+git checkout v49
 cd ..
 
 # Build trompeloeil
