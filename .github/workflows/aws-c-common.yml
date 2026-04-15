@@ -51,10 +51,10 @@ jobs:
           else
             source ~/qnx/800/qnxsdp-env.sh
           fi
-          autogen --version
           automake --version
-          cd /usr/bin
-          find . -name "autogen"
+          cd /
+          find . -name "autogen" 2>/dev/null
+          autogen --version
           cd ~
           ls qnx
           echo -e '#include <stdio.h>\nint main() { printf("Hello, World!\\n"); return 0; }' > hello.c
