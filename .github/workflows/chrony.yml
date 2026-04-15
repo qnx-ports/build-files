@@ -60,14 +60,6 @@ jobs:
             source ~/qnx/710/qnxsdp-env.sh
           fi
           QNX_PROJECT_ROOT="$(pwd)/gmp" make -C build-files/ports/gmp install
-      - name: Setup QNX Environment
-        shell: bash
-        run: |
-          if [[ "${{ matrix.qnx_env }}" == "800" ]]; then
-            source ~/qnx/800/qnxsdp-env.sh
-          else
-            source ~/qnx/710/qnxsdp-env.sh
-          fi
 
       - name: Clone Nettle
         run: |
@@ -77,6 +69,11 @@ jobs:
 
       - name: Build Nettle
         run: |
+          if [[ "${{ matrix.qnx_env }}" == "800" ]]; then
+            source ~/qnx/800/qnxsdp-env.sh
+          else
+            source ~/qnx/710/qnxsdp-env.sh
+          fi
           QNX_PROJECT_ROOT="$(pwd)/nettle" make -C build-files/ports/nettle install JLEVEL=4
 
       - name: Clone GnuTLS
@@ -88,6 +85,11 @@ jobs:
 
       - name: Build GnuTLS
         run: |
+          if [[ "${{ matrix.qnx_env }}" == "800" ]]; then
+            source ~/qnx/800/qnxsdp-env.sh
+          else
+            source ~/qnx/710/qnxsdp-env.sh
+          fi
           QNX_PROJECT_ROOT="$(pwd)/gnutls" make -C build-files/ports/gnutls install JLEVEL=4
 
       - name: Clone Chrony
@@ -95,6 +97,12 @@ jobs:
           git clone https://github.com/qnx-ports/chrony.git
 
       - name: Build Chrony
+        shell: bash
         run: |
+          if [[ "${{ matrix.qnx_env }}" == "800" ]]; then
+            source ~/qnx/800/qnxsdp-env.sh
+          else
+            source ~/qnx/710/qnxsdp-env.sh
+          fi
           QNX_PROJECT_ROOT="$(pwd)/chrony" make -C build-files/ports/chrony clean
           QNX_PROJECT_ROOT="$(pwd)/chrony" make -C build-files/ports/chrony install JLEVEL=4
