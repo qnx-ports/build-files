@@ -51,4 +51,4 @@ jobs:
       run: |
         source ~/qnx/800/qnxsdp-env.sh
         PREFIX="/usr" QNX_PROJECT_ROOT="$(pwd)/libyaml" make -C build-files/ports/libyaml install
-        QNX_PROJECT_ROOT="$(pwd)/libcamera" make -C build-files/ports/libcamera install
+        PREFIX="/usr" QNX_PROJECT_ROOT="$(pwd)/libcamera" make -C build-files/ports/libcamera install
