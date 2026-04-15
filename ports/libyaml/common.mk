@@ -12,7 +12,7 @@ NAME=yaml
 #by default, unless it was manually re-routed to
 #a staging area by setting both INSTALL_ROOT_nto
 #and USE_INSTALL_ROOT
-YAML_INSTALL_ROOT ?= $(INSTALL_ROOT_$(OS))
+INSTALL_ROOT ?= $(INSTALL_ROOT_$(OS))
 
 #A prefix path to use **on the target**. This is
 #different from INSTALL_ROOT, which refers to a
@@ -56,7 +56,7 @@ CFLAGS += -I$(INSTALL_ROOT)/$(PREFIX)/include
 
 CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DCMAKE_SYSTEM_PROCESSOR=$(CPUVARDIR) \
-             -DCMAKE_INSTALL_PREFIX=$(YAML_INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX) \
+             -DCMAKE_INSTALL_PREFIX=$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX) \
              -DCMAKE_MODULE_PATH="$(CMAKE_MODULE_PATH)" \
              -DCMAKE_FIND_ROOT_PATH="$(CMAKE_FIND_ROOT_PATH)" \
              -DCMAKE_BUILD_TYPE=$(CMAKE_BUILD_TYPE) \
@@ -64,7 +64,7 @@ CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DEXTRA_CMAKE_CXX_FLAGS="$(CFLAGS)" \
              -DEXTRA_CMAKE_LINKER_FLAGS="$(LDFLAGS)" \
              -DBUILD_SHARED_LIBS=ON \
-             -DINSTALL_INCLUDE_DIR="$(YAML_INSTALL_ROOT)/$(PREFIX)/include"
+             -DINSTALL_INCLUDE_DIR="$(INSTALL_ROOT)/$(PREFIX)/include"
 
 MAKE_ARGS ?= -j $(firstword $(JLEVEL) 4)
 
@@ -78,7 +78,7 @@ yaml_all:
 
 install: yaml_all
 	@cd build && make install $(MAKE_ARGS)
-	@cp $(YAML_INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/lib/libyaml.so $(YAML_INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/lib/libyaml-0.so.2
+	@cp $(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/lib/libyaml.so $(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/lib/libyaml-0.so.2
 
 clean iclean spotless:
 	rm -fr build
