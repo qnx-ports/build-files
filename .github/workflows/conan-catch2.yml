@@ -53,17 +53,18 @@ jobs:
         elif [ "${{ matrix.qnx_env }}" == "710" ]; then
           source ~/qnx/710/qnxsdp-env.sh
           conan create -pr:h=$QNX_CONAN_ROOT/tools/profiles/nto-7.1-aarch64-gcc --version=2.13.10 $QNX_CONAN_ROOT/recipes/catch2/2.x.x
-          conan create -pr:h=$QNX_CONAN_ROOT/tools/profiles/nto-7.1-x86_64-gcc --version=2.13.10 $QNX_CONAN_ROOT/recipes/catch2/2.x.x
-          conan create -pr:h=$QNX_CONAN_ROOT/tools/profiles/nto-7.1-aarch64-gcc --version=3.6.0 $QNX_CONAN_ROOT/recipes/catch2/3.x.x
-          conan create -pr:h=$QNX_CONAN_ROOT/tools/profiles/nto-7.1-x86_64-gcc --version=3.6.0 $QNX_CONAN_ROOT/recipes/catch2/3.x.x
+          conan create -pr:h=$QNX_CONAN_ROOT/tools/profiles/nto-7.1-aarch64-le --version=2.13.10 $QNX_CONAN_ROOT/recipes/catch2/2.x.x
+          #conan create -pr:h=$QNX_CONAN_ROOT/tools/profiles/nto-7.1-x86_64-gcc --version=2.13.10 $QNX_CONAN_ROOT/recipes/catch2/2.x.x
+          #conan create -pr:h=$QNX_CONAN_ROOT/tools/profiles/nto-7.1-aarch64-gcc --version=3.6.0 $QNX_CONAN_ROOT/recipes/catch2/3.x.x
+          #conan create -pr:h=$QNX_CONAN_ROOT/tools/profiles/nto-7.1-x86_64-gcc --version=3.6.0 $QNX_CONAN_ROOT/recipes/catch2/3.x.x
         elif [ "${{ matrix.qnx_env }}" == "800" ]; then
           source ~/qnx/800/qnxsdp-env.sh
-          conan create -pr:h=$QNX_CONAN_ROOT/tools/profiles/nto-8.0-aarch64-le --version=2.13.10 $QNX_CONAN_ROOT/recipes/catch2/2.x.x
-          conan create -pr:h=$QNX_CONAN_ROOT/tools/profiles/nto-8.0-aarch64-gcc --version=2.13.10 $QNX_CONAN_ROOT/recipes/catch2/2.x.x
-          conan create -pr:h=$QNX_CONAN_ROOT/tools/profiles/nto-8.0-x86_64 --version=2.13.10 $QNX_CONAN_ROOT/recipes/catch2/2.x.x
-          conan create -pr:h=$QNX_CONAN_ROOT/tools/profiles/nto-8.0-x86_64-gcc --version=2.13.10 $QNX_CONAN_ROOT/recipes/catch2/2.x.x
-          conan create -pr:h=$QNX_CONAN_ROOT/tools/profiles/nto-8.0-aarch64-le --version=3.6.0 $QNX_CONAN_ROOT/recipes/catch2/3.x.x
-          conan create -pr:h=$QNX_CONAN_ROOT/tools/profiles/nto-8.0-aarch64-gcc --version=3.6.0 $QNX_CONAN_ROOT/recipes/catch2/3.x.x
-          conan create -pr:h=$QNX_CONAN_ROOT/tools/profiles/nto-8.0-x86_64 --version=3.6.0 $QNX_CONAN_ROOT/recipes/catch2/3.x.x
-          conan create -pr:h=$QNX_CONAN_ROOT/tools/profiles/nto-8.0-x86_64-gcc --version=3.6.0 $QNX_CONAN_ROOT/recipes/catch2/3.x.x
+          #conan create -pr:h=$QNX_CONAN_ROOT/tools/profiles/nto-8.0-aarch64-le --version=2.13.10 $QNX_CONAN_ROOT/recipes/catch2/2.x.x
+          #conan create -pr:h=$QNX_CONAN_ROOT/tools/profiles/nto-8.0-aarch64-gcc --version=2.13.10 $QNX_CONAN_ROOT/recipes/catch2/2.x.x
+          #conan create -pr:h=$QNX_CONAN_ROOT/tools/profiles/nto-8.0-x86_64 --version=2.13.10 $QNX_CONAN_ROOT/recipes/catch2/2.x.x
+          #conan create -pr:h=$QNX_CONAN_ROOT/tools/profiles/nto-8.0-x86_64-gcc --version=2.13.10 $QNX_CONAN_ROOT/recipes/catch2/2.x.x
+          #conan create -pr:h=$QNX_CONAN_ROOT/tools/profiles/nto-8.0-aarch64-le --version=3.6.0 $QNX_CONAN_ROOT/recipes/catch2/3.x.x
+          #conan create -pr:h=$QNX_CONAN_ROOT/tools/profiles/nto-8.0-aarch64-gcc --version=3.6.0 $QNX_CONAN_ROOT/recipes/catch2/3.x.x
+          #conan create -pr:h=$QNX_CONAN_ROOT/tools/profiles/nto-8.0-x86_64 --version=3.6.0 $QNX_CONAN_ROOT/recipes/catch2/3.x.x
+          #conan create -pr:h=$QNX_CONAN_ROOT/tools/profiles/nto-8.0-x86_64-gcc --version=3.6.0 $QNX_CONAN_ROOT/recipes/catch2/3.x.x
         fi
