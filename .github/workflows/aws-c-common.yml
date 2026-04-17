@@ -49,7 +49,7 @@ jobs:
           if [[ ${{ matrix.qnx_env }} == 800 ]]; then
             source ~/qnx/800/qnxsdp-env.sh
           else
-            source ~/qnx/800/qnxsdp-env.sh
+            source ~/qnx/710/qnxsdp-env.sh
           fi
           echo -e '#include <stdio.h>\nint main() { printf("Hello, World!\\n"); return 0; }' > hello.c
           qcc hello.c -o hello
