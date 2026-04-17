@@ -46,7 +46,7 @@ jobs:
       - name: Build aws-c-common
         shell: bash
         run: |
-          if [[ ${{ matrix.qnx_env }} == 800 ]]; then
+          if [[ "${{ matrix.qnx_env }}" == "800" ]]; then
             source ~/qnx/800/qnxsdp-env.sh
           else
             source ~/qnx/710/qnxsdp-env.sh
