@@ -28,7 +28,7 @@ cd ~/qnx_workspace
 source ~/qnx800/qnxsdp-env.sh
 
 # Install dependencies
-./install_all.sh
+./build-files/ports/onnxruntime/install_all.sh
 git clone -b qnx-v1.23.2 https://github.com/microsoft/onnxruntime && cd onnxruntime
 git submodule update --init
 cd -
@@ -45,7 +45,7 @@ cd ~/qnx_workspace
 source ~/qnx800/qnxsdp-env.sh
 
 # Install dependencies
-./install_all.sh
+./build-files/ports/onnxruntime/install_all.sh
 git clone -b qnx-v1.23.2 https://github.com/microsoft/onnxruntime && cd onnxruntime
 git submodule update --init
 cd -
