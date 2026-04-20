@@ -79,7 +79,7 @@ CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DCMAKE_ASM_COMPILER_TARGET="gcc_nto${CPU}${EXT}" \
              -DCMAKE_C_COMPILER_TARGET="gcc_nto${CPU}${EXT}" \
              -DCMAKE_CXX_COMPILER_TARGET="gcc_nto${CPU}${EXT}" \
-             -DBUILD_SHARED_LIBS=ON \
+             -DBUILD_SHARED_LIBS=OFF \
              -DBUILD_TESTING=$(BUILD_TESTING) \
              -DCPU="$(CPU)" \
              -DEXT="$(EXT)" \
@@ -103,4 +103,11 @@ install check: $(NAME)_all
 
 clean iclean spotless:
 	rm -rf build
+
+uninstall: clean
+	rm -rf $(QNX_TARGET)/$(PREFIX)/include/onnx
+	rm -rf $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/libonnx*
+	rm -rf $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/cmake/ONNX
+	rm -rf $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/pkgconfig/onnx.pc
+	rm -rf $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/bin/onnx_gtests
 endif
