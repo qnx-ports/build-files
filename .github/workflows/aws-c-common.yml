@@ -51,5 +51,10 @@ jobs:
           else
             source ~/qnx/710/qnxsdp-env.sh
           fi
+          WORKSPACE=$PWD
+          cd ~/.qnx/license
+          ls -A
+          qlicense -info
+          cd $WORKSPACE
           echo -e '#include <stdio.h>\nint main() { printf("Hello, World!\\n"); return 0; }' > hello.c
           qcc hello.c -o hello
