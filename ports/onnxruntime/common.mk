@@ -54,44 +54,46 @@ CPPFLAGS += $(FLAGS) \
           -I$(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/include -I$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/include \
 					-I$(QNX_TARGET)/$(PREFIX)/include -I$(INSTALL_ROOT)/$(PREFIX)/include \
           -isystem $(QNX_TARGET)/usr/include/c++/v1/ \
-          -D_QNX_SOURCE -g
+          -D_QNX_SOURCE
 
 LDFLAGS += -Wl,--build-id=md5
 
+BUILD_SHARED_LIB ?= ON
+ENABLE_PYTHON ?= OFF
+USE_FULL_PROTOBUF ?= ON
 ENABLE_CPUINFO ?= OFF
+QNX ?= ON
 
-CMAKE_EXTRA_DEFINES = CMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
-                      CMAKE_SYSTEM_PROCESSOR=$(CPU) \
-                      CMAKE_EXE_LINKER_FLAGS="$(LDFLAGS)" \
-                      EXTRA_CMAKE_C_FLAGS="$(CFLAGS) $(CPPFLAGS)" \
-                      EXTRA_CMAKE_CXX_FLAGS="$(CXXFLAGS) $(CPPFLAGS)" \
-                      CMAKE_CXX_COMPILER_TARGET=gcc_nto$(CPUVARDIR) \
-                      CMAKE_C_COMPILER_TARGET=gcc_nto$(CPUVARDIR) \
-                      CMAKE_ASM_COMPILER_TARGET=gcc_nto$(CPUVARDIR) \
-                      CMAKE_INSTALL_PREFIX=$(INSTALL_ROOT) \
-                      CMAKE_INSTALL_LIBDIR=$(CPUVARDIR)/$(PREFIX)/lib \
-                      CMAKE_INSTALL_BINDIR=$(CPUVARDIR)/$(PREFIX)/bin \
-                      CMAKE_INSTALL_INCLUDEDIR=$(PREFIX)/include \
-                      CMAKE_MODULE_PATH="$(CMAKE_MODULE_PATH)" \
-                      CMAKE_FIND_ROOT_PATH="$(CMAKE_FIND_ROOT_PATH)" \
-                      CMAKE_BUILD_TYPE=$(CMAKE_BUILD_TYPE) \
-                      ENABLE_CPUINFO=$(ENABLE_CPUINFO)
+CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
+             -DCMAKE_SYSTEM_PROCESSOR=$(CPU) \
+             -DCMAKE_EXE_LINKER_FLAGS="$(LDFLAGS)" \
+             -DCMAKE_C_FLAGS="$(CFLAGS) $(CPPFLAGS)" \
+             -DCMAKE_CXX_FLAGS="$(CXXFLAGS) $(CPPFLAGS)" \
+             -DCMAKE_CXX_COMPILER_TARGET=gcc_nto$(CPUVARDIR) \
+             -DCMAKE_C_COMPILER_TARGET=gcc_nto$(CPUVARDIR) \
+             -DCMAKE_ASM_COMPILER_TARGET=gcc_nto$(CPUVARDIR) \
+             -DCMAKE_INSTALL_PREFIX="$(INSTALL_ROOT)" \
+             -DCMAKE_INSTALL_LIBDIR="$(CPUVARDIR)/$(PREFIX)/lib" \
+             -DCMAKE_INSTALL_BINDIR="$(CPUVARDIR)/$(PREFIX)/bin" \
+             -DCMAKE_INSTALL_INCLUDEDIR="$(PREFIX)/include" \
+             -DCMAKE_MODULE_PATH="$(CMAKE_MODULE_PATH)" \
+             -DCMAKE_FIND_ROOT_PATH="$(CMAKE_FIND_ROOT_PATH)" \
+             -DCMAKE_BUILD_TYPE=$(CMAKE_BUILD_TYPE) \
+             -D$(NAME)_BUILD_SHARED_LIB=$(BUILD_SHARED_LIB) \
+             -D$(NAME)_ENABLE_PYTHON=$(ENABLE_PYTHON) \
+             -D$(NAME)_USE_FULL_PROTOBUF=$(USE_FULL_PROTOBUF) \
+             -D$(NAME)_ENABLE_CPUINFO=$(ENABLE_CPUINFO) \
+             -D$(NAME)_USE_EXTERNAL_ABSEIL=ON \
+             -D$(NAME)_DISABLE_RTTI=OFF \
+             -D$(NAME)_QNX=$(QNX)
 
-PARALLEL ?= $(firstword $(JLEVEL) 1)
-
-BUILD_ARGS = --build_shared_lib \
-             --config $(CMAKE_BUILD_TYPE) \
-						 --parallel $(PARALLEL) \
-						 --compile_no_warning_as_error \
-             --skip_submodule_sync \
-						 --cmake_extra_defines $(CMAKE_EXTRA_DEFINES) \
-             --build_qnx
-
+MAKE_ARGS ?= -j $(firstword $(JLEVEL) 1)
 
 ifndef NO_TARGET_OVERRIDE
 $(NAME)_all:
 	@mkdir -p build
-	@python3 $(QNX_PROJECT_ROOT)/tools/ci_build/build.py --build_dir build $(BUILD_ARGS)
+	@cd build && cmake $(CMAKE_ARGS) $(QNX_PROJECT_ROOT)/cmake
+	@cd build && make VERBOSE=1 all $(MAKE_ARGS)
 
 install check: $(NAME)_all
 	@echo Installing...

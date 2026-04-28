@@ -56,4 +56,24 @@ make -C build-files/ports/onnxruntime install -j12
 
 # How to Run Tests and Applications
 
-Note: To be added
+**NOTE**: Tests are performed on RPi4 target available via QNX-E
+
+Move the libraries and tests to the target
+
+```bash
+TARGET_HOST=<target-ip-address-or-hostname>
+
+# Move libraries to the target
+scp -r $QNX_TARGET/aarch64le/usr/local/lib qnxuser@$TARGET_HOST:~/lib
+
+# Move test files to the target
+scp -r build-files/ports/onnxruntime/nto-aarch64-le/build qnxuser@$TARGET_HOST:~/
+```
+
+Run the tests
+
+```bash
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/data/home/qnxuser/lib
+cd build
+./onnxruntime_test_all
+```
