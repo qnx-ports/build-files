@@ -46,8 +46,8 @@ jobs:
     - name: Download SDP 7.1
       env:
         SDP710_LICENSE_KEY: ${{ secrets.SDP710_LICENSE_KEY }}
-        MYQNX_USER: ${{ secrets.MYQNX_USER }}
-        MYQNX_PASSWORD: ${{ secrets.MYQNX_PASSWORD }}
+        MYQNX_USER: ${{ secrets.DCHORDIA_USER }}
+        MYQNX_PASSWORD: ${{ secrets.DCHORDIA_PASSWORD }}
       run: |
         echo "Installing SDP 7.1 License ..."
         ${{ github.workspace }}/qnx/qnxsoftwarecenter/qnxsoftwarecenter_clt -syncLicenseKeys -myqnx.user="$MYQNX_USER" -myqnx.password="$MYQNX_PASSWORD" -addLicenseKey $SDP710_LICENSE_KEY
