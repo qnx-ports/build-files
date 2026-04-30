@@ -23,7 +23,7 @@ PREFIX ?= usr/local
 #choose Release or Debug
 CMAKE_BUILD_TYPE ?= Release
 
-BUILD_DIR=$(CURDIR)/build-$(CPUVARDIR)
+BUILD_DIR=$(CURDIR)/build
 
 #override 'all' target to bypass the default QNX build system
 ALL_DEPENDENCIES = $(NAME)_all
@@ -47,24 +47,13 @@ QNX_VARIANT = -Vgcc_nto$(CPUVARDIR)
 
 MAKE_ARGS ?= -j $(firstword $(JLEVEL) 1)
 
-ifeq ($(CPUVARDIR),aarch64le)
-HOST_TRIPLET = aarch64-unknown-nto-qnx
-endif
-
-ifeq ($(CPUVARDIR),x86_64)
-HOST_TRIPLET = x86_64-pc-nto-qnx8.0.0
-endif
-
-$(info HOST_TRIPLET=$(HOST_TRIPLET))
-
-$(info HOST_TRIPLET=$(HOST_TRIPLET))
 $(NAME)_all:
 	mkdir -p $(BUILD_DIR)
 
 	cd $(QNX_PROJECT_ROOT) && ./bootstrap.sh
 
 	cd $(BUILD_DIR) && $(QNX_PROJECT_ROOT)/configure \
-		--host=$(HOST_TRIPLET) \
+		--host=aarch64-unknown-nto-qnx \
 		CC="qcc $(QNX_VARIANT)" \
 		CFLAGS="$(CFLAGS)" \
 		LDFLAGS="$(LDFLAGS)"
@@ -73,11 +62,9 @@ $(NAME)_all:
 
 	cd $(BUILD_DIR)/examples && $(MAKE)
 
-	cd $(BUILD_DIR)/tests && $(MAKE) clean
-	cd $(BUILD_DIR)/tests && rm -f *.o
 	cd $(BUILD_DIR)/tests && $(MAKE)
 	
-BIN_INSTALL_DIR = $(QNX_TARGET)/$(CPUVARDIR)/usr/bin/libusb_tests
+BIN_INSTALL_DIR = $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/bin/libusb_tests
 
 install:
 	$(MAKE) -C $(BUILD_DIR) install DESTDIR=$(QNX_TARGET)/$(CPUVARDIR)
