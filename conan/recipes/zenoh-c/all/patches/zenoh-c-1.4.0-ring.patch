@@ -1,0 +1,22 @@
+diff --git a/Cargo.toml b/Cargo.toml
+index b7a72147..90ba9a51 100644
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -124,3 +124,6 @@ lto = "fat"
+ codegen-units = 1
+ opt-level = 3
+ panic = "abort"
++
++[patch.crates-io]
++ring = { git = "https://github.com/briansmith/ring.git", rev = "d018db62e1a4a92689611c86d33d6a85939197c4" }
+diff --git a/Cargo.toml.in b/Cargo.toml.in
+index 894ef445..7c751062 100644
+--- a/Cargo.toml.in
++++ b/Cargo.toml.in
+@@ -124,3 +124,6 @@ lto = "fat"
+ codegen-units = 1
+ opt-level = 3
+ panic = "abort"
++
++[patch.crates-io]
++ring = { git = "https://github.com/briansmith/ring.git", rev = "d018db62e1a4a92689611c86d33d6a85939197c4" }

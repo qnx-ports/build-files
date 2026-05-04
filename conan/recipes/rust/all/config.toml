@@ -1,0 +1,37 @@
+change-id = "ignore"
+
+[llvm]
+download-ci-llvm = false
+
+[build]
+docs = false
+
+#[target.x86_64-unknown-linux-gnu]
+#llvm-config = "/home/pkleymonov/.conan2/p/b/rust979dbf11b34f9/b/build/x86_64-unknown-linux-gnu/llvm/bin/llvm-config"
+
+[target.x86_64-pc-nto-qnx710]
+cc = 'qcc'
+cxx = 'q++'
+ar = 'ntox86_64-ar'
+#llvm-config = "/home/pkleymonov/.conan2/p/b/rust979dbf11b34f9/b/build/x86_64-unknown-linux-gnu/llvm/bin/llvm-config"
+
+[target.aarch64-unknown-nto-qnx710]
+cc = 'qcc'
+cxx = 'q++'
+ar = 'ntoaarch64-ar'
+#llvm-config = "/home/pkleymonov/.conan2/p/b/rust979dbf11b34f9/b/build/x86_64-unknown-linux-gnu/llvm/bin/llvm-config"
+
+[target.x86_64-pc-nto-qnx800]
+cc = 'qcc'
+cxx = 'q++'
+ar = 'ntox86_64-ar'
+#llvm-config = "/home/pkleymonov/.conan2/p/b/rust979dbf11b34f9/b/build/x86_64-unknown-linux-gnu/llvm/bin/llvm-config"
+
+[target.aarch64-unknown-nto-qnx800]
+cc = 'qcc'
+cxx = 'q++'
+ar = 'ntoaarch64-ar'
+#llvm-config = "/home/pkleymonov/.conan2/p/b/rust979dbf11b34f9/b/build/x86_64-unknown-linux-gnu/llvm/bin/llvm-config"
+
+[install]
+sysconfdir = 'etc'
