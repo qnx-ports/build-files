@@ -42,6 +42,8 @@ source ~/qnx800/qnxsdp-env.sh
 export QNX_CONAN_ROOT=$(realpath ~/qnx_workspace/build-files/conan)
 # Detect build profile if not already detected.
 conan profile detect
+# Update conan settings for QNX8.0 support
+conan config install $QNX_CONAN_ROOT/tools/qnx-8.0-extension/settings_user.yml
 ```
 
 # Build and install release Rust package for QNX into conan cache
