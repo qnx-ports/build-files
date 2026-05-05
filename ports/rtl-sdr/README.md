@@ -66,8 +66,8 @@ scp -r $QNX_TARGET/aarch64le/usr/local/bin/rtl-sdr-tests qnxuser@$TARGET_HOST:~/
 #copy test script and run 
 scp $(pwd)/build-files/ports/rtl-sdr/test.sh qnxuser@$TARGET_HOST:~/
 
-#copy libusb to target from your  sdp location
-scp $QNX_TARGET/target/qnx/aarch64le/usr/lib/libusb*    qnxuser@$TARGET_HOST:~/lib
+#Copy the built libusb binaries from the SDP output directory (after building from qnx-ports) to the target filesystem.
+scp $QNX_TARGET/target/qnx/aarch64le/usr/local/lib/libusb*    qnxuser@$TARGET_HOST:~/lib
 
 
 ```

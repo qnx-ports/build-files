@@ -42,6 +42,11 @@ jobs:
         repository: qnx-ports/rtl-sdr
         path:rtl-sdr
 
+    - name: Checkout libusb
+      uses: actions/checkout@v4
+      with:
+        repository: qnx-ports/libub
+        path:libusb
 
     - name: Login to GitHub Container Registry
       uses: docker/login-action@v3
@@ -67,5 +72,6 @@ jobs:
               source ~/qnx/800/qnxsdp-env.sh
             fi
             cd ~/workspace
+            make -C build-files/ports/libusb install
             make -C build-files/ports/rtl-sdr install
           
