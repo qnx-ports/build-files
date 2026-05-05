@@ -1,4 +1,4 @@
-name:rtl-sdr
+name: rtl-sdr
 
 permissions:
   contents: write
@@ -40,13 +40,13 @@ jobs:
       uses: actions/checkout@v4
       with:
         repository: qnx-ports/rtl-sdr
-        path:rtl-sdr
+        path: rtl-sdr
 
     - name: Checkout libusb
       uses: actions/checkout@v4
       with:
-        repository: qnx-ports/libub
-        path:libusb
+        repository: qnx-ports/libusb
+        path: libusb
 
     - name: Login to GitHub Container Registry
       uses: docker/login-action@v3
@@ -59,7 +59,7 @@ jobs:
       run: |
         docker pull ghcr.io/qnx-ports/sdp-build-env:latest
 
-    - name: Buildrtl-sdr
+    - name: Build rtl-sdr
       uses: addnab/docker-run-action@v3
       with:
         image: ghcr.io/qnx-ports/sdp-build-env:latest
@@ -72,6 +72,6 @@ jobs:
               source ~/qnx/800/qnxsdp-env.sh
             fi
             cd ~/workspace
-            make -C build-files/ports/libusb install
+            make -C build-files/ports/libusb install 
             make -C build-files/ports/rtl-sdr install
           
