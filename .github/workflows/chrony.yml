@@ -10,7 +10,7 @@ on:
     branches:
       - main
     paths:
-      - '.github/workflows/chrony-stack.yml'
+      - '.github/workflows/chrony.yml'
       - 'ports/chrony/**'
       - 'ports/gnutls/**'
       - 'ports/nettle/**'
@@ -19,7 +19,7 @@ on:
     branches:
       - main
     paths:
-      - '.github/workflows/chrony-stack.yml'
+      - '.github/workflows/chrony.yml'
       - 'ports/chrony/**'
       - 'ports/gnutls/**'
       - 'ports/nettle/**'
