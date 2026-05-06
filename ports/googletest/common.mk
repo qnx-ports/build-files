@@ -91,5 +91,12 @@ install check: $(NAME)_all
 clean iclean spotless:
 	rm -rf build
 
-uninstall:
+uninstall quninstall huninstall cuninstall: clean
+	@rm -rf $(QNX_TARGET)/$(PREFIX)/include/gmock
+	@rm -rf $(QNX_TARGET)/$(PREFIX)/include/gtest
+	@rm -rf $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/libgmock*
+	@rm -rf $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/libgtest*
+	@rm -rf $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/cmake/GTest
+	@rm -rf $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/pkgconfig/gmock*
+	@rm -rf $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/pkgconfig/gtest*
 endif
