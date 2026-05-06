@@ -38,14 +38,14 @@ jobs:
       - name: Checkout rtl-sdr
         uses: actions/checkout@v4
         with:
-          repository: rollbear/rtl-sdr
+          repository: qnx-ports/rtl-sdr
           path: rtl-sdr
           ref: v49
 
       - name: Checkout libusb
         uses: actions/checkout@v4
         with:
-          repository: rollbear/libusb
+          repository: qnx-ports/libusb
           path: rtl-sdr
           ref: v49
 
