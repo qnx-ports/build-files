@@ -20,9 +20,6 @@ INSTALL_ROOT ?= $(INSTALL_ROOT_$(OS))
 #CMake config modules, etc.). Default is /usr/local
 PREFIX ?= usr/local
 
-#choose Release or Debug
-CMAKE_BUILD_TYPE ?= Release
-
 BUILD_DIR=$(CURDIR)/build
 
 #override 'all' target to bypass the default QNX build system
