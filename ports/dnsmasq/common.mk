@@ -10,7 +10,7 @@ INSTALL_ROOT ?= $(INSTALL_ROOT_$(OS))
 
 # QNX flags
 CFLAGS += -D_QNX_SOURCE
-LDFLAGS += -lm -lc -lsocket
+LDFLAGS += -lm -lc
 
 # Handle io-sock for QNX SDP 7.1 (not needed for 8.0+)
 ifeq ($(USE_IOSOCK),true)
@@ -19,7 +19,9 @@ $(error USE_IOSOCK is defined but io-sock is not found inside SDP. Note that io-
 endif
 $(info Linking to io-sock libsocket...)
 CFLAGS += -I$(QNX_TARGET)/usr/include/io-sock
-LDFLAGS += -L$(QNX_TARGET)/$(CPUVARDIR)/io-sock/lib -Wl,--as-needed -lsocket -Wl,--no-as-needed
+LDFLAGS += -L$(QNX_TARGET)/$(CPUVARDIR)/io-sock/lib -lsocket
+else
+LDFLAGS += -lsocket
 endif
 
 ALL_DEPENDENCIES = $(NAME)_all
