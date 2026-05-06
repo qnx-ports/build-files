@@ -44,7 +44,6 @@ CFLAGS += -I$(QNX_TARGET)/$(PREFIX)/include \
           -D_QNX_SOURCE
 		  
 QNX_VARIANT = -Vgcc_nto$(CPUVARDIR)
-
 MAKE_ARGS ?= -j $(firstword $(JLEVEL) 1)
 
 $(NAME)_all:
@@ -59,10 +58,6 @@ $(NAME)_all:
 		LDFLAGS="$(LDFLAGS)"
 
 	cd $(BUILD_DIR) && $(MAKE)
-
-	cd $(BUILD_DIR)/examples && $(MAKE)
-
-	cd $(BUILD_DIR)/tests && $(MAKE)
 	
 BIN_INSTALL_DIR = $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/bin/libusb_tests
 

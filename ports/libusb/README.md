@@ -65,3 +65,4 @@ ssh qnxuser@$TARGET_IP
 
 export PATH=$PATH:/data/home/qnxuser/bin
 ./run_usb_tests
+# dpfp (fingerprint sensor),hotplug  and sam3u_benchmark exmples are not tested on Qnx.
