@@ -10,7 +10,7 @@ on:
     branches:
       - main
     paths:
-      - '.github/workflows/rtl-sdr-stack.yml'
+      - '.github/workflows/rtl-sdr.yml'
       - 'ports/rtl-sdr/**'
       - 'ports/libusb/**'
       
@@ -18,7 +18,7 @@ on:
     branches:
       - main
     paths:
-      - '.github/workflows/rtl-sdr-stack.yml'
+      - '.github/workflows/rtl-sdr.yml'
       - 'ports/rtl-sdr/**'
       - 'ports/libusb/**'
 
