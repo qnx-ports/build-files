@@ -11,7 +11,7 @@ endef
 
 NAME = trompeloeil
 
-QNX_PROJECT_ROOT ?= $(PRODUCT_ROOT)/../../TROMPELOEIL-CPP
+QNX_PROJECT_ROOT ?= $(PRODUCT_ROOT)/../../$(NAME)
 
 #$(INSTALL_ROOT_$(OS)) is pointing to $QNX_TARGET
 #by default, unless it was manually re-routed to
@@ -25,7 +25,7 @@ INSTALL_ROOT ?= $(INSTALL_ROOT_$(OS))
 #This prefix path may be exposed to the source code,
 #the linker, or package discovery config files (.pc,
 #CMake config modules, etc.). Default is /usr/local
-PREFIX ?= /usr/local
+PREFIX ?= usr/local
 
 #choose Release or Debug
 CMAKE_BUILD_TYPE ?= Release
@@ -65,6 +65,7 @@ endif
 #if the include path is "default"
 CFLAGS += $(FLAGS) \
           -I$(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/include \
+          -I$(QNX_TARGET)/$(PREFIX)/include \
           -I$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/include \
           -I$(INSTALL_ROOT)/$(PREFIX)/include \
           -D_QNX_SOURCE
@@ -72,6 +73,7 @@ CFLAGS += $(FLAGS) \
 LDFLAGS += -Wl,--build-id=md5 -lm -lsocket -lang-c++
 
 BUILD_SHARED_LIBS ?= ON
+TROMPELOEIL_BUILD_TESTS ?= ON
 
 CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DCMAKE_SYSTEM_PROCESSOR=$(CPUVARDIR) \
@@ -79,13 +81,13 @@ CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DCMAKE_EXE_LINKER_FLAGS="$(LDFLAGS)" \
              -DCMAKE_CXX_COMPILER_TARGET=gcc_nto$(CPUVARDIR) \
              -DCMAKE_C_COMPILER_TARGET=gcc_nto$(CPUVARDIR) \
-             -DCMAKE_INSTALL_PREFIX=$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX) \
-             -DCMAKE_INSTALL_INCLUDEDIR=$(INSTALL_ROOT)/$(PREFIX)/include \
+             -DCMAKE_INSTALL_PREFIX=$(INSTALL_ROOT) \
+             -DCMAKE_INSTALL_INCLUDEDIR=$(PREFIX)/include \
              -DCMAKE_MODULE_PATH="$(CMAKE_MODULE_PATH)" \
              -DCMAKE_FIND_ROOT_PATH="$(CMAKE_FIND_ROOT_PATH)" \
              -DCMAKE_BUILD_TYPE=$(CMAKE_BUILD_TYPE) \
              -DBUILD_SHARED_LIBS=$(BUILD_SHARED_LIBS) \
-             -DTROMPELOEIL_BUILD_TESTS=ON
+             -DTROMPELOEIL_BUILD_TESTS=$(TROMPELOEIL_BUILD_TESTS)
 
 MAKE_ARGS ?= -j $(firstword $(JLEVEL) 1)
 
