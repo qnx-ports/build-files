@@ -40,14 +40,12 @@ jobs:
         with:
           repository: qnx-ports/rtl-sdr
           path: rtl-sdr
-          ref: v49
 
       - name: Checkout libusb
         uses: actions/checkout@v4
         with:
           repository: qnx-ports/libusb
           path: rtl-sdr
-          ref: v49
 
       - name: Build libusb
         shell: bash
