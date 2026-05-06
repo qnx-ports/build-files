@@ -12,61 +12,66 @@ on:
     paths:
       - '.github/workflows/rtl-sdr.yml'
       - 'ports/rtl-sdr/**'
-      - 'ports/libusb/**'
-      
   pull_request:
     branches:
       - main
     paths:
       - '.github/workflows/rtl-sdr.yml'
       - 'ports/rtl-sdr/**'
-      - 'ports/libusb/**'
 
 jobs:
   build:
     strategy:
       matrix:
         qnx_env: ["710", "800"]
-
-    name: Build rtl-sdr for QNX ${{ matrix.qnx_env }}
+    name: Build for QNX ${{ matrix.qnx_env }}
     runs-on: ubuntu-22.04-common
     if: |
-      ((github.event_name == 'workflow_dispatch') ||
+      (github.event_name == 'workflow_dispatch') ||
       (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
-      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'rtl-sdr')))
-      
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'rtl-sdr'))
     steps:
-      - name: Checkout build-files
-        uses: actions/checkout@v4
-        with:
-          path: build-files
+    - name: Checkout build-files
+      uses: actions/checkout@v4
+      with:
+        path: build-files
 
-      - name: Clone libusb
-        run: |
-          git clone https://github.com/qnx-ports/libusb.git
+    - name: Checkout rtl-sdr
+      uses: actions/checkout@v4
+      with:
+        repository: qnx-ports/rtl-sdr
+        path: rtl-sdr
 
-      - name: Build libusb
+    - name: Checkout libusb
+      uses: actions/checkout@v4
+      with:
+        repository: qnx-ports/libusb
+        path: libusb
+
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v3
+      with:
+        registry: ghcr.io
+        username: ${{github.actor}}
+        password: ${{secrets.GITHUB_TOKEN}}
+
+    - name: Pull build environment
+      run: |
+        docker pull ghcr.io/qnx-ports/sdp-build-env:latest
+
+    - name: Build rtl-sdr
+      uses: addnab/docker-run-action@v3
+      with:
+        image: ghcr.io/qnx-ports/sdp-build-env:latest
+        options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
         shell: bash
         run: |
-          if [[ "${{ matrix.qnx_env }}" == "800" ]]; then
-            source ~/qnx/800/qnxsdp-env.sh
-          else
-            source ~/qnx/710/qnxsdp-env.sh
-          fi
-          QNX_PROJECT_ROOT="$(pwd)/libusb" make -C build-files/ports/libusb clean
-          QNX_PROJECT_ROOT="$(pwd)/libusb" make -C build-files/ports/libusb install
+            if [[ ${{ matrix.qnx_env }} == 710 ]]; then
+              source ~/qnx/710/qnxsdp-env.sh
+            else
+              source ~/qnx/800/qnxsdp-env.sh
+            fi
+            cd ~/workspace
+            make -C build-files/ports/libusb install 
+            make -C build-files/ports/rtl-sdr install
           
-      - name: Clone rtl-sdr
-        run: |
-          git clone https://github.com/qnx-ports/rtl-sdr.git
-
-      - name: Build rtl-sdr
-        shell: bash
-        run: |
-          if [[ "${{ matrix.qnx_env }}" == "800" ]]; then
-            source ~/qnx/800/qnxsdp-env.sh
-          else
-            source ~/qnx/710/qnxsdp-env.sh
-          fi
-          QNX_PROJECT_ROOT="$(pwd)/rtl-sdr" make -C build-files/ports/rtl-sdr clean
-          QNX_PROJECT_ROOT="$(pwd)/rtl-sdr" make -C build-files/ports/rtl-sdr install
