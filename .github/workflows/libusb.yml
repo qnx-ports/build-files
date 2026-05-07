@@ -1,0 +1,52 @@
+name: libusb
+
+permissions:
+  contents: write
+  checks: write
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/libusb.yml'
+      - 'ports/libusb/**'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/libusb.yml'
+      - 'ports/libusb/**'
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        qnx_env: [ 710, 800 ]
+    runs-on: ubuntu-22.04-common
+    if: |
+      ((github.event_name == 'workflow_dispatch') ||
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'libusb')))
+    steps:
+      - name: Checkout build-files
+        uses: actions/checkout@v4
+        with:
+          path: build-files
+
+      - name: Checkout libusb
+        uses: actions/checkout@v4
+        with:
+          repository: qnx-ports/libusb
+          path: libusb
+
+      - name: Build libusb
+        shell: bash
+        run: |
+          if [[ "${{ matrix.qnx_env }}" == "800" ]]; then
+            source ~/qnx/800/qnxsdp-env.sh
+          else
+            source ~/qnx/710/qnxsdp-env.sh
+          fi
+          QNX_PROJECT_ROOT="$(pwd)/libusb" make -C build-files/ports/libusb/ install
