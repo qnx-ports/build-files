@@ -63,4 +63,8 @@ jobs:
           fi
           QNX_PROJECT_ROOT="$(pwd)/libusb" make -C build-files/ports/libusb/ install
           QNX_PROJECT_ROOT="$(pwd)/rtl-sdr" make -C build-files/ports/rtl-sdr/ install
+<<<<<<< HEAD
           QNX_PROJECT_ROOT="$(pwd)/dump1090" make -C build-files/ports/dump1090/ install
+=======
+          QNX_PROJECT_ROOT="$(pwd)/dump1090" make -C build-files/ports/dump1090/ install
+>>>>>>> dc992d4 (yml file added)
