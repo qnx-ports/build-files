@@ -54,7 +54,7 @@ CMAKE_MODULE_PATH := $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/cmake;$(INSTALL_RO
 #because CMake and pkg-config do not necessary add it automatically
 #if the include path is "default"
 
-CFLAGS += -I$(QNX_TARGET)/usr/local/include/libusb-1.0 \
+CFLAGS += -I$(QNX_TARGET)/$(PREFIX)/include/libusb-1.0 \
           -DQNX \
           -D_QNX_SOURCE
 
@@ -67,14 +67,14 @@ CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DCMAKE_INSTALL_PREFIX="$(INSTALL_ROOT)" \
              -DCMAKE_INSTALL_LIBDIR="$(CPUVARDIR)/$(PREFIX)/lib" \
              -DCMAKE_INSTALL_BINDIR="$(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/bin/rtl-sdr-tests" \
-             -DCMAKE_INSTALL_INCLUDEDIR="$(PREFIX)/include" \
+             -DCMAKE_INSTALL_INCLUDEDIR="$(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/include" \
              -DCMAKE_MODULE_PATH="$(CMAKE_MODULE_PATH)" \
              -DCMAKE_FIND_ROOT_PATH="$(CMAKE_FIND_ROOT_PATH)" \
              -DCMAKE_BUILD_TYPE=$(CMAKE_BUILD_TYPE) \
              -DCPUVARDIR=$(CPUVARDIR)\
              -DLIBUSB_FOUND=TRUE\
              -DLIBUSB_LIBRARIES=$(QNX_TARGET)/$(CPUVARDIR)/usr/local/lib/libusb-1.0.so \
-            -DLIBUSB_INCLUDE_DIRS=$(QNX_TARGET)/$(CPUVARDIR)/usr/local/include/libusb-1.0
+             -DLIBUSB_INCLUDE_DIRS=$(QNX_TARGET)/$(CPUVARDIR)/usr/local/include/libusb-1.0
 
 MAKE_ARGS ?= -j $(firstword $(JLEVEL) 1)
 

@@ -55,10 +55,9 @@ make -C build-files/ports/rtl-sdr install JLEVEL=4
 ```bash
 export TARGET_HOST=<target-ip-address-or-hostname>
 
-# Copy the dependency libraries for testing
+# build libusb from qnx-ports first and proceed for below steps for testing 
 
 scp $QNX_TARGET/aarch64le/usr/local/lib/librtlsdr.so*   qnxuser@$TARGET_HOST:~/lib
-
 
 # Copy test binaries to target
 scp -r $QNX_TARGET/aarch64le/usr/local/bin/rtl-sdr-tests qnxuser@$TARGET_HOST:~/
@@ -66,7 +65,7 @@ scp -r $QNX_TARGET/aarch64le/usr/local/bin/rtl-sdr-tests qnxuser@$TARGET_HOST:~/
 #copy test script and run 
 scp $(pwd)/build-files/ports/rtl-sdr/test.sh qnxuser@$TARGET_HOST:~/
 
-#Copy the built libusb binaries from the SDP output directory (after building from qnx-ports) to the target filesystem.
+
 scp $QNX_TARGET/target/qnx/aarch64le/usr/local/lib/libusb*    qnxuser@$TARGET_HOST:~/lib
 
 
