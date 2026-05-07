@@ -21,10 +21,8 @@ ALL_DEPENDENCIES = $(NAME)_all
 .PHONY: $(NAME)_all install clean check
 
 # QNX flags
-CFLAGS += -D_QNX_SOURCE -g -O0
-LDFLAGS += -lrtlsdr -lm  -lsocket
-CFLAGS += -DQNX=1
-
+CFLAGS += -D_QNX_SOURCE -g -O0 -DQNX=1 -I$(QNX_TARGET)/include
+LDFLAGS += -lrtlsdr -lm -lsocket
 
 include $(MKFILES_ROOT)/qtargets.mk
 

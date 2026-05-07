@@ -54,6 +54,8 @@ make -C build-files/ports/dump1090 install JLEVEL=4
 ```bash
 export TARGET_HOST=<target-ip-address-or-hostname>
 
+
+# Note: build rtl-sdr,libusb from the qnx-ports and proceed for further steps 
 # Copy the dependency libraries for testing
 
 scp $QNX_TARGET/aarch64le/usr/local/lib/librtlsdr.so*   qnxuser@$TARGET_HOST:~/lib
@@ -63,8 +65,6 @@ scp $QNX_TARGET/aarch64le/usr/local/lib/librtlsdr.so*   qnxuser@$TARGET_HOST:~/l
 scp -r $QNX_TARGET/aarch64le/usr/local/bin/dump1090 qnxuser@$TARGET_HOST:~/
 
 
-#copy libusb to target from your  sdp location
-Note: Not available in the qnx ports and internal library
 scp $QNX_TARGET/target/qnx/aarch64le/usr/lib/libusb*    qnxuser@$TARGET_HOST:~/lib
 
 
