@@ -35,13 +35,6 @@ jobs:
         with:
           path: build-files
 
-      - name: Checkout rtl-sdr
-        uses: actions/checkout@v4
-        with:
-          repository: qnx-ports/rtl-sdr
-          ref: qnx_2.0.2
-          path: rtl-sdr
-
       - name: Checkout libusb
         uses: actions/checkout@v4
         with:
@@ -58,6 +51,13 @@ jobs:
             source ~/qnx/710/qnxsdp-env.sh
           fi
           QNX_PROJECT_ROOT="$(pwd)/libusb" make -C build-files/ports/libusb/ install
+
+      - name: Checkout rtl-sdr
+        uses: actions/checkout@v4
+        with:
+          repository: qnx-ports/rtl-sdr
+          ref: qnx_2.0.2
+          path: rtl-sdr
 
       - name: Build rtl-sdr
         shell: bash
