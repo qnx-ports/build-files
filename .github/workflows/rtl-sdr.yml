@@ -55,7 +55,6 @@ jobs:
           else
             source ~/qnx/710/qnxsdp-env.sh
           fi
-          QNX_PROJECT_ROOT="$(pwd)/libusb" make -C ports/libusb install
-
-          QNX_PROJECT_ROOT="$(pwd)/rtl-sdr" make -C ports/rtl-sdr install   
+          QNX_PROJECT_ROOT="$(pwd)/libusb" make -C build-files/ports/libusb/ install
+          QNX_PROJECT_ROOT="$(pwd)/rtl-sdr" make -C build-files/ports/rtl-sdr/ install
           
