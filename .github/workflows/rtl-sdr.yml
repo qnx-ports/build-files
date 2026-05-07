@@ -63,8 +63,6 @@ jobs:
           else
             source ~/qnx/710/qnxsdp-env.sh
           fi
-
-          QNX_PROJECT_ROOT="$(pwd)/libusb" \
             make -C build-files/ports/libusb/ install
 
       - name: Build rtl-sdr
