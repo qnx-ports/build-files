@@ -1,0 +1,66 @@
+name: dump1090
+
+permissions:
+  contents: write
+  checks: write
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/dump1090.yml'
+      - 'ports/dump1090/**'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/dump1090.yml'
+      - 'ports/dump1090/**'
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        qnx_env: [ 710, 800 ]
+    runs-on: ubuntu-22.04-common
+    if: |
+      ((github.event_name == 'workflow_dispatch') ||
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'dump1090')))
+    steps:
+      - name: Checkout build-files
+        uses: actions/checkout@v4
+        with:
+          path: build-files
+
+      - name: Checkout dump1090
+        uses: actions/checkout@v4
+        with:
+          repository: qnx-ports/dump1090
+          path: dump1090
+
+      - name: Checkout rtl-sdr
+        uses: actions/checkout@v4
+        with:
+          repository: qnx-ports/rtl-sdr
+          path: rtl-sdr
+
+      - name: Checkout libusb
+        uses: actions/checkout@v4
+        with:
+          repository: qnx-ports/libusb
+          path: libusb 
+
+      - name: Build dump1090
+        shell: bash
+        run: |
+          if [[ "${{ matrix.qnx_env }}" == "800" ]]; then
+            source ~/qnx/800/qnxsdp-env.sh
+          else
+            source ~/qnx/710/qnxsdp-env.sh
+          fi
+          QNX_PROJECT_ROOT="$(pwd)/libusb" make -C build-files/ports/libusb/ install
+          QNX_PROJECT_ROOT="$(pwd)/rtl-sdr" make -C build-files/ports/rtl-sdr/ install
+          QNX_PROJECT_ROOT="$(pwd)/dump1090" make -C build-files/ports/dump1090/ install
