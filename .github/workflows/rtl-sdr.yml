@@ -12,6 +12,7 @@ on:
     paths:
       - '.github/workflows/rtl-sdr.yml'
       - 'ports/rtl-sdr/**'
+
   pull_request:
     branches:
       - main
@@ -23,12 +24,15 @@ jobs:
   build:
     strategy:
       matrix:
-        qnx_env: [ 710, 800 ]
+        qnx_env: [710, 800]
+
     runs-on: ubuntu-22.04-common
+
     if: |
       ((github.event_name == 'workflow_dispatch') ||
       (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
       (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'rtl-sdr')))
+
     steps:
       - name: Checkout build-files
         uses: actions/checkout@v4
@@ -38,18 +42,18 @@ jobs:
       - name: Checkout libusb
         uses: actions/checkout@v4
         with:
-        repository: qnx-ports/libusb
-        ref: libusb-1.0.23
-        fetch-depth: 1
-        path: libusb
+          repository: qnx-ports/libusb
+          ref: libusb-1.0.23
+          fetch-depth: 1
+          path: libusb
 
       - name: Checkout rtl-sdr
         uses: actions/checkout@v4
         with:
-        repository: qnx-ports/rtl-sdr
-        ref: qnx_2.0.2
-        fetch-depth: 1
-        path: rtl-sdr
+          repository: qnx-ports/rtl-sdr
+          ref: qnx_2.0.2
+          fetch-depth: 1
+          path: rtl-sdr
 
       - name: Build libusb
         shell: bash
@@ -59,14 +63,9 @@ jobs:
           else
             source ~/qnx/710/qnxsdp-env.sh
           fi
-          QNX_PROJECT_ROOT="$(pwd)/libusb" make -C build-files/ports/libusb/ install
 
-      - name: Checkout rtl-sdr
-        uses: actions/checkout@v4
-        with:
-          repository: qnx-ports/rtl-sdr
-          ref: qnx_2.0.2
-          path: rtl-sdr
+          QNX_PROJECT_ROOT="$(pwd)/libusb" \
+            make -C build-files/ports/libusb/ install
 
       - name: Build rtl-sdr
         shell: bash
@@ -76,5 +75,6 @@ jobs:
           else
             source ~/qnx/710/qnxsdp-env.sh
           fi
-          QNX_PROJECT_ROOT="$(pwd)/rtl-sdr" make -C build-files/ports/rtl-sdr/ install
-        
+
+          QNX_PROJECT_ROOT="$(pwd)/rtl-sdr" \
+            make -C build-files/ports/rtl-sdr/ install
