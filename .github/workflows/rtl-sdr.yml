@@ -38,9 +38,18 @@ jobs:
       - name: Checkout libusb
         uses: actions/checkout@v4
         with:
-          repository: qnx-ports/libusb
-          ref: libusb-1.0.23
-          path: libusb 
+        repository: qnx-ports/libusb
+        ref: libusb-1.0.23
+        fetch-depth: 1
+        path: libusb
+
+      - name: Checkout rtl-sdr
+        uses: actions/checkout@v4
+        with:
+        repository: qnx-ports/rtl-sdr
+        ref: qnx_2.0.2
+        fetch-depth: 1
+        path: rtl-sdr
 
       - name: Build libusb
         shell: bash
