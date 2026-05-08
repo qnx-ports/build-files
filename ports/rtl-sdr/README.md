@@ -32,15 +32,14 @@ git clone https://github.com/qnx-ports/rtl-sdr.git
 make -C build-files/ports/rtl-sdr install JLEVEL=4
 
 ```
-
 # Compile the port for QNX on Ubuntu host
 
 ```bash
+
 # Clone the repos
 mkdir -p ~/qnx_workspace && cd qnx_workspace
 git clone https://github.com/qnx-ports/build-files.git
 git clone https://github.com/qnx-ports/rtl-sdr.git
-
 
 # source qnxsdp-env.sh
 source ~/qnx800/qnxsdp-env.sh
@@ -49,14 +48,13 @@ source ~/qnx800/qnxsdp-env.sh
 make -C build-files/ports/rtl-sdr install JLEVEL=4
 
 ```
-
 # Running tests
 
 ```bash
+
 export TARGET_HOST=<target-ip-address-or-hostname>
 
 # build libusb from qnx-ports first and proceed for below steps for testing 
-
 scp $QNX_TARGET/aarch64le/usr/local/lib/librtlsdr.so*   qnxuser@$TARGET_HOST:~/lib
 
 # Copy test binaries to target
@@ -65,9 +63,7 @@ scp -r $QNX_TARGET/aarch64le/usr/local/bin/rtl-sdr-tests qnxuser@$TARGET_HOST:~/
 #copy test script and run 
 scp $(pwd)/build-files/ports/rtl-sdr/test.sh qnxuser@$TARGET_HOST:~/
 
-
 scp $QNX_TARGET/target/qnx/aarch64le/usr/local/lib/libusb*    qnxuser@$TARGET_HOST:~/lib
-
 
 ```
 ### On target run
