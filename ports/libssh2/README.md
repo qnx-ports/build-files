@@ -27,15 +27,15 @@ cd build-files/docker
 source ~/qnx800/qnxsdp-env.sh
 cd ~/qnx_workspace
 
-# Clone unbound
-git clone https://github.com/qnx-ports/unbound.git
-cd unbound
-git checkout qnx-release-1.24.1
+# Clone libssh2
+git clone https://github.com/qnx-ports/libssh2.git
+cd libssh2
+git checkout qnx-libssh2-1.11.1
 cd ..
 
 
-# Build unbound
-QNX_PROJECT_ROOT="$(pwd)/unbound" make -C build-files/ports/unbound/  install -j4
+# Build libssh2
+QNX_PROJECT_ROOT="$(pwd)/libssh2" make -C build-files/ports/libssh2/  install -j4
 ```
 
 # Compile the port for QNX on Ubuntu host
@@ -49,52 +49,14 @@ git clone https://github.com/qnx-ports/build-files.git
 source ~/qnx800/qnxsdp-env.sh
 cd ~/qnx_workspace
 
-# Clone unbound
-git clone https://github.com/qnx-ports/unbound.git
-cd unbound
+# Clone libssh2
+git clone https://github.com/qnx-ports/libssh2.git
+cd libssh2
 git checkout qnx-release-1.24.1
 cd ..
 
 
-# Build unbound
-QNX_PROJECT_ROOT="$(pwd)/unbound" make -C build-files/ports/unbound/  install -j4
+# Build libssh2
+QNX_PROJECT_ROOT="$(pwd)/libssh2" make -C build-files/ports/libssh2/  install -j4
 ```
 
-
-# Testing :
-
-After building Unbound for your QNX target, validation is straightforward. The make process already compiles test binaries and copies test data to the CPU-specific directory (nto-<cpudir>). Deploy and run tests on your target device (RPi/x86 QNX machine).
-
-Prerequisites:
-    1. Built Unbound artifacts in build-files/ports/unbound/nto-<cpudir>/
-    2. Write permissions on target /tmp (or use TMPDIR=/fs/hd0/temp)
-    3. SSH access to target device
-
-1. Deploy to Target Device
-```bash
-TARGET_HOST=<target-ip-or-hostname>
-
-# Copy entire CPU directory to target
-scp -r ./build-files/ports/unbound/nto-aarch64-le qnxuser@$TARGET_HOST:/home/qnxuser/guests/
-```
-2. SSH to Target and Setup Environment
-```bash
-ssh qnxuser@<TARGET_HOST>
-cd /home/qnxuser/guests/nto-aarch64-le
-
-# Set library path (adjust to your install location)
-export LD_LIBRARY_PATH=/usr/local/lib:$PWD:$LD_LIBRARY_PATH
-```
-3. Run Validation Tests
-```bash
-# Execute full test suite
-sh ./unboundtest.sh
-```
-4. Expected Results
-```text
-1329XXX checks ok.
-selftest successful (33 checks).
-testdata/acl.rpl OK
-testdata/auth_nsec3_*.rpl OK
-# Note: auth_xfr.rpl may fail on QNX due to /tmp limitations (non-critical)
-```
