@@ -65,6 +65,8 @@ LDFLAGS += -Wl,--build-id=md5
 
 # Add choice to build and install tests
 BUILD_TESTING ?= ON
+BUILD_SHARED_LIBS ?= ON
+BUILD_DOCS ?= OFF
 
 
 CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
@@ -80,7 +82,8 @@ CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DCMAKE_FIND_ROOT_PATH="$(CMAKE_FIND_ROOT_PATH)" \
              -DCMAKE_BUILD_TYPE=$(CMAKE_BUILD_TYPE) \
              -DBUILD_TESTING=$(BUILD_TESTING) \
-             -DBUILD_SHARED_LIBS=$(BUILD_SHARED_LIBS)
+             -DBUILD_SHARED_LIBS=$(BUILD_SHARED_LIBS) \
+             -DBUILD_DOCS=$(BUILD_DOCS)
 
 MAKE_ARGS ?= -j $(firstword $(JLEVEL) 1)
 
