@@ -40,7 +40,7 @@ jobs:
         with:
           repository: qnx-ports/libssh2
           path: libssh2
-          ref: qnx-libssh2-1.11.1
+          ref: murthy/qnx-libssh2-1.11.1
 
       - name: Build libssh2
         shell: bash
