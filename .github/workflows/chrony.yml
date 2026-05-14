@@ -61,24 +61,6 @@ jobs:
           fi
           QNX_PROJECT_ROOT="$(pwd)/gmp" make -C build-files/ports/gmp install
 
-      - name: Checkout nettle
-        uses: actions/checkout@v4
-        with:
-          repository: gnutls/nettle
-          path: nettle
-
-      - name: Build nettle
-        shell: bash
-        run: |
-          if [[ "${{ matrix.qnx_env }}" == "800" ]]; then
-            source ~/qnx/800/qnxsdp-env.sh
-          else
-            source ~/qnx/710/qnxsdp-env.sh
-          fi
-          QNX_PROJECT_ROOT="$(pwd)/nettle" make -C build-files/ports/nettle install
-
-          autogen --version
-
       - name: Checkout gnutls
         uses: actions/checkout@v4
         with:
