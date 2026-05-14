@@ -57,8 +57,8 @@ CFLAGS += -I$(QNX_TARGET)/$(PREFIX)/include \
           -I$(INSTALL_ROOT)/$(PREFIX)/include \
           -D_QNX_SOURCE
 
-export PKG_CONFIG_LIBDIR=$(QNX_TARGET)/$(CPUVARDIR)/usr/local/lib/pkgconfig:$(INSTALL_ROOT)/$(CPUVARDIR)/usr/local/lib/pkgconfig
-export PKG_CONFIG_SYSROOT_DIR=$(QNX_TARGET)/$(CPUVARDIR):$(INSTALL_ROOT)/$(CPUVARDIR)
+export PKG_CONFIG_LIBDIR=$(QNX_TARGET)/$(CPUVARDIR)/usr/local/lib/pkgconfig
+export PKG_CONFIG_SYSROOT_DIR=$(QNX_TARGET)/$(CPUVARDIR)
 
 CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DCMAKE_SYSTEM_PROCESSOR=$(CPUVARDIR) \
