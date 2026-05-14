@@ -30,8 +30,7 @@ ALL_DEPENDENCIES = $(NAME)_all
 .PHONY: $(NAME)_all install check clean
 
 CFLAGS += $(FLAGS)
-LDFLAGS += -Wl,--build-id=md5
-LDFLAGS += -lsocket
+LDFLAGS += -Wl,--build-id=md5,-lsocket
 
 include $(MKFILES_ROOT)/qtargets.mk
 
@@ -58,6 +57,9 @@ CFLAGS += -I$(QNX_TARGET)/$(PREFIX)/include/libusb-1.0 \
           -I$(INSTALL_ROOT)/include \
           -D_QNX_SOURCE
 
+export PKG_CONFIG_LIBDIR=$(QNX_TARGET)/$(CPUVARDIR)/usr/local/lib/pkgconfig
+export PKG_CONFIG_SYSROOT_DIR=$(QNX_TARGET)/$(CPUVARDIR)
+
 CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DCMAKE_SYSTEM_PROCESSOR=$(CPUVARDIR) \
              -DCMAKE_CXX_FLAGS="$(CFLAGS)" \
@@ -70,11 +72,7 @@ CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DCMAKE_INSTALL_INCLUDEDIR="$(CPUVARDIR)/$(PREFIX)/include" \
              -DCMAKE_MODULE_PATH="$(CMAKE_MODULE_PATH)" \
              -DCMAKE_FIND_ROOT_PATH="$(CMAKE_FIND_ROOT_PATH)" \
-             -DCMAKE_BUILD_TYPE=$(CMAKE_BUILD_TYPE) \
-             -DCPUVARDIR=$(CPUVARDIR)\
-             -DLIBUSB_FOUND=TRUE\
-             -DLIBUSB_LIBRARIES=$(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/libusb-1.0.so \
-             -DLIBUSB_INCLUDE_DIRS=$(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/include/libusb-1.0
+             -DCMAKE_BUILD_TYPE=$(CMAKE_BUILD_TYPE)
 
 MAKE_ARGS ?= -j $(firstword $(JLEVEL) 1)
 
