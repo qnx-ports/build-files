@@ -15,16 +15,6 @@ function hook_preconfigure {
 
     # Set DESTDIR for staged installs
     export DESTDIR="${INSTALL_ROOT_nto}"
-
-    # Ensure pkg-config points to QNX target .pc files
-    export PKG_CONFIG_LIBDIR="${INSTALL_ROOT_nto}/${cpudir}${BASIC_PREFIX}/lib/pkgconfig"
-
-    # Ensure compiler flags can find QNX includes and libs
-    export CPPFLAGS="-I${QNX_TARGET}/${cpudir}/usr/include \
-                     -I${INSTALL_ROOT_nto}/${cpudir}${BASIC_PREFIX}/include ${CPPFLAGS}"
-
-    export LDFLAGS="-L${INSTALL_ROOT_nto}/${cpudir}${BASIC_PREFIX}/lib \
-                    -L${INSTALL_ROOT_nto}/${cpudir}/usr/lib ${LDFLAGS}"
     
     # Set CFLAGS that configure will use
     export CFLAGS="-O2 -Wall -Wno-format -Wno-unused-but-set-variable"
