@@ -6,9 +6,7 @@ include $(QCONFIG)
 include $(MKFILES_ROOT)/qmacros.mk
 
 NAME = libssh2
-
 SSH2_VERSION = 1.11.1
-
 QNX_PROJECT_ROOT ?= $(PRODUCT_ROOT)/../../
 
 #$(INSTALL_ROOT_$(OS)) is pointing to $QNX_TARGET
@@ -57,8 +55,7 @@ CMAKE_MODULE_PATH := $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/cmake;$(INSTALL_RO
 #if the include path is "default"
 CFLAGS += $(FLAGS) \
           -I$(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/include \
-          -I$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/include \
-          -I$(INSTALL_ROOT)/$(PREFIX)/include \
+          -I$(QNX_TARGET)/$(PREFIX)/include \
           -D_QNX_SOURCE
           
 LDFLAGS += -Wl,--build-id=md5
@@ -68,9 +65,9 @@ BUILD_TESTING ?= ON
 BUILD_SHARED_LIBS ?= ON
 BUILD_DOCS ?= OFF
 
-
 CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DCMAKE_SYSTEM_PROCESSOR=$(CPUVARDIR) \
+             -DCMAKE_BUILD_TYPE=$(CMAKE_BUILD_TYPE) \
              -DCMAKE_C_FLAGS="$(CFLAGS)" \
              -DCMAKE_EXE_LINKER_FLAGS="$(LDFLAGS)" \
              -DCMAKE_CXX_COMPILER_TARGET=gcc_nto$(CPUVARDIR) \
@@ -78,9 +75,7 @@ CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DCMAKE_INSTALL_PREFIX=$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX) \
              -DCMAKE_INSTALL_INCLUDEDIR=$(INSTALL_ROOT)/$(PREFIX)/include \
              -DCMAKE_STAGING_PREFIX="$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)" \
-             -DCMAKE_MODULE_PATH="$(CMAKE_MODULE_PATH)" \
              -DCMAKE_FIND_ROOT_PATH="$(CMAKE_FIND_ROOT_PATH)" \
-             -DCMAKE_BUILD_TYPE=$(CMAKE_BUILD_TYPE) \
              -DBUILD_TESTING=$(BUILD_TESTING) \
              -DBUILD_SHARED_LIBS=$(BUILD_SHARED_LIBS) \
              -DBUILD_DOCS=$(BUILD_DOCS)
