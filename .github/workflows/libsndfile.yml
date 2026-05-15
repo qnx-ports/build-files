@@ -23,7 +23,7 @@ jobs:
   build:
     strategy:
       matrix:
-        qnx_env: [ 710, 800 ]
+        qnx_env: [ 800 ]
     name: Build for QNX ${{ matrix.qnx_env }}
     runs-on: ubuntu-22.04-common
     if: |
@@ -46,9 +46,5 @@ jobs:
       - name: Build libsndfile
         shell: bash
         run: |
-          if [[ "${{ matrix.qnx_env }}" == "800" ]]; then
-            source ~/qnx/800/qnxsdp-env.sh
-          else
-            source ~/qnx/710/qnxsdp-env.sh
-          fi
+          source ~/qnx/800/qnxsdp-env.sh
           QNX_PROJECT_ROOT="$(pwd)/libsndfile" make -C build-files/ports/libsndfile install
