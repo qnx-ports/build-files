@@ -1,0 +1,28 @@
+diff --git a/Cargo.toml b/Cargo.toml
+index b7a72147..9c4f8f3d 100644
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -124,3 +124,9 @@ lto = "fat"
+ codegen-units = 1
+ opt-level = 3
+ panic = "abort"
++
++[patch.crates-io]
++ring = { git = "https://github.com/briansmith/ring.git", rev = "d018db62e1a4a92689611c86d33d6a85939197c4" }
++pnet_sys = { path = "/home/pkleymonov/qnx_workspace/libpnet/pnet_sys" }
++pnet_datalink = { path = "/home/pkleymonov/qnx_workspace/libpnet/pnet_datalink" }
++zenoh-util = { path = "/home/pkleymonov/qnx_workspace/zenoh" }
+diff --git a/Cargo.toml.in b/Cargo.toml.in
+index 894ef445..167154ab 100644
+--- a/Cargo.toml.in
++++ b/Cargo.toml.in
+@@ -124,3 +124,9 @@ lto = "fat"
+ codegen-units = 1
+ opt-level = 3
+ panic = "abort"
++
++[patch.crates-io]
++ring = { git = "https://github.com/briansmith/ring.git", rev = "d018db62e1a4a92689611c86d33d6a85939197c4" }
++pnet_sys = { path = "/home/pkleymonov/qnx_workspace/libpnet/pnet_sys" }
++pnet_datalink = { path = "/home/pkleymonov/qnx_workspace/libpnet/pnet_datalink" }
++zenoh-util = { path = "/home/pkleymonov/qnx_workspace/zenoh" }

@@ -1,0 +1,13 @@
+1.4.0:
+  sources:
+    url: "https://github.com/eclipse-zenoh/zenoh-c/archive/refs/tags/1.4.0.tar.gz"
+    sha256: "686267200cbedcc9816c61d53dfae4a7a926a68fa6f9fa533cf1cf2aed5ef663"
+  build_requirements:
+    rust-toolchain: "1.90.0"
+    rustup: "1.28.2"
+patches:
+  1.4.0:
+    #- patch_file: "patches/zenoh-c-1.4.0-ring.patch"
+    - patch_file: "patches/ring_pnet_sys.patch"
+      patch_description: "ring QNX support"
+      patch_type: "bugfix"
