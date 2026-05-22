@@ -64,9 +64,7 @@ endif
 #because CMake and pkg-config do not necessary add it automatically
 #if the include path is "default"
 CFLAGS += $(FLAGS) \
-          -I$(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/include \
           -I$(QNX_TARGET)/$(PREFIX)/include \
-          -I$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/include \
           -I$(INSTALL_ROOT)/$(PREFIX)/include \
           -D_QNX_SOURCE
 
