@@ -25,9 +25,9 @@ PREFIX ?= /usr/local
 
 BOOST_CPP_VERSION_FLAG ?= -std=c++11
 
-ifneq ($(wildcard $(QNX_TARGET)/usr/include/python3.11),)
-	PYTHON_VERSION = 3.11
-	PYTHON_USER_CONFIG=user-config-python311.jam
+ifneq ($(wildcard $(QNX_TARGET)/usr/include/python3.13),)
+	PYTHON_VERSION = 3.13
+	PYTHON_USER_CONFIG=user-config-python313.jam
 else
 	PYTHON_VERSION = 3.8
 	PYTHON_USER_CONFIG=user-config-python38.jam
