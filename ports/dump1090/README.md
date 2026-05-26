@@ -1,3 +1,4 @@
+# dump1090 [![Build](https://github.com/qnx-ports/build-files/actions/workflows/dump1090.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/dump1090.yml)
 
 **NOTE**: QNX ports are only supported from a Linux host operating system
 
