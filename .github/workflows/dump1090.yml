@@ -52,27 +52,7 @@ jobs:
         with:
           repository: qnx-ports/libusb
           path: libusb
-
-      - name: Build libusb
-        shell: bash
-        run: |
-          if [[ "${{ matrix.qnx_env }}" == "800" ]]; then
-            source ~/qnx/800/qnxsdp-env.sh
-          else
-            source ~/qnx/710/qnxsdp-env.sh
-          fi
-          QNX_PROJECT_ROOT="$(pwd)/libusb" make -C build-files/ports/libusb/ install
-
-      - name: Build rtl-sdr
-        shell: bash
-        run: |
-          if [[ "${{ matrix.qnx_env }}" == "800" ]]; then
-            source ~/qnx/800/qnxsdp-env.sh
-          else
-            source ~/qnx/710/qnxsdp-env.sh
-          fi
-          QNX_PROJECT_ROOT="$(pwd)/rtl-sdr" make -C build-files/ports/rtl-sdr/ install
-
+          
       - name: Build dump1090
         shell: bash
         run: |
@@ -81,4 +61,7 @@ jobs:
           else
             source ~/qnx/710/qnxsdp-env.sh
           fi
+          QNX_PROJECT_ROOT="$(pwd)/libusb" make -C build-files/ports/libusb/ install
+          QNX_PROJECT_ROOT="$(pwd)/rtl-sdr" make -C build-files/ports/rtl-sdr/ install
           QNX_PROJECT_ROOT="$(pwd)/dump1090" make -C build-files/ports/dump1090/ install
+          
