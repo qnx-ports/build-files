@@ -56,6 +56,8 @@ CFLAGS += $(FLAGS) -I$(QNX_TARGET)/$(PREFIX)/include \
 LDFLAGS += -Wl,--build-id=md5 -Wl,--allow-shlib-undefined
 
 BUILD_TESTING ?= OFF
+BUILD_SHARED_LIBS ?= ON
+
 CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DCMAKE_SYSTEM_PROCESSOR=$(CPU) \
              -DCMAKE_BUILD_TYPE=$(CMAKE_BUILD_TYPE) \
@@ -65,7 +67,8 @@ CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DCMAKE_STAGING_PREFIX="$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)" \
              -DCMAKE_MODULE_PATH="$(CMAKE_MODULE_PATH)" \
              -DCMAKE_FIND_ROOT_PATH="$(CMAKE_FIND_ROOT_PATH)" \
-             -DBUILD_TESTING=$(BUILD_TESTING)
+             -DBUILD_TESTING=$(BUILD_TESTING) \
+             -DBUILD_SHARED_LIBS=$(BUILD_SHARED_LIBS)
 
 MAKE_ARGS ?= -j $(firstword $(JLEVEL) 1)
 
