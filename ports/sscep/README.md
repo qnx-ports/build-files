@@ -27,16 +27,16 @@ cd build-files/docker
 cd ~/qnx_workspace
 source ~/qnx800/qnxsdp-env.sh
 
-# Clone sscep and openssl-companion
-git clone --recurse-submodules -b qnx-openssl-3.5.4 https://github.com/qnx-ports/openssl-companion.git
+# Clone sscep
 git clone https://github.com/qnx-ports/sscep.git
 
-# Build openssl
+# Optional: if custom openssl version required
+git clone --recurse-submodules -b qnx-openssl-3.5.4 https://github.com/qnx-ports/openssl-companion.git
 mkdir -p install_ssl
 make -C openssl-companion/build/Make install JLEVEL=4 INSTALL_ROOT_nto=$(pwd)/install_ssl USE_INSTALL_ROOT=true
 
 # Build sscep
-USE_CUSTOM_SSL=true make -C build-files/ports/sscep install JLEVEL=4 [default SSL path is $(pwd)/install_ssl; USE_IOSOCK=true to enable io-sock]
+make -C build-files/ports/sscep install JLEVEL=4 [default SSL path is $(pwd)/install_ssl; USE_IOSOCK=true to enable io-sock; USE_CUSTOM_SSL=true for custom OpenSSL]
 ```
 
 # Compile the port for QNX on Ubuntu Host
@@ -44,15 +44,15 @@ USE_CUSTOM_SSL=true make -C build-files/ports/sscep install JLEVEL=4 [default SS
 ```bash
 # Clone the repositories
 git clone https://github.com/qnx-ports/build-files.git
-git clone --recurse-submodules -b qnx-openssl-3.5.4 https://github.com/qnx-ports/openssl-companion.git
 git clone https://github.com/qnx-ports/sscep.git
 
-# Build openssl
+# Optional: if custom openssl version required
+git clone --recurse-submodules -b qnx-openssl-3.5.4 https://github.com/qnx-ports/openssl-companion.git
 mkdir -p install_ssl
 make -C openssl-companion/build/Make install JLEVEL=4 INSTALL_ROOT_nto=$(pwd)/install_ssl USE_INSTALL_ROOT=true
 
 # Build sscep
-USE_CUSTOM_SSL=true make -C build-files/ports/sscep install JLEVEL=4 [default SSL path is $(pwd)/install_ssl; USE_IOSOCK=true to enable io-sock]
+make -C build-files/ports/sscep install JLEVEL=4 [default SSL path is $(pwd)/install_ssl; USE_IOSOCK=true to enable io-sock; USE_CUSTOM_SSL=true for custom OpenSSL]
 ```
 
 # How to run application
