@@ -24,34 +24,18 @@ function hook_preconfigure {
 function hook_configure {
     echo "hook_configure - waf configure"  
       
-    export PKG_CONFIG_LIBDIR=${DESTDIR}/usr/local/lib/pkgconfig  
+    export PKG_CONFIG_LIBDIR="${DESTDIR}/usr/local/lib/pkgconfig"
     cd "${NESTED_LEVEL}" || exit 1  
 
-    case "${cpudir}" in  
-        aarch64le)  
-            TARGET_CC="aarch64-unknown-nto-qnx7.1.0-gcc"
-            ;;  
-        x86_64)  
-            TARGET_CC="x86_64-pc-nto-qnx7.1.0-gcc"  
-            ;;  
-        *)  
-            echo "ERROR: Unknown architecture ${cpudir}"  
-            exit 1  
-            ;;  
-    esac 
-    # Capture the QNX target flags before unsetting them
+    TARGET_CC="${CC}"
     TARGET_CFLAGS="${CFLAGS}"  
-    TARGET_LDFLAGS="${LDFLAGS} -lsocket -lm"  
+    TARGET_LDFLAGS="${LDFLAGS} -lsocket -lm"  # Required on QNX for socket and math symbols
 
     unset AR LD CPPFLAGS
 
-export CC="${TARGET_CC}"
-export CFLAGS="${TARGET_CFLAGS}"
-export LDFLAGS="${TARGET_LDFLAGS}"
-
-    echo "TARGET_CC=${TARGET_CC}"  
-    echo "TARGET_CFLAGS=${TARGET_CFLAGS}"  
-    echo "TARGET_LDFLAGS=${TARGET_LDFLAGS}"
+    export CC="${TARGET_CC}"
+    export CFLAGS="${TARGET_CFLAGS}"
+    export LDFLAGS="${TARGET_LDFLAGS}"
   
     # IMPORTANT: Unset target-polluted variables so 'host' variant uses native tools  
     unset CC CFLAGS LDFLAGS CPPFLAGS AR LD  
@@ -71,7 +55,7 @@ function hook_make {
     cd "${NESTED_LEVEL}" || exit 1
 
     if [ "${make_cmds}" = "install" ]; then
-        ./waf install --destdir=${INSTALL_ROOT_nto} || exit 1
+        ./waf install --destdir="${INSTALL_ROOT_nto}" || exit 1
 
     elif [ "${make_cmds}" = "clean" ]; then
         ./waf clean || exit 1
