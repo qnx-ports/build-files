@@ -28,12 +28,13 @@ source ~/qnx710/qnxsdp-env.sh
 source ~/qnx800/qnxsdp-env.sh
 cd ~/qnx_workspace
 
-# clone sysbench
-git clone https://github.com/qnx-ports/sysbench.git
+# clone ntpsec
+git clone https://github.com/qnx-ports/ntpsec.git
 
-# Build sysbench
-QNX_PROJECT_ROOT="$(pwd)/sysbench" make -C build-files/ports/sysbench clean 
-QNX_PROJECT_ROOT="$(pwd)/sysbench" make -C build-files/ports/sysbench install JLEVEL=4
+# Build ntpsec
+QNX_PROJECT_ROOT="$(pwd)/ntpsec" make -C build-files/ports/NTPsec clean
+QNX_PROJECT_ROOT="$(pwd)/ntpsec" make -C build-files/ports/NTPsec install
+
 ```
 
 # Compile the port for QNX on Ubuntu host
@@ -50,32 +51,10 @@ source ~/qnx710/qnxsdp-env.sh
 source ~/qnx800/qnxsdp-env.sh
 cd ~/qnx_workspace
 
-# clone sysbench
-git clone https://github.com/qnx-ports/sysbench.git
+# clone ntpsec
+git clone https://github.com/qnx-ports/ntpsec.git
 
-# Build sysbench
-QNX_PROJECT_ROOT="$(pwd)/sysbench" make -C build-files/ports/sysbench clean 
-QNX_PROJECT_ROOT="$(pwd)/sysbench" make -C build-files/ports/sysbench install JLEVEL=4
-```
-# Running tests
-
-```bash
-export TARGET_HOST=<target-ip-address-or-hostname>
-mkdir sysbench
-
-# Copy the dependency libraries for testing
-scp $QNX_TARGET/aarch64le/usr/local/bin/sysbench   qnxuser@$TARGET_HOST:~/sysbench
-```
-
-### On target run
-
-```bash
-cd ~/sysbench
-./sysbench cpu run
-./sysbench memory run
-./sysbench threads run
-./sysbench mutex run
-./sysbench fileio prepare
-./sysbench fileio run
-./sysbench fileio cleanup
+# Build ntpsec
+QNX_PROJECT_ROOT="$(pwd)/ntpsec" make -C build-files/ports/NTPsec clean
+QNX_PROJECT_ROOT="$(pwd)/ntpsec" make -C build-files/ports/NTPsec install
 ```
