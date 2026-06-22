@@ -6,7 +6,7 @@ This repository provides QNX-specific build files required to build various port
 
 **For build instructions, refer to the `README.md` file located in the sub-directory of the specific port.**
 
-Some open-source projects build without requiring modifications, so they don’t have a dedicated fork at https://github.com/qnx-ports/.
+Some open-source projects build without requiring modifications, so they don’t have a dedicated fork at https://github.com/qnx-ports/
 
 ## Building the Ports
 
