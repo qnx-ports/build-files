@@ -39,10 +39,10 @@ $(NAME)_all:
 		LDFLAGS="$(LDFLAGS)"
 
 install: $(NAME)_all
-	mkdir -p $(INSTALL_ROOT)/$(CPUVARDIR)/usr/bin
+	mkdir -p $(INSTALL_ROOT)/$(CPUVARDIR)/usr/local/bin
 	install -m 755 \
 		$(BUILD_DIR)/tree \
-		$(INSTALL_ROOT)/$(CPUVARDIR)/usr/bin/tree
+		$(INSTALL_ROOT)/$(CPUVARDIR)/usr/local/bin/tree
 
 check:
 	@echo "No tests for tree"
