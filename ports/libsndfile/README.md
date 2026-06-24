@@ -31,7 +31,8 @@ cd ~/qnx_workspace
 git clone -b 1.2.2 https://github.com/libsndfile/libsndfile.git
 
 # Build libsndfile
-QNX_PROJECT_ROOT="$(pwd)/libsndfile" make -C build-files/ports/libsndfile/ install -j4
+#QNX_PROJECT_ROOT=<source_path>
+make -C build-files/ports/libsndfile/ install -j4
 ```
 
 # Compile the port for QNX on Ubuntu host
@@ -47,7 +48,8 @@ source ~/qnx800/qnxsdp-env.sh
 cd ~/qnx_workspace
 
 # Build libsndfile
-QNX_PROJECT_ROOT="$(pwd)/libsndfile" make -C build-files/ports/libsndfile/ install -j4 
+#QNX_PROJECT_ROOT=<source_path>
+make -C build-files/ports/libsndfile/ install -j4 
 ```
 Here is a README for validating libsndfile on your QNX target, following the same format as your examples:
 

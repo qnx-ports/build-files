@@ -6,7 +6,7 @@ include $(QCONFIG)
 include $(MKFILES_ROOT)/qmacros.mk
 
 NAME = libsndfile
-QNX_PROJECT_ROOT ?= $(PRODUCT_ROOT)/../../
+QNX_PROJECT_ROOT ?= $(PRODUCT_ROOT)/../../$(NAME)
 
 #$(INSTALL_ROOT_$(OS)) is pointing to $QNX_TARGET
 #by default, unless it was manually re-routed to
@@ -51,7 +51,8 @@ CMAKE_MODULE_PATH := $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/cmake;$(INSTALL_RO
 #if the include path is "default"
 CFLAGS += $(FLAGS) -I$(QNX_TARGET)/$(PREFIX)/include \
                    -I$(INSTALL_ROOT)/$(PREFIX)/include \
-                   -fPIC
+                   -fPIC \
+                   -D_QNX_SOURCE
 
 LDFLAGS += -Wl,--build-id=md5 -Wl,--allow-shlib-undefined
 
@@ -61,6 +62,8 @@ BUILD_SHARED_LIBS ?= ON
 CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DCMAKE_SYSTEM_PROCESSOR=$(CPU) \
              -DCMAKE_BUILD_TYPE=$(CMAKE_BUILD_TYPE) \
+             -DCMAKE_CXX_FLAGS="$(CFLAGS)" \
+             -DCMAKE_EXE_LINKER_FLAGS="$(LDFLAGS)" \
              -DCMAKE_CXX_COMPILER_TARGET=gcc_nto$(CPUVARDIR) \
              -DCMAKE_C_COMPILER_TARGET=gcc_nto$(CPUVARDIR) \
              -DCMAKE_INSTALL_PREFIX="$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)" \

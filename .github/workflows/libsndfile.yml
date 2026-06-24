@@ -47,4 +47,4 @@ jobs:
         shell: bash
         run: |
           source ~/qnx/800/qnxsdp-env.sh
-          QNX_PROJECT_ROOT="$(pwd)/libsndfile" make -C build-files/ports/libsndfile install
+          make -C build-files/ports/libsndfile install
