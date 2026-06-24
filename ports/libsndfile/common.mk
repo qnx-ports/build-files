@@ -54,8 +54,6 @@ CFLAGS += $(FLAGS) -I$(QNX_TARGET)/$(PREFIX)/include \
                    -fPIC \
                    -D_QNX_SOURCE
 
-LDFLAGS += -Wl,--build-id=md5 -Wl,--allow-shlib-undefined
-
 BUILD_TESTING ?= OFF
 BUILD_SHARED_LIBS ?= ON
 
@@ -63,7 +61,6 @@ CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DCMAKE_SYSTEM_PROCESSOR=$(CPU) \
              -DCMAKE_BUILD_TYPE=$(CMAKE_BUILD_TYPE) \
              -DCMAKE_CXX_FLAGS="$(CFLAGS)" \
-             -DCMAKE_EXE_LINKER_FLAGS="$(LDFLAGS)" \
              -DCMAKE_CXX_COMPILER_TARGET=gcc_nto$(CPUVARDIR) \
              -DCMAKE_C_COMPILER_TARGET=gcc_nto$(CPUVARDIR) \
              -DCMAKE_INSTALL_PREFIX="$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)" \
