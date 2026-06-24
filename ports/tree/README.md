@@ -34,7 +34,8 @@ git checkout 2.3.2
 cd ..
 
 # Build tree
-QNX_PROJECT_ROOT="$(pwd)/tree" make -C build-files/ports/tree/  install
+#QNX_PROJECT_ROOT=<source_path>
+make -C build-files/ports/tree/  install
 ```
 
 # Compile the port for QNX on Ubuntu host
@@ -55,7 +56,8 @@ git checkout 2.3.2
 cd ..
 
 # Build tree
-QNX_PROJECT_ROOT="$(pwd)/tree" make -C build-files/ports/tree/  install
+#QNX_PROJECT_ROOT=<source_path>
+make -C build-files/ports/tree/  install
 ```
 
 
