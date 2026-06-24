@@ -50,4 +50,4 @@ jobs:
           else
             source ~/qnx/710/qnxsdp-env.sh
           fi
-          QNX_PROJECT_ROOT="$(pwd)/tree" make -C build-files/ports/tree/ install
+          make -C build-files/ports/tree/ install
