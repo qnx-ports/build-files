@@ -74,13 +74,16 @@ Prerequisites:
 ```bash
 TARGET_HOST=<target-ip-or-hostname>
 
+#creating ~/guests directory on target
+ssh qnxuser@$TARGET_HOST "mkdir -p ~/guests"
+
 # Copy entire CPU directory to target
-scp -r ./build-files/ports/tree/nto-aarch64-le qnxuser@$TARGET_HOST:/home/qnxuser/guests/
+scp -r ./build-files/ports/tree/nto-aarch64-le qnxuser@$TARGET_HOST:~/guests/guests/
 ```
 2. SSH to Target and Setup Environment
 ```bash
 ssh qnxuser@<TARGET_HOST>
-cd /home/qnxuser/guests/nto-aarch64-le
+cd ~/guests/guests/nto-aarch64-le
 ```
 3. Run Validation Tests
 ```bash
