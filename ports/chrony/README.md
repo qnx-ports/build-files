@@ -1,3 +1,5 @@
+# chrony [![Build](https://github.com/qnx-ports/build-files/actions/workflows/chrony.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/chrony.yml)
+
 # Compile the port for QNX
 
 **Note**: QNX ports are only supported from a **Linux host** operating system
@@ -109,4 +111,31 @@ git clone https://github.com/qnx-ports/chrony.git
 # Build Chrony
 QNX_PROJECT_ROOT="$(pwd)/chrony" make -C build-files/ports/chrony clean 
 QNX_PROJECT_ROOT="$(pwd)/chrony" make -C build-files/ports/chrony install JLEVEL=4
+```
+# Test chrony on Target
+
+```bash
+export TARGET_HOST=<target-ip-address-or-hostname>
+mkdir chrony
+mkdir -p ~/chrony/bin
+mkdir -p ~/chrony/lib
+mkdir -p ~/chrony/etc
+
+# Copy the dependency libraries for testing
+scp $QNX_TARGET/x86-64/usr/local/sbin/chronyd   qnxuser@$TARGET_HOST:~/chrony/bin
+scp $QNX_TARGET/x86-64/usr/local/bin/chronyc   qnxuser@$TARGET_HOST:~/chrony/bin
+scp $QNX_TARGET/x86-64/usr/local/lib/libgmp.so.14   qnxuser@$TARGET_HOST:~/chrony/lib
+scp $QNX_TARGET/x86-64/usr/local/lib/libhogweed.so.6   qnxuser@$TARGET_HOST:~/chrony/lib
+scp $QNX_TARGET/x86-64/usr/local/lib/libtasn1.so.12   qnxuser@$TARGET_HOST:~/chrony/lib
+scp $QNX_TARGET/x86-64/usr/local/lib/libgnutls.so.58   qnxuser@$TARGET_HOST:~/chrony/lib
+scp $QNX_TARGET/x86-64/usr/local/lib/libnettle.so.8   qnxuser@$TARGET_HOST:~/chrony/lib
+
+Prepare configure file and copy certificates and keys into ~/chrony/etc
+```
+# Run chrony daemon and track
+
+```bash
+./chronyd -f <path to chrony.conf>
+./chronyc tracking
+./chronyc sources
 ```
