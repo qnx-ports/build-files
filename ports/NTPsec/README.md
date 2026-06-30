@@ -1,3 +1,5 @@
+# NTPsec [![Build](https://github.com/qnx-ports/build-files/actions/workflows/ntpsec.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/ntpsec.yml)
+
 # Compile the port for QNX
 
 **Note**: QNX ports are only supported from a **Linux host** operating system
@@ -58,3 +60,31 @@ git clone https://github.com/qnx-ports/ntpsec.git
 QNX_PROJECT_ROOT="$(pwd)/ntpsec" make -C build-files/ports/NTPsec clean
 QNX_PROJECT_ROOT="$(pwd)/ntpsec" make -C build-files/ports/NTPsec install
 ```
+
+# Test NTPsec on Target
+
+```bash
+export TARGET_HOST=<target-ip-address-or-hostname>
+mkdir ntpsec
+mkdir -p ~/ntpsec/bin
+mkdir -p ~/ntpsec/lib
+mkdir -p ~/ntpsec/etc
+
+# Copy the dependency libraries for testing
+scp $QNX_TARGET/x86-64/usr/local/sbin/ntpd   qnxuser@$TARGET_HOST:~/ntpsec/bin
+scp $QNX_TARGET/x86-64/usr/local/bin/ntpq  qnxuser@$TARGET_HOST:~/ntpsec/bin
+scp $QNX_TARGET/x86-64/usr/local/lib/libffi.so  qnxuser@$TARGET_HOST:~/ntpsec/lib
+scp $QNX_TARGET/x86-64/usr/local/lib/libntpc.so   qnxuser@$TARGET_HOST:~/ntpsec/lib
+scp $QNX_TARGET/x86-64/usr/local/lib/libntpc.so.1.1.0   qnxuser@$TARGET_HOST:~/ntpsec/lib
+scp $QNX_TARGET/x86-64/usr/local/lib/libffi.so.6   qnxuser@$TARGET_HOST:~/ntpsec/lib
+scp $QNX_TARGET/x86-64/usr/local/lib/libntpc.so.1   qnxuser@$TARGET_HOST:~/ntpsec/lib
+
+Prepare configure file and copy certificates and keys into ~/ntpsec/etc
+```
+# Run ntpd daemon and track
+
+```bash
+./ntpd -n -d -c < path to ntpsec.conf >
+./ntpq 
+```
+

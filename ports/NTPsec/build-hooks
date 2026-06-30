@@ -9,14 +9,9 @@ function hook_preconfigure {
 
     unset AUTOMAKE AUTOCONF AUTOHEADER AUTORECONF ACLOCAL
     export DESTDIR="${INSTALL_ROOT_nto}"
-
-    if [ ! -f "${NESTED_LEVEL}/wscript" ]; then
-        echo "ERROR: wscript not found in ${NESTED_LEVEL}"
-        exit 1
-    fi
-
-    if [ ! -f "${NESTED_LEVEL}/waf" ]; then
-        echo "ERROR: waf script not found in ${NESTED_LEVEL}"
+    
+    if [ ! -f "${NESTED_LEVEL}/wscript" ] || [ ! -f "${NESTED_LEVEL}/waf" ]; then
+        echo "ERROR: Required files (wscript and/or waf) not found in ${NESTED_LEVEL}"
         exit 1
     fi
 }
@@ -31,7 +26,6 @@ function hook_configure {
     TARGET_CFLAGS="${CFLAGS}"  
     TARGET_LDFLAGS="${LDFLAGS} -lsocket -lm"  # Required on QNX for socket and math symbols
 
-    unset AR LD CPPFLAGS
 
     export CC="${TARGET_CC}"
     export CFLAGS="${TARGET_CFLAGS}"
@@ -52,10 +46,10 @@ function hook_configure {
 function hook_make {
     echo "hook_make - ${make_cmds}"
 
-    cd "${NESTED_LEVEL}" || exit 1
+    cd "${NESTED_LEVEL}"
 
     if [ "${make_cmds}" = "install" ]; then
-        ./waf install --destdir="${INSTALL_ROOT_nto}" || exit 1
+        ./waf install || exit 1
 
     elif [ "${make_cmds}" = "clean" ]; then
         ./waf clean || exit 1
