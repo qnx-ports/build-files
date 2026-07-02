@@ -22,6 +22,7 @@ INSTALL_ROOT ?= $(INSTALL_ROOT_$(OS))
 PREFIX ?= /usr/local
 
 MESON_BUILD_TYPE ?= plain
+PISTACHE_BUILD_TESTS ?= false
 
 #override 'all' target to bypass the default QNX build system
 ALL_DEPENDENCIES = $(NAME)_all
@@ -34,7 +35,7 @@ MESON := meson
 MESON_SETUP_FLAGS := --buildtype=$(MESON_BUILD_TYPE) \
                      --prefix=$(PREFIX) \
                      --cross-file=../qnx_cross.cfg \
-                     -DPISTACHE_BUILD_TESTS=true
+                     -DPISTACHE_BUILD_TESTS=$(PISTACHE_BUILD_TESTS)
 
 MESON_COMPILE_FLAGS := -v -j $(firstword $(JLEVEL) 1)
 
