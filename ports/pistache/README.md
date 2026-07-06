@@ -2,6 +2,12 @@
 
 **NOTE**: QNX ports are only supported from a Linux host operating system
 
+## Dependencies
+- libevent
+- googletest
+
+**NOTE**: Pistache uses pkg-config to locate its dependencies. Ensure that the *.pc files are installed and that the paths defined in those files are correct.
+
 # Compile the port for QNX in a Docker container
 
 Pre-requisite: Install Docker on Ubuntu https://docs.docker.com/engine/install/ubuntu/
