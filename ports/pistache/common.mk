@@ -46,6 +46,7 @@ qnx_cross.cfg: $(PROJECT_ROOT)/qnx_cross.cfg.in
 	sed -i "s|CPU|$(CPU)|" $@
 	sed -i "s|INSTALL_DIR|$(PROJECT_INSTALL_DIR)|" $@
 	sed -i "s|QNX_TARGET_DIR|$(QNX_TARGET)/$(CPUVARDIR)/usr|" $@
+	sed -i "s|SYSROOT|$(QNX_TARGET)|" $@
 
 ifndef NO_TARGET_OVERRIDE
 

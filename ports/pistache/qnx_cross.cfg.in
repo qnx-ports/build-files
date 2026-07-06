@@ -21,6 +21,7 @@ cpp_args = c_args
 growing_stack = false
 # pkg-config settings
 pkg_config_libdir = [qnx_install_dir + '/lib/pkgconfig', qnx_install_dir + '/share/pkgconfig', qnx_target_dir + '/lib/pkgconfig', qnx_target_dir + '/share/pkgconfig']
+sys_root = 'SYSROOT'
 
 [binaries]
 c = [qnx_host_dir + '/usr/bin/' + target + '-gcc']
