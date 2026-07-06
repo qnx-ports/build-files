@@ -4,7 +4,8 @@
 
 ## Dependencies
 - libevent
-- googletest
+- googletest (for testing)
+- libcurl (for testing)
 
 **NOTE**: Pistache uses pkg-config to locate its dependencies. Ensure that the *.pc files are installed and that the paths defined in those files are correct.
 
@@ -29,7 +30,7 @@ cd ~/qnx_workspace
 git clone https://github.com/qnx-ports/pistache.git
 
 # Build and install pistache
-make -C build-files/ports/pistache install JLEVEL=$(nproc)
+[PISTACHE_BUILD_TESTS=true] make -C build-files/ports/pistache install JLEVEL=$(nproc)
 ```
 
 # Compile the port for QNX on Ubuntu host
@@ -43,5 +44,5 @@ git clone https://github.com/qnx-ports/pistache.git
 source ~/qnx800/qnxsdp-env.sh
 
 # Build and install pistache
-make -C build-files/ports/pistache install JLEVEL=$(nproc)
+[PISTACHE_BUILD_TESTS=true] make -C build-files/ports/pistache install JLEVEL=$(nproc)
 ```
