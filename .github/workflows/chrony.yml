@@ -81,7 +81,25 @@ jobs:
           ./bootstrap
           cd ..
           QNX_PROJECT_ROOT="$(pwd)/gnutls" make -C build-files/ports/gnutls install
+          
+      - name: Checkout nettle
+        uses: actions/checkout@v4
+        with:
+          repository: gnutls/nettle
+          path: nettle
+          ref: nettle_3.8.1_release_20220727
 
+      - name: Build nettle
+        shell: bash
+        run: |
+          if [[ "${{ matrix.qnx_env }}" == "800" ]]; then
+            source ~/qnx/800/qnxsdp-env.sh
+          else
+            source ~/qnx/710/qnxsdp-env.sh
+          fi
+          QNX_PROJECT_ROOT="$(pwd)/nettle" make -C build-files/ports/nettle clean
+          QNX_PROJECT_ROOT="$(pwd)/nettle" make -C build-files/ports/nettle install
+          
       - name: Clone Chrony
         run: |
           git clone https://github.com/qnx-ports/chrony.git
