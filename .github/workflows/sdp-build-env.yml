@@ -90,5 +90,5 @@ jobs:
     - name: Push to ghcr.io
       if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/main') }}
       run: |
-        # Push the image
+        # Push image
         buildah push ghcr.io/qnx-ports/sdp-build-env:latest
