@@ -48,6 +48,8 @@ jobs:
         shell: bash
         run: |
           source ~/qnx/800/qnxsdp-env.sh
+          export Python3_EXECUTABLE=/usr/bin/python3
+          export PYTHON_EXECUTABLE=/usr/bin/python3
           make -C build-files/ports/libsndfile install
 
       - name: Checkout openal-soft
