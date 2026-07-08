@@ -1,0 +1,26 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index e6095da..38d70d1 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -43,7 +43,7 @@ if( NOT WIN32 )
+     set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Weffc++ -pedantic -Wno-unknown-pragmas -Wno-deprecated-declarations -Wno-non-virtual-dtor" )
+ endif ( )
+ 
+-if ( UNIX AND NOT APPLE )
++if ( UNIX AND NOT APPLE AND NOT QNX)
+     set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread" )
+ endif ( )
+ 
+diff --git a/source/corvusoft/restbed/detail/socket_impl.cpp b/source/corvusoft/restbed/detail/socket_impl.cpp
+index d0d6c0f..08ff078 100644
+--- a/source/corvusoft/restbed/detail/socket_impl.cpp
++++ b/source/corvusoft/restbed/detail/socket_impl.cpp
+@@ -301,7 +301,7 @@ namespace restbed
+             setsockopt(socket.native_handle(), SOL_SOCKET, SO_KEEPALIVE, &val, sizeof(uint32_t));
+ #ifdef __APPLE__
+             setsockopt(socket.native_handle(), IPPROTO_TCP, TCP_KEEPALIVE, &start, sizeof(uint32_t));
+-#elif defined(__FreeBSD__) || defined(__NetBSD__) || defined(__OpenBSD__) || defined(__DragonFly__) 
++#elif defined(__FreeBSD__) || defined(__NetBSD__) || defined(__OpenBSD__) || defined(__DragonFly__) || defined(__QNX__)
+             setsockopt(socket.native_handle(), IPPROTO_TCP, SO_KEEPALIVE, &start, sizeof(uint32_t));
+ #else
+             // Linux based systems

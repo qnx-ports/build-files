@@ -1,0 +1,9 @@
+3.6.0:
+  sources:
+    url: "https://github.com/catchorg/Catch2/archive/refs/tags/v3.6.0.tar.gz"
+    sha256: "485932259a75c7c6b72d4b874242c489ea5155d17efa345eb8cc72159f49f356"
+patches:
+  3.6.0:
+    - patch_file: "patches/catch2-3.6.0-qnx-fix.patch"
+      patch_description: "add support for QNX 7.1/8.0"
+      patch_type: "bugfix"

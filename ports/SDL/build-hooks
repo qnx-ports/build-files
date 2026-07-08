@@ -37,6 +37,7 @@ function hook_preconfigure
 function hook_configure
 {
    cd $BUILDDIR
+    ac_cv_header_immintrin_h="no" \
    ./configure \
         ${ac_host:+"--host=${ac_host}"} \
         ${ac_build:+"--build=${ac_build}"} \

@@ -1,0 +1,9 @@
+2.13.10:
+  sources:
+    url: "https://github.com/catchorg/Catch2/archive/v2.13.10.tar.gz"
+    sha256: "d54a712b7b1d7708bc7a819a8e6e47b2fde9536f487b89ccbca295072a7d9943"
+patches:
+  2.13.10:
+    - patch_file: "patches/catch2-2.13.10-qnx-fix.patch"
+      patch_description: "add support for QNX 7.1/8.0"
+      patch_type: "bugfix"

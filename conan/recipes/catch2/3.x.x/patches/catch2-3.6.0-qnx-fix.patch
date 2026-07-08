@@ -1,0 +1,224 @@
+diff --git a/extras/catch_amalgamated.cpp b/extras/catch_amalgamated.cpp
+index c080ad19..d2e81621 100644
+--- a/extras/catch_amalgamated.cpp
++++ b/extras/catch_amalgamated.cpp
+@@ -7,7 +7,7 @@
+ // SPDX-License-Identifier: BSL-1.0
+ 
+ //  Catch v3.6.0
+-//  Generated: 2024-05-05 20:53:27.562886
++//  Generated: 2026-04-02 12:08:40.402482
+ //  ----------------------------------------------------------
+ //  This file is an amalgamation of multiple different files.
+ //  You probably shouldn't edit it directly.
+@@ -3509,7 +3509,7 @@ namespace {
+ #endif // Windows/ ANSI/ None
+ 
+ 
+-#if defined( CATCH_PLATFORM_LINUX ) || defined( CATCH_PLATFORM_MAC )
++#if defined( CATCH_PLATFORM_LINUX ) || defined( CATCH_PLATFORM_MAC ) || defined( CATCH_PLATFORM_QNX )
+ #    define CATCH_INTERNAL_HAS_ISATTY
+ #    include <unistd.h>
+ #endif
+@@ -3757,7 +3757,7 @@ namespace Catch {
+         #endif
+     } // namespace Catch
+ 
+-#elif defined(CATCH_PLATFORM_LINUX)
++#elif defined(CATCH_PLATFORM_LINUX) || defined(CATCH_PLATFORM_QNX)
+     #include <fstream>
+     #include <string>
+ 
+diff --git a/extras/catch_amalgamated.hpp b/extras/catch_amalgamated.hpp
+index 6cc67e76..1ea83167 100644
+--- a/extras/catch_amalgamated.hpp
++++ b/extras/catch_amalgamated.hpp
+@@ -7,7 +7,7 @@
+ // SPDX-License-Identifier: BSL-1.0
+ 
+ //  Catch v3.6.0
+-//  Generated: 2024-05-05 20:53:27.071502
++//  Generated: 2026-04-02 12:08:40.388989
+ //  ----------------------------------------------------------
+ //  This file is an amalgamation of multiple different files.
+ //  You probably shouldn't edit it directly.
+@@ -101,6 +101,9 @@
+ #elif defined(linux) || defined(__linux) || defined(__linux__)
+ #  define CATCH_PLATFORM_LINUX
+ 
++#elif defined(__QNX__)
++#  define CATCH_PLATFORM_QNX
++
+ #elif defined(WIN32) || defined(__WIN32__) || defined(_WIN32) || defined(_MSC_VER) || defined(__MINGW32__)
+ #  define CATCH_PLATFORM_WINDOWS
+ 
+@@ -9359,7 +9362,7 @@ namespace Catch {
+         #define CATCH_TRAP()  __asm__(".inst 0xde01")
+     #endif
+ 
+-#elif defined(CATCH_PLATFORM_LINUX)
++#elif defined(CATCH_PLATFORM_LINUX) || defined(CATCH_PLATFORM_QNX)
+     // If we can use inline assembler, do it because this allows us to break
+     // directly at the location of the failing check instead of breaking inside
+     // raise() called from it, i.e. one stack frame below.
+diff --git a/src/catch2/internal/catch_console_colour.cpp b/src/catch2/internal/catch_console_colour.cpp
+index b19e01ec..c339135e 100644
+--- a/src/catch2/internal/catch_console_colour.cpp
++++ b/src/catch2/internal/catch_console_colour.cpp
+@@ -161,7 +161,7 @@ namespace {
+ #endif // Windows/ ANSI/ None
+ 
+ 
+-#if defined( CATCH_PLATFORM_LINUX ) || defined( CATCH_PLATFORM_MAC )
++#if defined( CATCH_PLATFORM_LINUX ) || defined( CATCH_PLATFORM_MAC ) || defined( CATCH_PLATFORM_QNX )
+ #    define CATCH_INTERNAL_HAS_ISATTY
+ #    include <unistd.h>
+ #endif
+diff --git a/src/catch2/internal/catch_debugger.cpp b/src/catch2/internal/catch_debugger.cpp
+index bd3be172..da22c7fd 100644
+--- a/src/catch2/internal/catch_debugger.cpp
++++ b/src/catch2/internal/catch_debugger.cpp
+@@ -69,7 +69,7 @@
+         #endif
+     } // namespace Catch
+ 
+-#elif defined(CATCH_PLATFORM_LINUX)
++#elif defined(CATCH_PLATFORM_LINUX) || defined(CATCH_PLATFORM_QNX)
+     #include <fstream>
+     #include <string>
+ 
+diff --git a/src/catch2/internal/catch_debugger.hpp b/src/catch2/internal/catch_debugger.hpp
+index 25c5a260..ef0ddc27 100644
+--- a/src/catch2/internal/catch_debugger.hpp
++++ b/src/catch2/internal/catch_debugger.hpp
+@@ -38,7 +38,7 @@ namespace Catch {
+         #define CATCH_TRAP()  __asm__(".inst 0xde01")
+     #endif
+ 
+-#elif defined(CATCH_PLATFORM_LINUX)
++#elif defined(CATCH_PLATFORM_LINUX) || defined(CATCH_PLATFORM_QNX)
+     // If we can use inline assembler, do it because this allows us to break
+     // directly at the location of the failing check instead of breaking inside
+     // raise() called from it, i.e. one stack frame below.
+diff --git a/src/catch2/internal/catch_platform.hpp b/src/catch2/internal/catch_platform.hpp
+index b653a58c..ba4717f0 100644
+--- a/src/catch2/internal/catch_platform.hpp
++++ b/src/catch2/internal/catch_platform.hpp
+@@ -25,6 +25,9 @@
+ #elif defined(linux) || defined(__linux) || defined(__linux__)
+ #  define CATCH_PLATFORM_LINUX
+ 
++#elif defined(__QNX__)
++#  define CATCH_PLATFORM_QNX
++
+ #elif defined(WIN32) || defined(__WIN32__) || defined(_WIN32) || defined(_MSC_VER) || defined(__MINGW32__)
+ #  define CATCH_PLATFORM_WINDOWS
+ 
+diff --git a/tests/CMakeLists.txt b/tests/CMakeLists.txt
+index 37a5977e..7c37196d 100644
+--- a/tests/CMakeLists.txt
++++ b/tests/CMakeLists.txt
+@@ -681,3 +681,43 @@ endforeach()
+ 
+ list(APPEND CATCH_WARNING_TARGETS SelfTest)
+ set(CATCH_WARNING_TARGETS ${CATCH_WARNING_TARGETS} PARENT_SCOPE)
++
++if (QNX)
++  #path to tests on target
++  set(tests_path ${CMAKE_INSTALL_BINDIR}/Catch2_tests)
++
++  #list of ut test targets
++  set(list_tests_targets
++    Catch2
++    Catch2WithMain
++    SelfTest
++  )
++
++  #install tests and libs
++  install(
++    TARGETS ${list_tests_targets}
++    LIBRARY DESTINATION ${tests_path}/lib
++    RUNTIME DESTINATION ${tests_path}
++  )
++
++  #install tests execution script
++  install(
++    PROGRAMS ${QNX_TEST_SCRIPT} ${QNX_CTEST_MODULE} ${QNX_DECODE_CTEST_MODULE}
++    DESTINATION ${tests_path}
++  )
++
++  #install SelfTest Misc artifacts
++  install(
++    DIRECTORY ${SELF_TEST_DIR}/Misc
++    DESTINATION ${tests_path}
++  )
++
++  #install CTests files
++  install(
++    DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
++    DESTINATION ${tests_path}
++    FILES_MATCHING PATTERN "CTestTestfile.cmake"
++    PATTERN "CMakeFiles" EXCLUDE
++    PATTERN "surrogates" EXCLUDE
++  )
++endif()
+diff --git a/tests/ExtraTests/CMakeLists.txt b/tests/ExtraTests/CMakeLists.txt
+index 9f6d8173..ad2d595a 100644
+--- a/tests/ExtraTests/CMakeLists.txt
++++ b/tests/ExtraTests/CMakeLists.txt
+@@ -110,7 +110,7 @@ foreach(target DisabledExceptions-DefaultHandler DisabledExceptions-CustomHandle
+   target_compile_options( ${target}
+     PUBLIC
+       $<$<CXX_COMPILER_ID:MSVC>:/EHs-c-;/D_HAS_EXCEPTIONS=0>
+-      $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:GNU>,$<CXX_COMPILER_ID:AppleClang>>:-fno-exceptions>
++      $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:GNU>,$<CXX_COMPILER_ID:QCC>,$<CXX_COMPILER_ID:AppleClang>>:-fno-exceptions>
+   )
+   target_link_libraries(${target} Catch2_buildall_interface)
+ endforeach()
+@@ -576,3 +576,46 @@ set_tests_properties(
+   PROPERTIES
+     PASS_REGULAR_EXPRESSION "All tests passed \\(14 assertions in 3 test cases\\)"
+ )
++
++if (QNX)
++  #path to tests on target
++  set(tests_path ${CMAKE_INSTALL_BINDIR}/Catch2_tests)
++
++  set(list_tests_targets ${list_tests_targets}
++    ListenerStdoutCaptureInMultireporter
++    AssertionStartingEventGoesBeforeAssertionIsEvaluated
++    PartialTestCaseEvents
++    DuplicatedReporters
++    DuplicatedTestCases-DuplicatedTestCaseMethods
++    ReportingCrashWithJunitReporter
++    DuplicatedTestCases-SameNameDifferentTags
++    CapturedStdoutInTestCaseEvents
++    AllSkipped
++    DisabledExceptions-CustomHandler
++    DisableStringification
++    DuplicatedTestCases-DifferentFixtures
++    DisabledMacros
++    AmalgamatedTestCompilation
++    BazelReporter
++    FallbackStringifier
++    CustomArgumentsForReporters
++    DisabledExceptions-DefaultHandler
++    ListenerCanAskForCapturedStdout
++    BenchmarksInCumulativeReporter
++    DuplicatedTestCases-SameNameAndTags
++    ListenersGetEventsBeforeReporters
++    CasingInReporterNames
++    NoTests
++    ReporterPreferencesForPassingAssertionsIsRespected
++    BazelReporterNoCatchConfig
++    DeferredStaticChecks
++    PrefixedMacros
++  )
++
++  #install tests and libs
++  install(
++    TARGETS ${list_tests_targets}
++    LIBRARY DESTINATION ${tests_path}/lib
++    RUNTIME DESTINATION ${tests_path}
++  )
++endif()

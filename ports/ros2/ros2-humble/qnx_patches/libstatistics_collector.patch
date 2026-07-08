@@ -1,12 +1,12 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 310f818..2167296 100644
+index 310f818..b50ca32 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -70,6 +70,10 @@ ament_export_targets(${PROJECT_NAME})
  
  ament_export_dependencies("builtin_interfaces" "rcl" "rcpputils" "rosidl_default_runtime" "statistics_msgs")
  
-+if(QNX)
++if(QNX AND QNX_TESTING)
 +  set(BUILD_TESTING ON)
 +endif()
 +

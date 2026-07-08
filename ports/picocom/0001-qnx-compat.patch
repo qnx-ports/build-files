@@ -1,0 +1,48 @@
+From 5c7ea908180fb8e3bab7d2213ff60a88475a5fee Mon Sep 17 00:00:00 2001
+From: Leo Shen <i@szclsya.me>
+Date: Wed, 30 Apr 2025 18:47:41 +0000
+Subject: [PATCH] qnx compat
+
+---
+ picocom.c | 1 +
+ term.c    | 6 +++++-
+ 2 files changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/picocom.c b/picocom.c
+index 96021a1..53b7101 100644
+--- a/picocom.c
++++ b/picocom.c
+@@ -23,6 +23,7 @@
+  * USA
+  */
+ 
++#include <sys/select.h>
+ #include <stdlib.h>
+ #include <stdio.h>
+ #include <string.h>
+diff --git a/term.c b/term.c
+index b45ab3d..6d4e320 100644
+--- a/term.c
++++ b/term.c
+@@ -61,13 +61,17 @@
+ #if defined(__linux__) || \
+     defined(__FreeBSD__) || defined(__OpenBSD__) || \
+     defined(__NetBSD__) || defined(__DragonFly__) || \
+-    defined(__APPLE__)
++    defined(__APPLE__) || defined(__QNX__)
+ #define USE_IOCTL
+ #endif
+ #ifdef USE_IOCTL
+ #include <sys/ioctl.h>
+ #endif
+ 
++#ifdef __QNX__
++#define CRTSCTS 0
++#endif
++
+ #include "custbaud.h"
+ #ifdef USE_CUSTOM_BAUD
+ #include CUSTOM_BAUD_HEAD
+-- 
+2.48.1
+

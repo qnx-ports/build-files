@@ -1,0 +1,85 @@
+name: amqp-cpp
+
+permissions:
+  contents: write
+  checks: write
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/amqp-cpp.yml'
+      - 'ports/amqp-cpp/**'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/amqp-cpp.yml'
+      - 'ports/amqp-cpp/**'
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        qnx_env: [ 710, 800 ]
+    runs-on: ubuntu-22.04-common
+    if: |
+      ((github.event_name == 'workflow_dispatch') ||
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'amqp-cpp')))
+    steps:
+      - name: Checkout build-files
+        uses: actions/checkout@v4
+        with:
+          path: build-files
+
+      - name: Checkout libev
+        uses: actions/checkout@v4
+        with:
+          repository: qnx-ports/libev
+          path: libev
+
+      - name: Build libev
+        shell: bash
+        run: |
+          if [[ ${{ matrix.qnx_env }} == 710 ]]; then
+            source ~/qnx/710/qnxsdp-env.sh
+          else
+            source ~/qnx/800/qnxsdp-env.sh
+          fi
+          make -C build-files/ports/libev install
+
+      - name: Checkout libuv
+        uses: actions/checkout@v4
+        with:
+          repository: qnx-ports/libuv
+          path: libuv
+
+      - name: Build libuv
+        shell: bash
+        run: |
+          if [[ ${{ matrix.qnx_env }} == 710 ]]; then
+            source ~/qnx/710/qnxsdp-env.sh
+          else
+            source ~/qnx/800/qnxsdp-env.sh
+          fi
+          make -C build-files/ports/libuv install
+
+      - name: Checkout amqp-cpp
+        uses: actions/checkout@v4
+        with:
+          repository: qnx-ports/AMQP-CPP
+          path: AMQP-CPP
+          ref: qnx-v4.3.27
+
+      - name: Build amqp-cpp
+        shell: bash
+        run: |
+          if [[ "${{ matrix.qnx_env }}" == "800" ]]; then
+            source ~/qnx/800/qnxsdp-env.sh
+          else
+            source ~/qnx/710/qnxsdp-env.sh
+          fi
+          QNX_PROJECT_ROOT="$(pwd)/AMQP-CPP" make -C build-files/ports/amqp-cpp/ install
