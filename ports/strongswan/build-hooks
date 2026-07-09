@@ -1,0 +1,101 @@
+#!/bin/sh
+
+NESTED_LEVEL="${QNX_PROJECT_ROOT:-../../..}"  
+BASIC_PREFIX="/usr/local"
+EXEC_PREFIX="/${cpudir}${BASIC_PREFIX}"
+
+function hook_preconfigure {
+    echo "hook_preconfigure - running autogen.sh in ${NESTED_LEVEL}"
+
+    unset AUTOMAKE AUTOCONF AUTOHEADER AUTORECONF ACLOCAL
+    export DESTDIR="${INSTALL_ROOT_nto}"
+
+    if [ ! -x "${NESTED_LEVEL}/configure" ]; then
+        (cd "${NESTED_LEVEL}" && ./autogen.sh)
+    fi
+}
+
+function hook_configure {
+    echo "hook_configure - running configure for Strongswan"
+
+    export FORCE_CROSS_COMPILING=yes
+    export PKG_CONFIG_LIBDIR=${DESTDIR}/usr/local/lib/pkgconfig
+
+    ARCH_FLAGS=""
+
+    case "${cpu}" in
+    x86|x86_64)
+        ARCH_FLAGS="\
+            --enable-aesni \
+            --enable-rdrand"
+        ;;
+    *)
+        ARCH_FLAGS="\
+            --disable-aesni \
+            --disable-rdrand"
+        ;;
+    esac
+    
+    ${NESTED_LEVEL}/configure \
+        --srcdir=${NESTED_LEVEL} \
+        --prefix=${BASIC_PREFIX} \
+        --exec-prefix=${EXEC_PREFIX} \
+        --host=${machine} \
+        --includedir=${BASIC_PREFIX}/include \
+        --host=${machine} \
+        --disable-gmp \
+        --enable-kernel-libipsec \
+        --enable-libipsec \
+        --disable-kernel-netlink \
+        --enable-hash \
+        --enable-sha1 \
+        --enable-sha2 \
+        --enable-kernel-pfkey \
+        --enable-kernel-pfroute \
+        --enable-openssl \
+        --enable-error-notify \
+        --enable-ccm \
+        --enable-gcm \
+        --enable-ctr \
+        --enable-sha3 \
+        --disable-uci \
+        --enable-agent \
+        --enable-sshkey \
+        --enable-mgf1 \
+        --enable-bliss \
+        --enable-acert \
+        ${ARCH_FLAGS} \
+        --enable-addrblock \
+        --enable-certexpire \
+        --enable-pkcs11 \
+        --enable-coupling \
+        --enable-ext-auth \
+        --enable-systime-fix \
+        --enable-whitelist \
+        --enable-chapoly \
+        --with-plugindir=/data/home/qnxuser/${cpudir}/strongswan/lib/plugins \
+        --sysconfdir=/etc \
+        --with-ipsecdir=${EXEC_PREFIX}/sbin \
+        --with-ipseclibdir=${EXEC_PREFIX}/lib/ipsec \
+        --with-swanctldir=${BASIC_PREFIX}/etc/swanctl \
+        --sbindir=${EXEC_PREFIX}/sbin \
+        --bindir=/usr/bin \
+        CFLAGS="-O2 -Wall -Wno-error" \
+        CPPFLAGS="${CPPFLAGS}" \
+        LDFLAGS="${LDFLAGS} -lsocket" \
+        || exit 1
+}
+
+function hook_make {
+    echo "hook_make - running make ${make_cmds}"
+
+    INSTALL_ROOT="${INSTALL_ROOT_nto}"
+    FixMakeEnvironment
+
+    if [ "${make_cmds}" = "install" ]; then
+        make ${JLEVEL:+-j${JLEVEL}} install || exit 1
+        find ${INSTALL_ROOT_nto} -name "*.la" -exec rm -f {} \;
+    else
+        make ${JLEVEL:+-j${JLEVEL}} ${make_cmds} || exit 1
+    fi
+}
