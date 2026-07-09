@@ -21,7 +21,7 @@ function hook_preconfigure {
 
 function hook_configure {
     echo "hook_configure - CC=$CC"
-    cd "${QNX_PROJECT_ROOT}" || exit 1
+    cd "${QNX_PROJECT_ROOT}"
     
     # Standard Autoconf + Chrony options + let build-cfg pass --host/--build
     "${QNX_PROJECT_ROOT}/configure" \
