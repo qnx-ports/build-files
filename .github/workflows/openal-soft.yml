@@ -49,9 +49,6 @@ jobs:
         run: |
           source ~/qnx/800/qnxsdp-env.sh
           make -C build-files/ports/libsndfile install
-          make -C build-files/ports/libsndfile \
-          CMAKE_ARGS_EXTRA="-DCMAKE_FIND_ROOT_PATH_MODE_PROGRAM=NEVER -DPython3_EXECUTABLE=/usr/bin/python3" \
-          install
 
       - name: Checkout openal-soft
         uses: actions/checkout@v4
@@ -64,6 +61,4 @@ jobs:
         shell: bash
         run: |
           source ~/qnx/800/qnxsdp-env.sh
-          export Python3_EXECUTABLE=/usr/bin/python3
-          export PYTHON_EXECUTABLE=/usr/bin/python3
           make -C build-files/ports/openal-soft install
