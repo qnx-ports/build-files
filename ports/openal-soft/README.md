@@ -105,60 +105,119 @@ cd ~/guests/nto-aarch64-le
 4. Expected Results
 ```text
 ===============================================================================
-./openal-info  
+./openal-info
+
 Available playback devices:
-    No Output
+    ALSA Default
+    sof-hda-dsp, (CARD=sofhdadsp,DEV=0)
+    sof-hda-dsp, (CARD=sofhdadsp,DEV=1)
+    sof-hda-dsp, (CARD=sofhdadsp,DEV=3)
+    sof-hda-dsp, (CARD=sofhdadsp,DEV=4)
+    sof-hda-dsp, (CARD=sofhdadsp,DEV=5)
+    ThinkPad Thunderbolt 4 Dock USB, USB Audio (CARD=USB,DEV=0)
+    Logitech H570e Stereo, USB Audio (CARD=Stereo,DEV=0)
+
 Available capture devices:
-    !!! none !!!
-Default playback device: No Output
-Default capture device: 
+    ALSA Default
+    sof-hda-dsp, (CARD=sofhdadsp,DEV=0)
+    sof-hda-dsp, (CARD=sofhdadsp,DEV=1)
+    sof-hda-dsp, (CARD=sofhdadsp,DEV=6)
+    sof-hda-dsp, (CARD=sofhdadsp,DEV=7)
+    ThinkPad Thunderbolt 4 Dock USB, USB Audio (CARD=USB,DEV=0)
+    Logitech H570e Stereo, USB Audio (CARD=Stereo,DEV=0)
+
+Default playback device: ALSA Default
+Default capture device: ALSA Default
 ALC version: 1.1
- 
-** Info for device "No Output" **
+
+** Info for device "ALSA Default" **
+
 ALC version: 1.1
+
 ALC extensions:
     ALC_ENUMERATE_ALL_EXT, ALC_ENUMERATION_EXT, ALC_EXT_CAPTURE,
-    ALC_EXT_DEDICATED, ALC_EXT_disconnect, ALC_EXT_EFX,
-    ALC_EXT_thread_local_context, ALC_SOFT_device_clock, ALC_SOFT_HRTF,
-    ALC_SOFT_loopback, ALC_SOFT_loopback_bformat, ALC_SOFT_output_limiter,
-    ALC_SOFT_output_mode, ALC_SOFT_pause_device, ALC_SOFT_reopen_device
-Available HRTFs:
+    ALC_EXT_debug, ALC_EXT_DEDICATED, ALC_EXT_direct_context,
+    ALC_EXT_disconnect, ALC_EXT_EFX,
+    ALC_EXT_thread_local_context, ALC_SOFT_device_clock,
+    ALC_SOFT_HRTF, ALC_SOFT_loopback,
+    ALC_SOFT_loopback_bformat, ALC_SOFT_output_limiter,
+    ALC_SOFT_output_mode, ALC_SOFT_pause_device,
+    ALC_SOFT_reopen_device, ALC_SOFT_system_events
+
+Available HRTF profiles:
+    Default HRTF
     Built-In HRTF
+
+Available events:
+    ALC_EVENT_TYPE_DEFAULT_DEVICE_CHANGED_SOFT for
+        ALC_PLAYBACK_DEVICE_SOFT - NOT SUPPORTED
+    ALC_EVENT_TYPE_DEFAULT_DEVICE_CHANGED_SOFT for
+        ALC_CAPTURE_DEVICE_SOFT - NOT SUPPORTED
+    ALC_EVENT_TYPE_DEVICE_ADDED_SOFT for
+        ALC_PLAYBACK_DEVICE_SOFT - NOT SUPPORTED
+    ALC_EVENT_TYPE_DEVICE_ADDED_SOFT for
+        ALC_CAPTURE_DEVICE_SOFT - NOT SUPPORTED
+    ALC_EVENT_TYPE_DEVICE_REMOVED_SOFT for
+        ALC_PLAYBACK_DEVICE_SOFT - NOT SUPPORTED
+    ALC_EVENT_TYPE_DEVICE_REMOVED_SOFT for
+        ALC_CAPTURE_DEVICE_SOFT - NOT SUPPORTED
+
 Device output mode: Stereo (basic)
 Device sample rate: 48000hz
+Device HRTF profile: (disabled)
+Device number of mono sources: 255
+Device number of stereo sources: 1
+
 OpenAL vendor string: OpenAL Community
 OpenAL renderer string: OpenAL Soft
-OpenAL version string: 1.1 ALSOFT 1.23.1
+OpenAL version string: 1.1 ALSOFT 1.24.3
+
 OpenAL extensions:
-    AL_EXT_ALAW, AL_EXT_BFORMAT, AL_EXT_DOUBLE, AL_EXT_EXPONENT_DISTANCE,
-    AL_EXT_FLOAT32, AL_EXT_IMA4, AL_EXT_LINEAR_DISTANCE, AL_EXT_MCFORMATS,
-    AL_EXT_MULAW, AL_EXT_MULAW_BFORMAT, AL_EXT_MULAW_MCFORMATS, AL_EXT_OFFSET,
-    AL_EXT_source_distance_model, AL_EXT_SOURCE_RADIUS, AL_EXT_STATIC_BUFFER,
-    AL_EXT_STEREO_ANGLES, AL_LOKI_quadriphonic, AL_SOFT_bformat_ex,
-    AL_SOFTX_bformat_hoa, AL_SOFT_block_alignment, AL_SOFT_buffer_length_query,
-    AL_SOFT_callback_buffer, AL_SOFTX_convolution_reverb,
-    AL_SOFT_deferred_updates, AL_SOFT_direct_channels,
-    AL_SOFT_direct_channels_remix, AL_SOFT_effect_target, AL_SOFT_events,
-    AL_SOFT_gain_clamp_ex, AL_SOFTX_hold_on_disconnect, AL_SOFT_loop_points,
-    AL_SOFTX_map_buffer, AL_SOFT_MSADPCM, AL_SOFT_source_latency,
-    AL_SOFT_source_length, AL_SOFT_source_resampler, AL_SOFT_source_spatialize,
-    AL_SOFT_source_start_delay, AL_SOFT_UHJ, AL_SOFT_UHJ_ex
+    AL_EXT_ALAW, AL_EXT_BFORMAT, AL_EXT_debug,
+    AL_EXT_direct_context, AL_EXT_DOUBLE,
+    AL_EXT_EXPONENT_DISTANCE, AL_EXT_FLOAT32,
+    AL_EXT_IMA4, AL_EXT_LINEAR_DISTANCE,
+    AL_EXT_MCFORMATS, AL_EXT_MULAW,
+    AL_EXT_MULAW_BFORMAT,
+    AL_EXT_MULAW_MCFORMATS,
+    AL_EXT_OFFSET,
+    AL_EXT_source_distance_model,
+    AL_EXT_SOURCE_RADIUS,
+    AL_EXT_STATIC_BUFFER,
+    AL_EXT_STEREO_ANGLES,
+    AL_LOKI_quadriphonic,
+    AL_SOFT_bformat_ex,
+    AL_SOFT_bformat_hoa,
+    AL_SOFT_block_alignment,
+    AL_SOFT_buffer_length_query,
+    AL_SOFT_callback_buffer,
+    AL_SOFTX_convolution_effect,
+    AL_SOFT_deferred_updates,
+    AL_SOFT_direct_channels,
+    AL_SOFT_direct_channels_remix,
+    AL_SOFT_effect_target,
+    AL_SOFT_events,
+    AL_SOFT_gain_clamp_ex,
+    AL_SOFTX_hold_on_disconnect,
+    AL_SOFT_loop_points,
+    AL_SOFTX_map_buffer,
+    AL_SOFT_MSADPCM,
+    AL_SOFT_source_latency,
+    AL_SOFT_source_length,
+    AL_SOFTX_source_panning,
+    AL_SOFT_source_resampler,
+    AL_SOFT_source_spatialize,
+    AL_SOFT_source_start_delay,
+    AL_SOFT_UHJ,
+    AL_SOFT_UHJ_ex
+
 Available resamplers:
     Nearest
     Linear
-    Cubic *
+    Cubic Spline *
+    4-point Gaussian
     11th order Sinc (fast)
     11th order Sinc
-    23rd order Sinc (fast)
-    23rd order Sinc
-EFX version: 1.0
-Max auxiliary sends: 2
-Supported filters:
-    Low-pass, High-pass, Band-pass
-Supported effects:
-    EAX Reverb, Reverb, Chorus, Distortion, Echo, Flanger, Frequency Shifter,
-    Vocal Morpher, Pitch Shifter, Ring Modulator, Autowah, Compressor,
-    Equalizer, Dedicated Dialog, Dedicated LFE
 ```
 ```text
 ===============================================================================
