@@ -20,20 +20,15 @@ function hook_configure {
     echo "hook_configure - waf configure"  
       
     export PKG_CONFIG_LIBDIR="${DESTDIR}/usr/local/lib/pkgconfig"
-    cd "${NESTED_LEVEL}" || exit 1  
+    cd "${NESTED_LEVEL}" 
 
+    
     TARGET_CC="${CC}"
-    TARGET_CFLAGS="${CFLAGS}"  
-    TARGET_LDFLAGS="${LDFLAGS} -lsocket -lm"  # Required on QNX for socket and math symbols
+    TARGET_CFLAGS="${CFLAGS}"
+    TARGET_LDFLAGS="${LDFLAGS} -lsocket -lm"
 
+    unset CC CFLAGS LDFLAGS CPPFLAGS AR LD
 
-    export CC="${TARGET_CC}"
-    export CFLAGS="${TARGET_CFLAGS}"
-    export LDFLAGS="${TARGET_LDFLAGS}"
-  
-    # IMPORTANT: Unset target-polluted variables so 'host' variant uses native tools  
-    unset CC CFLAGS LDFLAGS CPPFLAGS AR LD  
-  
     ./waf configure \
         --prefix="${EXEC_PREFIX}" \
         --cross-compiler="${TARGET_CC}" \
