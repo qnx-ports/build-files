@@ -1,0 +1,71 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 6aa4095..04b3931 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -2,6 +2,11 @@ cmake_minimum_required(VERSION 3.5)
+ 
+ project(rcpputils)
+ 
++# Enable testing by default for QNX
++if(QNX AND QNX_TESTING)
++  set(BUILD_TESTING ON CACHE BOOL "Build tests" FORCE)
++endif()
++
+ find_package(ament_cmake REQUIRED)
+ find_package(ament_cmake_ros REQUIRED)
+ find_package(rcutils REQUIRED)
+@@ -142,6 +147,54 @@ if(BUILD_TESTING)
+   target_link_libraries(test_accumulator ${PROJECT_NAME})
+ endif()
+ 
++# Install test executables for QNX
++if(QNX AND BUILD_TESTING)
++  # Install test executables explicitly
++  set(TEST_TARGETS
++    test_asserts_ndebug
++    test_asserts_debug
++    test_thread_safety_annotations
++    test_join
++    test_time
++    test_env
++    test_scope_exit
++    test_split
++    test_filesystem_helper
++    test_find_and_replace
++    test_pointer_traits
++    test_process
++    test_shared_library
++    test_endian
++    test_clamp
++    test_accumulator
++    test_find_library
++  )
++  
++  foreach(test_target ${TEST_TARGETS})
++    if(TARGET ${test_target})
++      message(STATUS "Installing test executable for QNX: ${test_target}")
++      install(TARGETS ${test_target}
++        RUNTIME DESTINATION test/rcpputils
++        PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
++    endif()
++  endforeach()
++  
++  # Install test libraries
++  if(TARGET test_library)
++    message(STATUS "Installing test library for QNX: test_library")
++    install(TARGETS test_library
++      LIBRARY DESTINATION test/rcpputils
++      PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
++  endif()
++  
++  if(TARGET dummy_shared_library)
++    message(STATUS "Installing test library for QNX: dummy_shared_library")
++    install(TARGETS dummy_shared_library
++      LIBRARY DESTINATION test/rcpputils
++      PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
++  endif()
++endif()
++
+ ament_package()
+ 
+ install(

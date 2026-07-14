@@ -1,0 +1,7 @@
+# Ignore all files under these two directories…
+nto-aarch64-le/*
+nto-x86_64-o/*
+
+# …but do not ignore the GNUmakefile in each
+!nto-aarch64-le/Makefile
+!nto-x86_64-o/Makefile

@@ -1,12 +1,12 @@
 diff --git a/rosidl_typesupport_cpp/CMakeLists.txt b/rosidl_typesupport_cpp/CMakeLists.txt
-index c6aa1cb..e33348e 100644
+index c6aa1cb..e95fd95 100644
 --- a/rosidl_typesupport_cpp/CMakeLists.txt
 +++ b/rosidl_typesupport_cpp/CMakeLists.txt
 @@ -52,6 +52,10 @@ ament_export_targets(${PROJECT_NAME})
  
  ament_index_register_resource("rosidl_runtime_packages")
  
-+if(QNX)
++if(QNX AND QNX_TESTING)
 +  set(BUILD_TESTING ON)
 +endif()
 +
