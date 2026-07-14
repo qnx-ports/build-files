@@ -47,8 +47,8 @@ jobs:
         run: |
           if [[ "${{ matrix.qnx_env }}" == "800" ]]; then
             source ~/qnx/800/qnxsdp-env.sh
-            QNX_PROJECT_ROOT="$(pwd)/dnsmasq" make -C build-files/ports/dnsmasq/ install
+            make -C build-files/ports/dnsmasq/ install
           else
             source ~/qnx/710/qnxsdp-env.sh
-            USE_IOSOCK=true QNX_PROJECT_ROOT="$(pwd)/dnsmasq" make -C build-files/ports/dnsmasq/ install
+            USE_IOSOCK=true make -C build-files/ports/dnsmasq/ install
           fi

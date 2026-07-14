@@ -33,12 +33,12 @@ git checkout qnx-v2.92
 cd ..
 
 # Build dnsmasq
-QNX_PROJECT_ROOT="$(pwd)/dnsmasq" make -C build-files/ports/dnsmasq clean 
+make -C build-files/ports/dnsmasq clean 
 # use below command for SDP8
-QNX_PROJECT_ROOT="$(pwd)/dnsmasq" make -C build-files/ports/dnsmasq install
+make -C build-files/ports/dnsmasq install
 # use below command for SDP7.1
 # install io_sock from software center before building 
-USE_IOSOCK=true QNX_PROJECT_ROOT="$(pwd)/dnsmasq" make -C build-files/ports/dnsmasq install
+USE_IOSOCK=true make -C build-files/ports/dnsmasq install
 ```
 
 # Compile the port for QNX on Ubuntu host
@@ -59,12 +59,12 @@ git checkout qnx-v2.92
 cd ..
 
 # Build dnsmasq
-QNX_PROJECT_ROOT="$(pwd)/dnsmasq" make -C build-files/ports/dnsmasq clean 
+make -C build-files/ports/dnsmasq clean 
 # use below command for SDP8
-QNX_PROJECT_ROOT="$(pwd)/dnsmasq" make -C build-files/ports/dnsmasq install
+make -C build-files/ports/dnsmasq install
 # use below command for SDP7.1
 # install io_sock from software center before building 
-USE_IOSOCK=true QNX_PROJECT_ROOT="$(pwd)/dnsmasq" make -C build-files/ports/dnsmasq install
+USE_IOSOCK=true make -C build-files/ports/dnsmasq install
 ```
 
 # Run the tests
