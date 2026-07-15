@@ -1,5 +1,0 @@
-# install path to SDP 7.1
-QNX710=$HOME/qnx710
-
-# install path to SDP 8.0
-QNX800=$HOME/qnx800

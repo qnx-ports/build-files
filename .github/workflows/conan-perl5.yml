@@ -34,7 +34,7 @@ jobs:
       with:
         path: build-files
 
-    - name: Build conan cmake recipes
+    - name: Build conan perl5 recipes
       shell: bash
       run: |
         python3.11 -m venv vpy

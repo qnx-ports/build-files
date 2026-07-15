@@ -1,0 +1,64 @@
+name: openal-soft
+
+permissions:
+  contents: write
+  checks: write
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/openal-soft.yml'
+      - 'ports/openal-soft/**'
+      - 'ports/libsndfile/**'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/openal-soft.yml'
+      - 'ports/openal-soft/**'
+      - 'ports/libsndfile/**'
+jobs:
+  build:
+    strategy:
+      matrix:
+        qnx_env: [800]
+    name: Build for QNX ${{ matrix.qnx_env }}
+    runs-on: ubuntu-22.04-common
+    if: |
+      ((github.event_name == 'workflow_dispatch') ||
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'openal-soft')))
+    steps:
+      - name: Checkout build-files
+        uses: actions/checkout@v4
+        with:
+          path: build-files
+
+      - name: Checkout libsndfile
+        uses: actions/checkout@v4
+        with:
+          repository: libsndfile/libsndfile
+          path: libsndfile
+          ref: 1.2.2
+
+      - name: Build libsndfile
+        shell: bash
+        run: |
+          source ~/qnx/800/qnxsdp-env.sh
+          make -C build-files/ports/libsndfile install
+
+      - name: Checkout openal-soft
+        uses: actions/checkout@v4
+        with:
+          repository: kcat/openal-soft
+          path: openal-soft
+          ref: 1.23.1
+
+      - name: Build openal-soft
+        shell: bash
+        run: |
+          source ~/qnx/800/qnxsdp-env.sh
+          make -C build-files/ports/openal-soft install

@@ -1,0 +1,9 @@
+1.29.0:
+  sources:
+    url: "https://github.com/chriskohlhoff/asio/archive/asio-1-29-0.tar.gz"
+    sha256: "44305859b4e6664dbbf853c1ef8ca0259d694f033753ae309fcb2534ca20f721"
+patches:
+  1.29.0:
+    - patch_file: "patches/asio-1.29.0-qnx-fix.patch"
+      patch_description: "add support for QNX 7.1/8.0"
+      patch_type: "bugfix"
