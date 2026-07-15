@@ -87,7 +87,7 @@ Prepare configure file and copy certificates and keys into ~/ntpsec/etc
 ./ntpd -n -d -c < path to ntpsec.conf >
 ./ntpq 
 ```
-# Expect result after functional test:
+# Expected result after functional test:
 
 ```bash
 ./ntpd -n -d -c < path to ntpsec.conf >
