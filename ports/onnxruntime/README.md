@@ -29,7 +29,7 @@ source ~/qnx800/qnxsdp-env.sh
 
 # Install dependencies
 ./build-files/ports/onnxruntime/install_all.sh
-git clone -b qnx-v1.23.2 https://github.com/microsoft/onnxruntime && cd onnxruntime
+git clone -b qnx-v1.23.2 https://github.com/qnx-ports/onnxruntime && cd onnxruntime
 git submodule update --init
 cd -
 
@@ -46,7 +46,7 @@ source ~/qnx800/qnxsdp-env.sh
 
 # Install dependencies
 ./build-files/ports/onnxruntime/install_all.sh
-git clone -b qnx-v1.23.2 https://github.com/microsoft/onnxruntime && cd onnxruntime
+git clone -b qnx-v1.23.2 https://github.com/qnx-ports/onnxruntime && cd onnxruntime
 git submodule update --init
 cd -
 
@@ -56,7 +56,7 @@ make -C build-files/ports/onnxruntime install -j12
 
 # How to Run Tests and Applications
 
-**NOTE**: Tests are performed on RPi4 target available via QNX-E
+**NOTE**: Tests are performed on [RPi4 target image available via QNX-E](https://www.qnx.com/developers/docs/qnxeverywhere/com.qnx.doc.target_images/topic/qsti/intro.html)
 
 Move the libraries and tests to the target
 
