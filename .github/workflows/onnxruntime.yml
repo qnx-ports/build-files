@@ -1,0 +1,56 @@
+name: onnxruntime
+
+permissions:
+  contents: write
+  checks: write
+
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/onnxruntime.yml'
+      - 'ports/onnxruntime/**'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/onnxruntime.yml'
+      - 'ports/onnxruntime/**'
+
+jobs:
+
+  build:
+    strategy:
+      matrix:
+        qnx_env: ["710", "800"]
+    runs-on: ubuntu-22.04-common
+    if: |
+      ((github.event_name == 'workflow_dispatch') ||
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'onnxruntime')))
+    steps:
+    - name: Checkout build-files
+      uses: actions/checkout@v4
+      with:
+        path: build-files
+
+    - name: Checkout onnxruntime
+      uses: actions/checkout@v4
+      with:
+        repository: qnx-ports/onnxruntime
+        path: onnxruntime
+        submodules: recursive
+
+    - name: Build onnxruntime
+      shell: bash
+      run: |
+        if [[ ${{ matrix.qnx_env }} == 800 ]]; then
+          source ~/qnx/800/qnxsdp-env.sh
+        else
+          source ~/qnx/710/qnxsdp-env.sh
+        fi
+        ./install_all.sh
+        make -C build-files/ports/onnxruntime JLEVEL=8 install
