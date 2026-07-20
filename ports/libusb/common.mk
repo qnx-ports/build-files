@@ -59,7 +59,7 @@ $(NAME)_all:
 BIN_INSTALL_DIR = $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/bin/libusb_tests
 
 install:
-	$(MAKE) -C $(BUILD_DIR) install DESTDIR=$(QNX_TARGET)
+	$(MAKE) -C $(BUILD_DIR) install DESTDIR=$(QNX_TARGET)/$(CPUVARDIR)
 
 	mkdir -p $(BIN_INSTALL_DIR)
 	find $(BUILD_DIR)/tests/.libs -maxdepth 1 -type f -perm -111 \
