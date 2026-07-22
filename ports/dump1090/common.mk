@@ -9,7 +9,7 @@ NAME = dump1090
 
 # Where dump1090 source lives
 QNX_PROJECT_ROOT ?= $(PRODUCT_ROOT)/../../$(NAME)
-
+PREFIX ?= usr/local
 #$(INSTALL_ROOT_$(OS)) is pointing to $QNX_TARGET
 #by default, unless it was manually re-routed to
 #a staging area by setting both INSTALL_ROOT_nto
@@ -21,7 +21,7 @@ ALL_DEPENDENCIES = $(NAME)_all
 .PHONY: $(NAME)_all install clean check
 
 # QNX flags
-CFLAGS += -D_QNX_SOURCE -DQNX=1 -I$(QNX_TARGET)/include -I$(INSTALL_ROOT)/include
+CFLAGS += -D_QNX_SOURCE -DQNX=1 -I$(QNX_TARGET)/$(PREFIX)/include  -I$(INSTALL_ROOT)/$(PREFIX)/include
 LDFLAGS += -lrtlsdr -lm -lsocket
 
 include $(MKFILES_ROOT)/qtargets.mk
