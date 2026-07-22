@@ -50,8 +50,6 @@ $(NAME)_all:
 
 	cd $(BUILD_DIR) && $(QNX_PROJECT_ROOT)/configure \
 		--host=aarch64-unknown-nto-qnx \
-		--prefix=/$(PREFIX) \
-		--exec_prefix=/$(CPUVARDIR)/$(PREFIX) \
 		CC="qcc $(QNX_VARIANT)" \
 		CFLAGS="$(CFLAGS)" \
 		LDFLAGS="$(LDFLAGS)"
@@ -61,7 +59,7 @@ $(NAME)_all:
 BIN_INSTALL_DIR = $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/bin/libusb_tests
 
 install:
-	$(MAKE) -C $(BUILD_DIR) install DESTDIR=$(QNX_TARGET)
+	$(MAKE) -C $(BUILD_DIR) install DESTDIR=$(QNX_TARGET)/$(CPUVARDIR)
 
 	mkdir -p $(BIN_INSTALL_DIR)
 	find $(BUILD_DIR)/tests/.libs -maxdepth 1 -type f -perm -111 \

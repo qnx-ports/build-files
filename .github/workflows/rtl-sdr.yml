@@ -23,7 +23,7 @@ jobs:
   build:
     strategy:
       matrix:
-        qnx_env: [ 710, 800 ]
+        qnx_env: [  800 ]
     runs-on: ubuntu-22.04-common
     if: |
       ((github.event_name == 'workflow_dispatch') ||
