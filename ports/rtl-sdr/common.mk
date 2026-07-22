@@ -58,7 +58,7 @@ CFLAGS += -I$(QNX_TARGET)/$(PREFIX)/include \
           -D_QNX_SOURCE
 
 export PKG_CONFIG_LIBDIR=$(QNX_TARGET)/$(CPUVARDIR)/usr/local/lib/pkgconfig:$(INSTALL_ROOT)/$(CPUVARDIR)/usr/local/lib/pkgconfig
-export PKG_CONFIG_SYSROOT_DIR=$(QNX_TARGET)
+export PKG_CONFIG_SYSROOT_DIR=$(QNX_TARGET)/$(CPUVARDIR)
 
 CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DCMAKE_SYSTEM_PROCESSOR=$(CPUVARDIR) \
@@ -69,7 +69,7 @@ CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DCMAKE_INSTALL_PREFIX="$(INSTALL_ROOT)" \
              -DCMAKE_INSTALL_LIBDIR="$(CPUVARDIR)/$(PREFIX)/lib" \
              -DCMAKE_INSTALL_BINDIR="$(CPUVARDIR)/$(PREFIX)/bin/rtl-sdr-tests" \
-             -DCMAKE_INSTALL_INCLUDEDIR="$(PREFIX)/include" \
+             -DCMAKE_INSTALL_INCLUDEDIR="$(CPUVARDIR)/$(PREFIX)/include" \
              -DCMAKE_MODULE_PATH="$(CMAKE_MODULE_PATH)" \
              -DCMAKE_FIND_ROOT_PATH="$(CMAKE_FIND_ROOT_PATH)" \
              -DCMAKE_BUILD_TYPE=$(CMAKE_BUILD_TYPE)
