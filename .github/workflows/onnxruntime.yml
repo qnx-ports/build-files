@@ -24,6 +24,7 @@ jobs:
 
   build:
     strategy:
+      fail-fast: false
       matrix:
         qnx_env: ["710", "800"]
     runs-on: ubuntu-22.04-common
