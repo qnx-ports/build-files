@@ -53,5 +53,5 @@ jobs:
         else
           source ~/qnx/710/qnxsdp-env.sh
         fi
-        ./build-files/ports/install_all.sh
+        ./build-files/ports/onnxruntime/install_all.sh
         make -C build-files/ports/onnxruntime JLEVEL=8 install
