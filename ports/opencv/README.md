@@ -32,12 +32,18 @@ cd build-files/docker
 # source qnxsdp-env.sh in
 source ~/qnx800/qnxsdp-env.sh
 
-# Clone numpy
 cd ~/qnx_workspace
+# Clone opencv
 git clone https://github.com/qnx-ports/opencv.git
+
+# Clone numpy
 git clone https://github.com/qnx-ports/numpy.git && cd numpy
 git submodule update --init --recursive
+
 cd ~/qnx_workspace
+
+# If building tests, clone opencv_extra
+git clone https://github.com/opencv/opencv_extra.git --branch 4.9.0
 
 # Clone muslflt
 git clone https://github.com/qnx-ports/muslflt.git
@@ -47,6 +53,13 @@ make -C build-files/ports/muslflt/ INSTALL_ROOT_nto=<staging-install-folder> USE
 
 # Build numpy
 QNX_PROJECT_ROOT="$(pwd)/numpy" make -C build-files/ports/numpy install -j4
+
+# If building tests, install opencv_extra models
+cd opencv_extra/testdata/dnn
+python3 download_models.py
+rm *.tar.gz
+rm *.tgz
+cd ~/qnx_workspace
 
 # Build opencv
 BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/opencv" make -C build-files/ports/opencv INSTALL_ROOT_nto=<staging-install-folder> USE_INSTALL_ROOT=true install -j4
@@ -59,6 +72,8 @@ git clone https://github.com/qnx-ports/build-files.git
 # opencv depends on numpy
 git clone https://github.com/qnx-ports/numpy.git
 git clone https://github.com/qnx-ports/opencv.git
+# If building tests, clone opencv_extra
+git clone https://github.com/opencv/opencv_extra.git --branch 4.9.0
 
 # Build numpy
 cd numpy
@@ -86,6 +101,13 @@ make -C build-files/ports/muslflt/ INSTALL_ROOT_nto=<staging-install-folder> USE
 # Build numpy first
 PREFIX="/usr" QNX_PROJECT_ROOT="$(pwd)/numpy" make -C build-files/ports/numpy install -j4
 
+# If building tests, install opencv_extra models
+cd opencv_extra/testdata/dnn
+python3 download_models.py
+rm *.tar.gz
+rm *.tgz
+cd ~/qnx_workspace
+
 # Build opencv
 BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/opencv" make -C build-files/ports/opencv INSTALL_ROOT_nto=<staging-install-folder> USE_INSTALL_ROOT=true install -j4
 ```
@@ -96,7 +118,6 @@ Create directories on the target.
 
 ```bash
 mkdir -p /data/home/qnxuser/opencv/libs
-mkdir -p /data/home/qnxuser/opencv/sampledata
 ````
 
 Set up the test environment (note, mDNS is configured from
@@ -104,23 +125,11 @@ Set up the test environment (note, mDNS is configured from
 ```bash
 TARGET_HOST=<target-ip-address-or-hostname>
 
-# On your development machine, clone opencv_extra
-git clone https://github.com/opencv/opencv_extra.git && cd opencv_extra
-git checkout 4.9.0
-
-# Download models used by the tests
-cd testdata/dnn
-python3 download_models.py
-rm *.tar.gz
-rm *.tgz
-
 # scp opencv_extra's testdata to /data on your target
-cd ~/qnx_workspace/opencv_extra
-scp -r testdata qnxuser@$TARGET_HOST:/data/home/qnxuser/opencv
+scp -r ~/build-files/ports/opencv/nto-aarch64-le/testdata qnxuser@$TARGET_HOST:/data/home/qnxuser/opencv
 
 # scp opencv's sample/data/* to /data on your target
-cd ~/qnx_workspace/opencv/samples/data
-scp -r * qnxuser@$TARGET_HOST:/data/home/qnxuser/opencv/sampledata
+scp -r ~/build-files/ports/opencv/nto-aarch64-le/sampledata qnxuser@$TARGET_HOST:/data/home/qnxuser/opencv
 
 # scp opencv libraries (you may first need to create the lib directory)
 scp $QNX_TARGET/aarch64le/usr/local/lib/libopencv* qnxuser@$TARGET_HOST:/data/home/qnxuser/opencv/libs
