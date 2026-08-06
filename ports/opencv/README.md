@@ -97,6 +97,8 @@ Create directories on the target.
 ```bash
 mkdir -p /data/home/qnxuser/opencv/libs
 mkdir -p /data/home/qnxuser/opencv/sampledata
+chown -R qnxuser:qnxuser /data/home/qnxuser/opencv
+chmod -R 755 /data/home/qnxuser/opencv
 ````
 
 Set up the test environment (note, mDNS is configured from
@@ -179,6 +181,25 @@ export OPENCV_SAMPLES_DATA_PATH=/data/home/qnxuser/opencv/sampledata
 # Copy the package to the target
 scp -r $QNX_TARGET/aarch64le/usr/local/lib/python3.11/site-packages/cv2 qnxuser@$TARGET_HOST:/data/home/qnxuser/opencv
 
+# Copy cv2.cpython-311.so dependencies to the target
+scp $QNX_TARGET/aarch64le/lib/libjpeg.so qnxuser@$TARGET_HOST:/data/home/qnxuser/opencv/libs
+scp $QNX_TARGET/aarch64le/lib/libjpeg.so.9 qnxuser@$TARGET_HOST:/data/home/qnxuser/opencv/libs
+scp $QNX_TARGET/aarch64le/lib/libstdc++.so.6 qnxuser@$TARGET_HOST:/data/home/qnxuser/opencv/libs
+scp $QNX_TARGET/aarch64le/lib/libstdc++.so.6.0.30 qnxuser@$TARGET_HOST:/data/home/qnxuser/opencv/libs
+scp $QNX_TARGET/aarch64le/lib/libm.so qnxuser@$TARGET_HOST:/data/home/qnxuser/opencv/libs
+scp $QNX_TARGET/aarch64le/lib/libm.so.3 qnxuser@$TARGET_HOST:/data/home/qnxuser/opencv/libs
+scp $QNX_TARGET/aarch64le/lib/libgcc_s.so qnxuser@$TARGET_HOST:/data/home/qnxuser/opencv/libs
+scp $QNX_TARGET/aarch64le/lib/libgcc_s.so.1 qnxuser@$TARGET_HOST:/data/home/qnxuser/opencv/libs
+scp $QNX_TARGET/aarch64le/lib/libgomp.so.1 qnxuser@$TARGET_HOST:/data/home/qnxuser/opencv/libs
+scp $QNX_TARGET/aarch64le/lib/libgomp.so.1.0.0 qnxuser@$TARGET_HOST:/data/home/qnxuser/opencv/libs
+scp $QNX_TARGET/aarch64le/lib/libimg.so.1 qnxuser@$TARGET_HOST:/data/home/qnxuser/opencv/libs
+scp $QNX_TARGET/aarch64le/lib/libcam.so qnxuser@$TARGET_HOST:/data/home/qnxuser/opencv/libs
+scp $QNX_TARGET/aarch64le/lib/libcam.so.2 qnxuser@$TARGET_HOST:/data/home/qnxuser/opencv/libs
+scp $QNX_TARGET/aarch64le/usr/lib/libpng16.so.16 qnxuser@$TARGET_HOST:/data/home/qnxuser/opencv/libs
+scp $QNX_TARGET/aarch64le/usr/lib/libtiff.so.5 qnxuser@$TARGET_HOST:/data/home/qnxuser/opencv/libs
+scp $QNX_TARGET/aarch64le/usr/lib/liblzma.so.5 qnxuser@$TARGET_HOST:/data/home/qnxuser/opencv/libs
+scp $QNX_TARGET/usr/local/include/opencv4 qnxuser@$TARGET_HOST:/data/home/qnxuser/opencv
+
 # Copy the numpy dependencies to the target
 scp -r $QNX_TARGET/aarch64le/usr/local/lib/python3.11/site-packages/numpy* qnxuser@$TARGET_HOST:/data/home/qnxuser/opencv
 ```
@@ -186,6 +207,9 @@ scp -r $QNX_TARGET/aarch64le/usr/local/lib/python3.11/site-packages/numpy* qnxus
 To verify the installation on the target,
 ```bash
 # Must point to opencv libs
+export PYTHONPATH=/data/home/qnxuser/opencv/cv2/python-3.11:$PYTHONPATH
+export OPENCV_LIBDIR=/data/home/qnxuser/opencv/libs
+export OPENCV_CONFIG_PATH=/data/home/qnxuser/opencv/cv2/config.py
 export OPENCV_LIBDIR=/data/home/qnxuser/opencv/libs
 
 cd /data/home/qnxuser/opencv
