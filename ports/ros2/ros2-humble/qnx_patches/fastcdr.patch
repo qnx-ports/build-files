@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 271c0db..aa8621d 100644
+index 271c0db..0cc14eb 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -189,7 +189,7 @@ endif()
@@ -7,7 +7,7 @@ index 271c0db..aa8621d 100644
  # Testing
  ###############################################################################
 -if(EPROSIMA_BUILD_TESTS AND IS_TOP_LEVEL AND NOT EPROSIMA_INSTALLER)
-+if(QNX OR (EPROSIMA_BUILD_TESTS AND IS_TOP_LEVEL AND NOT EPROSIMA_INSTALLER))
++if((QNX AND QNX_TESTING) OR (EPROSIMA_BUILD_TESTS AND IS_TOP_LEVEL AND NOT EPROSIMA_INSTALLER))
      enable_testing()
      include(CTest)
  

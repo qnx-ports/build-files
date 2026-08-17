@@ -61,13 +61,13 @@ jobs:
         run: |
           if [[ ${{ matrix.qnx_env }} == 800 ]]; then
             source ~/qnx/800/qnxsdp-env.sh
+            touch build-files/ports/googletest/nto-arm-le-v7/Makefile.dnm
+            BUILD_TESTING="ON"
           else
             source ~/qnx/710/qnxsdp-env.sh
+            BUILD_TESTING="OFF"
           fi
-          if [[ ${{ matrix.qnx_env }} == 800 ]]; then
-            touch build-files/ports/googletest/nto-arm-le-v7/Makefile.dnm
-          fi
-          BUILD_TESTING=ON make -C build-files/ports/googletest INSTALL_ROOT_nto=$PWD/stage USE_INSTALL_ROOT=true install
+          BUILD_TESTING=${BUILD_TESTING} make -C build-files/ports/googletest INSTALL_ROOT_nto=$PWD/stage USE_INSTALL_ROOT=true install
 
       - name: Setup python env
         if: ${{ (matrix.qnx_env == '800') }}

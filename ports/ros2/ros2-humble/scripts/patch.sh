@@ -22,6 +22,7 @@ qnx_patch ./src/ros2/pybind11_vendor pybind11_vendor.patch
 qnx_patch ./src/ros2/orocos_kdl_vendor orocos_kdl_vendor.patch
 qnx_patch ./src/ros2/rcl_interfaces rcl_interfaces.patch
 qnx_patch ./src/ros2/rclpy rclpy.patch
+qnx_patch ./src/ros2/rcpputils rcpputils.patch
 qnx_patch ./src/ros2/rosbag2 rosbag2.patch
 qnx_patch ./src/ros2/tinyxml2_vendor tinyxml2_vendor.patch
 qnx_patch ./src/ros2/rmw_dds_common rmw_dds_common.patch

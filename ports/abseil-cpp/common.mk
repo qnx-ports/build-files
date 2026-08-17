@@ -6,7 +6,7 @@ include $(MKFILES_ROOT)/qmacros.mk
 
 NAME=abseil-cpp
 
-QNX_PROJECT_ROOT ?= $(PRODUCT_ROOT)/../../
+QNX_PROJECT_ROOT ?= $(PRODUCT_ROOT)/../../$(NAME)
 
 #$(INSTALL_ROOT_$(OS)) is pointing to $QNX_TARGET
 #by default, unless it was manually re-routed to
@@ -29,8 +29,8 @@ CMAKE_BUILD_TYPE ?= Release
 GENERATE_PINFO_FILES ?= TRUE
 
 #override 'all' target to bypass the default QNX build system
-ALL_DEPENDENCIES = abseil-cpp_all
-.PHONY: abseil-cpp_all install check clean
+ALL_DEPENDENCIES = $(NAME)_all
+.PHONY: $(NAME)_all install check clean
 
 #QNX 7.1 Compat
 ifdef QNX_SEVEN_COMPAT
@@ -61,6 +61,13 @@ CMAKE_MODULE_PATH := $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/cmake;$(INSTALL_RO
 #if the include path is "default"
 CFLAGS += -I$(INSTALL_ROOT)/$(PREFIX)/include -I$(QNX_TARGET)/$(PREFIX)/include
 
+BUILD_SHARED_LIBS ?= ON
+BUILD_TESTING ?= OFF
+ABSL_BUILD_TESTING ?= OFF
+ABSL_RUN_TESTS ?= OFF
+ABSL_ENABLE_INSTALL ?= ON
+ABSL_USE_EXTERNAL_GOOGLETEST ?= ON
+
 CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DCMAKE_PROJECT_INCLUDE=$(PROJECT_ROOT)/project_hooks.cmake \
              -DCMAKE_INSTALL_PREFIX="$(INSTALL_ROOT)" \
@@ -75,28 +82,35 @@ CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DEXTRA_CMAKE_CXX_FLAGS="$(CFLAGS)" \
              -DEXTRA_CMAKE_ASM_FLAGS="$(FLAGS)" \
              -DEXTRA_CMAKE_LINKER_FLAGS="$(LDFLAGS)" \
-             -DBUILD_SHARED_LIBS=ON \
-             -DBUILD_TESTING=ON \
-             -DABSL_BUILD_TESTING=ON \
+             -DBUILD_SHARED_LIBS=$(BUILD_SHARED_LIBS) \
+             -DBUILD_TESTING=$(BUILD_TESTING) \
+             -DABSL_BUILD_TESTING=$(ABSL_BUILD_TESTING) \
              -DCPU=$(CPU) \
              -DEXT=$(EXT) \
-             -DABSL_RUN_TESTS=OFF \
-             -DABSL_ENABLE_INSTALL=ON \
-             -DABSL_USE_EXTERNAL_GOOGLETEST=ON
+             -DABSL_RUN_TESTS=$(ABSL_RUN_TESTS) \
+             -DABSL_ENABLE_INSTALL=$(ABSL_ENABLE_INSTALL) \
+             -DABSL_USE_EXTERNAL_GOOGLETEST=$(ABSL_USE_EXTERNAL_GOOGLETEST)
 
 MAKE_ARGS ?= -j $(firstword $(JLEVEL) 1)
 
 ifndef NO_TARGET_OVERRIDE
-abseil-cpp_all:
+$(NAME)_all:
 	@mkdir -p build
 	@cd build && cmake $(CMAKE_ARGS) $(QNX_PROJECT_ROOT)
 	@cd build && make VERBOSE=1 all $(MAKE_ARGS)
 
-install check: abseil-cpp_all
+install check: $(NAME)_all
 	@echo Installing...
 	@cd build && make VERBOSE=1 install $(MAKE_ARGS)
 	@echo Done.
 
 clean iclean spotless:
 	rm -rf build
+
+uninstall quninstall huninstall cuninstall: clean
+	@rm -rf $(QNX_TARGET)/$(PREFIX)/include/absl
+	@rm -rf $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/libabsl_*
+	@rm -rf $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/cmake/absl
+	@rm -rf $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/pkgconfig/absl_*
+	@rm -rf $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/bin/absl_*
 endif
