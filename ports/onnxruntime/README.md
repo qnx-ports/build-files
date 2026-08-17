@@ -1,4 +1,4 @@
-# onnxruntime
+# onnxruntime [![Build](https://github.com/qnx-ports/build-files/actions/workflows/onnxruntime.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/onnxruntime.yml)
 
 **NOTE**: QNX ports are only supported from Linux host operating system
 
