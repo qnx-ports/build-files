@@ -52,7 +52,7 @@ CMAKE_MODULE_PATH := $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/cmake;$(INSTALL_RO
 #if the include path is "default"
 CPPFLAGS += $(FLAGS) \
           -I$(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/include -I$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/include \
-					-I$(QNX_TARGET)/$(PREFIX)/include -I$(INSTALL_ROOT)/$(PREFIX)/include \
+          -I$(QNX_TARGET)/$(PREFIX)/include -I$(INSTALL_ROOT)/$(PREFIX)/include \
           -isystem $(QNX_TARGET)/usr/include/c++/v1/ \
           -D_QNX_SOURCE
 
