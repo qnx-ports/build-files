@@ -28,8 +28,8 @@ TARGET_OS=qnx-$(CPU)
 BASE=$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)
 .PHONY: $(NAME)_all install check clean
 
-CFLAGS += $(FLAGS) -O2 -DHAVE_uint=1 -DHAVE_uint64_t=1 -DHAVE_int64_t=1 -DRUSAGE -DNO_RPC -DSYS5
-LDFLAGS += -Wl,--build-id=md5 -L$(QNX_TARGET)/$(CPUVARDIR)/usr/lib
+CFLAGS += $(FLAGS) -DRUSAGE -DNO_RPC -DSYS5
+LDFLAGS += -Wl,--build-id=md5
 
 include $(MKFILES_ROOT)/qtargets.mk
 
@@ -42,7 +42,7 @@ $(NAME)_all:
 		AR="nto$(CPU)-ar" \
 		CFLAGS="$(CFLAGS)" \
 		LDFLAGS="$(LDFLAGS)" \
-		LDLIBS="-lm -lsocket -l:librpc.so.2"
+		LDLIBS="-lm -lsocket"
 
 install:  $(NAME)_all
 	mkdir -p $(BASE)/bin/$(TARGET_OS)
