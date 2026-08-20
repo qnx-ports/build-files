@@ -1,0 +1,49 @@
+name: lmbench
+
+permissions:
+  contents: write
+  checks: write
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/lmbench.yml"
+      - "ports/lmbench/**"
+  pull_request:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/lmbench.yml"
+      - "ports/lmbench/**"
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        qnx_env: ["800"]
+    name: Build for QNX ${{ matrix.qnx_env }}
+    runs-on: ubuntu-22.04-common
+    if: |
+      ((github.event_name == 'workflow_dispatch') ||
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'lmbench')))
+    steps:
+      - name: Checkout build-files
+        uses: actions/checkout@v4
+        with:
+          path: build-files
+
+      - name: Checkout lmbench
+        uses: actions/checkout@v4
+        with:
+          repository: qnx-ports/lmbench
+          path: lmbench
+
+      - name: Build lmbench
+        shell: bash
+        run: |
+          source ~/qnx/800/qnxsdp-env.sh
+          make -C build-files/ports/lmbench install
