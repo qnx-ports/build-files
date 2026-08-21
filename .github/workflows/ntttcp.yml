@@ -1,0 +1,66 @@
+name: ntttcp
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/ntttcp.yml"
+      - "ports/ntttcp/**"
+  pull_request:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/ntttcp.yml"
+      - "ports/ntttcp/**"
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        qnx_env: ["710", "800"]
+    name: Build for QNX ${{ matrix.qnx_env }}
+    runs-on: self-hosted
+    if: |
+      (github.event_name == 'workflow_dispatch') ||
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'ntttcp'))
+    steps:
+      - name: Checkout build-files
+        uses: actions/checkout@v4
+        with:
+          path: build-files
+
+      - name: Checkout ntttcp
+        uses: actions/checkout@v4
+        with:
+          repository: microsoft/ntttcp-for-linux
+          path: ntttcp
+          ref: b483afe00b9b095e8bf56c01308d81aeae0cb53c
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{github.actor}}
+          password: ${{secrets.GITHUB_TOKEN}}
+
+      - name: Pull build environment
+        run: |
+          docker pull ghcr.io/qnx-ports/sdp-build-env:latest
+
+      - name: Build ntttcp
+        uses: addnab/docker-run-action@v3
+        with:
+          image: ghcr.io/qnx-ports/sdp-build-env:latest
+          options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
+          shell: bash
+          run: |
+            if [[ ${{ matrix.qnx_env }} == 710 ]]; then
+              source ~/qnx/710/qnxsdp-env.sh
+            else
+              source ~/qnx/800/qnxsdp-env.sh
+            fi
+            cd ~/workspace
+            BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/ntttcp-for-linux/src" make -C build-files/ports/ntttcp install
