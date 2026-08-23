@@ -1,4 +1,4 @@
-# double-conversion
+# libwebp
 
 **NOTE**: QNX ports are only supported from a Linux host operating system.
 
@@ -21,12 +21,12 @@ cd build-files/docker
 # source qnxsdp-env.sh in
 source ~/qnx800/qnxsdp-env.sh
 
-# Clone double-conversion from upstream
+# Clone libwebp from upstream
 cd ~/qnx_workspace
-git clone https://github.com/google/double-conversion.git
+git clone https://chromium.googlesource.com/webm/libwebp
 
-# Build double-conversion
-BUILD_TESTING=ON QNX_PROJECT_ROOT="$(pwd)/double-conversion" make -C build-files/ports/double-conversion install -j4
+# Build libwebp
+QNX_PROJECT_ROOT="$(pwd)/libwebp" make -C build-files/ports/libwebp install -j4
 ```
 
 # Compile the port for QNX on Ubuntu host
@@ -34,28 +34,28 @@ BUILD_TESTING=ON QNX_PROJECT_ROOT="$(pwd)/double-conversion" make -C build-files
 ```bash
 # Clone the repos
 git clone https://github.com/qnx-ports/build-files.git
-git clone https://github.com/google/double-conversion.git
+git clone https://chromium.googlesource.com/webm/libwebp
 
 # source qnxsdp-env.sh
 source ~/qnx800/qnxsdp-env.sh
 
 # Build
-BUILD_TESTING=ON QNX_PROJECT_ROOT="$(pwd)/double-conversion" make -C build-files/ports/double-conversion install -j4
+QNX_PROJECT_ROOT="$(pwd)/libwebp" make -C build-files/ports/libwebp install -j4
 ```
 
 # How to run tests
 
 Make sure the directories exist on the target:
 ```bash
-mkdir -p /data/home/qnxuser/double-conversion/lib
+mkdir -p /data/home/qnxuser/libwebp/lib
 ```
 
 scp libraries and tests to the target (note, mDNS is configured from
 /boot/qnx_config.txt and uses qnxpi.local by default).
 
 ```bash
-TARGET_HOST=
+TARGET_HOST=<target-ip-address-or-hostname>
 
-scp $QNX_TARGET/aarch64le/usr/local/bin/cctest qnxuser@$TARGET_HOST:/data/home/qnxuser/double-conversion/
-scp $QNX_TARGET/aarch64le/usr/local/lib/libdouble-conversion* qnxuser@$TARGET_HOST:/data/home/qnxuser/double-conversion/lib/
+scp $QNX_TARGET/aarch64le/usr/local/lib/libwebp* qnxuser@$TARGET_HOST:/data/home/qnxuser/libwebp/lib/
+scp $QNX_TARGET/aarch64le/usr/local/lib/libsharpyuv* qnxuser@$TARGET_HOST:/data/home/qnxuser/libwebp/lib/
 ```
