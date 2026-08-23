@@ -1,4 +1,4 @@
-# FLAC
+# double-conversion
 
 **NOTE**: QNX ports are only supported from a Linux host operating system.
 
@@ -23,10 +23,10 @@ source ~/qnx800/qnxsdp-env.sh
 
 # Clone FLAC from upstream
 cd ~/qnx_workspace
-git clone https://github.com/xiph/flac.git
+git clone https://github.com/google/double-conversion.git
 
 # Build FLAC
-BUILD_TESTING=ON QNX_PROJECT_ROOT="$(pwd)/flac" make -C build-files/ports/FLAC install -j4
+BUILD_TESTING=ON QNX_PROJECT_ROOT="$(pwd)/double-conversion" make -C build-files/ports/double-conversion install -j4
 ```
 
 # Compile the port for QNX on Ubuntu host
@@ -34,24 +34,28 @@ BUILD_TESTING=ON QNX_PROJECT_ROOT="$(pwd)/flac" make -C build-files/ports/FLAC i
 ```bash
 # Clone the repos
 git clone https://github.com/qnx-ports/build-files.git
-git clone https://github.com/xiph/flac.git
+git clone https://github.com/google/double-conversion.git
 
 # source qnxsdp-env.sh
 source ~/qnx800/qnxsdp-env.sh
 
 # Build
-BUILD_TESTING=ON QNX_PROJECT_ROOT="$(pwd)/flac" make -C build-files/ports/FLAC install -j4
+BUILD_TESTING=ON QNX_PROJECT_ROOT="$(pwd)/double-conversion" make -C build-files/ports/double-conversion install -j4
 ```
 
 # How to run tests
 
 Make sure the directories exist on the target:
 ```bash
-mkdir -p /data/home/qnxuser/flac/lib
+mkdir -p /data/home/qnxuser/double-conversion/lib
 ```
+
 scp libraries and tests to the target (note, mDNS is configured from
 /boot/qnx_config.txt and uses qnxpi.local by default).
 
 ```bash
-TARGET_HOST=  scp $QNX_TARGET/aarch64le/usr/local/bin/flac qnxuser@$TARGET_HOST:/data/home/qnxuser/flac/scp $QNX_TARGET/aarch64le/usr/local/lib/libFLAC* qnxuser@$TARGET_HOST:/data/home/qnxuser/flac/lib/
+TARGET_HOST=
+
+scp $QNX_TARGET/aarch64le/usr/local/bin/cctest qnxuser@$TARGET_HOST:/data/home/qnxuser/double-conversion/
+scp $QNX_TARGET/aarch64le/usr/local/lib/libdouble-conversion* qnxuser@$TARGET_HOST:/data/home/qnxuser/double-conversion/lib/
 ```
