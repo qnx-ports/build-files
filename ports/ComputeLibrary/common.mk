@@ -63,7 +63,7 @@ CMAKE_MODULE_PATH := $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/cmake;$(INSTALL_RO
 #because CMake and pkg-config do not necessary add it automatically
 #if the include path is "default"
 CFLAGS += -I$(INSTALL_ROOT)/$(PREFIX)/include -isystem $(QNX_TARGET)/usr/include/c++/v1/ -D_QNX_SOURCE
-LDFLAGS += -Wl,--build-id=md5
+LDFLAGS += -Wl,--build-id=md5 -lregex
 
 CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DCMAKE_SYSTEM_PROCESSOR=$(CPUVARDIR) \
