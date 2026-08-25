@@ -8,6 +8,7 @@ Use `$(nproc)` instead of `4` after `JLEVEL=` and `-j` if you want to use the ma
 # Compile the port for QNX in a Docker container
 
 Pre-requisite: Install Docker on Ubuntu https://docs.docker.com/engine/install/ubuntu/
+
 ```bash
 # Create a workspace
 mkdir -p ~/qnx_workspace && cd ~/qnx_workspace
@@ -28,10 +29,11 @@ cd ~/qnx_workspace
 git clone https://github.com/qnx-ports/ComputeLibrary.git
 
 # Build ComputeLibrary
-BUILD_EXAMPLES="ON" BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/ComputeLibrary" make -C build-files/ports/ComputeLibrary install -j4
+BUILD_EXAMPLES="ON" BUILD_TESTING="ON" make -C build-files/ports/ComputeLibrary install -j4
 ```
 
 # Compile the port for QNX on Ubuntu host
+
 ```bash
 # Clone the repos
 mkdir -p ~/qnx_workspace && cd qnx_workspace
@@ -42,13 +44,14 @@ git clone https://github.com/qnx-ports/ComputeLibrary.git
 source ~/qnx800/qnxsdp-env.sh
 
 # Build ComputeLibrary
-BUILD_EXAMPLES="ON" BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/ComputeLibrary" make -C build-files/ports/ComputeLibrary install -j4
+BUILD_EXAMPLES="ON" BUILD_TESTING="ON" make -C build-files/ports/ComputeLibrary install -j4
 ```
 
 # How to run tests
 
 scp libraries and tests to the target (note, mDNS is configured from
 /boot/qnx_config.txt and uses qnxpi.local by default).
+
 ```bash
 TARGET_HOST=<target-ip-address-or-hostname>
 
@@ -62,6 +65,7 @@ scp $QNX_TARGET/aarch64le/lib/libgomp.so.1 qnxuser@$TARGET_HOST:/data/home/qnxus
 ```
 
 Run tests on the target.
+
 ```bash
 # ssh into the target
 ssh qnxuser@$TARGET_HOST
