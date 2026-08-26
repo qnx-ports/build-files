@@ -79,7 +79,7 @@ CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DEXTRA_CMAKE_CXX_FLAGS="$(CFLAGS)" \
              -DEXTRA_CMAKE_ASM_FLAGS="$(FLAGS)" \
              -DEXTRA_CMAKE_LINKER_FLAGS="$(LDFLAGS)" \
-             -DBUILD_SHARED_LIBS=$(BUILD_SHARED_LIBS) \
+             -DBUILD_SHARED_LIBS=ON \
              -DARM_COMPUTE_OPENMP=OFF \
              -DARM_COMPUTE_BUILD_EXAMPLES=$(BUILD_EXAMPLES) \
              -DARM_COMPUTE_BUILD_TESTING=$(BUILD_TESTING)
@@ -114,8 +114,6 @@ computelibrary_all:
 install check: computelibrary_all
 	@echo Installing...
 	@cd build && make VERBOSE=1 install all $(MAKE_ARGS)
-	@(cd $(QNX_PROJECT_ROOT) && find support -type f -name "*.h" -exec install -Dm 644 "{}" "$(INSTALL_ROOT)/$(PREFIX)/include/{}" \;)
-	@(cd $(QNX_PROJECT_ROOT)/include && find . -type f -exec install -Dm 644 "{}" "$(INSTALL_ROOT)/$(PREFIX)/include/{}" \;)
 	@echo Done.
 
 clean iclean spotless:
