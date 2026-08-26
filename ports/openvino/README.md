@@ -50,6 +50,7 @@ QNX_PROJECT_ROOT="$(pwd)/openvino" make -C build-files/ports/openvino install JL
 ```bash
 # Clone the dependencies and openvino
 mkdir -p ~/qnx_workspace && cd qnx_workspace
+git clone https://github.com/qnx-ports/build-files.git
 git clone -b qnx-v25.9.23 https://github.com/qnx-ports/flatbuffers.git
 git clone -b qnx-v53.0.0 https://github.com/qnx-ports/ComputeLibrary
 git clone -b qnx-v2022.3.0-rc1 https://github.com/qnx-ports/oneTBB
