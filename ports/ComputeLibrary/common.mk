@@ -28,8 +28,6 @@ PREFIX ?= /usr/local
 BUILD_EXAMPLES ?= OFF
 BUILD_TESTING ?= OFF
 
-BUILD_SHARED_LIBS ?= ON
-
 #choose Release or Debug
 CMAKE_BUILD_TYPE ?= Release
 
