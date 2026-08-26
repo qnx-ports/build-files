@@ -59,18 +59,23 @@ CMAKE_FIND_ROOT_PATH := $(QNX_TARGET);$(QNX_TARGET)/$(CPUVARDIR);$(INSTALL_ROOT)
 #Note that CMake modules can automatically detect the prefix they are
 #installed in.
 CMAKE_MODULE_PATH := $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/cmake;$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/lib/cmake
+export PKG_CONFIG_LIBDIR="$(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib"
 
-#Headers from INSTALL_ROOT need to be made available by default
-#because CMake and pkg-config do not necessary add it automatically
-#if the include path is "default"
-CPPFLAGS += -I$(INSTALL_ROOT)/$(PREFIX)/include -I$(QNX_TARGET)/$(PREFIX)/include
-CXXFLAGS += -isystem $(QNX_TARGET)/usr/include/c++/v1/
+CPPFLAGS += -I$(INSTALL_ROOT)/$(PREFIX)/include -I$(QNX_TARGET)/$(PREFIX)/include \
+            -isystem $(QNX_TARGET)/usr/include/c++/v1/ -g
+
+ifeq ($(CPU),aarch64)
+ASFLAGS += -Wa,-march=armv8.2-a+fp16+sve
+endif
 
 CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DCMAKE_INSTALL_PREFIX="$(INSTALL_ROOT)" \
              -DCMAKE_INSTALL_LIBDIR="$(CPUVARDIR)/$(PREFIX)/lib" \
              -DCMAKE_INSTALL_BINDIR="$(CPUVARDIR)/$(PREFIX)/bin" \
              -DCMAKE_INSTALL_INCLUDEDIR="$(PREFIX)/include" \
+             -DCMAKE_INSTALL_DATADIR="$(PREFIX)/share" \
+             -DCMAKE_INSTALL_SYSCONFDIR="$(PREFIX)/etc" \
+             -DCMAKE_INSTALL_DOCDIR="$(PREFIX)/share/doc" \
              -DCMAKE_FIND_ROOT_PATH="$(CMAKE_FIND_ROOT_PATH)" \
              -DCMAKE_MODULE_PATH="$(CMAKE_MODULE_PATH)" \
              -DCMAKE_BUILD_TYPE=$(CMAKE_BUILD_TYPE) \
@@ -85,6 +90,7 @@ CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DENABLE_BEH_TESTS=$(BUILD_TESTING) \
              -DENABLE_FUNCTIONAL_TESTS=$(BUILD_TESTING) \
              -DENABLE_SAMPLES=$(BUILD_SAMPLES) \
+             -DACL_INCLUDE_DIR="${QNX_TARGET}/${PREFIX}/include" \
              -DARM_COMPUTE_INCLUDE_DIR="$(INSTALL_ROOT)/$(PREFIX)/include" \
              -DARM_COMPUTE_LIB_DIR="$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/lib" \
              -DENABLE_SYSTEM_PROTOBUF=OFF \
@@ -93,8 +99,9 @@ CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DCMAKE_FIND_PACKAGE_PREFER_CONFIG=ON \
              -DPYTHON_EXECUTABLE="$(PYTHON_EXECUTABLE)" \
              -DENABLE_SYSTEM_OPENCL=ON \
-			 -DCMAKE_AR=${QNX_HOST}/usr/bin/nto${CPU}-ar \
-			 -DCMAKE_RANLIB=${QNX_HOST}/usr/bin/nto${CPU}-ranlib
+             -DOUTPUT_ROOT=$(CURDIR)/build \
+             -DCMAKE_AR=${QNX_HOST}/usr/bin/nto${CPU}-ar \
+             -DCMAKE_RANLIB=${QNX_HOST}/usr/bin/nto${CPU}-ranlib
 
 MAKE_ARGS ?= -j $(firstword $(JLEVEL) 1)
 
