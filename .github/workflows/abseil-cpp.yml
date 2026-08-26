@@ -1,5 +1,10 @@
 name: abseil-cpp
 
+permissions:
+  contents: write
+  checks: write
+
+
 on:
   workflow_dispatch:
   push:
@@ -21,11 +26,11 @@ jobs:
     strategy:
       matrix:
         qnx_env: ["710", "800"]
-    runs-on: self-hosted
+    runs-on: ubuntu-22.04-common
     if: |
-      (github.event_name == 'workflow_dispatch') ||
+      ((github.event_name == 'workflow_dispatch') ||
       (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
-      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'abseil-cpp'))
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'abseil-cpp')))
     steps:
     - name: Checkout build-files
       uses: actions/checkout@v4
@@ -37,6 +42,7 @@ jobs:
       with:
         repository: qnx-ports/abseil-cpp
         path: abseil-cpp
+        ref: qnx_20240116.0
 
     - name: Checkout muslflt
       uses: actions/checkout@v4
@@ -50,35 +56,64 @@ jobs:
         repository: qnx-ports/googletest
         path: googletest
 
-    - name: Login to GitHub Container Registry
-      uses: docker/login-action@v3
+    - name: Checkout check-tools
+      uses: actions/checkout@v4
       with:
-        registry: ghcr.io
-        username: ${{github.actor}}
-        password: ${{secrets.GITHUB_TOKEN}}
+        repository: qnx-ports/check-tools
+        path: check-tools
+        ref: v0.1.4
 
-    - name: Pull build environment
-      run: |
-        docker pull ghcr.io/qnx-ports/sdp-build-env:latest
+    - name: Checkout test-tools
+      uses: actions/checkout@v4
+      with:
+        repository: qnx-ports/test-tools
+        path: test-tools
+        token: ${{secrets.GCO_TOKEN}}
 
     - name: Build abseil-cpp
-      uses: addnab/docker-run-action@v3
+      shell: bash
+      run: |
+        if [[ ${{ matrix.qnx_env }} == 800 ]]; then
+          source ~/qnx/800/qnxsdp-env.sh
+        else
+          source ~/qnx/710/qnxsdp-env.sh
+        fi
+        touch build-files/ports/muslflt/nto-arm/a.le.v7/Makefile.dnm
+        touch build-files/ports/muslflt/nto-arm/o.le.v7/Makefile.dnm
+        touch build-files/ports/muslflt/nto-arm/so.le.v7/Makefile.dnm
+        if [[ ${{ matrix.qnx_env }} == 800 ]]; then
+          touch build-files/ports/googletest/nto-arm-le-v7/Makefile.dnm
+          touch build-files/ports/abseil-cpp/nto-arm-le-v7/Makefile.dnm
+        fi
+        BUILD_TESTING="OFF" QNX_PROJECT_ROOT="$(pwd)/googletest" make -C build-files/ports/googletest INSTALL_ROOT_nto=$PWD/stage USE_INSTALL_ROOT=true install
+        QNX_PROJECT_ROOT="$(pwd)/muslflt" make -C build-files/ports/muslflt/ INSTALL_ROOT_nto=$PWD/stage USE_INSTALL_ROOT=true install
+        QNX_SEVEN_COMPAT="true" BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/abseil-cpp" make -C build-files/ports/abseil-cpp INSTALL_ROOT_nto=$PWD/stage USE_INSTALL_ROOT=true install
+
+    - name: Setup python env
+      if: ${{ (matrix.qnx_env == '800') }}
+      uses: actions/setup-python@v6
       with:
-        image: ghcr.io/qnx-ports/sdp-build-env:latest
-        options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
-        shell: bash
-        run: |
-          if [[ ${{ matrix.qnx_env }} == 800 ]]; then
-            source ~/qnx/800/qnxsdp-env.sh
-          else
-            source ~/qnx/710/qnxsdp-env.sh
-          fi
-          cd ~/workspace
-          if [[ ${{ matrix.qnx_env }} == 800 ]]; then
-            touch build-files/ports/googletest/nto-arm-le-v7/Makefile.dnm
-            touch build-files/ports/muslflt/nto-arm-le-v7/Makefile.dnm
-            touch build-files/ports/abseil-cpp/nto-arm-le-v7/Makefile.dnm
-          fi
-          BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/googletest" make -C build-files/ports/googletest install
-          QNX_PROJECT_ROOT="$(pwd)/muslflt" make -C build-files/ports/muslflt/ install
-          QNX_SEVEN_COMPAT="true" BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/abseil-cpp" make -C build-files/ports/abseil-cpp install
+        python-version: '3.12'
+        cache: 'pip'
+
+    - name: Install dependencies
+      run: pip install -r ./test-tools/requirements.txt
+
+    - name: Test abseil-cpp
+      if: ${{ (matrix.qnx_env == '800') }}
+      env:
+        OSS_NAME: "abseil-cpp"
+        QNX_VERSION: "qnx${{ matrix.qnx_env }}"
+        COMPANION_DIR: "${{ github.workspace }}/build-files/ports/abseil-cpp"
+      shell: bash
+      run: |
+        source ~/qnx/800/qnxsdp-env.sh
+
+        ./test-tools/bin/run_tests.sh
+
+    - name: Publish Test Report
+      uses: mikepenz/action-junit-report@v5
+      if: ${{ always() }}
+      with:
+        report_paths: 'results/*.xml'
+        check_name: (${{ matrix.qnx_env }}) Test Report

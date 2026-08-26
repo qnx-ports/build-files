@@ -1,0 +1,20 @@
+[llvm]
+download-ci-llvm = false
+
+[build]
+target = ['x86_64-unknown-linux-gnu', 'x86_64-pc-nto-qnx800', 'aarch64-unknown-nto-qnx800']
+docs = false
+
+[target.x86_64-pc-nto-qnx800]
+cc = 'qcc'
+cxx = 'q++'
+ar = 'ntox86_64-ar'
+
+[target.aarch64-unknown-nto-qnx800]
+cc = 'qcc'
+cxx = 'q++'
+ar = 'ntoaarch64-ar'
+
+[install]
+sysconfdir = 'etc'
+prefix = 'stage/host/linux/x86_64/usr/'

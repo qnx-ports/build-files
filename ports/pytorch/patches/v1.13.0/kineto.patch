@@ -1,0 +1,25 @@
+diff --git a/libkineto/src/ThreadUtil.cpp b/libkineto/src/ThreadUtil.cpp
+index 0f67d54..89bc305 100644
+--- a/libkineto/src/ThreadUtil.cpp
++++ b/libkineto/src/ThreadUtil.cpp
+@@ -3,7 +3,11 @@
+ #ifndef _MSC_VER
+ #include <pthread.h>
+ #include <unistd.h>
++#ifdef __QNX__
++#include <process.h>
++#else
+ #include <sys/syscall.h>
++#endif
+ #include <sys/types.h>
+ #else // _MSC_VER
+ #include <locale>
+@@ -48,6 +52,8 @@ int32_t systemThreadId() {
+     _sysTid = (int32_t)syscall(SYS_thread_selfid);
+ #elif defined _MSC_VER
+     _sysTid = (int32_t)GetCurrentThreadId();
++#elif defined __QNX__
++    _sysTid = (int32_t)gettid();
+ #else
+     _sysTid = (int32_t)syscall(SYS_gettid);
+ #endif

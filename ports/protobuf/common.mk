@@ -30,7 +30,12 @@ CMAKE_BUILD_TYPE ?= Release
 ALL_DEPENDENCIES = protobuf_all
 .PHONY: protobuf_all install check clean
 
-CFLAGS += $(FLAGS) -D_XOPEN_SOURCE=700 -D_QNX_SOURCE -fPIC
+
+BASE_FLAGS := $(FLAGS) -D_XOPEN_SOURCE=700 -D_QNX_SOURCE
+INCLUDE_FLAGS := -I$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/include
+
+C_FLAGS   := $(BASE_FLAGS) $(INCLUDE_FLAGS)
+CXX_FLAGS := $(BASE_FLAGS) $(INCLUDE_FLAGS) -isystem $(QNX_TARGET)/usr/include/c++/v1
 
 #Search paths for all of CMake's find_* functions --
 #headers, libraries, etc.
@@ -50,11 +55,15 @@ CMAKE_MODULE_PATH := $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/cmake;$(INSTALL_RO
 #Headers from INSTALL_ROOT need to be made available by default
 #because CMake and pkg-config do not necessary add it automatically
 #if the include path is "default"
-CFLAGS += -I$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/include
+
+BUILD_SHARED_LIBS ?= ON
+protobuf_USE_EXTERNAL_GTEST ?= OFF
+protobuf_INSTALL ?= ON
+protobuf_ABSOLUTE_TEST_PLUGIN_PATH ?= OFF
 
 CMAKE_COMMON_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
                     -DCMAKE_SYSTEM_PROCESSOR=$(CPUVARDIR) \
-                    -DCMAKE_CXX_COMPILER_TARGET=gcc_nto$(CPUVARDIR) \
+                    -DCMAKE_CXX_COMPILER_TARGET=gcc_nto$(CPUVARDIR)_cxx \
                     -DCMAKE_C_COMPILER_TARGET=gcc_nto$(CPUVARDIR) \
                     -DCMAKE_INSTALL_PREFIX="$(INSTALL_ROOT)" \
                     -DCMAKE_INSTALL_LIBDIR="$(CPUVARDIR)/$(PREFIX)/lib" \
@@ -63,14 +72,16 @@ CMAKE_COMMON_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cma
                     -DCMAKE_MODULE_PATH="$(CMAKE_MODULE_PATH)" \
                     -DCMAKE_FIND_ROOT_PATH="$(CMAKE_FIND_ROOT_PATH)" \
                     -DCMAKE_BUILD_TYPE=$(CMAKE_BUILD_TYPE) \
-                    -DEXTRA_CMAKE_C_FLAGS="$(CFLAGS)" \
-                    -DEXTRA_CMAKE_CXX_FLAGS="$(CFLAGS)" \
+                    -DCMAKE_C_FLAGS="$(C_FLAGS)" \
+                    -DCMAKE_CXX_FLAGS="$(CXX_FLAGS)" \
                     -DEXTRA_CMAKE_ASM_FLAGS="$(FLAGS)" \
                     -DEXTRA_CMAKE_LINKER_FLAGS="$(LDFLAGS)" \
                     -DBUILD_SHARED_LIBS=$(BUILD_SHARED_LIBS) \
-                    -Dprotobuf_USE_EXTERNAL_GTEST=OFF \
-                    -Dprotobuf_INSTALL=ON \
-                    -Dprotobuf_ABSOLUTE_TEST_PLUGIN_PATH=OFF
+                    -Dprotobuf_USE_EXTERNAL_GTEST=$(protobuf_USE_EXTERNAL_GTEST) \
+                    -Dprotobuf_INSTALL=$(protobuf_INSTALL) \
+                    -Dprotobuf_ABSOLUTE_TEST_PLUGIN_PATH=$(protobuf_ABSOLUTE_TEST_PLUGIN_PATH) \
+                    -DZLIB_INCLUDE_DIR=$(QNX_TARGET)/usr/include \
+                    -DZLIB_LIBRARY=$(QNX_TARGET)/$(CPUVARDIR)/usr/lib/libz.so
 
 HOST_CMAKE_ARGS =   -DCMAKE_BUILD_TYPE=$(CMAKE_BUILD_TYPE) \
                     -Dprotobuf_BUILD_TESTS=OFF \
@@ -113,6 +124,13 @@ clean: protobuf_host_tools_clean
 protobuf_host_tools_clean:
 	rm -rf $(HOST_PROTOC_PATH)
 
-uninstall:
+uninstall: clean
+	rm -rf $(QNX_TARGET)/$(PREFIX)/include/google/protobuf
+	rm -rf $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/libproto*
+	rm -rf $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/cmake/protobuf
+	rm -rf $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/pkgconfig/protobuf*
+	rm -rf $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/bin/protoc*
+	rm -rf $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/bin/src/google/protobuf
+	rm -rf $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/bin/src/libproto*
 endif
 

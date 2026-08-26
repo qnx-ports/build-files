@@ -1,0 +1,58 @@
+name: ntpsec
+
+permissions:
+  contents: write
+  checks: write
+
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/ntpsec.yml'
+      - 'ports/NTPsec/'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/ntpsec.yml'
+      - 'ports/NTPsec/'
+jobs:
+
+  build:
+    strategy:
+      matrix:
+        qnx_env: ["710", "800"]
+    name: Build NTPsec for QNX ${{ matrix.qnx_env }}
+    runs-on: ubuntu-22.04-common
+    if: |
+      ((github.event_name == 'workflow_dispatch') ||
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'ntpsec')))
+    steps:
+      - name: Checkout build-files
+        uses: actions/checkout@v4
+        with:
+          path: build-files
+
+      - name: Clone NTPsec
+        run: |
+          cd ${{ github.workspace }}
+          git clone https://github.com/qnx-ports/ntpsec.git
+
+      - name: Build NTPsec
+        shell: bash
+        run: |
+          if [[ "${{ matrix.qnx_env }}" == "800" ]]; then
+            source ~/qnx/800/qnxsdp-env.sh
+          else
+            source ~/qnx/710/qnxsdp-env.sh
+          fi
+
+          QNX_PROJECT_ROOT="${{ github.workspace }}/ntpsec" \
+          make -C build-files/ports/NTPsec clean
+
+          QNX_PROJECT_ROOT="${{ github.workspace }}/ntpsec" \
+          make -C build-files/ports/NTPsec install

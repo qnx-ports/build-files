@@ -13,3 +13,7 @@ USEFILE :=
 
 EXTRA_SRCVPATH = $(QNX_PROJECT_ROOT)
 PUBLIC_INCVPATH = $(QNX_PROJECT_ROOT)/public
+
+ifneq ($(wildcard $(QNX_TARGET)/usr/include/sys/slog2.h), )
+	CCFLAGS += -DSLOG2
+endif

@@ -1,5 +1,10 @@
 name: glib
 
+permissions:
+  contents: write
+  checks: write
+
+
 on:
   workflow_dispatch:
   push:
@@ -18,11 +23,11 @@ on:
 jobs:
 
   build-qnx-ports:
-    runs-on: self-hosted
+    runs-on: ubuntu-22.04-common
     if: |
-      (github.event_name == 'workflow_dispatch') ||
+      ((github.event_name == 'workflow_dispatch') ||
       (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
-      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'glib'))
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'glib')))
     steps:
     - name: Checkout build-files
       uses: actions/checkout@v4
@@ -36,45 +41,29 @@ jobs:
         path: glib
         ref: qnx-2.82.2
 
-    - name: Login to GitHub Container Registry
-      uses: docker/login-action@v3
-      with:
-        registry: ghcr.io
-        username: ${{github.actor}}
-        password: ${{secrets.GITHUB_TOKEN}}
-
-    - name: Pull build environment
-      run: |
-        docker pull ghcr.io/qnx-ports/sdp-build-env:latest
-
     - name: Build glib
-      uses: addnab/docker-run-action@v3
-      with:
-        image: ghcr.io/qnx-ports/sdp-build-env:latest
-        options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
-        shell: bash
-        run: |
-          source ~/qnx/800/qnxsdp-env.sh
-          export QNX_VERSION=800
-          export CROSS_FILE=../build-files/resources/meson/aarch64le/workflows/qnx800.ini
-          cd ~/workspace
-          export QNX_ARCH=aarch64le
-          mkdir -p output
-          cd glib
-          /usr/local/qnx/env/bin/meson setup build-qnx$QNX_VERSION --cross-file $CROSS_FILE -Dprefix=/usr -Dxattr=false
-          /usr/local/qnx/env/bin/meson compile -C build-qnx$QNX_VERSION
-          DESTDIR=/home/runner/workspace/output /usr/local/qnx/env/bin/meson install --no-rebuild -C build-qnx$QNX_VERSION
+      shell: bash
+      run: |
+        source ~/qnx/800/qnxsdp-env.sh
+        export QNX_VERSION=800
+        export CROSS_FILE=../build-files/resources/meson/aarch64le/workflows/qnx800.ini
+        export QNX_ARCH=aarch64le
+        mkdir -p output
+        cd glib
+        /usr/local/qnx/env/bin/meson setup build-qnx$QNX_VERSION --cross-file $CROSS_FILE -Dprefix=/usr -Dxattr=false
+        /usr/local/qnx/env/bin/meson compile -C build-qnx$QNX_VERSION
+        DESTDIR=/home/runner/workspace/output /usr/local/qnx/env/bin/meson install --no-rebuild -C build-qnx$QNX_VERSION
 
   build-glib-main:
     strategy:
       matrix:
         qnx_env: ["710", "800"]
     name: Build for QNX ${{ matrix.qnx_env }}
-    runs-on: self-hosted
+    runs-on: ubuntu-22.04-common
     if: |
-      (github.event_name == 'workflow_dispatch') ||
+      ((github.event_name == 'workflow_dispatch') ||
       (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
-      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'glib'))
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'glib')))
     steps:
     - name: Checkout build-files
       uses: actions/checkout@v4
@@ -95,30 +84,14 @@ jobs:
         path: meson
         ref: 1.7.0
 
-    - name: Login to GitHub Container Registry
-      uses: docker/login-action@v3
-      with:
-        registry: ghcr.io
-        username: ${{github.actor}}
-        password: ${{secrets.GITHUB_TOKEN}}
-
-    - name: Pull build environment
-      run: |
-        docker pull ghcr.io/qnx-ports/sdp-build-env:latest
-
     - name: Build glib
-      uses: addnab/docker-run-action@v3
-      with:
-        image: ghcr.io/qnx-ports/sdp-build-env:latest
-        options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
-        shell: bash
-        run: |
-          if [[ ${{ matrix.qnx_env }} == 710 ]]; then
-            source ~/qnx/710/qnxsdp-env.sh
-          else
-            source ~/qnx/800/qnxsdp-env.sh
-          fi
-          cd ~/workspace
-          chmod +x ./build-files/ports/glib/install_all.sh 
-          JLEVEL=$(nproc) ./build-files/ports/glib/install_all.sh
-          JLEVEL=$(nproc) QNX_PROJECT_ROOT="$(pwd)/glib" make -C build-files/ports/glib install
+      shell: bash
+      run: |
+        if [[ ${{ matrix.qnx_env }} == 710 ]]; then
+          source ~/qnx/710/qnxsdp-env.sh
+        else
+          source ~/qnx/800/qnxsdp-env.sh
+        fi
+        chmod +x ./build-files/ports/glib/install_all.sh 
+        JLEVEL=$(nproc) ./build-files/ports/glib/install_all.sh
+        JLEVEL=$(nproc) QNX_PROJECT_ROOT="$(pwd)/glib" make -C build-files/ports/glib install

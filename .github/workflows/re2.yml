@@ -1,5 +1,10 @@
 name: re2
 
+permissions:
+  contents: write
+  checks: write
+
+
 on:
   workflow_dispatch:
   push:
@@ -18,11 +23,11 @@ on:
 jobs:
 
   build:
-    runs-on: self-hosted
+    runs-on: ubuntu-22.04-common
     if: |
-      (github.event_name == 'workflow_dispatch') ||
+      ((github.event_name == 'workflow_dispatch') ||
       (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
-      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 're2'))
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 're2')))
     steps:
     - name: Checkout build-files
       uses: actions/checkout@v4
@@ -59,28 +64,12 @@ jobs:
         repository: qnx-ports/re2
         path: re2
 
-    - name: Login to GitHub Container Registry
-      uses: docker/login-action@v3
-      with:
-        registry: ghcr.io
-        username: ${{github.actor}}
-        password: ${{secrets.GITHUB_TOKEN}}
-
-    - name: Pull build environment
-      run: |
-        docker pull ghcr.io/qnx-ports/sdp-build-env:latest  
-
     - name: Build re2
-      uses: addnab/docker-run-action@v3
-      with:
-        image: ghcr.io/qnx-ports/sdp-build-env:latest
-        options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
-        shell: bash
-        run: |
-          source ~/qnx/800/qnxsdp-env.sh
-          cd ~/workspace
-          BUILD_TESTING="OFF" QNX_PROJECT_ROOT="$(pwd)/googletest" make -C build-files/ports/googletest install 
-          QNX_PROJECT_ROOT="$(pwd)/benchmark" make -C build-files/ports/benchmark install 
-          QNX_PROJECT_ROOT="$(pwd)/muslflt" make -C build-files/ports/muslflt/ install 
-          BUILD_TESTING="OFF" QNX_PROJECT_ROOT="$(pwd)/abseil-cpp" make -C build-files/ports/abseil-cpp install 
-          OSLIST=nto QNX_PROJECT_ROOT="$(pwd)/re2" make -C build-files/ports/re2 install 
+      shell: bash
+      run: |
+        source ~/qnx/800/qnxsdp-env.sh
+        BUILD_TESTING="OFF" QNX_PROJECT_ROOT="$(pwd)/googletest" make -C build-files/ports/googletest install 
+        QNX_PROJECT_ROOT="$(pwd)/benchmark" make -C build-files/ports/benchmark install 
+        QNX_PROJECT_ROOT="$(pwd)/muslflt" make -C build-files/ports/muslflt/ install 
+        BUILD_TESTING="OFF" QNX_PROJECT_ROOT="$(pwd)/abseil-cpp" make -C build-files/ports/abseil-cpp install 
+        OSLIST=nto QNX_PROJECT_ROOT="$(pwd)/re2" make -C build-files/ports/re2 install 

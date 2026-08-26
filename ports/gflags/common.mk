@@ -5,13 +5,9 @@ include $(QCONFIG)
 
 NAME=gflags
 
-DIST_BASE=$(PRODUCT_ROOT)/../../../gflags
+QNX_PROJECT_ROOT=$(PRODUCT_ROOT)/../../$(NAME)
 
 PREFIX ?= /usr/local
-
-ifdef QNX_PROJECT_ROOT
-DIST_BASE=$(QNX_PROJECT_ROOT)
-endif
 
 #$(INSTALL_ROOT_$(OS)) is pointing to $QNX_TARGET
 #by default, unless it was manually re-routed to
@@ -26,18 +22,17 @@ CMAKE_BUILD_TYPE ?= Release
 GENERATE_PINFO_FILES ?= TRUE
 
 #override 'all' target to bypass the default QNX build system
-ALL_DEPENDENCIES = gflags_all
-.PHONY: gflags_all install check clean test
+ALL_DEPENDENCIES = $(NAME)_all
+.PHONY: $(NAME)_all install check clean test
 
 CFLAGS += $(FLAGS)
 
 include $(MKFILES_ROOT)/qtargets.mk
 
+BUILD_TESTING ?= OFF
+
 CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DCMAKE_INSTALL_PREFIX=$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX) \
-             -DCMAKE_INSTALL_LIBDIR=$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/lib \
-             -DCMAKE_INSTALL_BINDIR=$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/bin \
-             -DCMAKE_INSTALL_INCLUDEDIR=$(INSTALL_ROOT)/$(PREFIX)/include \
              -DGFLAGS_REGISTER_INSTALL_PREFIX=OFF \
              -DCMAKE_BUILD_TYPE=$(CMAKE_BUILD_TYPE) \
              -DCMAKE_SYSTEM_PROCESSOR=$(CPUVARDIR) \
@@ -47,18 +42,18 @@ CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DEXTRA_CMAKE_LINKER_FLAGS="$(LDFLAGS)" \
              -DBUILD_SHARED_LIBS=1 \
              -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON \
-             -DBUILD_TESTING=ON \
+             -DBUILD_TESTING=$(BUILD_TESTING) \
              -DCPU=$(CPU)
 
 MAKE_ARGS ?= -j $(firstword $(JLEVEL) 1)
 
 ifndef NO_TARGET_OVERRIDE
-gflags_all:
+$(NAME)_all:
 	@mkdir -p build
-	@cd build && cmake $(CMAKE_ARGS) $(DIST_BASE)
+	@cd build && cmake $(CMAKE_ARGS) $(QNX_PROJECT_ROOT)
 	@cd build && make VERBOSE=1 all $(MAKE_ARGS)
 
-install check: gflags_all
+install check: $(NAME)_all
 	@echo Installing...
 	@cd build && make VERBOSE=1 install $(MAKE_ARGS)
 	@echo Done.

@@ -1,0 +1,63 @@
+name: conan-restbed
+
+permissions:
+  contents: write
+  checks: write
+
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/conan-restbed.yml'
+      - 'conan/recipes/restbed/**'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/conan-restbed.yml'
+      - 'conan/recipes/restbed/**'
+
+jobs:
+
+  build:
+    strategy:
+      matrix:
+        qnx_env: ["Linux", "710", "800"]
+    name: Build conan restbed for ${{ matrix.qnx_env }}
+    runs-on: ubuntu-22.04-common
+    if: |
+      ((github.event_name == 'workflow_dispatch') ||
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'conan')))
+    steps:
+    - name: Checkout build-files
+      uses: actions/checkout@v4
+      with:
+        path: build-files
+
+    - name: Build conan restbed recipes
+      shell: bash
+      run: |
+        python3.11 -m venv vpy
+        . vpy/bin/activate
+        pip install conan
+        conan profile detect
+        export QNX_CONAN_ROOT=$(realpath ./build-files/conan)
+        conan config install $QNX_CONAN_ROOT/tools/qnx-8.0-extension/settings_user.yml
+        conan create --version=1.29.0 $QNX_CONAN_ROOT/recipes/asio/all
+        if [ "${{ matrix.qnx_env }}" == "Linux" ]; then
+          conan create  --version=4.8 $QNX_CONAN_ROOT/recipes/restbed/all --build=missing
+        elif [ "${{ matrix.qnx_env }}" == "710" ]; then
+          source ~/qnx/710/qnxsdp-env.sh
+          conan create -pr:h=$QNX_CONAN_ROOT/tools/profiles/nto-7.1-aarch64-gcc --version=4.8 $QNX_CONAN_ROOT/recipes/restbed/all --build=missing
+          conan create -pr:h=$QNX_CONAN_ROOT/tools/profiles/nto-7.1-x86_64-gcc --version=4.8 $QNX_CONAN_ROOT/recipes/restbed/all
+        elif [ "${{ matrix.qnx_env }}" == "800" ]; then
+          source ~/qnx/800/qnxsdp-env.sh
+          conan create -pr:h=$QNX_CONAN_ROOT/tools/profiles/nto-8.0-aarch64-le --version=4.8 $QNX_CONAN_ROOT/recipes/restbed/all --build=missing
+          conan create -pr:h=$QNX_CONAN_ROOT/tools/profiles/nto-8.0-aarch64-gcc --version=4.8 $QNX_CONAN_ROOT/recipes/restbed/all
+          conan create -pr:h=$QNX_CONAN_ROOT/tools/profiles/nto-8.0-x86_64 --version=4.8 $QNX_CONAN_ROOT/recipes/restbed/all
+          conan create -pr:h=$QNX_CONAN_ROOT/tools/profiles/nto-8.0-x86_64-gcc --version=4.8 $QNX_CONAN_ROOT/recipes/restbed/all
+        fi

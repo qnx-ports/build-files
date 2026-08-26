@@ -6,6 +6,7 @@ Use `$(nproc)` instead of `4` after `JLEVEL=` and `-j` if you want to use the ma
 # Compile the port for QNX in a Docker container
 
 Pre-requisite: Install Docker on Ubuntu https://docs.docker.com/engine/install/ubuntu/
+
 ```bash
 # Create a workspace
 mkdir -p ~/qnx_workspace && cd ~/qnx_workspace
@@ -54,7 +55,7 @@ git apply ~/qnx_workspace/build-files/ports/METIS/patches/GKlib.patch
 
 # Build
 cd ~/qnx_workspace
-GKLIB_SRC="$(pwd)/GKlib" QNX_PROJECT_ROOT="$(pwd)/METIS" make -C build-files/ports/METIS install -j4
+make -C build-files/ports/METIS install -j4
 ```
 
 # How to run tests
@@ -63,5 +64,5 @@ METIS does not have its own test suite. To test the port you will have to rely o
 the tests provided by other ports that use or provide a wrapper around METIS:
 
 - gtsam - To test METIS, please refer to the gtsam build instructions, checkout
-the qnx_v4.1.1_SYSTEM_METIS branch, and build its tests with
-USE_SYSTEM_METIS=ON.
+  the qnx_v4.1.1_SYSTEM_METIS branch, and build its tests with
+  USE_SYSTEM_METIS=ON.

@@ -1,0 +1,16 @@
+"4.8":
+  sources:
+    url: "https://github.com/Corvusoft/restbed/archive/refs/tags/4.8.tar.gz"
+    sha256: "4801833f86a67b8a123c2c01203e259eb81157e1e9ef144a3b6395cb2d838a42"
+  requirements:
+    asio: "1.29.0"
+  build_requirements:
+    cmake: "[>=3.16]"
+patches:
+  "4.8":
+    - patch_file: "patches/restbed-4.8-qnx-fix.patch"
+      patch_description: " add support for QNX 7.1/8.0"
+      patch_type: "portability"
+    - patch_file: "patches/restbed-4.8-conan-fix.patch"
+      patch_description: "Fix paths for external dependency"
+      patch_type: "conan"

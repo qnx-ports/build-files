@@ -56,7 +56,8 @@ RUN apt update && apt install -y \
 	ninja-build \
 	net-tools \
 	tree \
-	scons
+	scons \
+	autogen
 
 # Install QT dependancies
 RUN apt-get update && apt-get install -y \
@@ -494,9 +495,11 @@ RUN apt install -qq --assume-yes \
 RUN cd /opt && sudo wget https://cmake.org/files/v3.31/cmake-3.31.7-linux-x86_64.sh && \
 	sudo mkdir /opt/cmake-3.31.7-linux-x86_64 && \
 	yes | sudo sh cmake-3.31.7-linux-x86_64.sh --prefix=/opt/cmake-3.31.7-linux-x86_64 --skip-license && \
-	sudo ln -s /opt/cmake-3.31.7-linux-x86_64/bin/cmake /usr/local/bin/cmake
+	sudo ln -s /opt/cmake-3.31.7-linux-x86_64/bin/cmake /usr/local/bin/cmake && \
+	sudo sed -i 's/gmake //' /opt/cmake-3.31.7-linux-x86_64/share/cmake-3.31/Modules/CMakeUnixFindMake.cmake && \
+	sudo sed -i 's/gmake //' /usr/share/cmake-3.22/Modules/CMakeUnixFindMake.cmake
 
-# Install APK dependencies
+# Install APK dependencies (apk stuff is removed, but dependencies left intentionally)
 RUN apt-get install -y \
   busybox \
   pax-utils \
@@ -504,37 +507,11 @@ RUN apt-get install -y \
   meson \
   scdoc
 
-# Copy apk patches
-COPY "patches/apk-tools/*" "patches/abuild/*" /root/
-
-# Install apk-tools
-RUN cd ~ && \
-  git clone https://github.com/alpinelinux/apk-tools.git && cd apk-tools && \
-  git checkout 5ce64d14ead8ca1f2ee688c095390c8db0e5945c && \
-  git apply ~/0001-qnx-POSIX-API-compat.patch && \
-  git apply ~/0002-qnx-make-apk-s-internal-folders-SLQS-compatible.patch && \
-  git apply ~/0003-qnx-7xx-doesn-t-have-memmem-add-one-from-git.patch && \
-  meson setup ~/apk-tools/build ~/apk-tools -Dprefix=/usr/local -Dtests=disabled && \
-  meson compile -C build && \
-  sudo meson install -C build
-
-# Install and patch abuild
-RUN cd ~ && \
-  git clone -b 3.15.0_rc2 https://github.com/alpinelinux/abuild.git && cd abuild && \
-  git apply ~/0001-qnx-disable-features-not-used-by-QNX.patch && \
-  git apply ~/0002-qnx-add-Standardized-Layout-for-QNX-System-suport.patch && \
-  git apply ~/0003-qnx-busybox-location-for-ubuntu-debian-used-by-cross.patch && \
-  git apply ~/0004-abuild-remove-ash-specific-chdir.patch && \
-  make && sudo make install
-
 # Adding user
 ARG USER_NAME
 ARG GROUP_NAME
 ARG USER_ID
 ARG GROUP_ID
-ARG QNX_SDP_VERSION
-
-ENV QNX_SDP_VERSION=$QNX_SDP_VERSION
 
 ENV PS1='[QNX] (\u) \w$ '
 

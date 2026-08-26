@@ -1,0 +1,56 @@
+name: lz4
+
+permissions:
+  contents: write
+  checks: write
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/lz4.yml'
+      - 'ports/lz4/**'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/lz4.yml'
+      - 'ports/lz4/**'
+
+jobs:
+
+  build:
+    strategy:
+      matrix:
+        qnx_env: ["710", "800"]
+
+    name: Build LZ4 for QNX ${{ matrix.qnx_env }}
+    runs-on: ubuntu-22.04-common
+
+    if: |
+      ((github.event_name == 'workflow_dispatch') ||
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'lz4')))
+
+    steps:
+      - name: Checkout build-files
+        uses: actions/checkout@v4
+        with:
+          path: build-files
+
+      - name: Clone LZ4 repository
+        run: |
+          cd ${{ github.workspace }}
+          git clone https://github.com/lz4/lz4.git
+
+      - name: Set up QNX environment and build
+        shell: bash
+        run: |
+          if [[ "${{ matrix.qnx_env }}" == "800" ]]; then
+            source ~/qnx/800/qnxsdp-env.sh
+          else
+            source ~/qnx/710/qnxsdp-env.sh
+          fi
+          make -C build-files/ports/lz4 install

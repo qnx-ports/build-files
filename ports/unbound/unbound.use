@@ -1,0 +1,70 @@
+unbound(8)                      unbound 1.16.3                      unbound(8)
+
+
+
+NAME
+       unbound - Unbound DNS validating resolver 1.16.3.
+
+SYNOPSIS
+       unbound [-h] [-d] [-p] [-v] [-c cfgfile]
+
+DESCRIPTION
+       Unbound is a caching DNS resolver.
+
+       It  uses a built in list of authoritative nameservers for the root zone
+       (.), the so called root hints.  On receiving a DNS query  it  will  ask
+       the root nameservers for an answer and will in almost all cases receive
+       a delegation to a top level domain (TLD) authoritative nameserver.   It
+       will  then ask that nameserver for an answer.  It will recursively con-
+       tinue until an answer is found or no answer  is  available  (NXDOMAIN).
+       For performance and efficiency reasons that answer is cached for a cer-
+       tain time (the answer's time-to-live or TTL).  A second query  for  the
+       same  name  will  then be answered from the cache.  Unbound can also do
+       DNSSEC validation.
+
+       To use a locally running Unbound for resolving put
+
+             nameserver 127.0.0.1
+
+       into resolv.conf(5).
+
+       If authoritative DNS is needed as well using nsd(8), careful  setup  is
+       required  because authoritative nameservers and resolvers are using the
+       same port number (53).
+
+       The available options are:
+
+       -h     Show the version number and commandline option help, and exit.
+
+       -c cfgfile
+              Set the config file with settings for Unbound to read instead of
+              reading  the  file  at  the  default  location, /etc/unbound/un-
+              bound.conf. The syntax is described in unbound.conf(5).
+
+       -d     Debug flag: do not fork into the background, but  stay  attached
+              to  the  console.   This flag will also delay writing to the log
+              file until the thread-spawn time, so that most config and  setup
+              errors  appear  on  stderr. If given twice or more, logging does
+              not switch to the log file or to syslog, but  the  log  messages
+              are printed to stderr all the time.
+
+       -p     Don't  use  a pidfile.  This argument should only be used by su-
+              pervision systems which can ensure that only one instance of Un-
+              bound will run concurrently.
+
+       -v     Increase verbosity. If given multiple times, more information is
+              logged.  This is added to the verbosity (if any) from the config
+              file.
+
+       -V     Show the version number and build options, and exit.
+
+SEE ALSO
+       unbound.conf(5), unbound-checkconf(8), nsd(8).
+
+AUTHORS
+       Unbound  developers  are mentioned in the CREDITS file in the distribu-
+       tion.
+
+
+
+NLnet Labs                       Sep  21, 2022                       unbound(8)

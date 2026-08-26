@@ -1,0 +1,6 @@
+package = "onnx"
+timeout = 1800
+jobs = ${{nproc}}
+
+[googletest]
+path = "build/build/onnx_gtests"

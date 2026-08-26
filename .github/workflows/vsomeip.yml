@@ -1,5 +1,10 @@
 name: vsomeip
 
+permissions:
+  contents: write
+  checks: write
+
+
 on:
   workflow_dispatch:
   push:
@@ -22,11 +27,11 @@ jobs:
       matrix:
         qnx_env: [710, 800]
     name: Build for QNX ${{ matrix.qnx_env }}
-    runs-on: self-hosted
+    runs-on: ubuntu-22.04-common
     if: |
-      (github.event_name == 'workflow_dispatch') ||
+      ((github.event_name == 'workflow_dispatch') ||
       (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
-      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'vsomeip'))
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'vsomeip')))
     steps:
     - name: Checkout build-files
       uses: actions/checkout@v4
@@ -54,34 +59,18 @@ jobs:
         repository: qnx-ports/vsomeip
         path: vsomeip
 
-    - name: Login to GitHub Container Registry
-      uses: docker/login-action@v3
-      with:
-        registry: ghcr.io
-        username: ${{github.actor}}
-        password: ${{secrets.GITHUB_TOKEN}}
-
-    - name: Pull build environment
-      run: |
-        docker pull ghcr.io/qnx-ports/sdp-build-env:latest
-
     - name: Build vsomeip
-      uses: addnab/docker-run-action@v3
-      with:
-        image: ghcr.io/qnx-ports/sdp-build-env:latest
-        options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
-        shell: bash
-        run: |
-          if [ "${{ matrix.qnx_env }}" == "710" ]; then
-            source ~/qnx/710/qnxsdp-env.sh
-          else
-            source ~/qnx/800/qnxsdp-env.sh
-          fi
-          cd ~/workspace
-          WORKSPACE=$PWD
-          export GTEST_ROOT=/home/runner/workspace/googletest
-          cd $WORKSPACE/boost/libs/interprocess && git apply $WORKSPACE/build-files/ports/boost/interprocess_1.78.0_qnx_7.1.patch
-          cd $WORKSPACE/boost/tools/build && git apply $WORKSPACE/build-files/ports/boost/tools_qnx.patch
-          cd $WORKSPACE
-          BOOST_CPP_VERSION_FLAG="-std=c++17" QNX_PROJECT_ROOT="$(pwd)/boost" make -C build-files/ports/boost install -j$(nproc)
-          GTEST_ROOT=$GTEST_ROOT QNX_PROJECT_ROOT="$(pwd)/vsomeip" make -C build-files/ports/vsomeip install -j$(nproc)
+      shell: bash
+      run: |
+        if [ "${{ matrix.qnx_env }}" == "710" ]; then
+          source ~/qnx/710/qnxsdp-env.sh
+        else
+          source ~/qnx/800/qnxsdp-env.sh
+        fi
+        WORKSPACE=$PWD
+        export GTEST_ROOT=/home/runner/workspace/googletest
+        cd $WORKSPACE/boost/libs/interprocess && git apply $WORKSPACE/build-files/ports/boost/interprocess_1.78.0_qnx_7.1.patch
+        cd $WORKSPACE/boost/tools/build && git apply $WORKSPACE/build-files/ports/boost/tools_qnx.patch
+        cd $WORKSPACE
+        BOOST_CPP_VERSION_FLAG="-std=c++17" QNX_PROJECT_ROOT="$(pwd)/boost" make -C build-files/ports/boost install -j$(nproc)
+        GTEST_ROOT=$GTEST_ROOT QNX_PROJECT_ROOT="$(pwd)/vsomeip" make -C build-files/ports/vsomeip install -j$(nproc)

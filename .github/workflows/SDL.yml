@@ -1,5 +1,9 @@
 name: SDL
 
+permissions:
+  contents: write
+  checks: write
+
 on:
   workflow_dispatch:
   push:
@@ -22,11 +26,11 @@ jobs:
       matrix:
         qnx_env: [710, 800]
     name: Build for QNX ${{ matrix.qnx_env }}
-    runs-on: self-hosted
+    runs-on: ubuntu-22.04-common
     if: |
-      (github.event_name == 'workflow_dispatch') ||
+      ((github.event_name == 'workflow_dispatch') ||
       (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
-      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'SDL'))
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'SDL')))
     steps:
     - name: Checkout build-files
       uses: actions/checkout@v4
@@ -38,31 +42,15 @@ jobs:
       with:
         repository: qnx-ports/SDL
         path: SDL
-        ref: qnx_2.0.5
-    
-    - name: Login to GitHub Container Registry
-      uses: docker/login-action@v3
-      with:
-        registry: ghcr.io
-        username: ${{github.actor}}
-        password: ${{secrets.GITHUB_TOKEN}}
-
-    - name: Pull build environment
-      run: |
-        docker pull ghcr.io/qnx-ports/sdp-build-env:latest
+        ref: qnx-release-2.0.14
 
     - name: Build SDL
-      uses: addnab/docker-run-action@v3
-      with:
-        image: ghcr.io/qnx-ports/sdp-build-env:latest
-        options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
-        shell: bash
-        run: |
-          if [ "${{ matrix.qnx_env }}" == "710" ]; then
-            source ~/qnx/710/qnxsdp-env.sh
-          else
-            source ~/qnx/800/qnxsdp-env.sh
-          fi
-          cd ~/workspace
-          PREFIX="/usr/local" QNX_PROJECT_ROOT="$(pwd)/SDL" make -C build-files/ports/SDL install -j$(nproc)
+      shell: bash
+      run: |
+        if [ "${{ matrix.qnx_env }}" == "710" ]; then
+          source ~/qnx/710/qnxsdp-env.sh
+        else
+          source ~/qnx/800/qnxsdp-env.sh
+        fi
+        ENABLE_AUDIO="no" PREFIX="usr/local" QNX_PROJECT_ROOT="$(pwd)/SDL" make -C build-files/ports/SDL install -j$(nproc)
 

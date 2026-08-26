@@ -91,7 +91,7 @@ index dffac71..4e500ae 100644
 -    set(PATCH_COMMAND_STR PATCH_COMMAND
 -      git apply ${CMAKE_CURRENT_SOURCE_DIR}/CMakeLists.txt.patch &&
 -      sed -i -e "s/INSTALLER_PLATFORM/${INSTALLER_PLATFORM}/g" CMakeLists.txt)
-+  if(QNX)
++  if(QNX AND QNX_TESTING)
 +    list(APPEND extra_cmake_args "-DFOONATHAN_MEMORY_BUILD_TESTS=ON")
    endif()
  

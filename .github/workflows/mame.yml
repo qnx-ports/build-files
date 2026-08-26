@@ -1,0 +1,102 @@
+name: mame
+
+permissions:
+  contents: write
+  checks: write
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/mame.yml'
+      - 'ports/mame/**'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/mame.yml'
+      - 'ports/mame/**'
+
+jobs:
+
+  build:
+    strategy:
+      matrix:
+        qnx_env: [800]
+    name: Build for QNX ${{ matrix.qnx_env }}
+    runs-on: ubuntu-22.04-common
+    if: |
+      (github.event_name == 'workflow_dispatch') ||
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'mame'))
+    steps:
+    - name: Checkout build-files
+      uses: actions/checkout@v4
+      with:
+        path: build-files
+
+    - name: Checkout SDL_ttf
+      uses: actions/checkout@v4
+      with:
+        repository: qnx-ports/SDL_ttf
+        path: SDL_ttf
+        ref: qnx-release-2.0.18
+
+    - name: Checkout SDL
+      uses: actions/checkout@v4
+      with:
+        repository: qnx-ports/SDL
+        path: SDL
+        ref: qnx-release-2.0.14
+
+    - name: Checkout freetype
+      uses: actions/checkout@v4
+      with:
+        repository: freetype/freetype
+        path: freetype
+        ref: VER-2-13-3
+
+    - name: Checkout fontconfig
+      uses: actions/checkout@v4
+      with:
+        repository: fontconfig/fontconfig
+        path: fontconfig
+        ref: 2.16.0
+
+    - name: Checkout meson
+      uses: actions/checkout@v4
+      with:
+        repository: mesonbuild/meson
+        path: meson
+        ref: 1.7.0
+
+    - name: Checkout mame
+      uses: actions/checkout@v4
+      with:
+        repository: qnx-ports/mame
+        path: mame
+        ref: qnx-mame0281
+
+    - name: Build mame
+      shell: bash
+      run: |
+        if [ "${{ matrix.qnx_env }}" == "710" ]; then
+          source ~/qnx/710/qnxsdp-env.sh
+        else
+          source ~/qnx/800/qnxsdp-env.sh
+        fi
+        ENABLE_AUDIO="no" PREFIX="usr/local" QNX_PROJECT_ROOT="$(pwd)/SDL" make -C build-files/ports/SDL install -j$(nproc)
+
+        chmod +x build-files/ports/freetype/install_all.sh
+        JLEVEL=$(nproc) ./build-files/ports/freetype/install_all.sh
+        JLEVEL=$(nproc) QNX_PROJECT_ROOT="$(pwd)/freetype" make -C build-files/ports/freetype install
+
+        chmod +x ./build-files/ports/fontconfig/install_all.sh 
+        JLEVEL=$(nproc) ./build-files/ports/fontconfig/install_all.sh
+        JLEVEL=$(nproc) QNX_PROJECT_ROOT="$(pwd)/fontconfig" make -C build-files/ports/fontconfig install
+
+        PREFIX="usr/local" QNX_PROJECT_ROOT="$(pwd)/SDL_ttf" make -C build-files/ports/SDL_ttf install -j$(nproc)
+
+        PREFIX="usr/local" QNX_PROJECT_ROOT="$(pwd)/mame" make -C build-files/ports/mame JLEVEL=$(nproc) install

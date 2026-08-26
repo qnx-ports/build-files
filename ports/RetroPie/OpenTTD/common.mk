@@ -1,13 +1,12 @@
-
 ifndef QCONFIG
 QCONFIG=qconfig.mk
 endif
 include $(QCONFIG)
-
+include $(MKFILES_ROOT)/qmacros.mk
 ######### Settable Env. Vars ##################
 # Project Settings
 NAME=OpenTTD
-QNX_PROJECT_ROOT ?= $(PRODUCT_ROOT)/../../../openttd
+QNX_PROJECT_ROOT ?= $(PRODUCT_ROOT)/../../../OpenTTD
 
 # Installation Locations
 INSTALL_ROOT ?= $(INSTALL_ROOT_$(OS))
@@ -55,7 +54,7 @@ endif
 
 CMAKE_FIND_ROOT_PATH := $(QNX_TARGET);$(QNX_TARGET)/$(CPUVARDIR);$(INSTALL_ROOT)/$(CPUVARDIR)
 CMAKE_MODULE_PATH    := $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/cmake;$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/lib/cmake
-CFLAGS               += $(FLAGS) -I$(INSTALL_ROOT)/$(PREFIX)/include -I$(QNX_TARGET)/$(PREFIX)/include 
+CFLAGS               += $(FLAGS) -I$(INSTALL_ROOT)/$(PREFIX)/include -I$(QNX_TARGET)/$(PREFIX)/include
 
 CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DCMAKE_INSTALL_PREFIX="$(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)" \
@@ -70,28 +69,28 @@ CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DCPU=$(CPU) \
              -DOPTION_TOOLS_ONLY=OFF \
              -DCMAKE_BUILD_TYPE=RelWithdebInfo \
-             -DHOST_BINARY_DIR=../build_native  
+             -DHOST_BINARY_DIR=../build_native
+
+ifneq (, $(findstring x86_64, $(CPUVARDIR)))
+CMAKE_ARGS+= -DCMAKE_DISABLE_FIND_PACKAGE_ICU=ON
+endif
 
 CMAKE_ARGS_TOOLS = -DCMAKE_INSTALL_PREFIX="$(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)" \
                    -DCMAKE_FIND_ROOT_PATH="$(CMAKE_FIND_ROOT_PATH)" \
                    -DCMAKE_MODULE_PATH="$(CMAKE_MODULE_PATH)" \
                    -DCMAKE_BUILD_TYPE=$(CMAKE_BUILD_TYPE) \
 	               -DCMAKE_BUILD_TYPE=RelWithdebInfo \
-                   -DOPTION_TOOLS_ONLY=ON 
+                   -DOPTION_TOOLS_ONLY=ON
 
 MAKE_ARGS  ?= -j $(firstword $(JLEVEL) 1)
 
 OpenTTD_all:
-	@mkdir -p $(QNX_PROJECT_ROOT)/build_native
-	@cd $(QNX_PROJECT_ROOT)/build_native && PKG_CONFIG_PATH=${INSTALL_ROOT_nto}/${cpudir}/usr/lib/pkgconfig:${INSTALL_ROOT_nto}/${cpudir}/usr/local/lib/pkgconfig cmake $(CMAKE_ARGS_TOOLS) $(QNX_PROJECT_ROOT)
-	@cd $(QNX_PROJECT_ROOT)/build_native && PKG_CONFIG_PATH=${INSTALL_ROOT_nto}/${cpudir}/usr/lib/pkgconfig:${INSTALL_ROOT_nto}/${cpudir}/usr/local/lib/pkgconfig make VERBOSE=1 $(MAKE_ARGS)
-	@mkdir -p $(QNX_PROJECT_ROOT)/build
-	@cd $(QNX_PROJECT_ROOT)/build && PKG_CONFIG_PATH=${INSTALL_ROOT_nto}/${cpudir}/usr/lib/pkgconfig:${INSTALL_ROOT_nto}/${cpudir}/usr/local/lib/pkgconfig cmake $(CMAKE_ARGS) $(QNX_PROJECT_ROOT)
-	@cd $(QNX_PROJECT_ROOT)/build && PKG_CONFIG_PATH=${INSTALL_ROOT_nto}/${cpudir}/usr/lib/pkgconfig:${INSTALL_ROOT_nto}/${cpudir}/usr/local/lib/pkgconfig make VERBOSE=1 $(MAKE_ARGS)
-	@mkdir -p build
 	@mkdir -p build_native
-	@cp -r $(QNX_PROJECT_ROOT)/build/* build/
-	@cp -r $(QNX_PROJECT_ROOT)/build_native/* build_native/
+	@cd build_native && PKG_CONFIG_PATH=${INSTALL_ROOT_nto}/${cpudir}/usr/lib/pkgconfig:${INSTALL_ROOT_nto}/${cpudir}/usr/local/lib/pkgconfig cmake $(CMAKE_ARGS_TOOLS) $(QNX_PROJECT_ROOT)
+	@cd build_native && PKG_CONFIG_PATH=${INSTALL_ROOT_nto}/${cpudir}/usr/lib/pkgconfig:${INSTALL_ROOT_nto}/${cpudir}/usr/local/lib/pkgconfig make VERBOSE=1 $(MAKE_ARGS)
+	@mkdir -p build
+	@cd build && PKG_CONFIG_PATH=${INSTALL_ROOT_nto}/${cpudir}/usr/lib/pkgconfig:${INSTALL_ROOT_nto}/${cpudir}/usr/local/lib/pkgconfig cmake $(CMAKE_ARGS) $(QNX_PROJECT_ROOT)
+	@cd build && PKG_CONFIG_PATH=${INSTALL_ROOT_nto}/${cpudir}/usr/lib/pkgconfig:${INSTALL_ROOT_nto}/${cpudir}/usr/local/lib/pkgconfig make VERBOSE=1 $(MAKE_ARGS)
 
 staged: OpenTTD_all
 	@mkdir -p staging/lib
@@ -127,3 +126,4 @@ clean:
 	@rm -rf build
 	@rm -rf build_native
 	@rm -rf staging
+

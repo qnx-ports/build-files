@@ -1,0 +1,179 @@
+diff --git a/examples/CMakeLists.txt b/examples/CMakeLists.txt
+index d9842486..c510e269 100644
+--- a/examples/CMakeLists.txt
++++ b/examples/CMakeLists.txt
+@@ -143,7 +143,7 @@ foreach( name ${TARGETS_ALL} )
+     set_property(TARGET ${name} PROPERTY CXX_EXTENSIONS OFF)
+ 
+     # Add desired warnings
+-    if ( CMAKE_CXX_COMPILER_ID MATCHES "Clang|AppleClang|GNU" )
++    if ( CMAKE_CXX_COMPILER_ID MATCHES "Clang|AppleClang|GNU|QCC" )
+         target_compile_options( ${name}  PRIVATE -Wall -Wextra -Wunreachable-code )
+     endif()
+     # Clang specific warning go here
+diff --git a/include/internal/catch_debugger.cpp b/include/internal/catch_debugger.cpp
+index d4f74780..669f27e9 100644
+--- a/include/internal/catch_debugger.cpp
++++ b/include/internal/catch_debugger.cpp
+@@ -101,6 +101,39 @@
+             return false;
+         }
+     } // namespace Catch
++#elif defined(CATCH_PLATFORM_QNX)
++    #include <devctl.h>
++    #include <fcntl.h>
++    #include <sys/procfs.h>
++    #include <unistd.h>
++
++    namespace Catch {
++        bool isDebuggerActive() {
++            const int fd = ::open("/proc/self/ctl", O_RDONLY);
++            if (fd == -1) {
++                return false;
++            }
++
++            procfs_status status{};
++            const int rc = ::devctl(fd, DCMD_PROC_STATUS, &status, sizeof(status), nullptr);
++            ::close(fd);
++
++            if (rc != EOK) {
++                return false;
++            }
++
++            // Best-effort QNX heuristic:
++            // - STOPPED/ISTOP/SSTEP/TRACE_EXEC strongly suggest debugger control
++            // - RLC/KLC are debugger-related process flags and are also useful hints
++            const uint32_t f = status.flags;
++            return (f & (_DEBUG_FLAG_STOPPED |
++                        _DEBUG_FLAG_ISTOP |
++                        _DEBUG_FLAG_SSTEP |
++                        _DEBUG_FLAG_TRACE_EXEC |
++                        _DEBUG_FLAG_RLC |
++                        _DEBUG_FLAG_KLC)) != 0;
++        }
++    } // namespace Catch
+ #elif defined(_MSC_VER)
+     extern "C" __declspec(dllimport) int __stdcall IsDebuggerPresent();
+     namespace Catch {
+diff --git a/include/internal/catch_debugger.h b/include/internal/catch_debugger.h
+index a5a59b3b..afcfc34f 100644
+--- a/include/internal/catch_debugger.h
++++ b/include/internal/catch_debugger.h
+@@ -47,6 +47,11 @@ namespace Catch {
+ 
+         #define CATCH_TRAP() raise(SIGTRAP)
+     #endif
++#elif defined(CATCH_PLATFORM_QNX)
++    // For QNX use generic way.
++    #include <signal.h>
++
++    #define CATCH_TRAP() raise(SIGTRAP)
+ #elif defined(_MSC_VER)
+     #define CATCH_TRAP() __debugbreak()
+ #elif defined(__MINGW32__)
+diff --git a/include/internal/catch_platform.h b/include/internal/catch_platform.h
+index 82c5e144..568fa2aa 100644
+--- a/include/internal/catch_platform.h
++++ b/include/internal/catch_platform.h
+@@ -23,6 +23,9 @@
+ #elif defined(linux) || defined(__linux) || defined(__linux__)
+ #  define CATCH_PLATFORM_LINUX
+ 
++#elif defined(__QNX__)
++#  define CATCH_PLATFORM_QNX
++
+ #elif defined(WIN32) || defined(__WIN32__) || defined(_WIN32) || defined(_MSC_VER) || defined(__MINGW32__)
+ #  define CATCH_PLATFORM_WINDOWS
+ #endif
+diff --git a/projects/CMakeLists.txt b/projects/CMakeLists.txt
+index 5de0713c..44f8e875 100644
+--- a/projects/CMakeLists.txt
++++ b/projects/CMakeLists.txt
+@@ -351,7 +351,7 @@ if (CATCH_ENABLE_COVERAGE)
+ endif()
+ 
+ # Add per compiler options
+-if ( CMAKE_CXX_COMPILER_ID MATCHES "Clang|AppleClang|GNU" )
++if ( CMAKE_CXX_COMPILER_ID MATCHES "Clang|AppleClang|GNU|QCC" )
+     target_compile_options( SelfTest PRIVATE -Wall -Wextra -Wunreachable-code -Wpedantic -Wmissing-declarations )
+     if (CATCH_ENABLE_WERROR)
+         target_compile_options( SelfTest PRIVATE -Werror -Wno-error=pragmas )
+diff --git a/projects/ExtraTests/CMakeLists.txt b/projects/ExtraTests/CMakeLists.txt
+index 637dc692..c3d2f25f 100644
+--- a/projects/ExtraTests/CMakeLists.txt
++++ b/projects/ExtraTests/CMakeLists.txt
+@@ -89,7 +89,7 @@ foreach(target DisabledExceptions-DefaultHandler DisabledExceptions-CustomHandle
+ target_compile_options( ${target}
+   PRIVATE
+     $<$<CXX_COMPILER_ID:MSVC>:/EHs-c-;/D_HAS_EXCEPTIONS=0>
+-    $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:GNU>,$<CXX_COMPILER_ID:AppleClang>>:-fno-exceptions>
++    $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:GNU>,$<CXX_COMPILER_ID:QCC>,$<CXX_COMPILER_ID:AppleClang>>:-fno-exceptions>
+ #    $<$<CXX_COMPILER_ID:Clang>:-fno-exceptions>
+ #    $<$<CXX_COMPILER_ID:GNU>:-fno-exceptions>
+ )
+diff --git a/single_include/catch2/catch.hpp b/single_include/catch2/catch.hpp
+index 9b309bdd..0ed86a80 100644
+--- a/single_include/catch2/catch.hpp
++++ b/single_include/catch2/catch.hpp
+@@ -80,6 +80,9 @@
+ #elif defined(linux) || defined(__linux) || defined(__linux__)
+ #  define CATCH_PLATFORM_LINUX
+ 
++#elif defined(__QNX__)
++#  define CATCH_PLATFORM_QNX
++
+ #elif defined(WIN32) || defined(__WIN32__) || defined(_WIN32) || defined(_MSC_VER) || defined(__MINGW32__)
+ #  define CATCH_PLATFORM_WINDOWS
+ #endif
+@@ -7974,6 +7977,11 @@ namespace Catch {
+ 
+         #define CATCH_TRAP() raise(SIGTRAP)
+     #endif
++#elif defined(CATCH_PLATFORM_QNX)
++    // For QNX use generic way.
++    #include <signal.h>
++
++    #define CATCH_TRAP() raise(SIGTRAP)
+ #elif defined(_MSC_VER)
+     #define CATCH_TRAP() __debugbreak()
+ #elif defined(__MINGW32__)
+@@ -10483,6 +10491,39 @@ namespace Catch {
+             return false;
+         }
+     } // namespace Catch
++#elif defined(CATCH_PLATFORM_QNX)
++    #include <devctl.h>
++    #include <fcntl.h>
++    #include <sys/procfs.h>
++    #include <unistd.h>
++
++    namespace Catch {
++        bool isDebuggerActive() {
++            const int fd = ::open("/proc/self/ctl", O_RDONLY);
++            if (fd == -1) {
++                return false;
++            }
++
++            procfs_status status{};
++            const int rc = ::devctl(fd, DCMD_PROC_STATUS, &status, sizeof(status), nullptr);
++            ::close(fd);
++
++            if (rc != EOK) {
++                return false;
++            }
++
++            // Best-effort QNX heuristic:
++            // - STOPPED/ISTOP/SSTEP/TRACE_EXEC strongly suggest debugger control
++            // - RLC/KLC are debugger-related process flags and are also useful hints
++            const uint32_t f = status.flags;
++            return (f & (_DEBUG_FLAG_STOPPED |
++                        _DEBUG_FLAG_ISTOP |
++                        _DEBUG_FLAG_SSTEP |
++                        _DEBUG_FLAG_TRACE_EXEC |
++                        _DEBUG_FLAG_RLC |
++                        _DEBUG_FLAG_KLC)) != 0;
++        }
++    } // namespace Catch
+ #elif defined(_MSC_VER)
+     extern "C" __declspec(dllimport) int __stdcall IsDebuggerPresent();
+     namespace Catch {

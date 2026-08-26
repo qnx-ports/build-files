@@ -1,4 +1,9 @@
 name: pcre2
+
+permissions:
+  contents: write
+  checks: write
+
  
 on:
   workflow_dispatch:
@@ -20,14 +25,12 @@ jobs:
   build:
     strategy:
       matrix:
-        qnx_env:
-          - ghcr.io/qnx-ports/sdp800-build-env:latest
-          - ghcr.io/qnx-ports/sdp-build-env:latest
-    runs-on: self-hosted
+        qnx_env: [ 710, 800 ]
+    runs-on: ubuntu-22.04-common
     if: |
-      (github.event_name == 'workflow_dispatch') ||
+      ((github.event_name == 'workflow_dispatch') ||
       (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
-      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'pcre2'))
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'pcre2')))
     steps:
     - name: Checkout build-files
       uses: actions/checkout@v4
@@ -41,28 +44,12 @@ jobs:
         path: pcre2
         ref: pcre2-10.45
  
-    - name: Login to GitHub Container Registry
-      uses: docker/login-action@v3
-      with:
-        registry: ghcr.io
-        username: ${{github.actor}}
-        password: ${{secrets.GITHUB_TOKEN}}
- 
-    - name: Pull build environment
-      run: |
-        docker pull ${{ matrix.qnx_env }}
- 
     - name: Build pcre2
-      uses: addnab/docker-run-action@v3
-      with:
-        image: ${{ matrix.qnx_env }}
-        options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
-        shell: bash
-        run: |
-          if [[ "${{ matrix.qnx_env}}" == "ghcr.io/qnx-ports/sdp800-build-env:latest" ]]; then
-            source ~/qnx/800/qnxsdp-env.sh
-          else 
-            source ~/qnx/710/qnxsdp-env.sh
-          fi
-          cd ~/workspace
-          JLEVEL=$(nproc) QNX_PROJECT_ROOT="$(pwd)/pcre2" make -C build-files/ports/pcre2 install
+      shell: bash
+      run: |
+        if [[ "${{ matrix.qnx_env}}" == "800" ]]; then
+          source ~/qnx/800/qnxsdp-env.sh
+        else 
+          source ~/qnx/710/qnxsdp-env.sh
+        fi
+        JLEVEL=$(nproc) QNX_PROJECT_ROOT="$(pwd)/pcre2" make -C build-files/ports/pcre2 install

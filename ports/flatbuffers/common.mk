@@ -6,11 +6,11 @@ include $(MKFILES_ROOT)/qmacros.mk
 
 NAME=flatbuffers
 
-QNX_PROJECT_ROOT ?= $(PRODUCT_ROOT)/../../
+QNX_PROJECT_ROOT ?= $(PRODUCT_ROOT)/../../flatbuffers
 
-BUILD_TESTING ?= ON
+BUILD_TESTING ?= OFF
 
-HOST_PROTOC_PATH ?= $(PROJECT_ROOT)/../protobuf/host_protoc
+HOST_FLATC_PATH ?= $(PROJECT_ROOT)/linux-x86_64-o/build/flatc
 
 #$(INSTALL_ROOT_$(OS)) is pointing to $QNX_TARGET
 #by default, unless it was manually re-routed to
@@ -37,8 +37,6 @@ ALL_DEPENDENCIES = $(NAME)_all
 .PHONY: $(NAME)_all install check clean
 
 CPPFLAGS += -D_QNX_SOURCE -fPIC
-
-LDFLAGS += -lgomp
 
 include $(MKFILES_ROOT)/qtargets.mk
 
@@ -77,9 +75,12 @@ CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DBUILD_SHARED_LIBS=ON \
              -DFLATBUFFERS_BUILD_SHAREDLIB=ON \
              -DBUILD_TESTING=$(BUILD_TESTING) \
-             -DFLATBUFFERS_BUILD_FLATC=OFF \
+             -DFLATBUFFERS_BUILD_TESTS=$(BUILD_TESTING) \
+             -DFLATBUFFERS_BUILD_FLATC=ON \
+             -DFLATBUFFERS_FLATC_EXECUTABLE=$(HOST_FLATC_PATH) \
              -DCPU=$(CPU) \
-             -DEXT=$(EXT)
+             -DEXT=$(EXT) \
+             -DFLATBUFFERS_INSTALL=ON
 
 MAKE_ARGS ?= -j $(firstword $(JLEVEL) 1)
 

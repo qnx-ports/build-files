@@ -1,3 +1,7 @@
+1.5.0:
+  sources:
+    url: "https://github.com/eclipse-zenoh/zenoh-pico/archive/refs/tags/1.5.0.tar.gz"
+    sha256: "4a6c91420b43ab5a3a7677916139d6868172fe0aef221b0a2968ec591dcb8694"
 1.4.0:
   sources:
     url: "https://github.com/eclipse-zenoh/zenoh-pico/archive/refs/tags/1.4.0.tar.gz"
@@ -11,6 +15,10 @@
     url: "https://github.com/eclipse-zenoh/zenoh-pico/archive/refs/tags/1.0.0.5.tar.gz"
     sha256: "eaa211af290ea71e8b0a8670ad1f8782ce26a6123437c9555e4c19ac4452f341"
 patches:
+  1.5.0:
+    - patch_file: "patches/zenohpico-1.5.0-qnx.patch"
+      patch_description: "port QNX7.1/8.0"
+      patch_type: "conan"
   1.4.0:
     - patch_file: "patches/zenohpico-1.4.0-qnx.patch"
       patch_description: "port QNX7.1/8.0"

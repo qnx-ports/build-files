@@ -1,5 +1,10 @@
 name: libxml2
 
+permissions:
+  contents: write
+  checks: write
+
+
 on:
   push:
     branches:
@@ -16,11 +21,11 @@ on:
 
 jobs:
   build_source:
-    runs-on: self-hosted
+    runs-on: ubuntu-22.04-common
     if: |
-      (github.event_name == 'workflow_dispatch') ||
+      ((github.event_name == 'workflow_dispatch') ||
       (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
-      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'libxml2'))
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'libxml2')))
     steps:
     - name: Checkout build-files
       uses: actions/checkout@v4
@@ -33,25 +38,9 @@ jobs:
         repository: qnx-ports/libxml2
         path: libxml2
 
-    - name: Login to GitHub Container Registry
-      uses: docker/login-action@v3
-      with:
-        registry: ghcr.io
-        username: ${{github.actor}}
-        password: ${{secrets.GITHUB_TOKEN}}
-
-    - name: Pull build environment
-      run: |
-        docker pull ghcr.io/qnx-ports/sdp-build-env:latest
-
     - name: Build libxml2
-      uses: addnab/docker-run-action@v3
-      with:
-        image: ghcr.io/qnx-ports/sdp-build-env:latest
-        options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
-        shell: bash
-        run: |
-          source ~/qnx/800/qnxsdp-env.sh
-          cd ~/workspace
-          sed -i 's/1.16.3/1.16.1/g' libxml2/configure.ac
-          QNX_PROJECT_ROOT="$(pwd)/libxml2" make -C build-files/ports/libxml2 install 
+      shell: bash
+      run: |
+        source ~/qnx/800/qnxsdp-env.sh
+        sed -i 's/1.16.3/1.16.1/g' libxml2/configure.ac
+        QNX_PROJECT_ROOT="$(pwd)/libxml2" make -C build-files/ports/libxml2 install 

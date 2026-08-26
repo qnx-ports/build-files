@@ -1,0 +1,49 @@
+name: conan-iperf2
+
+permissions:
+  contents: write
+  checks: write
+
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/conan-iperf2.yml'
+      - 'conan/recipes/iperf2/**'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/conan-iperf2.yml'
+      - 'conan/recipes/iperf2/**'
+
+jobs:
+
+  build:
+    runs-on: ubuntu-22.04-common
+    if: |
+      ((github.event_name == 'workflow_dispatch') ||
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'conan')))
+    steps:
+    - name: Checkout build-files
+      uses: actions/checkout@v4
+      with:
+        path: build-files
+
+    - name: Build conan iperf2 recipes
+      shell: bash
+      run: |
+        python3.11 -m venv vpy
+        . vpy/bin/activate
+        pip install conan
+        conan profile detect
+        export QNX_CONAN_ROOT=$(realpath ./build-files/conan)
+        conan config install $QNX_CONAN_ROOT/tools/qnx-8.0-extension/settings_user.yml
+        source ~/qnx/800/qnxsdp-env.sh
+        conan create -pr:h=$QNX_CONAN_ROOT/tools/profiles/nto-8.0-x86_64-gcc --version=2.0.13 $QNX_CONAN_ROOT/recipes/iperf2/all
+        conan create -pr:h=$QNX_CONAN_ROOT/tools/profiles/nto-8.0-x86_64-gcc --version=2.1.9 $QNX_CONAN_ROOT/recipes/iperf2/all
+        conan create -pr:h=$QNX_CONAN_ROOT/tools/profiles/nto-8.0-x86_64-gcc --version=2.2.1 $QNX_CONAN_ROOT/recipes/iperf2/all

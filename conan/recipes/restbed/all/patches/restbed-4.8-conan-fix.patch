@@ -1,0 +1,95 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 38d70d1..2b74180 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -39,6 +39,10 @@ if( ${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC )
+     set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /D_WIN32_WINNT=0x0601 /W4 /wd4068 /wd4702 /wd4996 /wd4265" )
+ endif ( )
+ 
++if ( CMAKE_SYSTEM_NAME MATCHES "QNX" )
++    set(QNX TRUE)
++endif ( )
++
+ if( NOT WIN32 )
+     set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Weffc++ -pedantic -Wno-unknown-pragmas -Wno-deprecated-declarations -Wno-non-virtual-dtor" )
+ endif ( )
+@@ -51,16 +55,14 @@ if ( APPLE )
+     set( CMAKE_MACOSX_RPATH ON )
+ endif ( )
+ 
+-set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${PROJECT_SOURCE_DIR}/cmake" )
+-
+-find_package( asio REQUIRED )
++find_package( asio CONFIG REQUIRED )
+ 
+ if ( BUILD_SSL )
+     add_definitions( "-DBUILD_SSL" )
+     find_package( openssl REQUIRED )
+ endif ( )
+ 
+-include_directories( ${INCLUDE_DIR} SYSTEM ${asio_INCLUDE} ${ssl_INCLUDE} )
++include_directories( ${INCLUDE_DIR} SYSTEM ${asio_INCLUDE_DIR} ${ssl_INCLUDE_DIR} )
+ 
+ if ( BUILD_IPC )
+     add_definitions( "-DBUILD_IPC" )
+@@ -103,7 +105,7 @@ else ( )
+ endif ( )
+ 
+ if ( BUILD_TESTS )
+-    find_package( catch REQUIRED )
++    find_package( Catch2 REQUIRED )
+ 
+     enable_testing( )
+     add_subdirectory( "${PROJECT_SOURCE_DIR}/test/unit" )
+diff --git a/test/feature/CMakeLists.txt b/test/feature/CMakeLists.txt
+index 77db32a..250de93 100644
+--- a/test/feature/CMakeLists.txt
++++ b/test/feature/CMakeLists.txt
+@@ -8,7 +8,7 @@ cmake_minimum_required( VERSION 3.1.0 FATAL_ERROR )
+ set( SOURCE_DIR "source" )
+ set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DCATCH_CONFIG_MAIN" )
+ 
+-include_directories( SYSTEM ${catch_INCLUDE} ${asio_INCLUDE} )
++include_directories( SYSTEM ${Catch2_INCLUDE_DIR}/catch2 ${asio_INCLUDE_DIR} )
+ 
+ #
+ # Build
+diff --git a/test/integration/CMakeLists.txt b/test/integration/CMakeLists.txt
+index b1cbc6a..1889939 100644
+--- a/test/integration/CMakeLists.txt
++++ b/test/integration/CMakeLists.txt
+@@ -8,7 +8,7 @@ cmake_minimum_required( VERSION 3.1.0 FATAL_ERROR )
+ set( SOURCE_DIR "source" )
+ set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DCATCH_CONFIG_MAIN" )
+ 
+-include_directories( SYSTEM ${catch_INCLUDE} )
++include_directories( SYSTEM ${Catch2_INCLUDE_DIR}/catch2 )
+ 
+ #
+ # Build
+diff --git a/test/regression/CMakeLists.txt b/test/regression/CMakeLists.txt
+index d8e8904..d26cd5d 100644
+--- a/test/regression/CMakeLists.txt
++++ b/test/regression/CMakeLists.txt
+@@ -8,7 +8,7 @@ cmake_minimum_required( VERSION 3.1.0 FATAL_ERROR )
+ set( SOURCE_DIR "source" )
+ set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DCATCH_CONFIG_MAIN" )
+ 
+-include_directories( SYSTEM ${catch_INCLUDE} ${asio_INCLUDE} )
++include_directories( SYSTEM ${Catch2_INCLUDE_DIR}/catch2 ${asio_INCLUDE_DIR} )
+ 
+ #
+ # Build
+diff --git a/test/unit/CMakeLists.txt b/test/unit/CMakeLists.txt
+index 604a5e1..81bfc9e 100644
+--- a/test/unit/CMakeLists.txt
++++ b/test/unit/CMakeLists.txt
+@@ -8,7 +8,7 @@ cmake_minimum_required( VERSION 3.1.0 FATAL_ERROR )
+ set( SOURCE_DIR "source" )
+ set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DCATCH_CONFIG_MAIN" )
+ 
+-include_directories( SYSTEM ${catch_INCLUDE} )
++include_directories( SYSTEM ${Catch2_INCLUDE_DIR}/catch2 )
+ 
+ #
+ # Build

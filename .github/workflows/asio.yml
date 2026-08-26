@@ -1,5 +1,10 @@
 name: asio
 
+permissions:
+  contents: write
+  checks: write
+
+
 on:
   workflow_dispatch:
   push:
@@ -18,11 +23,11 @@ on:
 jobs:
 
   build:
-    runs-on: self-hosted
+    runs-on: ubuntu-22.04-common
     if: |
-      (github.event_name == 'workflow_dispatch') ||
+      ((github.event_name == 'workflow_dispatch') ||
       (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
-      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'asio'))
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'asio')))
     steps:
     - name: Checkout build-files
       uses: actions/checkout@v4
@@ -35,27 +40,11 @@ jobs:
         repository: qnx-ports/asio
         path: asio
 
-    - name: Login to GitHub Container Registry
-      uses: docker/login-action@v3
-      with:
-        registry: ghcr.io
-        username: ${{github.actor}}
-        password: ${{secrets.GITHUB_TOKEN}}
-
-    - name: Pull build environment
-      run: |
-        docker pull ghcr.io/qnx-ports/sdp-build-env:latest
-
     - name: Build asio
-      uses: addnab/docker-run-action@v3
-      with:
-        image: ghcr.io/qnx-ports/sdp-build-env:latest
-        options: -v ${{ github.workspace }}:/home/runner/workspace -e MAKEFLAGS=${{ env.MAKEFLAGS }}
-        shell: bash
-        run: |
-          source ~/qnx/800/qnxsdp-env.sh
-          cd ~/workspace
-          cd asio/asio
-          ./autogen.sh
-          cd -
-          make -C build-files/ports/asio install
+      shell: bash
+      run: |
+        source ~/qnx/800/qnxsdp-env.sh
+        cd asio/asio
+        ./autogen.sh
+        cd -
+        make -C build-files/ports/asio install

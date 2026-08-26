@@ -1,0 +1,19 @@
+1.4.81:
+  sources:
+    url: "https://github.com/lighttpd/lighttpd1.4/archive/refs/tags/lighttpd-1.4.81.tar.gz"
+    sha256: "5086617ee58dd0b4a0c5b12fc678900b52619622451dde44a5f5d8b7a2c1a294"
+  requirements:
+    zlib: "1.3.1"
+    pcre2: "10.44"
+1.4.73:
+  sources:
+    url: "https://github.com/qnx-ports/lighttpd1.4/archive/5e22769dcf04efb323310f973a4313822e377da5.tar.gz"
+    sha256: "f343eeb72126a55f4e9c2c36787a3ec4457790b465d94298fdefc9f77a548b1d"
+  requirements:
+    zlib: "1.3.1"
+    pcre2: "10.44"
+patches:
+  1.4.81:
+    - patch_file: "patches/lighttpd-1.4.81-pcre2_cmake_fix.patch"
+      patch_description: "fix for PCRE2 find_package()"
+      patch_type: "bugfix"

@@ -9,6 +9,7 @@ An open-source re-implementation of Transport Tycoon Deluxe. Now available on QN
 You will need:
 - SDL2, available to build at https://github.com/qnx-ports/build-files at ports/SDL
 - Font Packages, available from QNX Software Centre with package ID com.qnx.qnx800.target.screen.fonts.engine
+- Image Codecs, available from QNX Software Center with package ID com.qnx.qnx800.target.screen.img_codecs
 
 You will also want `curl` and `unzip` installed as utilities for your host system.
 
@@ -19,7 +20,7 @@ Also note than on Raspberry Pi, higher graphics resolutions may crash the game d
 
 ## Building
 Once you have the required dependencies (SDL2 and the font package from QNX Software Centre, see above) you can build OpenTTD for QNX. \
-**NOTE:** It is recommended to install OpenTTD as part of the RetroPie project. If you do not, make sure to also install a graphics package manually https://www.openttd.org/downloads/opengfx-releases/latest 
+**NOTE:** If you are not installing OpenTTD as part of the RetroPie project, make sure to also install a graphics package manually https://www.openttd.org/downloads/opengfx-releases/latest 
 
 ```bash
 #1. Make a working directory

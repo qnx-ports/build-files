@@ -1,0 +1,53 @@
+name: cunit
+
+permissions:
+  contents: write
+  checks: write
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/cunit.yml'
+      - 'ports/cunit/**'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/cunit.yml'
+      - 'ports/cunit/**'
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        qnx_env: [ 710, 800 ]
+    runs-on: ubuntu-22.04-common
+    if: |
+      ((github.event_name == 'workflow_dispatch') ||
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'cunit')))
+    steps:
+      - name: Checkout build-files
+        uses: actions/checkout@v4
+        with:
+          path: build-files
+
+      - name: Checkout cunit
+        uses: actions/checkout@v4
+        with:
+          repository: jacklicn/CUnit
+          path: CUnit
+          ref: v2.1-3
+
+      - name: Build cunit
+        shell: bash
+        run: |
+          if [[ "${{ matrix.qnx_env }}" == "800" ]]; then
+            source ~/qnx/800/qnxsdp-env.sh
+          else
+            source ~/qnx/710/qnxsdp-env.sh
+          fi
+          QNX_PROJECT_ROOT="$(pwd)/CUnit" make -C build-files/ports/cunit/ install

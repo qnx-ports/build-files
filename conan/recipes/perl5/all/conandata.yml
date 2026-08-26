@@ -3,7 +3,7 @@ perl5:
     sources:
       url: "https://github.com/Perl/perl5/archive/refs/tags/v5.42.0.tar.gz"
       sha256: "e2bb05cea46921009b7902b927b58110949c4f8e51b0583f57e3e1eeff5306d8"
-    perl-cross: "1.6.3-rc0"
+    perl-cross: "1.6.4"
   5.36.0:
     sources:
       url: "https://github.com/Perl/perl5/archive/refs/tags/v5.36.0.tar.gz"
@@ -15,6 +15,10 @@ perl5:
       sha256: "68656fb977b2a92b99fc63b0e1d6c58979eedb2c6b571bb16d699f5638fde651"
     perl-cross: "1.6.2"
 perl-cross:
+  1.6.4:
+    sources:
+      url: "https://github.com/arsv/perl-cross/archive/refs/tags/1.6.4.tar.gz"
+      sha256: "b176522bceb1fc3533eb85e4435e5ab06f7473633979122a8f5b18a2b4fc865a"
   1.6.3-rc0:
     sources:
       url: "https://github.com/qnx-ports/perl-cross/archive/add39339ed09334e6809b48b3f8474c01a7ea1a1.tar.gz"

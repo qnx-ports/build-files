@@ -53,14 +53,14 @@ cd ~/qnx_workspace
 # Build zenoh-pico for QNX target
 #
 # <profile-name>: nto-7.1-aarch64-le, nto-7.1-x86_64, nto-8.0-aarch64-le, nto-8.0-x86_64
-# <version-number>: 1.4.0, 1.2.1, 1.0.0-rc5
+# <version-number>: 1.5.0, 1.4.0, 1.2.1, 1.0.0-rc5
 #
 conan create -pr:h=$QNX_CONAN_ROOT/tools/profiles/<profile-name> --version=<version-number> $QNX_CONAN_ROOT/recipes/zenoh-pico/release
 
 # Build zenoh-cpp for QNX target
 #
 # <profile-name>: nto-7.1-aarch64-le, nto-7.1-x86_64, nto-8.0-aarch64-le, nto-8.0-x86_64
-# <version-number>: 1.4.0, 1.2.1, 1.0.0-rc5
+# <version-number>: 1.5.0, 1.4.0, 1.2.1, 1.0.0-rc5
 #
 conan create -pr:h=$QNX_CONAN_ROOT/tools/profiles/<profile-name> --version=<version-number> $QNX_CONAN_ROOT/recipes/zenoh-cpp/release
 ```
@@ -91,7 +91,7 @@ export QNX_PROJECT_ROOT=$(pwd)
 # Install conan toolchain for QNX target
 #
 # <profile-name>: nto-7.1-aarch64-le, nto-7.1-x86_64, nto-8.0-aarch64-le, nto-8.0-x86_64
-# <version-number>: 1.4.0, 1.2.1, 1.0.0-rc5
+# <version-number>: 1.5.0, 1.4.0, 1.2.1, 1.0.0-rc5
 # IMPORTANT: version 1.0.0-rc5 has conflict with nto-7.1-*
 #
 conan install -pr:h=$QNX_CONAN_ROOT/tools/profiles/<profile-name> --version=<version-number> $QNX_CONAN_ROOT/recipes/zenoh-cpp/tests
@@ -139,10 +139,10 @@ cd ./build_tests/Release/
 
 ctest
 ```
-CTest reports no error
+CTest for zenoh-cpp version 1.5.0 reports no error
 
 ```bash
-100% tests passed, 0 tests failed out of 8
+100% tests passed, 0 tests failed out of 11
 
-Total Test time (real) =  46.80 sec
+Total Test time (real) =  83.56 sec
 ```
