@@ -62,7 +62,7 @@ CMAKE_MODULE_PATH := $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/cmake;$(INSTALL_RO
 export PKG_CONFIG_LIBDIR="$(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib"
 
 CPPFLAGS += -I$(INSTALL_ROOT)/$(PREFIX)/include -I$(QNX_TARGET)/$(PREFIX)/include \
-            -isystem $(QNX_TARGET)/usr/include/c++/v1/ -g
+            -isystem $(QNX_TARGET)/usr/include/c++/v1/
 
 ifeq ($(CPU),aarch64)
 ASFLAGS += -Wa,-march=armv8.2-a+fp16+sve
