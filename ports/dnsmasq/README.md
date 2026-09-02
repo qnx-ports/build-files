@@ -23,7 +23,11 @@ cd build-files/docker
 # Now you are in the Docker container
 
 # Source qnxsdp-env.sh in
+# use below command for SDP8
 source ~/qnx800/qnxsdp-env.sh
+# use below command for SDP7.1
+source ~/qnx710/qnxsdp-env.sh
+
 cd ~/qnx_workspace
 
 # Clone dnsmasq
@@ -49,7 +53,10 @@ mkdir -p ~/qnx_workspace && cd qnx_workspace
 git clone https://github.com/qnx-ports/build-files.git
 
 # Source SDP environment
+# use below command for SDP8
 source ~/qnx800/qnxsdp-env.sh
+# use below command for SDP7.1
+source ~/qnx710/qnxsdp-env.sh
 cd ~/qnx_workspace
 
 # Clone dnsmasq

@@ -40,9 +40,6 @@ install: $(NAME)_all
 	mkdir -p $(INSTALL_ROOT)/$(CPUVARDIR)/usr/bin
 	install -m 755 build/dnsmasq $(INSTALL_ROOT)/$(CPUVARDIR)/usr/bin/
 
-check:
-	@echo "No tests for dnsmasq"
-
 clean iclean spotless:
 	rm -rf build
 	$(MAKE) -C $(QNX_PROJECT_ROOT) clean

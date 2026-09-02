@@ -169,12 +169,12 @@ test_error_handling() {
     dig @"$DNS_SERVER" -p "$DNS_PORT" google.com TYPE65333 +time=5 +tries=1 > /dev/null 2>&1  
     print_result $? "Invalid record type handling"  
       
-    # Empty query test
+    # DNS server port availability
     echo "" | nc -zv "$DNS_SERVER" "$DNS_PORT" > /dev/null 2>&1    
     if [ $? -eq 0 ]; then    
-        print_result 0 "Empty query handling"  # Pass if connection succeeds  
+        print_result 0 "DNS server port availability"  # Pass if connection succeeds  
     else    
-        print_result 1 "Empty query handling"    
+        print_result 1 "DNS server port availability"    
     fi
 }  
   
@@ -206,6 +206,10 @@ generate_report() {
     echo "Total Tests: $((PASSED + FAILED))"  
     echo -e "Passed: $PASSED"  
     echo -e "Failed: $FAILED"  
+    if [ $((PASSED + FAILED)) -eq 0 ]; then
+        echo "No tests were executed."
+        exit 1
+    fi
     echo "Success Rate: $(( PASSED * 100 / (PASSED + FAILED) ))%"  
     echo ""  
       
