@@ -7,9 +7,9 @@ include $(QCONFIG)
 
 include $(MKFILES_ROOT)/qmacros.mk
 
-NAME=computelibrary
+NAME=ComputeLibrary
 
-QNX_PROJECT_ROOT ?= $(PRODUCT_ROOT)/../../
+QNX_PROJECT_ROOT ?= $(PRODUCT_ROOT)/../../$(NAME)
 
 #$(INSTALL_ROOT_$(OS)) is pointing to $QNX_TARGET
 #by default, unless it was manually re-routed to
@@ -27,16 +27,14 @@ PREFIX ?= /usr/local
 
 BUILD_EXAMPLES ?= OFF
 BUILD_TESTING ?= OFF
+BUILD_SHARED_LIB ?= OFF
 
 #choose Release or Debug
 CMAKE_BUILD_TYPE ?= Release
 
 #override 'all' target to bypass the default QNX build system
-ALL_DEPENDENCIES = computelibrary_all
-.PHONY: computelibrary_all install check clean
-
-CFLAGS += $(FLAGS)
-LDFLAGS += -Wl,--build-id=md5
+ALL_DEPENDENCIES = ComputeLibrary_all
+.PHONY: ComputeLibrary_all install check clean
 
 include $(MKFILES_ROOT)/qtargets.mk
 
@@ -65,7 +63,8 @@ CMAKE_MODULE_PATH := $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/cmake;$(INSTALL_RO
 #Headers from INSTALL_ROOT need to be made available by default
 #because CMake and pkg-config do not necessary add it automatically
 #if the include path is "default"
-CFLAGS += -I$(INSTALL_ROOT)/$(PREFIX)/include -D_QNX_SOURCE
+CFLAGS += -I$(INSTALL_ROOT)/$(PREFIX)/include -isystem $(QNX_TARGET)/usr/include/c++/v1/ -D_QNX_SOURCE
+LDFLAGS += -Wl,--build-id=md5 -lregex
 
 CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DCMAKE_SYSTEM_PROCESSOR=$(CPUVARDIR) \
@@ -79,8 +78,8 @@ CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DEXTRA_CMAKE_CXX_FLAGS="$(CFLAGS)" \
              -DEXTRA_CMAKE_ASM_FLAGS="$(FLAGS)" \
              -DEXTRA_CMAKE_LINKER_FLAGS="$(LDFLAGS)" \
-             -DBUILD_SHARED_LIBS=ON \
-             -DARM_COMPUTE_OPENMP=OFF \
+             -DARM_COMPUTE_BUILD_SHARED_LIB=$(BUILD_SHARED_LIB) \
+             -DARM_COMPUTE_ENABLE_OPENMP=OFF \
              -DARM_COMPUTE_BUILD_EXAMPLES=$(BUILD_EXAMPLES) \
              -DARM_COMPUTE_BUILD_TESTING=$(BUILD_TESTING)
 
@@ -106,12 +105,12 @@ SCONS_ARGS = -Q \
 
 ifndef NO_TARGET_OVERRIDE
 ifeq ($(SDP_VERSION), 8.0)
-computelibrary_all:
+ComputeLibrary_all:
 	@mkdir -p build
 	@cd build && cmake $(CMAKE_ARGS) $(QNX_PROJECT_ROOT)
 	@cd build && make VERBOSE=1 all $(MAKE_ARGS)
 
-install check: computelibrary_all
+install check: ComputeLibrary_all
 	@echo Installing...
 	@cd build && make VERBOSE=1 install all $(MAKE_ARGS)
 	@echo Done.
@@ -121,15 +120,19 @@ clean iclean spotless:
 
 uninstall:
 else
-computelibrary_all:
+ComputeLibrary_all:
 	@cd $(QNX_PROJECT_ROOT) && scons $(SCONS_ARGS)
 
-install check: computelibrary_all
+install check: ComputeLibrary_all
 	@cd $(QNX_PROJECT_ROOT) && scons $(SCONS_ARGS)
 
 clean iclean spotless:
 	rm -rf $(PROJECT_ROOT)/nto-aarch64-le/build
 
-uninstall:
+uninstall: clean
+	@rm -rf $(QNX_TARGET)/$(PREFIX)/include/arm_compute
+	@rm -rf $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/libarm_compute*
+	@rm -rf $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/cmake/ArmCompute
+
 endif
 endif
