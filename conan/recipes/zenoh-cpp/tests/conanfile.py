@@ -15,13 +15,28 @@ class TestPackageConan(ConanFile):
 
     # Binary configuration
     settings = "os", "compiler", "build_type", "arch"
+    backend = ["zenoh-c", "zenoh-pico"]
+    options = {
+        "shared": [True, False],
+        "backend": backend,
+    }
+
+    default_options = {
+        "shared": False,
+        "backend": backend[0], #"zenoh-c"
+    }
 
     def layout(self):
         project_root = os.environ["QNX_PROJECT_ROOT"]
         cmake_layout(self, src_folder=os.path.join(project_root,"."), build_folder=os.path.join(project_root,"build_tests"))
 
     def requirements(self):
-        self.requires(f"zenoh-pico/{self.version}")
+        if "zenoh-c" == self.options.backend:
+            self.requires(f"zenoh-c/{self.version}")
+        elif "zenoh-pico" == self.options.backend:
+            self.requires(f"zenoh-pico/{self.version}")
+        else:
+            self.output.warning("No proper backend defined. Please check your backend option.")
 
     def generate(self):
         deps = CMakeDeps(self)
@@ -38,8 +53,18 @@ class TestPackageConan(ConanFile):
                 # fixed in newer version of zenoh-pico
                 tc.preprocessor_definitions["_Bool"] = "bool"
 
-        tc.cache_variables["ZENOHCXX_ZENOHC"] = False
-        tc.cache_variables["ZENOHCXX_ZENOHPICO"] = True
+        if "zenoh-c" == self.options.backend:
+            tc.cache_variables["ZENOHCXX_ZENOHC"] = True
+            tc.cache_variables["ZENOHCXX_ZENOHPICO"] = False
+        elif "zenoh-pico" == self.options.backend:
+            tc.cache_variables["ZENOHCXX_ZENOHC"] = False
+            tc.cache_variables["ZENOHCXX_ZENOHPICO"] = True
+        else:
+            self.output.warning("No proper backend defined. Please check your backend option.")
+            tc.cache_variables["ZENOHCXX_ZENOHC"] = False
+            tc.cache_variables["ZENOHCXX_ZENOHPICO"] = False
+
+        tc.cache_variables["ZENOHCXX_EXAMPLES_PROTOBUF"] = False
 
         if self.settings.os == "Neutrino":
             tc.cache_variables["CMAKE_EXE_LINKER_FLAGS_INIT"] = "-lsocket"

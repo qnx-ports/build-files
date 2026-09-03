@@ -1,0 +1,7 @@
+"1.90.0":
+  sources:
+    url: "https://github.com/qnx-ports/rust.git"
+    commit: "d2119192d5dd097504a24f97fc5af4bb38432caa"
+  build_requirements:
+    rustup: "1.28.2"
+    rust-llvm: "1.90.0"

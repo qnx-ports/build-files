@@ -1,0 +1,7 @@
+change-id = "ignore"
+
+[llvm]
+download-ci-llvm = false
+
+[build]
+docs = false
