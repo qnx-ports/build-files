@@ -30,13 +30,12 @@ source ~/qnx710/qnxsdp-env.sh
 source ~/qnx800/qnxsdp-env.sh
 cd ~/qnx_workspace
 
-# clone strongswan
+# Clone strongswan
 git clone https://github.com/qnx-ports/strongswan.git
 
 # Build strongswan
 QNX_PROJECT_ROOT="$(pwd)/strongswan" make -C build-files/ports/strongswan clean 
 QNX_PROJECT_ROOT="$(pwd)/strongswan" make -C build-files/ports/strongswan install JLEVEL=4
-
 ```
 
 # Compile the port for QNX on Ubuntu host
@@ -53,7 +52,7 @@ source ~/qnx710/qnxsdp-env.sh
 source ~/qnx800/qnxsdp-env.sh
 cd ~/qnx_workspace
 
-# clone strongswan
+# Clone strongswan
 git clone https://github.com/qnx-ports/strongswan.git
 
 # Build strongswan
@@ -63,7 +62,6 @@ QNX_PROJECT_ROOT="$(pwd)/strongswan" make -C build-files/ports/strongswan instal
 # Test on Target
 
 ```bash
-
 1.Create the file strongswan.conf in /etc/. For example:
 swanctl {
 }

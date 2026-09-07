@@ -4,7 +4,6 @@ permissions:
   contents: write
   checks: write
 
-
 on:
   workflow_dispatch:
   push:
@@ -20,7 +19,6 @@ on:
       - '.github/workflows/strongswan.yml'
       - 'ports/strongswan/'
 jobs:
-
   build:
     strategy:
       matrix:
@@ -50,6 +48,5 @@ jobs:
           else
             source ~/qnx/710/qnxsdp-env.sh
           fi
-
           QNX_PROJECT_ROOT="$(pwd)/strongswan" make -C build-files/ports/strongswan clean
           QNX_PROJECT_ROOT="$(pwd)/strongswan" make -C build-files/ports/strongswan install

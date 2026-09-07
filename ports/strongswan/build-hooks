@@ -67,17 +67,15 @@ esac
         --with-swanctldir=${BASIC_PREFIX}/etc/swanctl \
         --sbindir=${EXEC_PREFIX}/sbin \
         --bindir=${EXEC_PREFIX}/bin \
-        CFLAGS="-O2 -Wall -Wno-error" \
+        CFLAGS="${CFLAGS} -O2 -Wall -Wno-error" \
         LDFLAGS="${LDFLAGS} -lsocket" \
         || exit 1
 }
 
 function hook_make {
     echo "hook_make - running make ${make_cmds}"
-
     INSTALL_ROOT="${INSTALL_ROOT_nto}"
-    FixMakeEnvironment
-
+    
     if [ "${make_cmds}" = "install" ]; then
         make ${JLEVEL:+-j${JLEVEL}} install || exit 1
         find ${INSTALL_ROOT_nto} -name "*.la" -exec rm -f {} \;
