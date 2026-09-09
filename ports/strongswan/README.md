@@ -61,13 +61,15 @@ QNX_PROJECT_ROOT="$(pwd)/strongswan" make -C build-files/ports/strongswan instal
 ```
 # Test on Target
 
+1. Create the file strongswan.conf in /etc/. For example:
 ```bash
-1.Create the file strongswan.conf in /etc/. For example:
 swanctl {
 }
 charon {
 }
-2.Create the directory /etc/swanctl/ and add to it swanctl.conf. For example:
+```
+2. Create the directory /etc/swanctl/ and add to it swanctl.conf. For example:
+```bash
 connections {
     host-host {
         local_addrs = 192.0.2.10
@@ -96,17 +98,23 @@ secrets {
         secret = 0sFpZAZqEN6Ti9sqt4ZP5EWcqx
     }
 }
-3.Make sure that the strongSwan binaries are in the proper directories.
-4.Make sure that io-sock is running and an appropriate driver is loaded.
-5.Use charon to start the strongSwan daemon. For example:
+```
+3. Make sure that the strongSwan binaries are in the proper directories.
+4. Make sure that io-sock is running and an appropriate driver is loaded.
+5. Use charon to start the strongSwan daemon. For example:
+```bash
 charon --use-syslog &
-6.Run swanctl with the following subcommand to load connection configurations:
+```
+6. Run swanctl with the following subcommand to load connection configurations:
+```bash
 swanctl --load-conns
-7.Run swanctl with the following subcommand to load credentials.
+```
+7. Run swanctl with the following subcommand to load credentials.
+```bash
 swanctl --load-creds
-
+```
 Repeat the previous steps for Sun, but use the following swanctl.conf:
-
+```bash
 connections {
     host-host {
         local_addrs = 192.0.2.20
@@ -135,14 +143,17 @@ secrets {
         secret = 0sFpZAZqEN6Ti9sqt4ZP5EWcqx
     }
 }
+```
 To establish the connection between Moon and Sun, on Moon, run swanctl with the following subcommand and option:
-
+```bash
 swanctl --initiate --child host-host
+```
 To verify the connection, on either Sun or Moon, run swanctl with the following subcommand:
-
+```bash
 swanctl --list-sas
+```
 Example output from the verification:
-
+```bash
 host-host: #3, ESTABLISHED, IKEv2, 8f852fd4921c156f_i 68c5ff2775c43666_r*
     local  '192.0.2.10' @ 192.0.2.10[4500]
     remote '192.0.2.20' @ 192.0.2.20[4500]
