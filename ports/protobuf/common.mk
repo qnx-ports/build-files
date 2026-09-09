@@ -7,6 +7,8 @@ NAME=protobuf
 
 QNX_PROJECT_ROOT ?= $(PRODUCT_ROOT)/../../protobuf/
 
+BUILD_SHARED_LIBS ?= ON
+
 #$(INSTALL_ROOT_$(OS)) is pointing to $QNX_TARGET
 #by default, unless it was manually re-routed to
 #a staging area by setting both INSTALL_ROOT_nto
