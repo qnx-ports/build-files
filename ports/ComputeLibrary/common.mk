@@ -27,22 +27,21 @@ PREFIX ?= /usr/local
 
 BUILD_EXAMPLES ?= OFF
 BUILD_TESTING ?= OFF
-BUILD_SHARED_LIB ?= OFF
+BUILD_SHARED_LIB ?= ON
 
 #choose Release or Debug
 CMAKE_BUILD_TYPE ?= Release
 
 #override 'all' target to bypass the default QNX build system
-ALL_DEPENDENCIES = ComputeLibrary_all
-.PHONY: ComputeLibrary_all install check clean
+ALL_DEPENDENCIES = $(NAME)_all
+.PHONY: $(NAME)_all install check clean
 
 include $(MKFILES_ROOT)/qtargets.mk
 
-# Figure out if it's SDP 7.1 or SDP 8.0
-FSNOTIFY_EXISTS = $(wildcard $(QNX_TARGET)/$(CPUVARDIR)/lib/libfsnotify.so)
-SDP_VERSION = 8.0
-ifeq ($(FSNOTIFY_EXISTS),)
-    SDP_VERSION = 7.1
+# Figure out if it's SDP 7.1.0 or SDP 8.0.0
+SDP_VERSION := $(shell cat $(QNX_TARGET)/etc/qversion 2>/dev/null)
+ifeq ($(SDP_VERSION),)
+    SDP_VERSION := 7.1.0
 endif
 
 #Search paths for all of CMake's find_* functions --
@@ -87,7 +86,6 @@ SCONS_ARGS = -Q \
              debug=1 \
              arch=armv8a \
              os=qnx \
-             build_dir=arm64nowerror \
              standalone=0 \
              opencl=0 \
              openmp=0 \
@@ -100,39 +98,56 @@ SCONS_ARGS = -Q \
              Werror=0 \
              reference_openmp=0 \
              build_dir=$(PROJECT_ROOT)/nto-aarch64-le/build \
-             install_dir=$(computelibrary_INSTALL_ROOT) \
             -j 12
 
 ifndef NO_TARGET_OVERRIDE
-ifeq ($(SDP_VERSION), 8.0)
-ComputeLibrary_all:
+ifeq ($(SDP_VERSION), 8.0.0)
+$(NAME)_all:
 	@mkdir -p build
 	@cd build && cmake $(CMAKE_ARGS) $(QNX_PROJECT_ROOT)
 	@cd build && make VERBOSE=1 all $(MAKE_ARGS)
 
-install check: ComputeLibrary_all
+install check: $(NAME)_all
 	@echo Installing...
 	@cd build && make VERBOSE=1 install all $(MAKE_ARGS)
+	@rm -rf $(INSTALL_ROOT)/$(PREFIX)/include/kleidiai
+	@rm -rf $(INSTALL_ROOT)/$(PREFIX)/include/src
+	@rm -rf $(INSTALL_ROOT)/$(PREFIX)/include/CL
+	@rm -rf $(INSTALL_ROOT)/$(PREFIX)/include/stb
+	@rm -rf $(INSTALL_ROOT)/$(PREFIX)/include/libnpy
+	@rm -f $(INSTALL_ROOT)/$(PREFIX)/include/BUILD.bazel
+	@rm -f $(INSTALL_ROOT)/$(PREFIX)/include/REUSE.toml
 	@echo Done.
+else
+$(NAME)_all:
+	@cd $(QNX_PROJECT_ROOT) && scons $(SCONS_ARGS)
+
+install check: $(NAME)_all
+	@echo "Installing..."
+	@mkdir -p $(INSTALL_ROOT)/$(PREFIX)/include
+	@mkdir -p $(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/lib
+	@mkdir -p $(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/bin/ComputeLibrary_tests
+
+	@cp -r $(QNX_PROJECT_ROOT)/arm_compute $(INSTALL_ROOT)/$(PREFIX)/include/
+	@cp -r $(QNX_PROJECT_ROOT)/support $(INSTALL_ROOT)/$(PREFIX)/include/
+	@cp -r $(QNX_PROJECT_ROOT)/include/half $(INSTALL_ROOT)/$(PREFIX)/include/
+	@cp -r $(QNX_PROJECT_ROOT)/utils $(INSTALL_ROOT)/$(PREFIX)/include/
+
+	@cp $(PROJECT_ROOT)/nto-aarch64-le/build/*.so* $(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/lib/ || true
+	@cp $(PROJECT_ROOT)/nto-aarch64-le/build/*.a $(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/lib/ || true
+	@cp $(PROJECT_ROOT)/nto-aarch64-le/build/tests/arm_compute_* $(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/bin/ComputeLibrary_tests
+	@echo Done.
+endif
+endif
 
 clean iclean spotless:
 	rm -rf build
 
-uninstall:
-else
-ComputeLibrary_all:
-	@cd $(QNX_PROJECT_ROOT) && scons $(SCONS_ARGS)
-
-install check: ComputeLibrary_all
-	@cd $(QNX_PROJECT_ROOT) && scons $(SCONS_ARGS)
-
-clean iclean spotless:
-	rm -rf $(PROJECT_ROOT)/nto-aarch64-le/build
-
 uninstall: clean
-	@rm -rf $(QNX_TARGET)/$(PREFIX)/include/arm_compute
-	@rm -rf $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/libarm_compute*
-	@rm -rf $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/cmake/ArmCompute
-
-endif
-endif
+	@rm -rf $(INSTALL_ROOT)/$(PREFIX)/include/arm_compute
+	@rm -rf $(INSTALL_ROOT)/$(PREFIX)/include/support
+	@rm -rf $(INSTALL_ROOT)/$(PREFIX)/include/utils
+	@rm -rf $(INSTALL_ROOT)/$(PREFIX)/include/half
+	@rm -rf $(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/lib/libarm_compute*
+	@rm -rf $(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/lib/cmake/ArmCompute
+	@rm -rf $(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/bin/ComputeLibrary_tests
