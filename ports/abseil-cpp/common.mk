@@ -32,13 +32,6 @@ GENERATE_PINFO_FILES ?= TRUE
 ALL_DEPENDENCIES = $(NAME)_all
 .PHONY: $(NAME)_all install check clean
 
-#QNX 7.1 Compat
-ifdef QNX_SEVEN_COMPAT
-FLAGS += -D_QNX_SOURCE
-endif
-
-CFLAGS += $(FLAGS)
-
 include $(MKFILES_ROOT)/qtargets.mk
 
 #Search paths for all of CMake's find_* functions --
@@ -59,7 +52,10 @@ CMAKE_MODULE_PATH := $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/cmake;$(INSTALL_RO
 #Headers from INSTALL_ROOT need to be made available by default
 #because CMake and pkg-config do not necessary add it automatically
 #if the include path is "default"
-CFLAGS += -I$(INSTALL_ROOT)/$(PREFIX)/include -I$(QNX_TARGET)/$(PREFIX)/include
+CFLAGS += $(FLAGS) \
+          -I$(QNX_TARGET)/$(PREFIX)/include \
+          -I$(INSTALL_ROOT)/$(PREFIX)/include \
+          -D_QNX_SOURCE
 
 BUILD_SHARED_LIBS ?= ON
 BUILD_TESTING ?= OFF
