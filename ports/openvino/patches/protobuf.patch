@@ -1,0 +1,15 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 04cb3303a..bdb1d9d06 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -160,7 +160,9 @@ else()
+ endif()
+ file(REMOVE ${CMAKE_CURRENT_BINARY_DIR}/cmaketest.map)
+ 
+-find_package(Threads REQUIRED)
++if(NOT QNX)
++  find_package(Threads REQUIRED)
++endif()
+ 
+ set(_protobuf_FIND_ZLIB)
+ if (protobuf_WITH_ZLIB)
