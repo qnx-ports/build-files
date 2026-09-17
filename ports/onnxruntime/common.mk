@@ -79,6 +79,7 @@ CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DCMAKE_MODULE_PATH="$(CMAKE_MODULE_PATH)" \
              -DCMAKE_FIND_ROOT_PATH="$(CMAKE_FIND_ROOT_PATH)" \
              -DCMAKE_BUILD_TYPE=$(CMAKE_BUILD_TYPE) \
+             -DPatch_EXECUTABLE=/usr/bin/patch \
              -D$(NAME)_BUILD_SHARED_LIB=$(BUILD_SHARED_LIB) \
              -D$(NAME)_ENABLE_PYTHON=$(ENABLE_PYTHON) \
              -D$(NAME)_USE_FULL_PROTOBUF=$(USE_FULL_PROTOBUF) \
