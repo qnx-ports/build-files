@@ -62,7 +62,6 @@ BUILD_SHARED_LIB ?= ON
 ENABLE_PYTHON ?= OFF
 USE_FULL_PROTOBUF ?= ON
 ENABLE_CPUINFO ?= OFF
-QNX ?= ON
 
 CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DCMAKE_SYSTEM_PROCESSOR=$(CPU) \
@@ -79,12 +78,13 @@ CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DCMAKE_MODULE_PATH="$(CMAKE_MODULE_PATH)" \
              -DCMAKE_FIND_ROOT_PATH="$(CMAKE_FIND_ROOT_PATH)" \
              -DCMAKE_BUILD_TYPE=$(CMAKE_BUILD_TYPE) \
+             -DPatch_EXECUTABLE="/usr/bin/patch" \
+             -DCMAKE_UNAME="/usr/bin/uname" \
              -D$(NAME)_BUILD_SHARED_LIB=$(BUILD_SHARED_LIB) \
              -D$(NAME)_ENABLE_PYTHON=$(ENABLE_PYTHON) \
              -D$(NAME)_USE_FULL_PROTOBUF=$(USE_FULL_PROTOBUF) \
              -D$(NAME)_ENABLE_CPUINFO=$(ENABLE_CPUINFO) \
-             -D$(NAME)_DISABLE_RTTI=OFF \
-             -D$(NAME)_QNX=$(QNX)
+             -D$(NAME)_DISABLE_RTTI=OFF
 
 MAKE_ARGS ?= -j $(firstword $(JLEVEL) 1)
 
