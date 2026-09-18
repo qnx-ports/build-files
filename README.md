@@ -197,6 +197,7 @@ Click on a port below to navigate to its `README.md` for build and test instruct
 | [VLC](https://github.com/qnx-ports/build-files/blob/main/ports/vlc/README.md) | N/A |
 | [vsomeip](https://github.com/qnx-ports/build-files/blob/main/ports/vsomeip/README.md) | [![Build](https://github.com/qnx-ports/build-files/actions/workflows/vsomeip.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/vsomeip.yml) |
 | [webrtc](https://github.com/qnx-ports/build-files/blob/main/ports/webrtc/README.md) | [![Build](https://github.com/qnx-ports/build-files/actions/workflows/webrtc.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/webrtc.yml) |
+| [weston](https://github.com/qnx-ports/build-files/blob/main/ports/weston/README.md) | N/A |
 | [XNNPACK](https://github.com/qnx-ports/build-files/blob/main/ports/XNNPACK/README.md) | [![Build](https://github.com/qnx-ports/build-files/actions/workflows/XNNPACK.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/XNNPACK.yml) |
 | [zlib](https://github.com/qnx-ports/build-files/blob/main/ports/zlib/README.md) | [![Build](https://github.com/qnx-ports/build-files/actions/workflows/zlib.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/zlib.yml) |
 | [zstd](https://github.com/qnx-ports/build-files/blob/main/ports/zstd/README.md) | [![Build](https://github.com/qnx-ports/build-files/actions/workflows/zstd.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/zstd.yml) |
