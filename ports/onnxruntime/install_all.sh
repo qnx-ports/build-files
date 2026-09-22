@@ -29,6 +29,13 @@ for NN in $(seq 0 ${DEP_COUNT}); do
     cd -
   fi
 
+  if compgen -G "$(pwd)/build-files/ports/${DEP_NAME[$NN]}/nto-arm*" > /dev/null; then
+    TARGET_DIR=$(compgen -G "$(pwd)/build-files/ports/${DEP_NAME[$NN]}/nto-arm*/" | head -n 1)
+    if [ -d "$TARGET_DIR" ]; then
+      touch "$TARGET_DIR/Makefile.dnm"
+    fi
+  fi
+
   if ! QNX_PROJECT_ROOT="$(pwd)/${DEP_NAME[$NN]}" make -C "build-files/ports/${DEP_NAME[$NN]}" install; then
     echo "onnxruntime build failed due to ${DEP_NAME[$NN]} dependency build failure."
     exit 1
