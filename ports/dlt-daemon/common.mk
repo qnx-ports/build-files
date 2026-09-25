@@ -59,8 +59,8 @@ BUILD_TESTING ?= OFF
 
 CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
              -DCMAKE_SYSTEM_PROCESSOR=$(CPUVARDIR) \
-             -DCMAKE_C_FLAGS="$(CFLAGS) -Wno-error=sign-conversion -Wno-error=conversion  -Wno-error=sign-compare" \
-             -DCMAKE_CXX_FLAGS="$(CFLAGS) -Wno-error=sign-conversion -Wno-error=conversion  -Wno-error=sign-compare " \
+             -DCMAKE_C_FLAGS="$(CFLAGS) -Wno-error=sign-conversion -Wno-error=conversion  -Wno-error=sign-compare -Wno-error=missing-field-initializers" \
+             -DCMAKE_CXX_FLAGS="$(CFLAGS) -Wno-error=sign-conversion -Wno-error=conversion  -Wno-error=sign-compare -Wno-error=missing-field-initializers" \
              -DCMAKE_EXE_LINKER_FLAGS="$(LDFLAGS)" \
              -DCMAKE_CXX_COMPILER_TARGET=gcc_nto$(CPUVARDIR) \
              -DCMAKE_C_COMPILER_TARGET=gcc_nto$(CPUVARDIR) \
