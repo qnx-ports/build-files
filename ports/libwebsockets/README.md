@@ -68,25 +68,23 @@ Move the libraries and tests to the target
 TARGET_HOST=<target-ip-address-or-hostname>
 
 # Move libraries to the target
-scp -r $QNX_TARGET/aarch64le/usr/local/lib qnxuser@$TARGET_HOST:~/lib
+scp -r $QNX_TARGET/aarch64le/usr/local/lib/libwebsockets* qnxuser@$TARGET_HOST:~/lib
 
 # Move test binaries to the target
-scp -r build-files/ports/libwebsockets/nto-aarch64-le/build/bin qnxuser@$TARGET_HOST:~/
+scp -r $QNX_TARGET/aarch64le/usr/local/bin/libwebsockets* qnxuser@$TARGET_HOST:~/bin
 
 # Move share binaries to the target for web based test
-scp -r build-files/ports/libwebsockets/nto-aarch64-le/build/share qnxuser@$TARGET_HOST:~/
+scp -r $QNX_TARGET/aarch64le/usr/local/share/libwebsockets-test-server qnxuser@$TARGET_HOST:~/share
 ```
 
 ## Run the Test Server
 ```bash
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/data/home/qnxuser/lib
-cd build
 ./libwebsockets-test-server
 ```
 ## Run the Test Client
 ```bash
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/data/home/qnxuser/lib
-cd build
 ./libwebsockets-test-client 0.0.0.0
 ```
 
