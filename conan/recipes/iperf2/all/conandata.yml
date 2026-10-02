@@ -1,3 +1,7 @@
+1779e3e:
+  sources:
+    git: "https://git.code.sf.net/p/iperf2/code"
+    commit: "1779e3e3770a080cbd77ca77acaffdfff83c7c2b"
 2.2.1:
   sources:
     url: "https://sourceforge.net/projects/iperf2/files/iperf-2.2.1.tar.gz"
