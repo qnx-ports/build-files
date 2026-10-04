@@ -4,9 +4,9 @@ local QNX_TARGET = [ os.environ QNX_TARGET ] ;
 local CPUVARDIR = [ os.environ CPUVARDIR ] ;
 
 using python
-     : 3.11
+     : 3.13
      : python3
-     : $(QNX_TARGET)/$(CPUVARDIR)/usr/include/python3.11 $(QNX_TARGET)/usr/include/python3.11 $(QNX_TARGET)/usr/include/$(CPUVARDIR)/python3.11
+     : $(QNX_TARGET)/$(CPUVARDIR)/usr/include/python3.13 $(QNX_TARGET)/usr/include/python3.13 $(QNX_TARGET)/usr/include/$(CPUVARDIR)/python3.13
      : $(QNX_TARGET)/$(CPUVARDIR)/usr/lib
      : <target-os>qnxnto <toolset>qcc
      ;
