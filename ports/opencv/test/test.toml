@@ -1,0 +1,24 @@
+package = "opencv"
+timeout = 6000
+jobs = ${{nproc}}
+
+[googletest]
+path = """
+    build/bin/opencv_perf_*
+    build/bin/opencv_test_*
+    """
+
+[[googletest.skipped]]
+name = "build/bin/opencv_test_highgui"
+[[googletest.skipped.suites]]
+name = "Highgui_GUI"
+file = "opencv/modules/highgui/test/test_gui.cpp"
+[[googletest.skipped.suites.cases]]
+name = "regression"
+line = "65"
+[[googletest.skipped.suites.cases]]
+name = "trackbar_unsafe"
+line = "144"
+[[googletest.skipped.suites.cases]]
+name = "trackbar"
+line = "184"
