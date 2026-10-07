@@ -82,12 +82,44 @@ scp -r $QNX_TARGET/aarch64le/usr/local/share/libwebsockets-test-server qnxuser@$
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/data/home/qnxuser/lib
 ./libwebsockets-test-server
 ```
+**Expected/sample output:**
+```
+./libwebsockets-test-server 
+[2026/10/07 05:37:51:0374] N: libwebsockets test server - license MIT 
+[2026/10/07 05:37:51:0378] N: (C) Copyright 2010-2018 Andy Green <andy@warmcat.com> 
+Using resource path "/data/share/libwebsockets-test-server" 
+[2026/10/07 05:37:51:0379] N: lws_create_context: LWS: 4.5.0-v4.5.0, NET CLI SRV H1 H2 WS SS-JSON-POL ConMon IPv6-absent 
+[2026/10/07 05:37:51:0389] N: [vh|2|default||7681]: lws_socket_bind: source ads 0.0.0.0 
+[2026/10/07 05:38:39:1677] N: Created new mi 3fdb56cf40 '' 
+[2026/10/07 05:39:04:0461] N: Created new mi 3fdb56e8c0 '' 
+```
+
 ## Run the Test Client
 ```bash
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/data/home/qnxuser/lib
 ./libwebsockets-test-client 0.0.0.0
 ```
-
+**Expected/sample output:**
+```
+# ./libwebsockets-test-client 0.0.0.0 
+[2026/10/07 05:38:39:1536] N: libwebsockets test client - license MIT 
+[2026/10/07 05:38:39:1539] N: (C) Copyright 2010-2018 Andy Green <andy@warmcat.com> 
+[2026/10/07 05:38:39:1540] N:  SSL disabled 
+[2026/10/07 05:38:39:1541] N:  Cert must validate correctly (use -s to allow selfsigned) 
+[2026/10/07 05:38:39:1541] N:  Requiring peer cert hostname matches 
+[2026/10/07 05:38:39:1542] N: lws_create_context: LWS: 4.5.0-v4.5.0, NET CLI SRV H1 H2 WS SS-JSON-POL ConMon IPv6-absent 
+[2026/10/07 05:38:39:1653] N: using  mode (ws) 
+[2026/10/07 05:38:39:1654] N: dumb: connecting 
+[2026/10/07 05:38:39:1658] N: mirror: connecting 
+[2026/10/07 05:38:39:1678] N: mirror: LWS_CALLBACK_CLIENT_ESTABLISHED 
+[2026/10/07 05:38:39:1679] N: opened mirror connection with 24878 lifetime 
+[2026/10/07 05:38:39:1690] N: lws_http_client_http_response 101 
+[2026/10/07 05:39:04:0450] N: closing mirror session 
+[2026/10/07 05:39:04:0452] N: mirror: LWS_CALLBACK_CLOSED mirror_lifetime=0, rxb 0, rx_count 0 
+[2026/10/07 05:39:04:0453] N: mirror: connecting 
+[2026/10/07 05:39:04:0461] N: mirror: LWS_CALLBACK_CLIENT_ESTABLISHED 
+[2026/10/07 05:39:04:0462] N: opened mirror connection with 55194 lifetime 
+```
 ## Web Access Note
 After starting the server, the test page should be accessible at:
  
