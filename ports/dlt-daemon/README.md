@@ -39,3 +39,37 @@ source ~/qnx800/qnxsdp-env.sh
 # Build dlt-daemon
 BUILD_TESTING="ON" make -C build-files/ports/dlt-daemon install JLEVEL=$(nproc) [INSTALL_ROOT_nto=PATH_TO_YOUR_STAGING_AREA USE_INSTALL_ROOT=true]
 ```
+# How to run tests
+
+Copy(scp) tests to the target.
+
+```bash
+cd ~/qnx_workspace
+
+# define target IP address
+TARGET_HOST=<target-ip-address-or-hostname>
+
+# copy test binaries to your QNX target
+scp  $QNX_TARGET/x86_64/usr/local/lib/libgtest* qnxuser@$TARGET_HOST:/data/home/qnxuser/
+# or
+scp -r $QNX_TARGET/x86_64/usr/local/bin/dlt_tests qnxuser@$TARGET_HOST:/data/home/qnxuser/
+# copy test binaries to your QNX target
+scp   $QNX_TARGET/x86_64/usr/local/lib/libdlt*  qnxuser@$TARGET_HOST:/data/home/qnxuser/
+# copy script to run the tests
+scp test_script.sh  qnxuser@$TARGET_HOST:/data/home/qnxuser/dlt_tests
+
+```
+
+Run tests on the target.
+```bash
+# ssh into the target
+ssh qnxuser@$TARGET_HOST
+
+# Run tests
+cd /data/home/qnxuser/CANdb_tests/
+./test_script.sh
+
+# test results (x86 VM)
+13 test suites executed: 10 passed, 3 reported failures — gtest_dlt_user  (1/170  intermittent), gtest_dlt_daemon_gateway (1/46, intermittent), and  gtest_dlt_daemon_event_handler (1/25, coded FD 100 is not a valid open descriptor in the test context).
+
+```
