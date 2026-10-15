@@ -21,8 +21,11 @@ on:
       - 'ports/ComputeLibrary/**'
 
 jobs:
-
   build:
+    strategy:
+      fail-fast: false
+      matrix:
+        qnx_env: ["710", "800"]
     runs-on: ubuntu-22.04-common
     if: |
       ((github.event_name == 'workflow_dispatch') ||
@@ -43,5 +46,9 @@ jobs:
     - name: Build ComputeLibrary
       shell: bash
       run: |
-        source ~/qnx/800/qnxsdp-env.sh
+        if [[ ${{ matrix.qnx_env }} == 800 ]]; then
+          source ~/qnx/800/qnxsdp-env.sh
+        else
+          source ~/qnx/710/qnxsdp-env.sh
+        fi
         BUILD_EXAMPLES="ON" BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/ComputeLibrary" make -C build-files/ports/ComputeLibrary install
