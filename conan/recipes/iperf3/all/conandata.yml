@@ -1,0 +1,4 @@
+"3.7":
+  sources:
+    url: "https://github.com/qnx-ports/iperf3/archive/refs/tags/qnx-3.7_p0.tar.gz"
+    sha256: "8a6e479eaf1b8280af6bae1545af518926350fa44a9814a094d437c64d36860f"
