@@ -1,0 +1,29 @@
+diff -ru a/src/portable_endian.h b/src/portable_endian.h
+--- a/src/portable_endian.h	2026-10-13 17:21:29.498648803 +0200
++++ b/src/portable_endian.h	2026-10-13 17:21:29.519350682 +0200
+@@ -65,6 +65,10 @@
+ #	define __LITTLE_ENDIAN LITTLE_ENDIAN
+ #	define __PDP_ENDIAN    PDP_ENDIAN
+ 
++#elif defined(__QNX__)
++
++#	include <net/netbyte.h>
++
+ #elif defined(__sun) && defined(__SVR4)
+ 
+ #	include <sys/types.h>
+diff -ru a/src/timer.h b/src/timer.h
+--- a/src/timer.h	2026-10-13 17:21:29.498648803 +0200
++++ b/src/timer.h	2026-10-13 17:21:54.688871766 +0200
+@@ -30,7 +30,11 @@
+ #ifndef __TIMER_H
+ #define __TIMER_H
+ 
++#ifdef __QNX__
++#include <sys/time.h>
++#else
+ #include <time.h>
++#endif
+ #include "iperf_time.h"
+ 
+ /* TimerClientData is an opaque value that tags along with a timer.  The

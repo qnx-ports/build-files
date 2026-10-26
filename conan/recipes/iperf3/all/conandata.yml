@@ -1,0 +1,12 @@
+"3.7":
+  sources:
+    url: "https://github.com/esnet/iperf/archive/refs/tags/3.7.tar.gz"
+    sha256: "c349924a777e8f0a70612b765e26b8b94cc4a97cc21a80ed260f65e9823c8fc5"
+patches:
+  "3.7":
+    - patch_file: "patches/iperf-3.7-qnx-fix.patch"
+      patch_description: "QNX fix for iperf3 3.7"
+      patch_type: "portability"
+    - patch_file: "patches/iperf-3.7-json-udp-bufsize.patch"
+      patch_description: "do not print 'Increasing socket buffer size' on stdout in JSON mode (it corrupts -u -J output)"
+      patch_type: "bugfix"
