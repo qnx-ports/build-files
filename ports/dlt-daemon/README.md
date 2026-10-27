@@ -50,13 +50,13 @@ cd ~/qnx_workspace
 TARGET_HOST=<target-ip-address-or-hostname>
 
 # copy test binaries to your QNX target
-scp  $QNX_TARGET/x86_64/usr/local/lib/libgtest* qnxuser@$TARGET_HOST:/data/home/qnxuser/
+scp  $QNX_TARGET/x86_64/usr/local/lib/libgtest* qnxuser@$TARGET_HOST:/data/home/qnxuser/lib
 # or
-scp -r $QNX_TARGET/x86_64/usr/local/bin/dlt_tests qnxuser@$TARGET_HOST:/data/home/qnxuser/
+scp -r $QNX_TARGET/x86_64/usr/local/bin/dlt_tests qnxuser@$TARGET_HOST:/data/home/qnxuser/bin
 # copy test binaries to your QNX target
-scp   $QNX_TARGET/x86_64/usr/local/lib/libdlt*  qnxuser@$TARGET_HOST:/data/home/qnxuser/
+scp   $QNX_TARGET/x86_64/usr/local/lib/libdlt*  qnxuser@$TARGET_HOST:/data/home/qnxuser/lib
 # copy script to run the tests
-scp test_script.sh  qnxuser@$TARGET_HOST:/data/home/qnxuser/dlt_tests
+scp test_script.sh  qnxuser@$TARGET_HOST:/data/home/qnxuser/bin/dlt_tests
 
 ```
 
@@ -66,10 +66,10 @@ Run tests on the target.
 ssh qnxuser@$TARGET_HOST
 
 # Run tests
-cd /data/home/qnxuser/CANdb_tests/
+cd /data/home/qnxuser/bin/dlt_tests/
 ./test_script.sh
 
 # test results (x86 VM)
-13 test suites executed: 10 passed, 3 reported failures — gtest_dlt_user  (1/170  intermittent), gtest_dlt_daemon_gateway (1/46, intermittent), and  gtest_dlt_daemon_event_handler (1/25, coded FD 100 is not a valid open descriptor in the test context).
+13 test suites executed: 10 passed, 3 reported failures — gtest_dlt_user  (1/170  intermittent failed), gtest_dlt_daemon_gateway (1/46, intermittent failed), and  gtest_dlt_daemon_event_handler (1/25, coded FD 100 is not a valid open descriptor in the test context).
 
 ```
