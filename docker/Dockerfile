@@ -1,5 +1,5 @@
-# Use latest Ubuntu LTS which QSC also supports
-FROM ubuntu:24.04
+# Use latest LTS for ubuntu
+FROM ubuntu:22.04
 
 # LABEL about the custom image
 LABEL maintainer="chachoi@blackberry.com"
@@ -103,11 +103,17 @@ RUN apt-get update && apt-get install -y \
 	libxslt1-dev \
 	freeglut3-dev
 
-# Install python3
-RUN apt-get install -y \
-	python3 \
-	python3-dev \
-	python3-venv \
+# Install python 3.11
+RUN mkdir -p /etc/apt/keyrings && \
+	curl -sS "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0xF23C5A6CF475977595C89F51BA6932366A755776" \
+	  | gpg --dearmor -o /etc/apt/keyrings/deadsnakes.gpg && \
+	echo "deb [signed-by=/etc/apt/keyrings/deadsnakes.gpg] https://ppa.launchpadcontent.net/deadsnakes/ppa/ubuntu jammy main" \
+	  > /etc/apt/sources.list.d/deadsnakes.list && \
+	apt update && \
+	apt-get install -y \
+	python3.11-dev \
+	python3.11-venv \
+	python3.11-distutils \
 	rename
 
 # Install packages needed for building WebRTC
@@ -530,13 +536,15 @@ RUN cd /usr/local/qnx && \
 # Install pip packages needed for testing
 # Needed to build numpy from source
 RUN cd /usr/local/qnx && \
-	python3 -m venv env && \
+	python3.11 -m venv env && \
 	. ./env/bin/activate && \
-	python3 -m pip install -U pip setuptools wheel && \
 	python3 -m pip install -U \
-	"empy>=4.1" \
+	pip \
+	empy==3.3.4 \
 	lark \
-	"Cython>=3.0.0" \
+	lark-parser \
+	Cython==0.29.35 \
+	wheel \
 	colcon-common-extensions \
 	vcstool \
 	catkin_pkg \
@@ -554,7 +562,7 @@ RUN cd /usr/local/qnx && \
 	pytest \
 	pybind11 \
 	requests \
-	versioneer>=0.29 \
+	versioneer \
 	meson==1.3.0
 
 WORKDIR /home/${USER_NAME}
