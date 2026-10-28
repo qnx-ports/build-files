@@ -105,7 +105,7 @@ RUN apt-get update && apt-get install -y \
 
 # Install python3
 RUN apt-get install -y \
-	python3
+	python3 \
 	python3-dev \
 	python3-venv \
 	rename
@@ -530,15 +530,13 @@ RUN cd /usr/local/qnx && \
 # Install pip packages needed for testing
 # Needed to build numpy from source
 RUN cd /usr/local/qnx && \
-	python3.11 -m venv env && \
+	python3 -m venv env && \
 	. ./env/bin/activate && \
+	python3 -m pip install -U pip setuptools wheel && \
 	python3 -m pip install -U \
-	pip \
-	empy==3.3.4 \
+	"empy>=4.1" \
 	lark \
-	lark-parser \
-	Cython==0.29.35 \
-	wheel \
+	"Cython>=3.0.0" \
 	colcon-common-extensions \
 	vcstool \
 	catkin_pkg \
@@ -556,7 +554,7 @@ RUN cd /usr/local/qnx && \
 	pytest \
 	pybind11 \
 	requests \
-	versioneer \
+	versioneer>=0.29 \
 	meson==1.3.0
 
 WORKDIR /home/${USER_NAME}
