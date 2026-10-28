@@ -104,7 +104,11 @@ RUN apt-get update && apt-get install -y \
 	freeglut3-dev
 
 # Install python 3.11
-RUN add-apt-repository ppa:deadsnakes/ppa -y && \
+RUN mkdir -p /etc/apt/keyrings && \
+	curl -sS "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0xF23C5A6CF475977595C89F51BA6932366A755776" \
+	  | gpg --dearmor -o /etc/apt/keyrings/deadsnakes.gpg && \
+	echo "deb [signed-by=/etc/apt/keyrings/deadsnakes.gpg] https://ppa.launchpadcontent.net/deadsnakes/ppa/ubuntu jammy main" \
+	  > /etc/apt/sources.list.d/deadsnakes.list && \
 	apt update && \
 	apt-get install -y \
 	python3.11-dev \
