@@ -1,5 +1,5 @@
-# Use latest LTS for ubuntu
-FROM ubuntu:22.04
+# Use latest Ubuntu LTS which QSC also supports
+FROM ubuntu:24.04
 
 # LABEL about the custom image
 LABEL maintainer="chachoi@blackberry.com"
@@ -103,13 +103,11 @@ RUN apt-get update && apt-get install -y \
 	libxslt1-dev \
 	freeglut3-dev
 
-# Install python 3.11
-RUN add-apt-repository ppa:deadsnakes/ppa -y && \
-	apt update && \
-	apt-get install -y \
-	python3.11-dev \
-	python3.11-venv \
-	python3.11-distutils \
+# Install python3
+RUN apt-get install -y \
+	python3
+	python3-dev \
+	python3-venv \
 	rename
 
 # Install packages needed for building WebRTC
