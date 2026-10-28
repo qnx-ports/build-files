@@ -1,0 +1,26 @@
+--- a/src/iperf_udp.c	2026-10-23 15:41:31.487960582 +0200
++++ b/src/iperf_udp.c	2026-10-23 15:41:31.511859480 +0200
+@@ -381,8 +381,9 @@
+     if (rc > 0) {
+ 	if (test->settings->socket_bufsize == 0) {
+ 	    int bufsize = test->settings->blksize + UDP_BUFFER_EXTRA;
+-	    printf("Increasing socket buffer size to %d\n",
+-		bufsize);
++	    if (!test->json_output)
++		printf("Increasing socket buffer size to %d\n",
++		    bufsize);
+ 	    test->settings->socket_bufsize = bufsize;
+ 	    rc = iperf_udp_buffercheck(test, s);
+ 	    if (rc < 0)
+@@ -493,8 +494,9 @@
+     if (rc > 0) {
+ 	if (test->settings->socket_bufsize == 0) {
+ 	    int bufsize = test->settings->blksize + UDP_BUFFER_EXTRA;
+-	    printf("Increasing socket buffer size to %d\n",
+-		bufsize);
++	    if (!test->json_output)
++		printf("Increasing socket buffer size to %d\n",
++		    bufsize);
+ 	    test->settings->socket_bufsize = bufsize;
+ 	    rc = iperf_udp_buffercheck(test, s);
+ 	    if (rc < 0)
