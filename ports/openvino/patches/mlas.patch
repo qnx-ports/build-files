@@ -1,0 +1,30 @@
+diff --git a/lib/platform.cpp b/lib/platform.cpp
+index 36123e1..0498434 100644
+--- a/lib/platform.cpp
++++ b/lib/platform.cpp
+@@ -20,6 +20,11 @@ Abstract:
+ #include <thread>
+ #include <mutex>
+ 
++#if defined(__QNX__) && defined(MLAS_TARGET_ARM64)
++#define AA64ISAR0_REG_INDEX  24
++#include <sys/syspage.h>
++#endif
++
+ #if defined(MLAS_TARGET_POWER) && defined(__linux__)
+ #include <sys/auxv.h>
+ #endif
+@@ -450,6 +455,13 @@ Return Value:
+ 
+ #if defined(_WIN32)
+     HasDotProductInstructions = (IsProcessorFeaturePresent(PF_ARM_V82_DP_INSTRUCTIONS_AVAILABLE) != 0);
++#elif defined(__QNX__)
++    struct syspage_entry* sp = _syspage_ptr;
++    struct aarch64_syspage_entry* aarch64_sys = &sp->un.aarch64;
++    uint64_t* hardware_registers = (uint64_t*)((char*)sp + aarch64_sys->idreg_dump.entry_off);
++    uint64_t isar0_el1 = hardware_registers[AA64ISAR0_REG_INDEX];
++    uint32_t dp_field = (isar0_el1 >> 44) & 0xF;
++    HasDotProductInstructions = (dp_field >= 1) ? true : false;
+ #elif !defined(__APPLE__)  // The next few lines result in an EXC_BAD_INSTRUCTION runtime error on a M1 Mac so we
+                            // disable it there.
+     uint64_t isar0_el1;

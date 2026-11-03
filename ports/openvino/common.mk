@@ -1,0 +1,121 @@
+ifndef QCONFIG
+QCONFIG=qconfig.mk
+endif
+include $(QCONFIG)
+include $(MKFILES_ROOT)/qmacros.mk
+
+NAME=openvino
+
+QNX_PROJECT_ROOT ?= $(PRODUCT_ROOT)/../../$(NAME)
+
+BUILD_TESTING ?= ON
+BUILD_SAMPLES ?= ON
+
+HOST_FLATC_PATH ?= $(PROJECT_ROOT)/../flatbuffers/host_flatc/
+
+#$(INSTALL_ROOT_$(OS)) is pointing to $QNX_TARGET
+#by default, unless it was manually re-routed to
+#a staging area by setting both INSTALL_ROOT_nto
+#and USE_INSTALL_ROOT
+INSTALL_ROOT ?= $(INSTALL_ROOT_$(OS))
+
+#A prefix path to use **on the target**. This is
+#different from INSTALL_ROOT, which refers to a
+#installation destination **on the host machine**.
+#This prefix path may be exposed to the source code,
+#the linker, or package discovery config files (.pc,
+#CMake config modules, etc.). Default is usr/local
+PREFIX ?= usr/local
+
+#choose Release or Debug
+CMAKE_BUILD_TYPE ?= Release
+
+#set the following to FALSE if generating .pinfo files is causing problems
+GENERATE_PINFO_FILES ?= TRUE
+
+#override 'all' target to bypass the default QNX build system
+ALL_DEPENDENCIES = $(NAME)_all
+.PHONY: $(NAME)_all install check clean
+
+CPPFLAGS += -D_QNX_SOURCE
+
+LDFLAGS += -lgomp -lregex
+
+include $(MKFILES_ROOT)/qtargets.mk
+
+PYTHON_EXECUTABLE = $(shell which python3)
+
+#Search paths for all of CMake's find_* functions --
+#headers, libraries, etc.
+#
+#$(QNX_TARGET): for architecture-agnostic files shipped with SDP (e.g. headers)
+#$(QNX_TARGET)/$(CPUVARDIR): for architecture-specific files in SDP
+#$(INSTALL_ROOT)/$(CPUVARDIR): any packages that may have been installed in the staging area
+CMAKE_FIND_ROOT_PATH := $(QNX_TARGET);$(QNX_TARGET)/$(CPUVARDIR);$(INSTALL_ROOT)/$(CPUVARDIR)
+
+#Path to CMake modules; These are CMake files installed by other packages
+#for downstreams to discover them automatically. We support discovering
+#CMake-based packages from inside SDP or in the staging area.
+#Note that CMake modules can automatically detect the prefix they are
+#installed in.
+CMAKE_MODULE_PATH := $(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib/cmake;$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/lib/cmake
+export PKG_CONFIG_LIBDIR="$(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)/lib"
+
+CPPFLAGS += -I$(INSTALL_ROOT)/$(PREFIX)/include -I$(QNX_TARGET)/$(PREFIX)/include \
+            -isystem $(QNX_TARGET)/usr/include/c++/v1/
+
+ifeq ($(CPU),aarch64)
+ASFLAGS += -Wa,-march=armv8.2-a+fp16+sve
+endif
+
+CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
+             -DCMAKE_INSTALL_PREFIX="$(INSTALL_ROOT)" \
+             -DCMAKE_INSTALL_LIBDIR="$(CPUVARDIR)/$(PREFIX)/lib" \
+             -DCMAKE_INSTALL_BINDIR="$(CPUVARDIR)/$(PREFIX)/bin" \
+             -DCMAKE_INSTALL_INCLUDEDIR="$(PREFIX)/include" \
+             -DCMAKE_INSTALL_DATADIR="$(PREFIX)/share" \
+             -DCMAKE_INSTALL_SYSCONFDIR="$(PREFIX)/etc" \
+             -DCMAKE_INSTALL_DOCDIR="$(PREFIX)/share/doc" \
+             -DCMAKE_FIND_ROOT_PATH="$(CMAKE_FIND_ROOT_PATH)" \
+             -DCMAKE_MODULE_PATH="$(CMAKE_MODULE_PATH)" \
+             -DCMAKE_BUILD_TYPE=$(CMAKE_BUILD_TYPE) \
+             -DCMAKE_PREFIX_PATH="$(QNX_TARGET)/$(CPUVARDIR)/$(PREFIX)" \
+             -DEXTRA_CMAKE_C_FLAGS="$(CFLAGS) $(CPPFLAGS)" \
+             -DEXTRA_CMAKE_CXX_FLAGS="$(CXXFLAGS) $(CPPFLAGS)" \
+             -DEXTRA_CMAKE_ASM_FLAGS="$(ASFLAGS)" \
+             -DEXTRA_CMAKE_LINKER_FLAGS="$(LDFLAGS)" \
+             -DBUILD_SHARED_LIBS=ON \
+             -DBUILD_TESTING=$(BUILD_TESTING) \
+             -DENABLE_TESTS=$(BUILD_TESTING) \
+             -DENABLE_BEH_TESTS=$(BUILD_TESTING) \
+             -DENABLE_FUNCTIONAL_TESTS=$(BUILD_TESTING) \
+             -DENABLE_SAMPLES=$(BUILD_SAMPLES) \
+             -DACL_INCLUDE_DIR="${QNX_TARGET}/${PREFIX}/include" \
+             -DARM_COMPUTE_INCLUDE_DIR="$(INSTALL_ROOT)/$(PREFIX)/include" \
+             -DARM_COMPUTE_LIB_DIR="$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX)/lib" \
+             -DENABLE_SYSTEM_PROTOBUF=OFF \
+             -DENABLE_SYSTEM_FLATBUFFERS=ON \
+             -DFlatbuffers_DIR="$(HOST_FLATC_PATH)/usr/lib/cmake/flatbuffers" \
+             -DCMAKE_FIND_PACKAGE_PREFER_CONFIG=ON \
+             -DPYTHON_EXECUTABLE="$(PYTHON_EXECUTABLE)" \
+             -DENABLE_SYSTEM_OPENCL=ON \
+             -DOUTPUT_ROOT=$(CURDIR)/build \
+             -DCMAKE_AR=${QNX_HOST}/usr/bin/nto${CPU}-ar \
+             -DCMAKE_RANLIB=${QNX_HOST}/usr/bin/nto${CPU}-ranlib
+
+MAKE_ARGS ?= -j $(firstword $(JLEVEL) 1)
+
+ifndef NO_TARGET_OVERRIDE
+$(NAME)_all:
+	@mkdir -p build
+	@cd build && cmake $(CMAKE_ARGS) $(QNX_PROJECT_ROOT)
+	@cd build && make VERBOSE=1 all $(MAKE_ARGS)
+
+install check: $(NAME)_all
+	@echo Installing...
+	@cd build && make VERBOSE=1 install $(MAKE_ARGS)
+	@echo Done.
+
+clean iclean spotless:
+	rm -rf build
+endif
