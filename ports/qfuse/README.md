@@ -15,14 +15,14 @@ QFuse and build-files as separate source checkouts:
 mkdir -p ~/qnx_workspace
 cd ~/qnx_workspace
 git clone https://github.com/gowtham0992/qfuse.git
-git -C qfuse checkout e8fcb83
+git -C qfuse checkout a8048b3e0cc9e4a0a4db7b6c6cb5c3516f810b46
 # Use this build-files checkout, containing ports/qfuse.
 source ~/qnx800/qnxsdp-env.sh
 QNX_PROJECT_ROOT="$PWD/qfuse" make -C build-files/ports/qfuse CPU=x86_64 install verify
 QNX_PROJECT_ROOT="$PWD/qfuse" make -C build-files/ports/qfuse CPU=aarch64le install verify
 ```
 
-Source baseline: [QFuse e8fcb83](https://github.com/gowtham0992/qfuse/tree/e8fcb83).
+Source baseline: [QFuse a8048b3](https://github.com/gowtham0992/qfuse/tree/a8048b3e0cc9e4a0a4db7b6c6cb5c3516f810b46).
 The project fetches libfuse 3.16.2 fixture files by hash-checked lock file; this
 recipe does not import libfuse Git history or distribute the QNX SDK.
 
