@@ -1,0 +1,42 @@
+name: qfuse
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: [".github/workflows/qfuse.yml", "ports/qfuse/**"]
+  pull_request:
+    branches: [main]
+    paths: [".github/workflows/qfuse.yml", "ports/qfuse/**"]
+permissions:
+  contents: read
+jobs:
+  sdk-build:
+    name: QNX 8.0 SDK build (${{ matrix.cpu }})
+    runs-on: ubuntu-22.04-common
+    strategy:
+      fail-fast: false
+      matrix:
+        cpu: [aarch64, x86_64]
+    steps:
+      - name: Checkout build-files
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          path: build-files
+          persist-credentials: false
+      - name: Checkout pinned QFuse source
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          repository: gowtham0992/qfuse
+          ref: dd3edf04d7515b4abc6f750c4adce6cd1a2cc78f
+          path: qfuse
+          persist-credentials: false
+      - name: Compile, stage, and verify installed package
+        shell: bash
+        env:
+          QFUSE_CPU: ${{ matrix.cpu }}
+        run: |
+          set -euo pipefail
+          source ~/qnx/800/qnxsdp-env.sh
+          stage=$(mktemp -d "$RUNNER_TEMP/qfuse.XXXXXX")
+          QNX_PROJECT_ROOT="$GITHUB_WORKSPACE/qfuse" INSTALL_ROOT_nto="$stage" \
+            make -C build-files/ports/qfuse CPULIST="$QFUSE_CPU" install verify

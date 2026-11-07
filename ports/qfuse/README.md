@@ -1,64 +1,86 @@
 # QFuse for QNX 8.0
 
 QFuse maps a tested subset of high-level FUSE callbacks to native QNX resource
-managers. This recipe builds the static library, headers, pkg-config metadata,
-and lifecycle tools for `x86_64` or `aarch64le` on a Linux SDK host. It requires
-the developer's own activated QNX SDP 8.0. It stages into a private root rather
-than modifying the SDK.
+managers. This recipe builds `libfuse3.a`, the public SDK headers/pkg-config
+metadata, `qfuse-mount` and `qfuse-unmount` using QNX's standard
+`recurse.mk`/`common.mk`/`qtargets.mk` system. It supports x86_64 and aarch64le
+with the developer's activated QNX SDP 8.0 on a Linux host.
 
 ## Build and verify
 
-Install Bash, GNU make, a host C compiler, Python 3, patch and pkg-config. Keep
-QFuse and build-files as separate source checkouts:
+Install Python 3, GNU make and pkg-config. Keep QFuse and build-files as separate
+source checkouts and source your own SDK:
 
 ```sh
 mkdir -p ~/qnx_workspace
 cd ~/qnx_workspace
 git clone https://github.com/gowtham0992/qfuse.git
-git -C qfuse checkout a8048b3e0cc9e4a0a4db7b6c6cb5c3516f810b46
-# Use this build-files checkout, containing ports/qfuse.
+git -C qfuse checkout dd3edf04d7515b4abc6f750c4adce6cd1a2cc78f
+# Use the build-files checkout containing this recipe.
 source ~/qnx800/qnxsdp-env.sh
-QNX_PROJECT_ROOT="$PWD/qfuse" make -C build-files/ports/qfuse CPU=x86_64 install verify
-QNX_PROJECT_ROOT="$PWD/qfuse" make -C build-files/ports/qfuse CPU=aarch64le install verify
+QNX_PROJECT_ROOT="$PWD/qfuse" INSTALL_ROOT_nto="$PWD/qfuse-stage" \
+  make -C build-files/ports/qfuse install verify
 ```
 
-Source baseline: [QFuse a8048b3](https://github.com/gowtham0992/qfuse/tree/a8048b3e0cc9e4a0a4db7b6c6cb5c3516f810b46).
-The project fetches libfuse 3.16.2 fixture files by hash-checked lock file; this
-recipe does not import libfuse Git history or distribute the QNX SDK.
+This builds both architectures. Select `CPULIST=aarch64` or `CPULIST=x86_64`
+for one architecture; QNX infers `CPU` from its variant directories. The previous
+wrapper's `CPU=aarch64le` selection is replaced by `CPULIST=aarch64`.
 
-`INSTALL_ROOT_nto` defaults to `stage/$(CPU)` beneath this recipe and `PREFIX` to
-`/usr/local`. `QFUSE_BUILD_PARENT` defaults to `build/$(CPU)`. Override both with
-absolute Linux-native paths when compiling under emulation. `QNX_SDP_ROOT` can
-be set if it cannot be derived from sourced `QNX_HOST`. `QFUSE_SOURCE_DIR` is an
-alias for `QNX_PROJECT_ROOT`.
+The `prepare` component verifies the project's pinned public libfuse fixture
+files and generates the minimal option parser/configuration. The library and
+lifecycle tools compile directly through QNX make rules. Small Python helpers
+verify/prepare public sources and install SDK metadata. Source preparation is
+shared with the project's callback tests. Original upstream hello/passthrough sources are not
+rewritten.
 
-The installed pkg-config prefix points at its staging location for subsequent
-cross-compilation. Regenerate the package when changing that location. The
-manifest uninstaller preserves modified and unrelated files:
+By default `INSTALL_ROOT_nto` is this recipe's private `stage` directory and
+`PREFIX` is `/usr/local`. Results are staged beneath
+`stage/aarch64le/usr/local` and `stage/x86_64/usr/local`. Set an absolute private
+staging root outside the SDK. Builds default to their native variant directories;
+use a Linux-native checkout when running SDK tools under emulation. Normal Linux
+SDK hosts need no Docker or emulator wrapper.
+
+`verify` links unchanged upstream hello and passthrough using only installed
+pkg-config metadata, and checks the lifecycle tools' ELF architecture. Passthrough
+explicitly selects the optional directory-entry adapter. The installed `.pc`
+prefix points to its host staging location for subsequent cross-compilation.
+
+## Header installation and safe removal
+
+`hinstall` stages public headers and metadata without requiring staged target
+binaries. Full `install` adds the library and tools. The final package manifest
+records only QFuse-owned files. The root uninstall target preserves modified and
+unrelated files, and should be run separately from build/install targets:
 
 ```sh
-QNX_PROJECT_ROOT="$PWD/qfuse" make -C build-files/ports/qfuse CPU=x86_64 uninstall
+QNX_PROJECT_ROOT="$PWD/qfuse" INSTALL_ROOT_nto="$PWD/qfuse-stage" \
+  make -C build-files/ports/qfuse CPULIST=aarch64 uninstall
 ```
 
-## Validation and scope
+## CI, validation and limits
 
-Both architecture recipes were built, staged and checked with the real SDP 8.0.
-Installed pkg-config flags compile unchanged upstream hello and passthrough
-sources. Passthrough explicitly selects QFuse's optional directory-entry adapter.
+The accompanying `qfuse.yml` is intended for build-files' `.github/workflows`.
+It builds both CPU profiles on the repository's existing licensed QNX 8.0 SDK
+runner, with read-only repository permissions and a pinned QFuse source revision.
+It uploads no SDK, runtime, images or binaries. Running that upstream job depends
+on maintainer approval/runner availability; the author's local native recipe
+checks do not substitute for it or for independent-user reproduction.
 
-The QFuse project's native QEMU evidence covers 51 differential cases on both
-architectures, callback stalls and client interruption, management authorization,
-permissions, lifecycle and process-death recovery. The current ARM build also
-passed native cp/diff over 5,000 files and executes an ELF from an SSHFS mount.
-See its [verification guide](https://github.com/gowtham0992/qfuse/blob/main/docs/guide/verification.md).
+Both CPU profiles have been built, staged and checked with the real SDK. The
+project's native QEMU gates compare 51 cases on both architectures, plus
+permissions, callback cancellation, namespace isolation, FIFO writer ordering,
+management and lifecycle. ARM also passed native cp/diff over 5,000 files.
+The project tests SSHFS reads/writes, concurrent namespace operations and
+persisted remount separately. See its verification guide for qualified evidence.
 
-This is experimental source compatibility, not complete libfuse compatibility.
-Mounting requires root. Low-level FUSE, non-root mounts, xattrs and locking are
-outside the supported profile. QEMU functional deadlines do not establish
-hardware or hard-real-time guarantees. Independent builds and upstream review
-are separate from the owner's tests.
+This is experimental source compatibility, with root mounts and a tested
+high-level API subset. Low-level FUSE, non-root mounting, xattrs and locking are
+outside the supported profile. Conflicting paths and shared backend dependencies
+can still block callbacks; client cancellation does not roll back writes or
+forcibly cancel foreign code. QEMU functional tests establish no hardware,
+hard-real-time or safety guarantee.
 
-SSHFS dependencies and optional bindfs stay in QFuse's separate recipes. No SDK
-files, licensed runtime, target images, credentials or binaries accompany this
-contribution. Original contribution files are MIT; upstream components retain
+SSHFS dependencies and optional bindfs remain in separate project recipes.
+No SDK files, licensed runtime, target images, credentials or compiled binaries
+are included. Original contribution files are MIT; upstream components retain
 their own licenses.
