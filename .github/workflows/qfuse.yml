@@ -13,6 +13,10 @@ jobs:
   sdk-build:
     name: QNX 8.0 SDK build (${{ matrix.cpu }})
     runs-on: ubuntu-22.04-common
+    if: |
+      ((github.event_name == 'workflow_dispatch') ||
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'qfuse')))
     strategy:
       fail-fast: false
       matrix:
