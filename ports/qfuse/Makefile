@@ -11,6 +11,11 @@ override INSTALL_ROOT_nto := $(abspath $(INSTALL_ROOT_nto))
 export INSTALL_ROOT_nto
 PREFIX ?= /usr/local
 export PREFIX
+# SDK qconfig assigns INSTALL_ROOT_nto in each leaf. Preserve caller intent
+# through a private variable, then override it before including qconfig.
+QFUSE_NATIVE_STAGE := $(INSTALL_ROOT_nto)
+QFUSE_NATIVE_PREFIX := $(PREFIX)
+export QFUSE_NATIVE_STAGE QFUSE_NATIVE_PREFIX
 QNX_NO_IGNORE := 1
 export QNX_NO_IGNORE
 ifneq ($(origin CPU),undefined)

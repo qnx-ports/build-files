@@ -15,11 +15,11 @@ source checkouts and source your own SDK:
 mkdir -p ~/qnx_workspace
 cd ~/qnx_workspace
 git clone https://github.com/gowtham0992/qfuse.git
-git -C qfuse checkout dd3edf04d7515b4abc6f750c4adce6cd1a2cc78f
+git -C qfuse checkout d2bc2adadaeba993171efa4877513e5125add546
 # Use the build-files checkout containing this recipe.
 source ~/qnx800/qnxsdp-env.sh
-QNX_PROJECT_ROOT="$PWD/qfuse" INSTALL_ROOT_nto="$PWD/qfuse-stage" \
-  make -C build-files/ports/qfuse install verify
+make -C build-files/ports/qfuse QNX_PROJECT_ROOT="$PWD/qfuse" \
+  INSTALL_ROOT_nto="$PWD/qfuse-stage" install verify
 ```
 
 This builds both architectures. Select `CPULIST=aarch64` or `CPULIST=x86_64`
@@ -36,7 +36,8 @@ rewritten.
 By default `INSTALL_ROOT_nto` is this recipe's private `stage` directory and
 `PREFIX` is `/usr/local`. Results are staged beneath
 `stage/aarch64le/usr/local` and `stage/x86_64/usr/local`. Set an absolute private
-staging root outside the SDK. Builds default to their native variant directories;
+staging root outside the SDK. The recipe preserves that root across recursive
+SDK configuration and rejects staging inside the licensed SDP. Builds default to their native variant directories;
 use a Linux-native checkout when running SDK tools under emulation. Normal Linux
 SDK hosts need no Docker or emulator wrapper.
 
@@ -53,8 +54,8 @@ records only QFuse-owned files. The root uninstall target preserves modified and
 unrelated files, and should be run separately from build/install targets:
 
 ```sh
-QNX_PROJECT_ROOT="$PWD/qfuse" INSTALL_ROOT_nto="$PWD/qfuse-stage" \
-  make -C build-files/ports/qfuse CPULIST=aarch64 uninstall
+make -C build-files/ports/qfuse QNX_PROJECT_ROOT="$PWD/qfuse" \
+  INSTALL_ROOT_nto="$PWD/qfuse-stage" CPULIST=aarch64 uninstall
 ```
 
 ## CI, validation and limits
