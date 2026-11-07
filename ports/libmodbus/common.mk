@@ -21,8 +21,9 @@ INSTALL_ROOT ?= $(INSTALL_ROOT_$(OS))
 #Default is /usr/local
 PREFIX ?= /usr/local
 
-#Set to OFF to skip installing the test binaries and qnxtests.sh
-LIBMODBUS_INSTALL_TESTS ?= ON
+#Set to ON to also install the test binaries, modbus-serial-probe and
+#qnxtests.sh (they are always built)
+BUILD_TESTING ?= OFF
 
 ALL_DEPENDENCIES = $(NAME)_all
 .PHONY: $(NAME)_all install check clean
@@ -79,7 +80,7 @@ $(NAME)_all:
 install check: $(NAME)_all
 	@echo Installing...
 	@cd build && $(MAKE) install $(MAKE_ARGS)
-ifeq ($(LIBMODBUS_INSTALL_TESTS),ON)
+ifeq ($(BUILD_TESTING),ON)
 	@mkdir -p $($(NAME)_TESTS_DIR)
 	@for t in $(TEST_PROGRAMS); do \
 		if [ -f build/tests/.libs/$$t ]; then cp build/tests/.libs/$$t $($(NAME)_TESTS_DIR)/; \

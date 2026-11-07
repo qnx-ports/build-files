@@ -28,7 +28,7 @@ git clone https://github.com/stephane/libmodbus.git
 cd libmodbus && git checkout v3.2.0 && cd ..
 
 # Build and install libmodbus (plus test binaries)
-QNX_PROJECT_ROOT="$(pwd)/libmodbus" JLEVEL=4 make -C build-files/ports/libmodbus install
+BUILD_TESTING=ON QNX_PROJECT_ROOT="$(pwd)/libmodbus" JLEVEL=4 make -C build-files/ports/libmodbus install
 ```
 
 ## Compile the port for QNX on Ubuntu host
@@ -42,11 +42,11 @@ cd libmodbus && git checkout v3.2.0 && cd ..
 
 source ~/qnx800/qnxsdp-env.sh
 
-QNX_PROJECT_ROOT="$(pwd)/libmodbus" JLEVEL=4 make -C build-files/ports/libmodbus install
+BUILD_TESTING=ON QNX_PROJECT_ROOT="$(pwd)/libmodbus" JLEVEL=4 make -C build-files/ports/libmodbus install
 ```
 
 To build only one architecture, run make in its folder, e.g. `make -C build-files/ports/libmodbus/nto-aarch64-le install`.
-Set `LIBMODBUS_INSTALL_TESTS=OFF` to skip the test binaries.
+`BUILD_TESTING=ON` also installs the test binaries, `modbus-serial-probe` and `qnxtests.sh`; leave it out (default `OFF`) to install only the library, headers and pkg-config file.
 
 Installed files:
 
@@ -55,7 +55,7 @@ Installed files:
 | Headers | `$QNX_TARGET/usr/local/include/modbus/` |
 | Library | `$QNX_TARGET/<cpu>/usr/local/lib/libmodbus.so*` |
 | pkg-config | `$QNX_TARGET/<cpu>/usr/local/lib/pkgconfig/libmodbus.pc` |
-| Tests | `$QNX_TARGET/<cpu>/usr/local/bin/libmodbus_tests/` |
+| Tests (`BUILD_TESTING=ON`) | `$QNX_TARGET/<cpu>/usr/local/bin/libmodbus_tests/` |
 
 ## Deploy binaries via SSH
 ```bash
