@@ -15,7 +15,7 @@ source checkouts and source your own SDK:
 mkdir -p ~/qnx_workspace
 cd ~/qnx_workspace
 git clone https://github.com/gowtham0992/qfuse.git
-git -C qfuse checkout d2bc2adadaeba993171efa4877513e5125add546
+git -C qfuse checkout 096aa6d1a53f41ddbad2425ffb86b3a76435d665
 # Use the build-files checkout containing this recipe.
 source ~/qnx800/qnxsdp-env.sh
 make -C build-files/ports/qfuse QNX_PROJECT_ROOT="$PWD/qfuse" \
@@ -74,9 +74,11 @@ management and lifecycle. ARM also passed native cp/diff over 5,000 files.
 The project tests SSHFS reads/writes, concurrent namespace operations and
 persisted remount separately. See its verification guide for qualified evidence.
 
-This is experimental source compatibility, with root mounts and a tested
-high-level API subset. Low-level FUSE, non-root mounting, xattrs and locking are
-outside the supported profile. Conflicting paths and shared backend dependencies
+This is experimental source compatibility with root management and a tested
+high-level API subset. An optional target-specific enforcing policy can run
+SSHFS as a dedicated non-root service UID; see the project security guide.
+Low-level FUSE, ordinary unprivileged mounting, xattrs and locking are outside
+the supported profile. Conflicting paths and shared backend dependencies
 can still block callbacks; client cancellation does not roll back writes or
 forcibly cancel foreign code. QEMU functional tests establish no hardware,
 hard-real-time or safety guarantee.
