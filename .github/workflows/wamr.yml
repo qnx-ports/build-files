@@ -1,0 +1,56 @@
+name: wamr
+
+permissions:
+  contents: write
+  checks: write
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/wamr.yml'
+      - 'ports/wamr/**'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/wamr.yml'
+      - 'ports/wamr/**'
+
+jobs:
+
+  build:
+    strategy:
+      matrix:
+        # The QNX platform support for WAMR (upstream PR #5200) targets QNX 8.0 only.
+        qnx_env: [ 800 ]
+    runs-on: ubuntu-22.04-common
+    if: |
+      ((github.event_name == 'workflow_dispatch') ||
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'wamr')))
+    steps:
+    - name: Checkout build-files
+      uses: actions/checkout@v4
+      with:
+        path: build-files
+
+    - name: Checkout WAMR with the QNX platform support
+      # Upstream WAMR has no QNX platform layer yet: it is proposed by
+      # bytecodealliance/wasm-micro-runtime#5200. This branch is that pull request's head.
+      # Once it is merged, switch to the upstream repository and tag WAMR-2.4.5.
+      uses: actions/checkout@v4
+      with:
+        repository: altinayselman/wasm-micro-runtime
+        path: wasm-micro-runtime
+        ref: qnx-platform
+
+    - name: Build wamr
+      shell: bash
+      run: |
+        if [[ "${{ matrix.qnx_env }}" == "800" ]]; then
+          source ~/qnx/800/qnxsdp-env.sh
+        fi
+        JLEVEL=$(nproc) QNX_PROJECT_ROOT="$(pwd)/wasm-micro-runtime" make -C build-files/ports/wamr install
