@@ -1,0 +1,51 @@
+name: net-snmp
+
+permissions:
+  contents: write
+  checks: write
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/net-snmp.yml'
+      - 'ports/net-snmp/**'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/net-snmp.yml'
+      - 'ports/net-snmp/**'
+
+jobs:
+
+  build:
+    strategy:
+      matrix:
+        qnx_env: ["800"]
+    name: Build for QNX ${{ matrix.qnx_env }}
+    runs-on: ubuntu-22.04-common
+    if: |
+      ((github.event_name == 'workflow_dispatch') ||
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'net-snmp')))
+    steps:
+    - name: Checkout build-files
+      uses: actions/checkout@v4
+      with:
+        path: build-files
+
+    - name: Checkout net-snmp
+      uses: actions/checkout@v4
+      with:
+        repository: net-snmp/net-snmp
+        path: net-snmp
+        ref: v5.9.5.2
+
+    - name: Build net-snmp
+      shell: bash
+      run: |
+        source ~/qnx/${{ matrix.qnx_env }}/qnxsdp-env.sh
+        JLEVEL=$(nproc) QNX_PROJECT_ROOT="$(pwd)/net-snmp" make -C build-files/ports/net-snmp clean install
