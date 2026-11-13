@@ -1,6 +1,6 @@
 # open62541 [![Build](https://github.com/qnx-ports/build-files/actions/workflows/open62541.yml/badge.svg)](https://github.com/qnx-ports/build-files/actions/workflows/open62541.yml)
 
-Supports QNX 8.0 (aarch64le, x86_64). Built from upstream [open62541/open62541](https://github.com/open62541/open62541) at commit [`667acbc69`](https://github.com/open62541/open62541/commit/667acbc69132d3ba5b6db17be8002cb121849d41), the merge of QNX 8.0 support for the POSIX architecture ([open62541#8702](https://github.com/open62541/open62541/pull/8702)). No release contains it yet (latest: v1.5.10). The three patches in `patches/` are open upstream (see below).
+Supports QNX 8.0 (aarch64le, x86_64). Built from upstream [open62541/open62541](https://github.com/open62541/open62541) at commit [`6b0a34cdc`](https://github.com/open62541/open62541/commit/6b0a34cdc82a039b7f6378635c8e61d731d3c176) on master. It includes QNX 8.0 support for the POSIX architecture ([open62541#8702](https://github.com/open62541/open62541/pull/8702)) and the fix for IPv4 multicast on QNX ([open62541#8718](https://github.com/open62541/open62541/pull/8718)). No release contains them yet (latest: v1.5.10). The two patches in `patches/` are open upstream (see below).
 
 It builds the shared library `libopen62541.so` with encryption (the SDP's OpenSSL 3: the RSA SecurityPolicies Basic256Sha256, Aes128_Sha256_RsaOaep and Aes256_Sha256_RsaPss, and the ECC ones), PubSub, and the examples. With `BUILD_TESTING=ON` it also builds upstream's unit tests and installs them with a script that runs them on the target.
 
@@ -12,9 +12,8 @@ Use `$(nproc)` instead of `4` after `JLEVEL=` if you want to use all cores.
 
 | Patch | Why | Upstream |
 | --- | --- | --- |
-| `0001-fix-arch-set-IP_MULTICAST_IF-...` | Only Linux takes `struct ip_mreqn` for `IP_MULTICAST_IF`. QNX rejects the 8-byte `struct ip_mreq` with `EADDRNOTAVAIL`, so every IPv4 multicast PubSub connection fails to open. | [open62541#8718](https://github.com/open62541/open62541/pull/8718) |
-| `0002-build-link-the-rt-state-machine-...` | The example `server_pubsub_subscribe_rt_state_machine` calls the socket API itself; on QNX that is in `libsocket`. | [open62541#8719](https://github.com/open62541/open62541/pull/8719) |
-| `0003-test-fix-unit-tests-that-fail-on-QNX-8.0` | Test fixes: `errno` read too late, loopback interface `lo0`, missing `netinet/in.h`, and `check_json_config_pki` not built on QNX (the certificate filestore that `pkiFolder` configures is not available there). | [open62541#8719](https://github.com/open62541/open62541/pull/8719) |
+| `0001-build-link-the-rt-state-machine-...` | The example `server_pubsub_subscribe_rt_state_machine` calls the socket API itself; on QNX that is in `libsocket`. | [open62541#8719](https://github.com/open62541/open62541/pull/8719) |
+| `0002-test-fix-unit-tests-that-fail-on-QNX-8.0` | Test fixes: `errno` read too late, loopback interface `lo0`, missing `netinet/in.h`, and `check_json_config_pki` not built on QNX (the certificate filestore that `pkiFolder` configures is not available there). | [open62541#8719](https://github.com/open62541/open62541/pull/8719) |
 
 ## What the recipe sets, and why
 
@@ -47,7 +46,7 @@ source ~/qnx800/qnxsdp-env.sh
 cd ~/qnx_workspace
 git clone https://github.com/open62541/open62541.git
 cd open62541
-git checkout 667acbc69132d3ba5b6db17be8002cb121849d41
+git checkout 6b0a34cdc82a039b7f6378635c8e61d731d3c176
 git submodule update --init --recursive
 git apply ../build-files/ports/open62541/patches/*.patch
 cd ..
@@ -62,7 +61,7 @@ mkdir -p ~/qnx_workspace && cd ~/qnx_workspace
 git clone https://github.com/qnx-ports/build-files.git
 git clone https://github.com/open62541/open62541.git
 cd open62541
-git checkout 667acbc69132d3ba5b6db17be8002cb121849d41
+git checkout 6b0a34cdc82a039b7f6378635c8e61d731d3c176
 git submodule update --init --recursive
 git apply ../build-files/ports/open62541/patches/*.patch
 cd ..
@@ -114,13 +113,12 @@ On a Raspberry Pi 4 with QNX 8.0 (aarch64le), built from fresh clones as above, 
 
 | Test | Result |
 | --- | --- |
-| Unit tests (`qnxtests.sh`) | 202 programs: 193 passed, 6 skipped (source-tree paths), 3 failed, explained below |
+| Unit tests (`qnxtests.sh`) | 204 programs: 196 passed, 6 skipped (source-tree paths), 2 failed, explained below |
 | Interoperability: example `server_encryption` (RSA certificate it generates itself) with the Python client [asyncua](https://github.com/FreeOpcUa/opcua-asyncio) 1.1.6 from a Linux host | connects, reads the server status and namespaces, and browses with SecurityMode None, Basic256Sha256 Sign, Basic256Sha256 SignAndEncrypt and Aes128_Sha256_RsaOaep SignAndEncrypt |
 
-The three failures depend on the test machine, not on the port:
+The two failures depend on the test machine, not on the port:
 
 | Test | Why |
 | --- | --- |
 | `check_pubsub_connection_udp` (2 of 15 checks) | IPv6 multicast needs a route for `ff00::/8`. With `route add -inet6 -net ff00:: -prefixlen 8 -interface <if>` all 15 pass. |
 | `check_server_filetransfer` (2 of 104 checks) | On this image `/tmp` is a link to `/data/var/tmp`, and `symlink()` with a path through that link fails with `ENOSYS`; the same call with the path inside `/data/var/tmp` works. |
-| `check_client` (1 of 48 checks) | `Client_reconnectAbortKeepsSession` failed once; it passed in three runs after that. |

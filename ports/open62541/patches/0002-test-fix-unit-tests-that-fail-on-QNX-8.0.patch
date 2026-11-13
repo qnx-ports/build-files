@@ -1,7 +1,7 @@
-From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From 9d20e15879e4df8f4713bd310da6a9ee9d7411eb Mon Sep 17 00:00:00 2001
 From: Helen Kwok <107752876+helenkwok@users.noreply.github.com>
 Date: Fri, 13 Nov 2026 23:26:42 +1030
-Subject: [PATCH 3/3] test: fix unit tests that fail on QNX 8.0
+Subject: [PATCH 2/2] test: fix unit tests that fail on QNX 8.0
 
 - check_musl_inet_pton: keep errno right after the call. The following
   ck_assert can change it; on QNX it became ESRCH.
@@ -72,3 +72,6 @@ index 4110f6e0..feace4d3 100644
      UA_String interface = UA_STRING("lo0");
  #else
      UA_String interface = UA_STRING("lo");
+-- 
+2.53.0.windows.2
+

@@ -42,7 +42,7 @@ jobs:
       with:
         repository: open62541/open62541
         path: open62541
-        ref: 667acbc69132d3ba5b6db17be8002cb121849d41
+        ref: 6b0a34cdc82a039b7f6378635c8e61d731d3c176
         submodules: recursive
 
     - name: Apply patches
