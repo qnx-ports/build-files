@@ -1,0 +1,30 @@
+From aa87b1022244831dfa503fb3aeab35b229fad03f Mon Sep 17 00:00:00 2001
+From: Helen Kwok <107752876+helenkwok@users.noreply.github.com>
+Date: Fri, 13 Nov 2026 23:26:41 +1030
+Subject: [PATCH 1/2] build: link the rt state machine subscriber example with
+ libsocket on QNX
+
+server_pubsub_subscribe_rt_state_machine calls the socket API itself. On QNX
+8.0 that is in libsocket, which libopen62541 links privately, so a shared
+library build failed to link the example.
+---
+ examples/CMakeLists.txt | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/examples/CMakeLists.txt b/examples/CMakeLists.txt
+index 1dd9999e..416dfa91 100644
+--- a/examples/CMakeLists.txt
++++ b/examples/CMakeLists.txt
+@@ -202,6 +202,9 @@ if(UA_ENABLE_PUBSUB)
+         if(NOT CMAKE_SYSTEM_NAME STREQUAL "QNX")
+             target_link_libraries(server_pubsub_publish_rt_state_machine "rt")
+             target_link_libraries(server_pubsub_subscribe_rt_state_machine "rt")
++        else()
++            ## The subscriber calls the socket API, which is in libsocket on QNX
++            target_link_libraries(server_pubsub_subscribe_rt_state_machine socket)
+         endif()
+     endif()
+ 
+-- 
+2.53.0.windows.2
+

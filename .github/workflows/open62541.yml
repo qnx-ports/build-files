@@ -1,0 +1,58 @@
+name: open62541
+
+permissions:
+  contents: write
+  checks: write
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/open62541.yml'
+      - 'ports/open62541/**'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/open62541.yml'
+      - 'ports/open62541/**'
+
+jobs:
+
+  build:
+    strategy:
+      matrix:
+        qnx_env: ["800"]
+    name: Build for QNX ${{ matrix.qnx_env }}
+    runs-on: ubuntu-22.04-common
+    if: |
+      ((github.event_name == 'workflow_dispatch') ||
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'open62541')))
+    steps:
+    - name: Checkout build-files
+      uses: actions/checkout@v4
+      with:
+        path: build-files
+
+    - name: Checkout open62541
+      uses: actions/checkout@v4
+      with:
+        repository: open62541/open62541
+        path: open62541
+        ref: 6b0a34cdc82a039b7f6378635c8e61d731d3c176
+        submodules: recursive
+
+    - name: Apply patches
+      shell: bash
+      run: |
+        cd open62541
+        git apply ../build-files/ports/open62541/patches/*.patch
+
+    - name: Build open62541
+      shell: bash
+      run: |
+        source ~/qnx/${{ matrix.qnx_env }}/qnxsdp-env.sh
+        JLEVEL=$(nproc) QNX_PROJECT_ROOT="$(pwd)/open62541" make -C build-files/ports/open62541 clean install

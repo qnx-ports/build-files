@@ -1,0 +1,77 @@
+From 9d20e15879e4df8f4713bd310da6a9ee9d7411eb Mon Sep 17 00:00:00 2001
+From: Helen Kwok <107752876+helenkwok@users.noreply.github.com>
+Date: Fri, 13 Nov 2026 23:26:42 +1030
+Subject: [PATCH 2/2] test: fix unit tests that fail on QNX 8.0
+
+- check_musl_inet_pton: keep errno right after the call. The following
+  ck_assert can change it; on QNX it became ESRCH.
+- check_discovery_mdnsd: the loopback interface is lo0 on QNX, as on macOS.
+- check_pubsub_custom_state_machine: include netinet/in.h and arpa/inet.h
+  for sockaddr_in, IPPROTO_UDP and IP_ADD_MEMBERSHIP.
+- check_json_config_pki: do not build it on QNX, where the certificate
+  filestore that pkiFolder configures is not available.
+---
+ tests/CMakeLists.txt                             | 3 ++-
+ tests/check_musl_inet_pton.c                     | 3 ++-
+ tests/pubsub/check_pubsub_custom_state_machine.c | 2 ++
+ tests/server/check_discovery_mdnsd.c             | 2 +-
+ 4 files changed, 7 insertions(+), 3 deletions(-)
+
+diff --git a/tests/CMakeLists.txt b/tests/CMakeLists.txt
+index e774b1df..9c3d7897 100644
+--- a/tests/CMakeLists.txt
++++ b/tests/CMakeLists.txt
+@@ -272,7 +272,8 @@ if(UA_ENABLE_JSON_ENCODING)
+     configure_file(${CMAKE_SOURCE_DIR}/tests/client/client_json/server_cert.der ${CMAKE_BINARY_DIR}/tests/server_cert.der COPYONLY)
+     configure_file(${CMAKE_SOURCE_DIR}/tests/client/client_json/server_key.der ${CMAKE_BINARY_DIR}/tests/server_key.der COPYONLY)
+ 
+-    if(UA_ENABLE_ENCRYPTION)
++    # pkiFolder configures the certificate filestore, which is not built on QNX
++    if(UA_ENABLE_ENCRYPTION AND NOT CMAKE_SYSTEM_NAME STREQUAL "QNX")
+         ua_add_test(server/check_json_config_pki.c)
+     endif()
+ 
+diff --git a/tests/check_musl_inet_pton.c b/tests/check_musl_inet_pton.c
+index c884d716..a530f9e0 100644
+--- a/tests/check_musl_inet_pton.c
++++ b/tests/check_musl_inet_pton.c
+@@ -173,8 +173,9 @@ START_TEST(badAddressFamily) {
+     unsigned char addr[16];
+     errno = 0;
+     int ret = musl_inet_pton(999, "127.0.0.1", addr);
++    int err = errno; /* check may change errno in the next assertion */
+     ck_assert_int_eq(ret, -1);
+-    ck_assert_int_eq(errno, EAFNOSUPPORT);
++    ck_assert_int_eq(err, EAFNOSUPPORT);
+ } END_TEST
+ 
+ START_TEST(ipv6SingleColon) {
+diff --git a/tests/pubsub/check_pubsub_custom_state_machine.c b/tests/pubsub/check_pubsub_custom_state_machine.c
+index fa1732d8..3786b786 100644
+--- a/tests/pubsub/check_pubsub_custom_state_machine.c
++++ b/tests/pubsub/check_pubsub_custom_state_machine.c
+@@ -20,6 +20,8 @@
+ #include <sys/types.h>
+ #include <sys/socket.h>
+ #include <netdb.h>
++#include <netinet/in.h>
++#include <arpa/inet.h>
+ #include <poll.h>
+ #include <unistd.h>
+ #include <fcntl.h>
+diff --git a/tests/server/check_discovery_mdnsd.c b/tests/server/check_discovery_mdnsd.c
+index 4110f6e0..feace4d3 100644
+--- a/tests/server/check_discovery_mdnsd.c
++++ b/tests/server/check_discovery_mdnsd.c
+@@ -1996,7 +1996,7 @@ static UA_Server *realUdpReceiver, *realUdpSender;
+ 
+ static void
+ useLoopbackInterface(UA_MdnsDriver *mdns) {
+-#ifdef __APPLE__
++#if defined(__APPLE__) || defined(__QNX__)
+     UA_String interface = UA_STRING("lo0");
+ #else
+     UA_String interface = UA_STRING("lo");
+-- 
+2.53.0.windows.2
+
