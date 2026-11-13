@@ -39,7 +39,7 @@ CFLAGS += -I$(INSTALL_ROOT)/$(PREFIX)/include
 LDFLAGS += -lsocket
 
 CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
-             -DCMAKE_INSTALL_PREFIX=$(INSTALL_ROOT)/$(CPUVARDIR)/$(PREFIX) \
+             -DCMAKE_INSTALL_PREFIX=$(PREFIX) \
              -DCMAKE_BUILD_TYPE=$(CMAKE_BUILD_TYPE) \
              -DCMAKE_SYSTEM_PROCESSOR=$(CPUVARDIR) \
              -DCMAKE_C_COMPILER_TARGET=gcc_nto$(CPUVARDIR) \
@@ -58,7 +58,7 @@ libevent_all:
 
 install: libevent_all
 	@echo Installing...
-	@cd build && make VERBOSE=1 install all $(MAKE_ARGS)
+	@cd build && make VERBOSE=1 install all DESTDIR=$(INSTALL_ROOT)/$(CPUVARDIR) $(MAKE_ARGS)
 	@echo Done.
 
 clean:
