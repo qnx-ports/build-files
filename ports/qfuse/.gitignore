@@ -1,0 +1,12 @@
+/build/
+/stage/
+*.o
+*.a
+*.d
+*.dep
+*.pinfo
+*.sym
+/mount/nto-*/le/qfuse-mount
+/mount/nto-*/o/qfuse-mount
+/unmount/nto-*/le/qfuse-unmount
+/unmount/nto-*/o/qfuse-unmount
