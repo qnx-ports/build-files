@@ -46,13 +46,16 @@ qnx_cross.cfg: $(PROJECT_ROOT)/qnx_cross.cfg.in
 	sed -i "s|CPU|$(CPU)|" $@
 	sed -i "s|INSTALL_DIR|$(PROJECT_INSTALL_DIR)|" $@
 	sed -i "s|QNX_TARGET_DIR|$(QNX_TARGET)/$(CPUVARDIR)/usr|" $@
-	sed -i "s|SYSROOT|$(QNX_TARGET)|" $@
+	sed -i "s|SYSROOT|$(QNX_TARGET)/$(CPUVARDIR)|" $@
 
 ifndef NO_TARGET_OVERRIDE
 
 $(NAME)_all: qnx_cross.cfg
 	@mkdir -p build
-	@cd build && $(MESON) setup $(MESON_SETUP_FLAGS) $(QNX_PROJECT_ROOT)
+	@cd build && if [ -f build.ninja ]; then \
+		if [ ../qnx_cross.cfg -nt build.ninja ]; then SETUP_OPT=--wipe; else SETUP_OPT=--reconfigure; fi; \
+	fi; \
+	$(MESON) setup $$SETUP_OPT $(MESON_SETUP_FLAGS) $(QNX_PROJECT_ROOT)
 	@cd build && $(MESON) compile $(MESON_COMPILE_FLAGS)
 
 install: $(NAME)_all
