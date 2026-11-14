@@ -1,0 +1,129 @@
+diff --git a/common/arg.cpp b/common/arg.cpp
+index 71f63ba63..0d41dffce 100644
+--- a/common/arg.cpp
++++ b/common/arg.cpp
+@@ -43,6 +43,8 @@
+ #   endif
+ #elif defined(_AIX)
+ #include <sys/limits.h>
++#elif defined(__QNX__)
++#include <limits.h>
+ #else
+ #include <sys/syslimits.h>
+ #endif
+diff --git a/common/common.cpp b/common/common.cpp
+index 59d75a3b9..61ffc494a 100644
+--- a/common/common.cpp
++++ b/common/common.cpp
+@@ -852,7 +852,7 @@ std::string fs_get_cache_directory() {
+         cache_directory = std::getenv("LLAMA_CACHE");
+     } else {
+ #if defined(__linux__) || defined(__FreeBSD__) || defined(_AIX) || \
+-        defined(__OpenBSD__) || defined(__NetBSD__)
++        defined(__OpenBSD__) || defined(__NetBSD__) || defined(__QNX__)
+         if (std::getenv("XDG_CACHE_HOME")) {
+             cache_directory = std::getenv("XDG_CACHE_HOME");
+         } else if (std::getenv("HOME")) {
+diff --git a/common/download.cpp b/common/download.cpp
+index b0abbba8f..2a777dbb7 100644
+--- a/common/download.cpp
++++ b/common/download.cpp
+@@ -31,6 +31,8 @@
+ #   endif
+ #elif defined(_AIX)
+ #include <sys/limits.h>
++#elif defined(__QNX__)
++#include <limits.h>
+ #else
+ #include <sys/syslimits.h>
+ #endif
+diff --git a/ggml/cmake/common.cmake b/ggml/cmake/common.cmake
+index cb6638833..1f0f8bd73 100644
+--- a/ggml/cmake/common.cmake
++++ b/ggml/cmake/common.cmake
+@@ -29,7 +29,7 @@ function(ggml_get_system_arch)
+     if (CMAKE_OSX_ARCHITECTURES      STREQUAL "arm64" OR
+         CMAKE_GENERATOR_PLATFORM_LWR STREQUAL "arm64" OR
+         (NOT CMAKE_OSX_ARCHITECTURES AND NOT CMAKE_GENERATOR_PLATFORM_LWR AND
+-            CMAKE_SYSTEM_PROCESSOR MATCHES "^(aarch64|arm.*|ARM64)$"))
++            CMAKE_SYSTEM_PROCESSOR MATCHES "^(aarch64|aarch64.*|arm.*|ARM64)$"))
+         set(GGML_SYSTEM_ARCH "ARM" PARENT_SCOPE)
+     elseif (CMAKE_OSX_ARCHITECTURES STREQUAL "x86_64" OR
+             CMAKE_GENERATOR_PLATFORM_LWR MATCHES "^(x86_64|i686|amd64|x64|win32)$" OR
+diff --git a/ggml/src/ggml-backend-reg.cpp b/ggml/src/ggml-backend-reg.cpp
+index 058710921..3ade608dd 100644
+--- a/ggml/src/ggml-backend-reg.cpp
++++ b/ggml/src/ggml-backend-reg.cpp
+@@ -471,7 +471,16 @@ static ggml_backend_reg_t ggml_backend_load_best(const char * name, bool silent,
+ #endif
+         // default search paths: executable directory, current directory
+         search_paths.push_back(get_executable_path());
++#ifdef __QNX__
++        {
++            char cwd[PATH_MAX];
++            if (getcwd(cwd, sizeof(cwd)) != nullptr) {
++                search_paths.push_back(std::string(cwd));
++            }
++        }
++#else
+         search_paths.push_back(fs::current_path());
++#endif
+     } else {
+         search_paths.push_back(fs::u8path(user_search_path));
+     }
+diff --git a/ggml/src/ggml-cpu/ggml-cpu.cpp b/ggml/src/ggml-cpu/ggml-cpu.cpp
+index ddf1737a3..8d96df38f 100644
+--- a/ggml/src/ggml-cpu/ggml-cpu.cpp
++++ b/ggml/src/ggml-cpu/ggml-cpu.cpp
+@@ -360,6 +360,42 @@ static const char * ggml_backend_cpu_device_get_description(ggml_backend_dev_t d
+     return ctx->description.c_str();
+ }
+ 
++#ifdef __QNX__
++#include <fcntl.h>
++#include <sys/stat.h>
++#include <sys/syspage.h>
++static int _qnx_get_memory(size_t *total, size_t *free) {
++    int                 fd;
++    struct stat         st;
++    char                *str = (char *)SYSPAGE_ENTRY(strings)->data;
++    struct asinfo_entry *as  = (struct asinfo_entry *)SYSPAGE_ENTRY(asinfo);
++    unsigned            num;
++
++    *total = *free = 0;
++
++    if ((fd = open("/proc", O_RDONLY)) == -1) {
++        return -1;
++    }
++
++    if (fstat(fd, &st) == -1) {
++        close(fd);
++        return -1;
++    }
++
++    *free = st.st_size;
++    close(fd);
++
++    for (num = SYSPAGE_ENTRY_SIZE(asinfo) / sizeof(*as); num > 0; --num) {
++        if (strcmp(&str[as->name], "ram") == 0) {
++            *total += as->end - as->start + 1;
++        }
++        ++as;
++    }
++
++    return 0;
++}
++#endif
++
+ static void ggml_backend_cpu_device_get_memory(ggml_backend_dev_t dev, size_t * free, size_t * total) {
+ #ifdef _WIN32
+     MEMORYSTATUSEX status;
+@@ -367,6 +403,8 @@ static void ggml_backend_cpu_device_get_memory(ggml_backend_dev_t dev, size_t *
+     GlobalMemoryStatusEx(&status);
+     *total = status.ullTotalPhys;
+     *free = status.ullAvailPhys;
++#elif defined(__QNX__)
++    _qnx_get_memory(total, free);
+ #else
+     long pages = sysconf(_SC_PHYS_PAGES);
+     long page_size = sysconf(_SC_PAGE_SIZE);

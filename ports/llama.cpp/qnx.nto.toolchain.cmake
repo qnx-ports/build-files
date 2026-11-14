@@ -1,0 +1,71 @@
+set(QNX TRUE)
+set(CMAKE_SYSTEM_NAME QNX)
+
+set(QNX_HOST "$ENV{QNX_HOST}")
+set(QNX_TARGET "$ENV{QNX_TARGET}")
+
+if(NOT QNX_HOST)
+    message(FATAL_ERROR "QNX_HOST environment variable not set. Source qnxsdp-env.sh first.")
+endif()
+
+if(NOT QNX_TARGET)
+    message(FATAL_ERROR "QNX_TARGET environment variable not set. Source qnxsdp-env.sh first.")
+endif()
+
+# Default processor if not set (happens during cmake's try_compile ABI detection)
+if(NOT DEFINED CMAKE_SYSTEM_PROCESSOR OR CMAKE_SYSTEM_PROCESSOR STREQUAL "")
+    if(DEFINED ENV{CPUVARDIR} AND "$ENV{CPUVARDIR}" MATCHES "x86_64")
+        set(CMAKE_SYSTEM_PROCESSOR x86_64)
+    else()
+        set(CMAKE_SYSTEM_PROCESSOR aarch64)
+    endif()
+endif()
+
+# Map processor names to QNX conventions
+# Accepts both "aarch64le" (from QNX CPUVARDIR) and "aarch64"
+if(CMAKE_SYSTEM_PROCESSOR MATCHES "aarch64")
+    set(QNX_ARCH "aarch64le")
+    set(GCC_ARCH "gcc_ntoaarch64le")
+    set(QNX_TOOL_PREFIX "ntoaarch64")
+elseif(CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
+    set(QNX_ARCH "x86_64")
+    set(GCC_ARCH "gcc_ntox86_64")
+    set(QNX_TOOL_PREFIX "ntox86_64")
+else()
+    message(FATAL_ERROR "Unsupported architecture: ${CMAKE_SYSTEM_PROCESSOR}")
+endif()
+
+message(STATUS "using QNX_HOST ${QNX_HOST}")
+message(STATUS "using QNX_TARGET ${QNX_TARGET}")
+
+set(CMAKE_C_COMPILER ${QNX_HOST}/usr/bin/qcc)
+set(CMAKE_CXX_COMPILER ${QNX_HOST}/usr/bin/q++)
+set(CMAKE_ASM_COMPILER ${QNX_HOST}/usr/bin/qcc)
+
+set(CMAKE_C_COMPILER_TARGET ${GCC_ARCH})
+set(CMAKE_CXX_COMPILER_TARGET ${GCC_ARCH})
+
+set(CMAKE_SYSROOT "${QNX_TARGET}/${QNX_ARCH}")
+
+set(CMAKE_AR ${QNX_HOST}/usr/bin/${QNX_TOOL_PREFIX}-ar CACHE PATH "QNX ar" FORCE)
+set(CMAKE_RANLIB ${QNX_HOST}/usr/bin/${QNX_TOOL_PREFIX}-ranlib CACHE PATH "QNX ranlib" FORCE)
+set(CMAKE_STRIP ${QNX_HOST}/usr/bin/${QNX_TOOL_PREFIX}-strip CACHE PATH "QNX strip" FORCE)
+
+set(QNX_FLAGS "-D_QNX_SOURCE")
+set(CMAKE_C_FLAGS "${QNX_FLAGS} ${CMAKE_C_FLAGS}" CACHE STRING "" FORCE)
+set(CMAKE_CXX_FLAGS "${QNX_FLAGS} ${CMAKE_CXX_FLAGS}" CACHE STRING "" FORCE)
+set(CMAKE_ASM_FLAGS "${QNX_FLAGS} ${CMAKE_ASM_FLAGS}" CACHE STRING "" FORCE)
+
+set(QNX_LINKER_FLAGS "-lm -lsocket -lgcc_s")
+set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${QNX_LINKER_FLAGS}" CACHE STRING "" FORCE)
+set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} ${QNX_LINKER_FLAGS}" CACHE STRING "" FORCE)
+set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} ${QNX_LINKER_FLAGS}" CACHE STRING "" FORCE)
+
+set(CMAKE_FIND_ROOT_PATH "${QNX_TARGET}/${QNX_ARCH};${QNX_TARGET}")
+set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
+set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
+set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
+set(CMAKE_FIND_ROOT_PATH_MODE_PACKAGE ONLY)
+
+
+set(CMAKE_SKIP_RPATH TRUE CACHE BOOL "Skip RPATH" FORCE)
