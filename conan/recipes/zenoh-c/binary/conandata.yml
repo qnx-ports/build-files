@@ -1,0 +1,17 @@
+sources:
+  "1.4.0":
+    "Linux":
+      "x86_64":
+        url: "https://github.com/eclipse-zenoh/zenoh-c/releases/download/1.4.0/zenoh-c-1.4.0-x86_64-unknown-linux-gnu-standalone.zip"
+        sha256: "99958a491511c446a4f423f1753ae27d85e9984a3446dfe1684ada94b99364ed"
+    "license":
+      url: "https://github.com/eclipse-zenoh/zenoh-c/raw/1.4.0/LICENSE"
+      sha256: "01a44774f7b1a453595c7c6d7f7308284ba6a1059dc49e14dad6647e1d44a338"
+  "1.2.1":
+    "Linux":
+      "x86_64":
+        url: "https://github.com/eclipse-zenoh/zenoh-c/releases/download/1.2.1/zenoh-c-1.2.1-x86_64-unknown-linux-gnu-standalone.zip"
+        sha256: "eb870ffa4f01044c79ae9f4878e869be129e3e63eb7481e017fabdda811694a7"
+    "license":
+      url: "https://github.com/eclipse-zenoh/zenoh-c/raw/1.2.1/LICENSE"
+      sha256: "01a44774f7b1a453595c7c6d7f7308284ba6a1059dc49e14dad6647e1d44a338"
