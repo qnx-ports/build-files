@@ -5,7 +5,7 @@ include $(QCONFIG)
 
 NAME=libevent
 
-QNX_PROJECT_ROOT ?= $(PRODUCT_ROOT)/../../libevent
+QNX_PROJECT_ROOT ?= $(PROJECT_ROOT)/../../../../libevent
 
 #$(INSTALL_ROOT_$(OS)) is pointing to $QNX_TARGET
 #by default, unless it was manually re-routed to
@@ -38,7 +38,7 @@ include $(MKFILES_ROOT)/qtargets.mk
 CFLAGS += -I$(INSTALL_ROOT)/$(PREFIX)/include
 LDFLAGS += -lsocket
 
-CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/qnx.nto.toolchain.cmake \
+CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/../qnx.nto.toolchain.cmake \
              -DCMAKE_INSTALL_PREFIX=$(PREFIX) \
              -DCMAKE_BUILD_TYPE=$(CMAKE_BUILD_TYPE) \
              -DCMAKE_SYSTEM_PROCESSOR=$(CPUVARDIR) \
