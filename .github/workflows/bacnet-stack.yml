@@ -1,0 +1,51 @@
+name: bacnet-stack
+
+permissions:
+  contents: write
+  checks: write
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/bacnet-stack.yml'
+      - 'ports/bacnet-stack/**'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/bacnet-stack.yml'
+      - 'ports/bacnet-stack/**'
+
+jobs:
+
+  build:
+    strategy:
+      matrix:
+        qnx_env: ["800"]
+    name: Build for QNX ${{ matrix.qnx_env }}
+    runs-on: ubuntu-22.04-common
+    if: |
+      ((github.event_name == 'workflow_dispatch') ||
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'bacnet-stack')))
+    steps:
+    - name: Checkout build-files
+      uses: actions/checkout@v4
+      with:
+        path: build-files
+
+    - name: Checkout bacnet-stack
+      uses: actions/checkout@v4
+      with:
+        repository: bacnet-stack/bacnet-stack
+        path: bacnet-stack
+        ref: dab1ea2f27e5696155ff16e9ab83e8b860caced9  # first commit with QNX 8.0 support (#1606); no release has it yet
+
+    - name: Build bacnet-stack
+      shell: bash
+      run: |
+        source ~/qnx/${{ matrix.qnx_env }}/qnxsdp-env.sh
+        QNX_PROJECT_ROOT="$(pwd)/bacnet-stack" make -C build-files/ports/bacnet-stack clean install
