@@ -1,0 +1,66 @@
+name: sockpp
+
+permissions:
+  contents: write
+  checks: write
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/sockpp.yml"
+      - "ports/sockpp/**"
+  pull_request:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/sockpp.yml"
+      - "ports/sockpp/**"
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        qnx_env: ["800"]
+    runs-on: ubuntu-22.04-common
+    if: |
+      ((github.event_name == 'workflow_dispatch') ||
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'sockpp')))
+    steps:
+      - name: Checkout build-files
+        uses: actions/checkout@v4
+        with:
+          path: build-files
+
+      - name: Checkout Catch2
+        uses: actions/checkout@v4
+        with:
+          repository: qnx-ports/Catch2
+          path: Catch2
+
+      - name: Checkout sockpp
+        uses: actions/checkout@v4
+        with:
+          repository: fpagliughi/sockpp
+          path: sockpp
+          ref: v1.0.0
+
+      - name: Apply the QNX patch to sockpp
+        shell: bash
+        run: git -C sockpp apply $GITHUB_WORKSPACE/build-files/ports/sockpp/patches/qnx.patch
+
+      - name: Build Catch2
+        shell: bash
+        run: |
+          source ~/qnx/800/qnxsdp-env.sh
+          QNX_PROJECT_ROOT="$(pwd)/Catch2" make -C build-files/ports/Catch2 install
+
+      - name: Build sockpp
+        shell: bash
+        run: |
+          source ~/qnx/800/qnxsdp-env.sh
+          BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/sockpp" make -C build-files/ports/sockpp install
