@@ -1,0 +1,14 @@
+diff --git a/include/spdlog/details/os-inl.h b/include/spdlog/details/os-inl.h
+index 92dfe12..7c2cba2 100644
+--- a/include/spdlog/details/os-inl.h
++++ b/include/spdlog/details/os-inl.h
+@@ -41,6 +41,9 @@
+ 
+ #include <fcntl.h>
+ #include <unistd.h>
++#if defined(__QNX__)
++#include <sys/process.h>
++#endif
+ 
+ #ifdef __linux__
+ #include <sys/syscall.h>  //Use gettid() syscall under linux to get thread id
