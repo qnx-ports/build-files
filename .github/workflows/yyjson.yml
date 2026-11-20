@@ -1,0 +1,47 @@
+name: yyjson
+
+permissions:
+  contents: write
+  checks: write
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/yyjson.yml'
+      - 'ports/yyjson/**'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/yyjson.yml'
+      - 'ports/yyjson/**'
+
+jobs:
+
+  build:
+    runs-on: ubuntu-22.04-common
+    if: |
+      ((github.event_name == 'workflow_dispatch') ||
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'yyjson')))
+    steps:
+    - name: Checkout build-files
+      uses: actions/checkout@v4
+      with:
+        path: build-files
+
+    - name: Checkout yyjson
+      uses: actions/checkout@v4
+      with:
+        repository: ibireme/yyjson
+        path: yyjson
+        ref: 0.10.0
+
+    - name: Build yyjson
+      shell: bash
+      run: |
+        source ~/qnx/800/qnxsdp-env.sh
+        QNX_PROJECT_ROOT="$(pwd)/yyjson" make -C build-files/ports/yyjson install
