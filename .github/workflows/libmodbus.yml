@@ -1,0 +1,51 @@
+name: libmodbus
+
+permissions:
+  contents: write
+  checks: write
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/libmodbus.yml'
+      - 'ports/libmodbus/**'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/libmodbus.yml'
+      - 'ports/libmodbus/**'
+
+jobs:
+
+  build:
+    strategy:
+      matrix:
+        qnx_env: ["800"]
+    name: Build for QNX ${{ matrix.qnx_env }}
+    runs-on: ubuntu-22.04-common
+    if: |
+      ((github.event_name == 'workflow_dispatch') ||
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'libmodbus')))
+    steps:
+    - name: Checkout build-files
+      uses: actions/checkout@v4
+      with:
+        path: build-files
+
+    - name: Checkout libmodbus
+      uses: actions/checkout@v4
+      with:
+        repository: stephane/libmodbus
+        path: libmodbus
+        ref: v3.2.0
+
+    - name: Build libmodbus
+      shell: bash
+      run: |
+        source ~/qnx/${{ matrix.qnx_env }}/qnxsdp-env.sh
+        JLEVEL=$(nproc) QNX_PROJECT_ROOT="$(pwd)/libmodbus" make -C build-files/ports/libmodbus clean install
