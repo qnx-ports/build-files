@@ -15,7 +15,7 @@ source checkouts and source your own SDK:
 mkdir -p ~/qnx_workspace
 cd ~/qnx_workspace
 git clone https://github.com/gowtham0992/qfuse.git
-git -C qfuse checkout f19f3f21a25542dd0512de4eb3f2343cf209923b
+git -C qfuse checkout 97b32bac9927f3dd63415a81687c843165f06f62
 # Use the build-files checkout containing this recipe.
 source ~/qnx800/qnxsdp-env.sh
 make -C build-files/ports/qfuse QNX_PROJECT_ROOT="$PWD/qfuse" \
