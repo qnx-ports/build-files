@@ -5,9 +5,8 @@
 Use `$(nproc)` instead of `4` after `JLEVEL=` if you want to use the maximum number of cores to build this project.
 
 # Git tags:
-- qnx-2.1.12_p0
-- qnx-2.1.13_p0
-
+- qnx-2.1.12_p1
+- qnx-2.1.13_p1
 
 # Compile the port for QNX in a Docker container
 
@@ -61,3 +60,12 @@ Applications using libevent should follow these points:
 3. For signals that should drive the event loop, use `evsignal_new()` / `event_new()` with the signal number instead of your own handlers. The callback then runs from the event loop and not in signal-handler context.
 4. Do not rely on `SA_RESTART` in your own `sigaction()` code. If shared code sets it, guard it with `#ifdef SA_RESTART`, and still retry on `EINTR`.
 5. Test the interrupted paths of your application, that is, a signal arriving while it is blocked in a system call or in the event loop.
+
+# OpenSSL and zlib
+
+The port builds libevent with OpenSSL support (`libevent_openssl`, linked against the SDP's `libssl` and `libcrypto`) and with zlib support (used by `bufferevent_zlib`). Both libraries come from the SDP, and `common.mk` passes them to CMake as linker flags.
+
+# Known limitations on QNX
+
+- The upstream test `regress main/fork` fails: it hangs until the test timeout, or fails immediately with `FAILED (exit): 0`. 
+waitpid() clears the pending SIGCHLD and the test waits for that signal. All other upstream tests pass on QNX (x86_64 and aarch64le).
