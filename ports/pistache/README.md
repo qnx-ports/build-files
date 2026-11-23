@@ -2,6 +2,9 @@
 
 **NOTE**: QNX ports are only supported from a Linux host operating system
 
+# Git tags:
+- qnx-v0.4.26_p0
+
 ## Dependencies
 - libevent
 - googletest (for testing)
@@ -27,7 +30,8 @@ source ~/qnx800/qnxsdp-env.sh
 
 # Clone pistache
 cd ~/qnx_workspace
-git clone https://github.com/qnx-ports/pistache.git
+# replace <Git tag>, with one of the supported tags
+git clone [-b <Git tag>] https://github.com/qnx-ports/pistache.git
 
 # Build and install pistache
 [PISTACHE_BUILD_TESTS=true] make -C build-files/ports/pistache install JLEVEL=$(nproc)
@@ -38,7 +42,8 @@ git clone https://github.com/qnx-ports/pistache.git
 # Clone the repos
 mkdir -p ~/qnx_workspace && cd qnx_workspace
 git clone https://github.com/qnx-ports/build-files.git
-git clone https://github.com/qnx-ports/pistache.git
+# replace <Git tag>, with one of the supported tags
+git clone [-b <Git tag>] https://github.com/qnx-ports/pistache.git
 
 # source qnxsdp-env.sh
 source ~/qnx800/qnxsdp-env.sh
