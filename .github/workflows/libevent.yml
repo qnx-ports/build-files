@@ -26,8 +26,8 @@ jobs:
       matrix:
         qnx_env: ["710", "800"]
         version:
-          - { dir: "2.1.12", ref: "qnx-2.1.12_p0" }
-          - { dir: "2.1.13", ref: "qnx-2.1.13_p0" }
+          - { dir: "2.1.12", ref: "qnx-2.1.12_p1" }
+          - { dir: "2.1.13", ref: "qnx-2.1.13_p1" }
     name: Build libevent ${{ matrix.version.dir }} for QNX ${{ matrix.qnx_env }}
     runs-on: ubuntu-22.04-common
     if: |

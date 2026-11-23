@@ -38,6 +38,16 @@ include $(MKFILES_ROOT)/qtargets.mk
 CFLAGS += -I$(INSTALL_ROOT)/$(PREFIX)/include
 LDFLAGS += -lsocket
 
+#OpenSSL and zlib come from the SDP. qcc finds their libraries by itself, but
+#CMake's find_package() only searches the sysroot (target/qnx), not the per-CPU
+#directory (target/qnx/<cpu>/usr/lib). Pass the libraries as linker flags (the
+#":STRING" type keeps CMake from turning them into paths) so that qcc resolves
+#them and no host path ends up in the installed files.
+OPENSSL_ZLIB_CMAKE_ARGS = -DEVENT__DISABLE_OPENSSL=OFF \
+                          -DOPENSSL_SSL_LIBRARY:STRING=-lssl \
+                          -DOPENSSL_CRYPTO_LIBRARY:STRING=-lcrypto \
+                          -DZLIB_LIBRARY:STRING=-lz
+
 CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/../qnx.nto.toolchain.cmake \
              -DCMAKE_INSTALL_PREFIX=$(PREFIX) \
              -DCMAKE_BUILD_TYPE=$(CMAKE_BUILD_TYPE) \
@@ -48,7 +58,7 @@ CMAKE_ARGS = -DCMAKE_TOOLCHAIN_FILE=$(PROJECT_ROOT)/../qnx.nto.toolchain.cmake \
              -DEXTRA_CMAKE_CXX_FLAGS="$(CXXFLAGS)" \
              -DEXTRA_CMAKE_ASM_FLAGS="$(FLAGS)" \
              -DEXTRA_CMAKE_LINKER_FLAGS="$(LDFLAGS)" \
-             -DEVENT__DISABLE_OPENSSL=ON
+             $(OPENSSL_ZLIB_CMAKE_ARGS)
 
 ifndef NO_TARGET_OVERRIDE
 libevent_all:
