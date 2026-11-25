@@ -61,10 +61,10 @@ QNX_PROJECT_ROOT="$(pwd)/strongswan" make -C build-files/ports/strongswan instal
 ```
 # Test on Target
 
-1. Put all the 
+1. Put all the files from
         lib  under /usr/local/lib
         bin  under /usr/local/bin
-        sbin under /usr/loval/sbin
+        sbin under /usr/local/sbin
 
 2. Create the file strongswan.conf in usr/local/etc/. For example:
 ```bash
