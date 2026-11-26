@@ -61,14 +61,19 @@ QNX_PROJECT_ROOT="$(pwd)/strongswan" make -C build-files/ports/strongswan instal
 ```
 # Test on Target
 
-1. Create the file strongswan.conf in /etc/. For example:
+1. Put all the files from
+        lib  under /usr/local/lib
+        bin  under /usr/local/bin
+        sbin under /usr/local/sbin
+
+2. Create the file strongswan.conf in usr/local/etc/. For example:
 ```bash
 swanctl {
 }
 charon {
 }
 ```
-2. Create the directory /etc/swanctl/ and add to it swanctl.conf. For example:
+3. Create the directory /usr/local/etc/swanctl/ and add to it swanctl.conf. For example:
 ```bash
 connections {
     host-host {
@@ -84,7 +89,9 @@ connections {
          }
          children {
              host-host {
-                 esp_proposals = aes256-esn-noesn
+                 mode = transport  
+                 rekey_time = 3600
+                 esp_proposals = aes256-sha256
                  replay_window=512
              }
         }
@@ -99,17 +106,17 @@ secrets {
     }
 }
 ```
-3. Make sure that the strongSwan binaries are in the proper directories.
-4. Make sure that io-sock is running and an appropriate driver is loaded.
-5. Use charon to start the strongSwan daemon. For example:
+4. Make sure that the strongSwan binaries are in the proper directories.
+5. Make sure that io-sock is running and an appropriate driver is loaded.
+6. Use charon to start the strongSwan daemon. For example:
 ```bash
 charon --use-syslog &
 ```
-6. Run swanctl with the following subcommand to load connection configurations:
+7. Run swanctl with the following subcommand to load connection configurations:
 ```bash
 swanctl --load-conns
 ```
-7. Run swanctl with the following subcommand to load credentials.
+8. Run swanctl with the following subcommand to load credentials.
 ```bash
 swanctl --load-creds
 ```
@@ -129,7 +136,9 @@ connections {
          }
          children {
              host-host {
-                 esp_proposals = aes256-esn-noesn
+                 mode = transport  
+                 rekey_time = 3600
+                 esp_proposals = aes256-sha256
                  replay_window=512
              }
         }
