@@ -1,0 +1,54 @@
+name: spdlog
+
+permissions:
+  contents: write
+  checks: write
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/spdlog.yml"
+      - "ports/spdlog/**"
+  pull_request:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/spdlog.yml"
+      - "ports/spdlog/**"
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        qnx_env: ["800"]
+    runs-on: ubuntu-22.04-common
+    if: |
+      ((github.event_name == 'workflow_dispatch') ||
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.title, 'spdlog')))
+    steps:
+      - name: Checkout build-files
+        uses: actions/checkout@v4
+        with:
+          path: build-files
+
+      - name: Checkout spdlog
+        uses: actions/checkout@v4
+        with:
+          repository: gabime/spdlog
+          path: spdlog
+          ref: v1.17.0
+
+      - name: Apply the QNX patch to spdlog
+        shell: bash
+        run: git -C spdlog apply $GITHUB_WORKSPACE/build-files/ports/spdlog/patches/qnx.patch
+
+      - name: Build spdlog
+        shell: bash
+        run: |
+          source ~/qnx/800/qnxsdp-env.sh
+          BUILD_TESTING="ON" QNX_PROJECT_ROOT="$(pwd)/spdlog" make -C build-files/ports/spdlog install
