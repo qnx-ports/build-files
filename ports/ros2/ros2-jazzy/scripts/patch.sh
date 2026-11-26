@@ -27,6 +27,7 @@ qnx_patch ./src/ros2/unique_identifier_msgs unique_identifier_msgs.patch
 qnx_patch ./src/ros2/spdlog_vendor spdlog_vendor.patch
 qnx_patch ./src/ros2/ros2_tracing ros2_tracing.patch
 qnx_patch ./src/ros2/rcutils rcutils.patch
+qnx_patch ./src/ros2/rcutils qnx-rcutils-strndup-memchr.patch
 qnx_patch ./src/ros2/rcpputils rcpputils.patch
 qnx_patch ./src/ros2/rcl_logging rcl_logging.patch
 qnx_patch ./src/ros2/ros2cli ros2cli.patch

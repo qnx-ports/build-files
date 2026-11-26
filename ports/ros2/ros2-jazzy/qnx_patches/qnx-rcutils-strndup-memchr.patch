@@ -1,0 +1,19 @@
+--- a/src/strdup.c
++++ b/src/strdup.c
+@@ -44,8 +44,14 @@
+     return NULL;
+   }
+   RCUTILS_CHECK_ALLOCATOR(&allocator, return NULL);
+-  char * p = memchr(str, '\0', max_length);
+-  size_t string_length = p == NULL ? max_length : (size_t)(p - str);
++  size_t string_length;
++  if (SIZE_MAX == max_length) {
++    // Avoid calling memchr() with SIZE_MAX on QNX x86-64.
++    string_length = strlen(str);
++  } else {
++    const char * p = memchr(str, '\0', max_length);
++    string_length = p == NULL ? max_length : (size_t)(p - str);
++  }
+   char * new_string = allocator.allocate(string_length + 1, allocator.state);
+   if (NULL == new_string) {
+     return NULL;
