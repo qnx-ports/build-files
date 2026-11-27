@@ -1,0 +1,113 @@
+diff --git a/common/CMakeLists.txt b/common/CMakeLists.txt
+index c454f6b..5c8bb52 100644
+--- a/common/CMakeLists.txt
++++ b/common/CMakeLists.txt
+@@ -189,6 +189,10 @@ endif()
+ 
+ target_link_libraries(${TARGET} PUBLIC llama Threads::Threads)
+ 
++if (CMAKE_SYSTEM_NAME STREQUAL "QNX")
++    target_link_libraries(${TARGET} PUBLIC socket)
++endif()
++
+ if (CMAKE_SYSTEM_NAME MATCHES "AIX")
+     # AIX's flock() function comes from libbsd.a
+     target_link_libraries(${TARGET} PRIVATE -lbsd)
+diff --git a/common/download.cpp b/common/download.cpp
+index 4dabaed..7e488eb 100644
+--- a/common/download.cpp
++++ b/common/download.cpp
+@@ -31,6 +31,8 @@
+ #   endif
+ #elif defined(_AIX)
+ #include <sys/limits.h>
++#elif defined(__QNX__)
++#include <limits.h>
+ #else
+ #include <sys/syslimits.h>
+ #endif
+diff --git a/ggml/src/ggml-cpu/ggml-cpu.cpp b/ggml/src/ggml-cpu/ggml-cpu.cpp
+index b7e35d1..a2a01cb 100644
+--- a/ggml/src/ggml-cpu/ggml-cpu.cpp
++++ b/ggml/src/ggml-cpu/ggml-cpu.cpp
+@@ -8,6 +8,12 @@
+ 
+ #include <cctype>
+ #include <string>
++
++#if defined(__QNX__)
++#include <cstring>
++#include <sys/stat.h>
++#include <sys/syspage.h>
++#endif
+ #include <vector>
+ 
+ #ifdef GGML_USE_CPU_HBM
+@@ -369,6 +375,21 @@ static void ggml_backend_cpu_device_get_memory(ggml_backend_dev_t dev, size_t *
+     GlobalMemoryStatusEx(&status);
+     *total = status.ullTotalPhys;
+     *free = status.ullAvailPhys;
++#elif defined(__QNX__)
++    // QNX has no _SC_PHYS_PAGES: total RAM is the sum of the "ram" entries in the system page,
++    // and the size reported for /proc is the currently free memory.
++    uint64_t ram = 0;
++    const struct asinfo_entry * as = SYSPAGE_ENTRY(asinfo);
++    const size_t n_as = _syspage_ptr->asinfo.entry_size / sizeof(*as);
++    const char * strings = SYSPAGE_ENTRY(strings)->data;
++    for (size_t i = 0; i < n_as; i++) {
++        if (strcmp(strings + as[i].name, "ram") == 0) {
++            ram += as[i].end - as[i].start + 1;
++        }
++    }
++    *total = (size_t) ram;
++    struct stat st;
++    *free = (stat("/proc", &st) == 0 && st.st_size > 0) ? (size_t) st.st_size : *total;
+ #else
+     long pages = sysconf(_SC_PHYS_PAGES);
+     long page_size = sysconf(_SC_PAGE_SIZE);
+diff --git a/tools/quantize/quantize.cpp b/tools/quantize/quantize.cpp
+index d586951..deca342 100644
+--- a/tools/quantize/quantize.cpp
++++ b/tools/quantize/quantize.cpp
+@@ -927,7 +927,11 @@ int llama_quantize(int argc, char ** argv) {
+         struct sigaction sigint_action;
+         sigint_action.sa_handler = signal_handler;
+         sigemptyset(&sigint_action.sa_mask);
++#ifdef SA_RESTART
+         sigint_action.sa_flags = SA_RESTART;
++#else
++        sigint_action.sa_flags = 0; // e.g. QNX 8.0 does not support SA_RESTART
++#endif
+         sigaction(SIGINT, &sigint_action, nullptr);
+         sigaction(SIGTERM, &sigint_action, nullptr);
+ #elif defined (_WIN32)
+diff --git a/vendor/cpp-httplib/CMakeLists.txt b/vendor/cpp-httplib/CMakeLists.txt
+index dfe9488..c857d31 100644
+--- a/vendor/cpp-httplib/CMakeLists.txt
++++ b/vendor/cpp-httplib/CMakeLists.txt
+@@ -24,6 +24,11 @@ if (WIN32 AND NOT MSVC)
+     target_link_libraries(${TARGET} PUBLIC ws2_32)
+ endif()
+ 
++# QNX keeps the BSD socket API (socket, bind, inet_pton, ...) in libsocket
++if (CMAKE_SYSTEM_NAME STREQUAL "QNX")
++    target_link_libraries(${TARGET} PUBLIC socket)
++endif()
++
+ target_compile_features(${TARGET} PRIVATE cxx_std_17)
+ 
+ target_compile_definitions(${TARGET} PRIVATE
+diff --git a/vendor/sheredom/subprocess.h b/vendor/sheredom/subprocess.h
+index 67420c1..de8c002 100644
+--- a/vendor/sheredom/subprocess.h
++++ b/vendor/sheredom/subprocess.h
+@@ -322,6 +322,9 @@ subprocess_weak int subprocess_alive(struct subprocess_s *const process);
+ #endif
+ #elif defined(__APPLE__) && MAC_OS_X_VERSION_MIN_REQUIRED < 101500
+ #define SUBPROCESS_HAVE_CWD 0
++#elif defined(__QNX__)
++/* QNX provides posix_spawn but no posix_spawn_file_actions_addchdir(_np). */
++#define SUBPROCESS_HAVE_CWD 0
+ #else
+ #define SUBPROCESS_HAVE_CWD 1
+ #endif
